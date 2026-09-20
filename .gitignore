@@ -1,0 +1,13 @@
+.netlify
+node_modules
+dist
+video-downloader/bin
+video-downloader/cookies.txt
+creator-tools/.out
+creator-tools/config.json
+package-lock.json
+
+# Business files that live in this folder but are not part of the website
+katescott-submission-email.md
+upgrowth-calculators.csv
+upgrowth-calculators.xlsx

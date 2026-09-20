@@ -1,0 +1,12 @@
+{
+  "name": "squareko-tools",
+  "private": true,
+  "description": "Squareko tools site: static pages built by build.js plus Netlify Functions.",
+  "scripts": {
+    "build": "node build.js",
+    "creator-tools": "node creator-tools/server.js"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "latest"
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "brand": {
+    "name": "Upgrowth",
+    "handle": "@upgrowth.io",
+    "tone": "confident, plain",
+    "audience": "small agency owners and freelance marketers",
+    "industry": "SEO and marketing tools",
+    "banned_words": ["revolutionary", "game-changer", "unlock"],
+    "cta_default": "Try it free"
+  },
+  "platform": "instagram",
+  "template": "announcement",
+  "row": {
+    "id": "row-014",
+    "title": "SEO ROI calculator is live",
+    "context": "New free calculator on the site. User enters monthly traffic, conversion rate, and average order value, gets projected revenue from a ranking lift. No signup needed. Link: upgrowth.io/tools/seo-roi. Built after 40 agency owners asked for a way to justify SEO spend to clients.",
+    "image_url": "",
+    "scheduled_at": ""
+  }
+}

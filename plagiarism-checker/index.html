@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Plagiarism Checker</title>
+<style>
+  :root {
+    --bg: #f4f6fb; --card: #fff; --text: #1b2433; --muted: #64708a; --line: #dfe4ee;
+    --accent: #1f4e78; --accent-soft: #e8f0f8; --accent-text: #fff;
+    --red: #c0392b; --red-soft: #fdecea; --green: #157347; --green-soft: #e6f4ec; --amber: #b7791f; --amber-soft: #fff4dd;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; background: var(--bg); color: var(--text); padding: 24px 16px 56px; line-height: 1.5; }
+  .wrap { max-width: 1040px; margin: 0 auto; }
+  h1 { font-size: 1.9rem; margin: 0 0 6px; }
+  h2 { font-size: 1.2rem; margin: 0 0 12px; }
+  .sub { color: var(--muted); margin: 0 0 20px; max-width: 700px; }
+
+  .tabs { display: flex; gap: 6px; margin-bottom: 14px; flex-wrap: wrap; }
+  .tab { padding: 9px 16px; border-radius: 8px; border: 1px solid var(--line); background: var(--card); cursor: pointer; font-weight: 600; color: var(--muted); }
+  .tab.active { background: var(--accent); color: var(--accent-text); border-color: var(--accent); }
+
+  .card { background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 20px; }
+  textarea { width: 100%; min-height: 260px; resize: vertical; font: inherit; font-size: 1rem; padding: 12px; border: 1px solid var(--line); border-radius: 8px; color: var(--text); background: var(--card); }
+  textarea:focus, input:focus { outline: 2px solid var(--accent); border-color: var(--accent); }
+  .meta { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; margin-top: 8px; color: var(--muted); font-size: .9rem; }
+  .meta .over { color: var(--red); font-weight: 600; }
+  .toolbar { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 12px; align-items: center; }
+  .toolbar input[type="text"] { flex: 1 1 220px; min-width: 0; font: inherit; padding: 9px 12px; border: 1px solid var(--line); border-radius: 8px; }
+  button { font: inherit; font-weight: 600; padding: 9px 16px; border: 0; border-radius: 8px; background: var(--accent-soft); color: var(--accent); cursor: pointer; }
+  button.primary { background: var(--accent); color: var(--accent-text); font-size: 1.05rem; padding: 12px 22px; }
+  button[disabled] { opacity: .55; cursor: not-allowed; }
+  .actions { display: flex; gap: 8px; margin-top: 16px; flex-wrap: wrap; align-items: center; }
+  .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  @media (max-width: 760px) { .grid2 { grid-template-columns: 1fr; } }
+  .grid2 textarea { min-height: 220px; }
+
+  .banner { border-radius: 8px; padding: 10px 14px; margin-bottom: 14px; font-size: .95rem; }
+  .banner.warn { background: var(--amber-soft); color: #7a4f0b; }
+  .banner.err { background: var(--red-soft); color: #7c1d14; }
+  .banner code { background: rgba(0,0,0,.06); padding: 1px 5px; border-radius: 4px; }
+
+  #results { margin-top: 20px; }
+  .scores { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 18px; }
+  @media (max-width: 520px) { .scores { grid-template-columns: 1fr; } }
+  .score { border-radius: 10px; padding: 16px 18px; }
+  .score.plag { background: var(--red-soft); color: var(--red); }
+  .score.uniq { background: var(--green-soft); color: var(--green); }
+  .score .n { font-size: 2.4rem; font-weight: 800; line-height: 1.1; }
+  .score .l { font-weight: 600; }
+  .bar { height: 10px; border-radius: 6px; background: rgba(0,0,0,.08); overflow: hidden; margin-top: 10px; }
+  .bar > div { height: 100%; background: currentColor; }
+  .summary { color: var(--muted); font-size: .92rem; margin-bottom: 14px; }
+
+  .legend { display: flex; gap: 14px; flex-wrap: wrap; font-size: .9rem; color: var(--muted); margin-bottom: 10px; }
+  .legend i { display: inline-block; width: 12px; height: 12px; border-radius: 3px; vertical-align: -1px; margin-right: 5px; }
+  .sent { padding: 10px 12px; border-left: 4px solid var(--line); border-radius: 6px; margin-bottom: 8px; background: #fafbfd; }
+  .sent.plag { border-left-color: var(--red); background: var(--red-soft); }
+  .sent.uniq { border-left-color: var(--green); background: var(--green-soft); }
+  .sent.skip { border-left-color: var(--amber); background: var(--amber-soft); }
+  .sent .tag { font-size: .75rem; font-weight: 700; text-transform: uppercase; letter-spacing: .04em; margin-right: 8px; }
+  .sent.plag .tag { color: var(--red); } .sent.uniq .tag { color: var(--green); } .sent.skip .tag { color: var(--amber); }
+  .sent .src { display: block; margin-top: 6px; font-size: .88rem; color: var(--muted); word-break: break-all; }
+  .sent .src a { color: var(--accent); }
+  .sent .match { display: block; margin-top: 6px; font-size: .88rem; color: var(--muted); font-style: italic; }
+  .foot { color: var(--muted); font-size: .85rem; margin-top: 36px; }
+  .spinner { display: inline-block; width: 16px; height: 16px; border: 2px solid rgba(255,255,255,.4); border-top-color: #fff; border-radius: 50%; animation: spin .8s linear infinite; vertical-align: -3px; margin-right: 8px; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  [hidden] { display: none !important; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Plagiarism Checker</h1>
+  <p class="sub">Paste text, upload a file or enter a URL. Each sentence is checked and marked as plagiarized or unique, with the matching source.</p>
+
+  <div class="tabs">
+    <button class="tab active" data-tab="web">Check against the web</button>
+    <button class="tab" data-tab="compare">Compare two texts</button>
+  </div>
+
+  <!-- WEB CHECK -->
+  <section class="card" id="panel-web">
+    <div class="banner warn" id="nokey" hidden>
+      Web checking is not set up yet. Add your free Google API key and Search Engine ID to <code>config.json</code> and restart. The README explains the 5-minute setup. "Compare two texts" works without it.
+    </div>
+    <textarea id="text" placeholder="Paste your text here (up to 1,000 words)…" spellcheck="false"></textarea>
+    <div class="meta">
+      <span id="wc">0 / 1000 words</span>
+      <span>Characters: <span id="cc">0</span></span>
+    </div>
+    <div class="toolbar">
+      <input type="file" id="file" accept=".txt,.md,.docx,.pdf" hidden>
+      <button type="button" id="uploadBtn">Upload file (.txt, .docx, .pdf)</button>
+      <input type="text" id="pageUrl" placeholder="Or paste a web page URL to check…">
+      <button type="button" id="fetchBtn">Get text from URL</button>
+    </div>
+    <div class="toolbar">
+      <input type="text" id="excludeUrl" placeholder="Exclude a URL (optional, e.g. your own site)">
+    </div>
+    <div class="actions">
+      <button class="primary" id="checkBtn">Check Plagiarism</button>
+      <button type="button" id="clearBtn">Clear</button>
+    </div>
+  </section>
+
+  <!-- COMPARE -->
+  <section class="card" id="panel-compare" hidden>
+    <div class="grid2">
+      <div>
+        <h2>Text 1</h2>
+        <textarea id="textA" placeholder="Paste the first text…" spellcheck="false"></textarea>
+        <div class="meta"><span id="wcA">0 words</span></div>
+      </div>
+      <div>
+        <h2>Text 2</h2>
+        <textarea id="textB" placeholder="Paste the second text…" spellcheck="false"></textarea>
+        <div class="meta"><span id="wcB">0 words</span></div>
+      </div>
+    </div>
+    <div class="actions">
+      <button class="primary" id="compareBtn">Compare Texts</button>
+      <button type="button" id="clearCmpBtn">Clear</button>
+    </div>
+  </section>
+
+  <div id="results" hidden></div>
+
+  <p class="foot">Results are an estimate based on exact-phrase searching. Always review flagged sentences yourself.</p>
+</div>
+
+<script>
+  const $ = (id) => document.getElementById(id);
+  let WORD_LIMIT = 1000;
+  let WEB_OK = false;
+  let lastReport = null;
+
+  const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+  const words = (s) => (s.match(/[\p{L}\p{N}]+(?:['’-][\p{L}\p{N}]+)*/gu) || []).length;
+
+  // ----- status -----
+  // API paths are relative on purpose: they work at http://localhost:3100/ and at https://site/plagiarism-checker/
+  fetch("api/status").then((r) => r.json()).then((s) => {
+    WORD_LIMIT = s.wordLimit || 1000;
+    WEB_OK = !!s.webCheck;
+    $("nokey").hidden = WEB_OK;
+    updateCounts();
+  }).catch(() => {});
+
+  // ----- tabs -----
+  document.querySelectorAll(".tab").forEach((t) => t.addEventListener("click", () => {
+    document.querySelectorAll(".tab").forEach((x) => x.classList.toggle("active", x === t));
+    $("panel-web").hidden = t.dataset.tab !== "web";
+    $("panel-compare").hidden = t.dataset.tab !== "compare";
+    $("results").hidden = true;
+  }));
+
+  // ----- counters -----
+  function updateCounts() {
+    const n = words($("text").value);
+    $("wc").textContent = `${n.toLocaleString()} / ${WORD_LIMIT.toLocaleString()} words`;
+    $("wc").classList.toggle("over", n > WORD_LIMIT);
+    $("cc").textContent = $("text").value.length.toLocaleString();
+    $("checkBtn").disabled = n === 0 || n > WORD_LIMIT;
+    $("wcA").textContent = words($("textA").value).toLocaleString() + " words";
+    $("wcB").textContent = words($("textB").value).toLocaleString() + " words";
+  }
+  ["text", "textA", "textB"].forEach((id) => $(id).addEventListener("input", updateCounts));
+  updateCounts();
+
+  // ----- file upload -----
+  $("uploadBtn").addEventListener("click", () => $("file").click());
+  $("file").addEventListener("change", async (e) => {
+    const f = e.target.files[0];
+    if (!f) return;
+    banner("Reading " + f.name + "…", "warn");
+    try {
+      const ext = f.name.split(".").pop().toLowerCase();
+      let text = "";
+      if (ext === "txt" || ext === "md") text = await f.text();
+      else if (ext === "docx") text = await readDocx(f);
+      else if (ext === "pdf") text = await readPdf(f);
+      else throw new Error("Unsupported file type. Use .txt, .docx or .pdf");
+      $("text").value = text.trim();
+      updateCounts();
+      banner("", "");
+      if (words(text) > WORD_LIMIT) banner(`This file has ${words(text).toLocaleString()} words. Trim it to ${WORD_LIMIT.toLocaleString()} or fewer to check.`, "warn");
+    } catch (err) {
+      banner("Could not read the file: " + err.message, "err");
+    }
+    e.target.value = "";
+  });
+
+  function loadScript(src) {
+    return new Promise((res, rej) => {
+      const s = document.createElement("script");
+      s.src = src; s.onload = res; s.onerror = () => rej(new Error("Could not load a helper library. Check your internet connection."));
+      document.head.appendChild(s);
+    });
+  }
+  async function readDocx(file) {
+    if (!window.JSZip) await loadScript("https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js");
+    const zip = await JSZip.loadAsync(await file.arrayBuffer());
+    const xml = await zip.file("word/document.xml").async("string");
+    return xml.replace(/<\/w:p>/g, "\n").replace(/<w:tab\/>/g, "\t").replace(/<[^>]+>/g, "")
+      .replace(/&amp;/g, "&").replace(/&lt;/g, "<").replace(/&gt;/g, ">").replace(/&quot;/g, '"').replace(/&apos;/g, "'");
+  }
+  async function readPdf(file) {
+    if (!window.pdfjsLib) {
+      await loadScript("https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js");
+      pdfjsLib.GlobalWorkerOptions.workerSrc = "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js";
+    }
+    const pdf = await pdfjsLib.getDocument({ data: await file.arrayBuffer() }).promise;
+    let out = "";
+    for (let i = 1; i <= pdf.numPages; i++) {
+      const page = await pdf.getPage(i);
+      const content = await page.getTextContent();
+      out += content.items.map((it) => it.str).join(" ") + "\n\n";
+    }
+    return out;
+  }
+
+  // ----- URL fetch -----
+  $("fetchBtn").addEventListener("click", async () => {
+    const url = $("pageUrl").value.trim();
+    if (!url) return;
+    $("fetchBtn").disabled = true;
+    banner("Downloading page…", "warn");
+    try {
+      const r = await fetch("api/fetch-url", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ url }) });
+      const d = await r.json();
+      if (!d.ok) throw new Error(d.error);
+      $("text").value = d.text;
+      updateCounts();
+      banner(d.words > WORD_LIMIT ? `Page has ${d.words.toLocaleString()} words. Trim to ${WORD_LIMIT.toLocaleString()} or fewer to check.` : "", "warn");
+      if (!$("excludeUrl").value) $("excludeUrl").value = d.url;
+    } catch (err) {
+      banner(err.message, "err");
+    }
+    $("fetchBtn").disabled = false;
+  });
+
+  // ----- banners -----
+  function banner(msg, kind) {
+    let b = $("msg");
+    if (!b) {
+      b = document.createElement("div");
+      b.id = "msg";
+      $("panel-web").insertBefore(b, $("text"));
+    }
+    b.className = "banner " + kind;
+    b.textContent = msg;
+    b.hidden = !msg;
+  }
+
+  // ----- run checks -----
+  function busy(btn, on, label) {
+    btn.disabled = on;
+    btn.innerHTML = on ? '<span class="spinner"></span>' + label : label.replace(/ing…$/, "");
+  }
+
+  $("checkBtn").addEventListener("click", async () => {
+    const text = $("text").value;
+    if (!text.trim()) return;
+    busy($("checkBtn"), true, "Checking…");
+    $("results").hidden = true;
+    try {
+      const r = await fetch("api/check", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ text, excludeUrl: $("excludeUrl").value.trim() }) });
+      const d = await r.json();
+      if (!d.ok) throw new Error(d.error);
+      render(d, text);
+    } catch (err) {
+      showError(err.message);
+    }
+    $("checkBtn").disabled = false;
+    $("checkBtn").textContent = "Check Plagiarism";
+    updateCounts();
+  });
+
+  $("compareBtn").addEventListener("click", async () => {
+    const textA = $("textA").value, textB = $("textB").value;
+    if (!textA.trim() || !textB.trim()) return showError("Please paste both texts.");
+    busy($("compareBtn"), true, "Comparing…");
+    try {
+      const r = await fetch("api/compare", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ textA, textB }) });
+      const d = await r.json();
+      if (!d.ok) throw new Error(d.error);
+      render(d, textA);
+    } catch (err) {
+      showError(err.message);
+    }
+    $("compareBtn").disabled = false;
+    $("compareBtn").textContent = "Compare Texts";
+  });
+
+  $("clearBtn").addEventListener("click", () => { $("text").value = ""; $("pageUrl").value = ""; $("excludeUrl").value = ""; banner("", ""); $("results").hidden = true; updateCounts(); });
+  $("clearCmpBtn").addEventListener("click", () => { $("textA").value = ""; $("textB").value = ""; $("results").hidden = true; updateCounts(); });
+
+  function showError(msg) {
+    $("results").innerHTML = `<div class="card"><div class="banner err" style="margin:0">${esc(msg)}</div></div>`;
+    $("results").hidden = false;
+  }
+
+  // ----- results -----
+  function render(d, originalText) {
+    lastReport = { data: d, text: originalText, when: new Date() };
+    const plagCount = d.sentences.filter((s) => s.matched).length;
+    const checkedCount = d.sentences.filter((s) => !s.skipped && !s.error).length;
+    const isWeb = d.mode === "web";
+
+    const rows = d.sentences.map((s) => {
+      if (s.skipped) return `<div class="sent skip"><span class="tag">Too short</span>${esc(s.sentence)}</div>`;
+      if (s.error) return `<div class="sent skip"><span class="tag">Not checked</span>${esc(s.sentence)}<span class="match">${esc(s.error)}</span></div>`;
+      const cls = s.matched ? "plag" : "uniq";
+      const tag = s.matched ? "Plagiarized" : "Unique";
+      let extra = "";
+      if (s.matched && s.source) extra = `<span class="src">Source: <a href="${esc(s.source.link)}" target="_blank" rel="noopener">${esc(s.source.title || s.source.link)}</a></span>`;
+      if (s.matched && !isWeb && s.matchText) extra = `<span class="match">Matches in Text 2: “${esc(s.matchText)}”</span>`;
+      return `<div class="sent ${cls}"><span class="tag">${tag}${s.score ? " · " + s.score + "%" : ""}</span>${esc(s.sentence)}${extra}</div>`;
+    }).join("");
+
+    $("results").innerHTML = `
+      <div class="card">
+        <div class="scores">
+          <div class="score plag"><div class="n">${d.plagiarized}%</div><div class="l">Plagiarized</div><div class="bar"><div style="width:${d.plagiarized}%"></div></div></div>
+          <div class="score uniq"><div class="n">${d.unique}%</div><div class="l">Unique</div><div class="bar"><div style="width:${d.unique}%"></div></div></div>
+        </div>
+        <div class="summary">
+          ${checkedCount} sentence${checkedCount === 1 ? "" : "s"} checked · ${plagCount} flagged · ${d.totalWords.toLocaleString()} words${isWeb ? " · checked against the web" : " · compared with Text 2"}
+          ${d.note ? "<br>" + esc(d.note) : ""}
+        </div>
+        <div class="legend"><span><i style="background:var(--red)"></i>Plagiarized</span><span><i style="background:var(--green)"></i>Unique</span><span><i style="background:var(--amber)"></i>Not checked</span></div>
+        ${rows}
+        <div class="actions"><button type="button" id="dlBtn">Download report</button></div>
+      </div>`;
+    $("results").hidden = false;
+    $("dlBtn").addEventListener("click", downloadReport);
+    $("results").scrollIntoView({ behavior: "smooth", block: "start" });
+  }
+
+  function downloadReport() {
+    if (!lastReport) return;
+    const d = lastReport.data;
+    const lines = [
+      "PLAGIARISM REPORT",
+      "Generated: " + lastReport.when.toLocaleString(),
+      "Mode: " + (d.mode === "web" ? "Checked against the web" : "Compared two texts"),
+      `Plagiarized: ${d.plagiarized}%   Unique: ${d.unique}%   Words: ${d.totalWords}`,
+      d.note ? "Note: " + d.note : "",
+      "",
+      "SENTENCES",
+      "---------",
+    ];
+    d.sentences.forEach((s, i) => {
+      const status = s.skipped ? "TOO SHORT" : s.error ? "NOT CHECKED" : s.matched ? "PLAGIARIZED" : "UNIQUE";
+      lines.push(`${i + 1}. [${status}${s.score ? " " + s.score + "%" : ""}] ${s.sentence}`);
+      if (s.source) lines.push("   Source: " + s.source.link);
+      if (s.matchText && s.matched && d.mode !== "web") lines.push("   Matches: " + s.matchText);
+    });
+    const blob = new Blob([lines.filter((l) => l !== "").join("\r\n")], { type: "text/plain;charset=utf-8" });
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = "plagiarism-report.txt";
+    a.click();
+    setTimeout(() => URL.revokeObjectURL(a.href), 2000);
+  }
+</script>
+</body>
+</html>

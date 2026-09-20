@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Video Downloader</title>
+<style>
+  :root {
+    --bg: #f4f6fb;
+    --card: #ffffff;
+    --text: #1b2433;
+    --muted: #64708a;
+    --line: #dfe4ee;
+    --accent: #1f4e78;
+    --accent-hover: #17405f;
+    --accent-text: #ffffff;
+    --soft: #e8eff7;
+    --ok: #157347;
+    --err-bg: #fdecec;
+    --err-text: #9b1c1c;
+    --warn-bg: #fff6e0;
+    --warn-text: #7a4b00;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    padding: 32px 16px 48px;
+    line-height: 1.5;
+  }
+  .wrap { max-width: 720px; margin: 0 auto; }
+  h1 { font-size: 1.9rem; margin: 0 0 6px; text-align: center; }
+  .sub { color: var(--muted); margin: 0 0 22px; text-align: center; }
+  .sites { display: flex; flex-wrap: wrap; justify-content: center; gap: 6px; margin: 0 0 22px; }
+  .sites span { font-size: .8rem; background: var(--soft); color: var(--accent); padding: 3px 10px; border-radius: 999px; }
+
+  form { display: flex; gap: 8px; flex-wrap: wrap; }
+  .inputbox { flex: 1 1 320px; position: relative; display: flex; }
+  input[type="text"] {
+    width: 100%;
+    font-size: 1.05rem;
+    padding: 13px 92px 13px 14px;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    background: var(--card);
+    color: var(--text);
+  }
+  input[type="text"]:focus { outline: 2px solid var(--accent); border-color: var(--accent); }
+  .paste {
+    position: absolute; right: 6px; top: 6px; bottom: 6px;
+    font-size: .9rem; padding: 0 12px; border-radius: 6px;
+    background: var(--soft); color: var(--accent); border: 0; cursor: pointer;
+  }
+  .paste:hover { background: #d9e5f2; }
+  button.primary {
+    font-size: 1.05rem;
+    padding: 12px 24px;
+    border: 0;
+    border-radius: 8px;
+    background: var(--accent);
+    color: var(--accent-text);
+    cursor: pointer;
+    flex: 0 0 auto;
+  }
+  button.primary:hover { background: var(--accent-hover); }
+  button[disabled] { opacity: .6; cursor: wait; }
+
+  .card {
+    margin-top: 20px;
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    padding: 18px;
+  }
+  .error { background: var(--err-bg); color: var(--err-text); border-color: transparent; }
+  .warn { background: var(--warn-bg); color: var(--warn-text); border-color: transparent; font-size: .95rem; }
+  .loading { display: flex; align-items: center; gap: 12px; color: var(--muted); }
+  .spin {
+    width: 20px; height: 20px; border-radius: 50%;
+    border: 3px solid var(--line); border-top-color: var(--accent);
+    animation: spin .8s linear infinite; flex: 0 0 auto;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  .item { display: grid; grid-template-columns: 160px 1fr; gap: 16px; }
+  .thumb {
+    width: 160px; aspect-ratio: 16 / 10; object-fit: cover;
+    border-radius: 8px; background: var(--soft); display: block;
+  }
+  .thumb.placeholder { display: flex; align-items: center; justify-content: center; color: var(--muted); font-size: .85rem; }
+  .title { font-weight: 600; margin: 0 0 4px; word-break: break-word; }
+  .meta { color: var(--muted); font-size: .9rem; margin: 0 0 12px; }
+  .meta b { color: var(--text); font-weight: 500; }
+
+  .opts { display: flex; flex-direction: column; gap: 8px; }
+  .opt {
+    display: flex; align-items: center; gap: 10px;
+    padding: 10px 12px; border: 1px solid var(--line); border-radius: 8px;
+    background: var(--bg);
+  }
+  .opt .q { font-weight: 600; min-width: 70px; }
+  .opt .fmt { color: var(--muted); font-size: .9rem; flex: 1; }
+  .opt button {
+    font-size: .95rem; padding: 8px 16px; border: 0; border-radius: 6px;
+    background: var(--accent); color: var(--accent-text); cursor: pointer;
+  }
+  .opt button:hover { background: var(--accent-hover); }
+  .opt button.ghost { background: var(--soft); color: var(--muted); cursor: default; }
+  .opt.busy { flex-wrap: wrap; }
+  .bar { width: 100%; height: 8px; background: var(--line); border-radius: 4px; overflow: hidden; margin-top: 4px; }
+  .bar i { display: block; height: 100%; background: var(--accent); width: 0; transition: width .3s; }
+  .bar i.pulse { width: 100% !important; animation: pulse 1.2s ease-in-out infinite; }
+  @keyframes pulse { 0%,100% { opacity: .4; } 50% { opacity: 1; } }
+  .status { width: 100%; font-size: .85rem; color: var(--muted); }
+  .status.err { color: var(--err-text); }
+  .status.ok { color: var(--ok); }
+
+  .foot { color: var(--muted); font-size: .85rem; margin-top: 28px; text-align: center; }
+  .foot a { color: var(--accent); }
+  @media (max-width: 520px) {
+    .item { grid-template-columns: 1fr; }
+    .thumb { width: 100%; }
+    .opt .fmt { flex-basis: 100%; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Video Downloader</h1>
+  <p class="sub">Paste a link from Facebook, Instagram, TikTok, YouTube, X and more. Pick a quality. Done.</p>
+  <div class="sites">
+    <span>Facebook</span><span>Instagram</span><span>TikTok</span><span>YouTube</span><span>X / Twitter</span>
+    <span>Pinterest</span><span>Reddit</span><span>Vimeo</span><span>Dailymotion</span><span>+1000 more</span>
+  </div>
+
+  <form id="form" autocomplete="off">
+    <div class="inputbox">
+      <input type="text" id="url" placeholder="https://www.instagram.com/reel/..." required autofocus>
+      <button type="button" class="paste" id="paste">Paste</button>
+    </div>
+    <button type="submit" class="primary" id="btn">Download</button>
+  </form>
+
+  <div id="notice" hidden></div>
+  <div id="result" hidden></div>
+
+  <p class="foot">
+    Runs on your own computer. Only download content you have the right to save.
+    <br>Site stopped working? <a href="#" id="update">Update the engine</a> <span id="updmsg"></span>
+  </p>
+</div>
+
+<script>
+  const form = document.getElementById("form");
+  const input = document.getElementById("url");
+  const btn = document.getElementById("btn");
+  const result = document.getElementById("result");
+  const notice = document.getElementById("notice");
+
+  function esc(s) {
+    return String(s == null ? "" : s).replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+  }
+  function fmtDuration(sec) {
+    if (!sec) return "";
+    sec = Math.round(sec);
+    const h = Math.floor(sec / 3600), m = Math.floor((sec % 3600) / 60), s = sec % 60;
+    return (h ? h + ":" + String(m).padStart(2, "0") : m) + ":" + String(s).padStart(2, "0");
+  }
+  function show(el, html, cls) {
+    el.className = "card" + (cls ? " " + cls : "");
+    el.innerHTML = html;
+    el.hidden = false;
+  }
+
+  // ---- Paste button ----
+  document.getElementById("paste").addEventListener("click", async () => {
+    try {
+      const t = await navigator.clipboard.readText();
+      if (t) { input.value = t.trim(); form.requestSubmit(); }
+    } catch (_) {
+      input.focus();
+    }
+  });
+
+  // ---- Look up a link ----
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const url = input.value.trim();
+    if (!url) return;
+    btn.disabled = true;
+    notice.hidden = true;
+    show(result, '<div class="loading"><div class="spin"></div>Looking up the video, this can take a few seconds...</div>');
+
+    try {
+      const r = await fetch("/api/info?url=" + encodeURIComponent(url));
+      const data = await r.json();
+      if (!data.ok) {
+        show(result, esc(data.error || "Something went wrong."), "error");
+        return;
+      }
+      if (!data.ffmpeg && data.items.some(it => it.options.some(o => o.needsFfmpeg))) {
+        show(notice, "Some qualities are greyed out because ffmpeg is not installed. Double-click <b>Get-FFmpeg.bat</b> once, restart the tool, and they will light up.", "warn");
+      }
+      result.hidden = true;
+      result.innerHTML = "";
+      data.items.forEach(item => result.appendChild(renderItem(item, data.input)));
+      result.className = "";
+      result.hidden = false;
+    } catch (err) {
+      show(result, "Could not reach the server. Is the black window still open?", "error");
+    } finally {
+      btn.disabled = false;
+    }
+  });
+
+  function renderItem(item, inputUrl) {
+    const card = document.createElement("div");
+    card.className = "card";
+    const thumb = item.thumbnail
+      ? `<img class="thumb" src="/api/thumb?u=${encodeURIComponent(item.thumbnail)}" alt="" onerror="this.outerHTML='<div class=&quot;thumb placeholder&quot;>No preview</div>'">`
+      : `<div class="thumb placeholder">No preview</div>`;
+    const meta = [
+      item.site ? `<b>${esc(item.site)}</b>` : "",
+      item.uploader ? esc(item.uploader) : "",
+      item.duration ? fmtDuration(item.duration) : "",
+    ].filter(Boolean).join(" &middot; ");
+
+    card.innerHTML = `
+      <div class="item">
+        ${thumb}
+        <div>
+          <p class="title">${esc(item.title)}</p>
+          <p class="meta">${meta}</p>
+          <div class="opts"></div>
+        </div>
+      </div>`;
+
+    const opts = card.querySelector(".opts");
+    item.options.forEach(o => {
+      const row = document.createElement("div");
+      row.className = "opt";
+      const detail = [o.ext ? o.ext.toUpperCase() : "", o.size || ""].filter(Boolean).join(" &middot; ");
+      row.innerHTML = `<span class="q">${esc(o.label)}</span><span class="fmt">${detail}</span>`;
+      const b = document.createElement("button");
+      if (o.available) {
+        b.textContent = "Download";
+        b.addEventListener("click", () => startDownload(row, b, { url: item.url || inputUrl, format: o.id, kind: o.kind, playlistIndex: item.playlistIndex }));
+      } else {
+        b.textContent = "Needs ffmpeg";
+        b.className = "ghost";
+        b.disabled = true;
+      }
+      row.appendChild(b);
+      opts.appendChild(row);
+    });
+    return card;
+  }
+
+  // ---- Download with progress ----
+  async function startDownload(row, b, payload) {
+    b.disabled = true;
+    b.textContent = "Starting...";
+    row.classList.add("busy");
+    const bar = document.createElement("div");
+    bar.className = "bar";
+    bar.innerHTML = "<i></i>";
+    const status = document.createElement("div");
+    status.className = "status";
+    row.appendChild(bar);
+    row.appendChild(status);
+    const fill = bar.querySelector("i");
+
+    try {
+      const r = await fetch("/api/download", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(payload) });
+      const data = await r.json();
+      if (!data.ok) throw new Error(data.error || "Could not start the download.");
+
+      const id = data.id;
+      b.textContent = "Downloading";
+      while (true) {
+        await new Promise(res => setTimeout(res, 700));
+        const p = await (await fetch("/api/progress?id=" + id)).json();
+        if (!p.ok) throw new Error(p.error || "Lost track of the download.");
+        if (p.status === "error") throw new Error(p.error || "Download failed.");
+        if (p.status === "processing") {
+          fill.className = "pulse";
+          status.textContent = "Merging / converting...";
+          continue;
+        }
+        if (p.status === "done") {
+          fill.className = "";
+          fill.style.width = "100%";
+          status.className = "status ok";
+          status.textContent = "Ready" + (p.size ? " (" + p.size + ")" : "") + ". Your browser is saving the file now.";
+          b.textContent = "Save again";
+          b.disabled = false;
+          b.onclick = () => { window.location.href = "/api/file?id=" + id; };
+          window.location.href = "/api/file?id=" + id;
+          return;
+        }
+        fill.style.width = (p.progress || 0) + "%";
+        status.textContent = `${Math.floor(p.progress || 0)}%` + (p.speed ? " at " + p.speed : "") + (p.eta ? ", " + p.eta + " left" : "");
+      }
+    } catch (err) {
+      status.className = "status err";
+      status.textContent = err.message;
+      b.textContent = "Retry";
+      b.disabled = false;
+      b.onclick = () => { bar.remove(); status.remove(); row.classList.remove("busy"); startDownload(row, b, payload); };
+    }
+  }
+
+  // ---- Update yt-dlp ----
+  document.getElementById("update").addEventListener("click", async (e) => {
+    e.preventDefault();
+    const msg = document.getElementById("updmsg");
+    msg.textContent = " updating...";
+    try {
+      const d = await (await fetch("/api/update", { method: "POST" })).json();
+      msg.textContent = " " + (d.message || (d.ok ? "done" : "failed"));
+    } catch (_) {
+      msg.textContent = " failed";
+    }
+  });
+</script>
+</body>
+</html>

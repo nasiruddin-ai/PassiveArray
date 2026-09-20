@@ -1,0 +1,18 @@
+{
+  "headline": "Justify SEO spend in 3 numbers",
+  "body": "A quick way to turn a ranking lift into a revenue projection.",
+  "cta": "Try it free",
+  "caption": "Three numbers are enough to show a client what SEO is worth.\n\nSwipe for the quick version, then try the free calculator.\n\nupgrowth.io/tools/seo-roi",
+  "hashtags": ["#SEO", "#AgencyTips", "#MarketingROI", "#SEOROI"],
+  "slides": [
+    "Three numbers turn a ranking lift into a revenue projection",
+    "Monthly organic traffic. Pull it from Search Console.",
+    "Conversion rate. Use the site average if you have nothing better.",
+    "Average order value. Ask the client, they always know it.",
+    "Multiply by the expected traffic lift. That is your revenue number.",
+    "Try the free calculator at upgrowth.io/tools/seo-roi"
+  ],
+  "alt_text": "Carousel cover reading Justify SEO spend in 3 numbers, followed by five slides walking through the calculation.",
+  "confidence": 0.85,
+  "notes": ""
+}

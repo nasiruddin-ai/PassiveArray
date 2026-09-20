@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SEO ROI Calculator</title>
+<meta name="description" content="Estimate the monthly traffic, conversions, revenue and ROI you can expect from ranking on the first page of Google.">
+<style>
+  :root {
+    --bg: #f4f6fb;
+    --card: #ffffff;
+    --text: #1b2433;
+    --muted: #64708a;
+    --line: #dfe4ee;
+    --accent: #1f4e78;
+    --accent-soft: #e8f0f8;
+    --accent-text: #ffffff;
+    --good: #157347;
+    --bad: #b42318;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    padding: 24px 16px 56px;
+    line-height: 1.55;
+  }
+  .wrap { max-width: 960px; margin: 0 auto; }
+  h1 { font-size: 1.9rem; margin: 0 0 6px; }
+  h2 { font-size: 1.25rem; margin: 32px 0 10px; }
+  .sub { color: var(--muted); margin: 0 0 24px; max-width: 640px; }
+
+  .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; align-items: start; }
+  @media (max-width: 720px) { .grid { grid-template-columns: 1fr; } }
+
+  .card {
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    padding: 22px;
+  }
+  .field { margin-bottom: 16px; }
+  .field:last-child { margin-bottom: 0; }
+  label { display: block; font-weight: 600; margin-bottom: 4px; }
+  .hint { display: block; color: var(--muted); font-size: .85rem; font-weight: 400; margin-bottom: 6px; }
+  .inputwrap { display: flex; align-items: stretch; }
+  .inputwrap span {
+    display: flex; align-items: center;
+    padding: 0 12px;
+    border: 1px solid var(--line); border-right: 0;
+    border-radius: 8px 0 0 8px;
+    background: var(--accent-soft); color: var(--muted);
+    font-size: .95rem;
+  }
+  .inputwrap input, .inputwrap select {
+    flex: 1; min-width: 0;
+    font-size: 1.05rem;
+    padding: 10px 12px;
+    border: 1px solid var(--line);
+    border-radius: 0 8px 8px 0;
+    background: var(--card);
+    color: var(--text);
+  }
+  .inputwrap input:first-child { border-radius: 8px; }
+  .inputwrap input:focus { outline: 2px solid var(--accent); border-color: var(--accent); }
+  .inputwrap select { border-radius: 8px; font-size: 1rem; }
+  input.invalid { border-color: var(--bad); }
+  .actions { display: flex; gap: 8px; margin-top: 18px; flex-wrap: wrap; }
+  button {
+    font-size: 1rem;
+    padding: 10px 18px;
+    border: 0; border-radius: 8px;
+    background: var(--accent); color: var(--accent-text);
+    cursor: pointer;
+  }
+  button.secondary { background: var(--accent-soft); color: var(--accent); }
+
+  .results .row {
+    display: flex; justify-content: space-between; align-items: baseline; gap: 12px;
+    padding: 12px 0; border-bottom: 1px solid var(--line);
+  }
+  .results .row:last-of-type { border-bottom: 0; }
+  .results .name { color: var(--muted); }
+  .results .name small { display: block; font-size: .8rem; }
+  .results .val { font-weight: 700; font-size: 1.15rem; text-align: right; white-space: nowrap; }
+  .hero { background: var(--accent); color: var(--accent-text); border-radius: 10px; padding: 16px 18px; margin-bottom: 8px; }
+  .hero .name { color: rgba(255,255,255,.8); font-size: .9rem; }
+  .hero .val { font-size: 2rem; font-weight: 800; line-height: 1.2; }
+  .roi.good { color: var(--good); }
+  .roi.bad { color: var(--bad); }
+  .note { color: var(--muted); font-size: .9rem; margin-top: 12px; }
+
+  .steps { counter-reset: s; padding-left: 0; list-style: none; }
+  .steps li { counter-increment: s; padding: 8px 0 8px 36px; position: relative; }
+  .steps li::before {
+    content: counter(s);
+    position: absolute; left: 0; top: 8px;
+    width: 26px; height: 26px; border-radius: 50%;
+    background: var(--accent-soft); color: var(--accent);
+    display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: .9rem;
+  }
+  code { background: var(--accent-soft); padding: 2px 6px; border-radius: 4px; font-size: .95em; }
+  table { border-collapse: collapse; width: 100%; font-size: .95rem; }
+  th, td { text-align: left; padding: 8px 10px; border-bottom: 1px solid var(--line); }
+  th { color: var(--muted); font-weight: 600; }
+  td.num, th.num { text-align: right; }
+  details { border: 1px solid var(--line); border-radius: 8px; padding: 10px 14px; margin-bottom: 8px; background: var(--card); }
+  summary { cursor: pointer; font-weight: 600; }
+  details p { margin: 8px 0 0; color: var(--muted); }
+  .foot { color: var(--muted); font-size: .85rem; margin-top: 36px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>SEO ROI Calculator</h1>
+  <p class="sub">Estimate how much traffic, how many conversions and how much revenue first-page rankings could bring you every month, and what that means for your SEO return on investment.</p>
+
+  <div class="grid">
+    <!-- INPUTS -->
+    <form class="card" id="form" autocomplete="off">
+      <div class="field">
+        <label for="keywords">Number of keywords ranking on the first page</label>
+        <span class="hint">How many keywords you rank (or expect to rank) in Google's top 10.</span>
+        <div class="inputwrap"><input type="number" id="keywords" min="0" step="1" value="50" inputmode="numeric"></div>
+      </div>
+
+      <div class="field">
+        <label for="sv">Average monthly search volume per keyword</label>
+        <span class="hint">Typical monthly searches for one of those keywords.</span>
+        <div class="inputwrap"><input type="number" id="sv" min="0" step="1" value="300" inputmode="numeric"></div>
+      </div>
+
+      <div class="field">
+        <label for="ctr">Estimated % of searchers who visit your site</label>
+        <span class="hint">Click-through rate. First-page average is roughly 10 to 30% depending on position.</span>
+        <div class="inputwrap"><input type="number" id="ctr" min="0" max="100" step="0.1" value="15" inputmode="decimal"><span>%</span></div>
+      </div>
+
+      <div class="field">
+        <label for="cvr">Estimated conversion rate</label>
+        <span class="hint">Share of visitors who buy or enquire. If unsure, 1 to 3% is a common range.</span>
+        <div class="inputwrap"><input type="number" id="cvr" min="0" max="100" step="0.1" value="2.5" inputmode="decimal"><span>%</span></div>
+      </div>
+
+      <div class="field">
+        <label for="aov">Average value of a sale or lead</label>
+        <span class="hint">What one conversion is worth to you.</span>
+        <div class="inputwrap"><span id="cursym">$</span><input type="number" id="aov" min="0" step="1" value="120" inputmode="decimal"></div>
+      </div>
+
+      <div class="field">
+        <label for="cost">Monthly SEO cost <span class="hint" style="display:inline">(optional, needed for ROI %)</span></label>
+        <div class="inputwrap"><span id="cursym2">$</span><input type="number" id="cost" min="0" step="1" value="" placeholder="e.g. 2500" inputmode="decimal"></div>
+      </div>
+
+      <div class="field">
+        <label for="currency">Currency</label>
+        <div class="inputwrap">
+          <select id="currency">
+            <option value="INR" data-sym="₹" data-locale="en-IN">₹ Indian Rupee</option>
+            <option value="USD" data-sym="$" data-locale="en-US" selected>$ US Dollar</option>
+            <option value="EUR" data-sym="€" data-locale="de-DE">€ Euro</option>
+            <option value="GBP" data-sym="£" data-locale="en-GB">£ British Pound</option>
+            <option value="AED" data-sym="AED" data-locale="en-AE">AED UAE Dirham</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="actions">
+        <button type="submit">Calculate</button>
+        <button type="button" class="secondary" id="reset">Reset to example</button>
+        <button type="button" class="secondary" id="copy">Copy link</button>
+      </div>
+    </form>
+
+    <!-- RESULTS -->
+    <div class="card results" id="results">
+      <div class="hero">
+        <div class="name">Estimated monthly revenue</div>
+        <div class="val" id="r-revenue">$0</div>
+      </div>
+      <div class="row"><div class="name">Total estimated searches<small>keywords × search volume</small></div><div class="val" id="r-total">0</div></div>
+      <div class="row"><div class="name">Expected monthly visitors<small>searches × visit %</small></div><div class="val" id="r-visits">0</div></div>
+      <div class="row"><div class="name">Monthly conversions<small>visitors × conversion rate</small></div><div class="val" id="r-conv">0</div></div>
+      <div class="row"><div class="name">Annual revenue<small>monthly × 12</small></div><div class="val" id="r-annual">$0</div></div>
+      <div class="row"><div class="name">Monthly profit after SEO cost<small>revenue − SEO cost</small></div><div class="val" id="r-profit">–</div></div>
+      <div class="row"><div class="name">SEO ROI<small>(revenue − cost) ÷ cost × 100</small></div><div class="val roi" id="r-roi">–</div></div>
+      <p class="note" id="r-note">Enter a monthly SEO cost to see profit and ROI.</p>
+    </div>
+  </div>
+
+  <h2>How the calculation works</h2>
+  <div class="card">
+    <ol class="steps">
+      <li><strong>Total estimated searches</strong> = keywords × average monthly search volume</li>
+      <li><strong>Expected visitors</strong> = total searches × visit %</li>
+      <li><strong>Conversions</strong> = expected visitors × conversion rate</li>
+      <li><strong>Monthly revenue</strong> = conversions × average sale value</li>
+      <li><strong>ROI</strong> = (monthly revenue − monthly SEO cost) ÷ monthly SEO cost × 100</li>
+    </ol>
+    <p><strong>Worked example.</strong> A D2C brand ranks 50 keywords at 300 searches each, so 15,000 searches. At a 15% visit rate that is 2,250 visitors. At 2.5% conversion that is 56 sales. At $120 each, monthly revenue is $6,750. If SEO costs $2,500 a month, ROI is 170%.</p>
+    <p class="note">Conversions are shown as whole numbers, but revenue is calculated from the exact fractional figure so small inputs are not rounded away.</p>
+  </div>
+
+  <h2>What counts as a good SEO ROI?</h2>
+  <div class="card">
+    <table>
+      <thead><tr><th>ROI</th><th>Meaning</th></tr></thead>
+      <tbody>
+        <tr><td>Below 0%</td><td>SEO is costing more than it returns. Normal in the first 3 to 6 months, a problem after 12.</td></tr>
+        <tr><td>0% to 100%</td><td>Break-even to doubling your money. Typical for young campaigns.</td></tr>
+        <tr><td>100% to 500%</td><td>Healthy. Most mature SEO programmes land here.</td></tr>
+        <tr><td>Above 500%</td><td>Excellent. Usually high-margin products or well-established domains.</td></tr>
+      </tbody>
+    </table>
+    <p class="note">Benchmarks vary a lot by industry. E-commerce with low margins sits lower; B2B services with high deal values sit higher.</p>
+  </div>
+
+  <h2>Frequently asked questions</h2>
+  <details><summary>What is ROI in SEO?</summary><p>Return on investment: the revenue SEO brings in compared with what you spend on it, expressed as a percentage.</p></details>
+  <details><summary>What if I don't know my conversion rate?</summary><p>Check Google Analytics for the conversion rate of organic traffic. If you have no data yet, start with 1 to 3% and adjust once you have real numbers.</p></details>
+  <details><summary>Where do I get the search volume?</summary><p>Google Keyword Planner, Ahrefs, Semrush or Ubersuggest. Use the average across the keywords you rank for rather than your single biggest term.</p></details>
+  <details><summary>Why is the visit % not 100%?</summary><p>Only a share of searchers click any given result. Position 1 gets roughly 25 to 30% of clicks, position 5 about 5%, and position 10 under 2%. Use an average across your rankings.</p></details>
+  <details><summary>Does this include brand searches?</summary><p>Only if you include brand keywords in your count. Many people exclude them because that traffic would come anyway.</p></details>
+  <details><summary>How is this different from paid ads ROI?</summary><p>SEO cost is mostly fixed per month while traffic compounds over time. Paid ads stop the moment spend stops. This is why SEO ROI usually starts negative and grows.</p></details>
+
+  <p class="foot">Estimates only. Real results depend on ranking positions, seasonality and how well your pages convert.</p>
+</div>
+
+<script>
+  const $ = (id) => document.getElementById(id);
+  const fields = ["keywords", "sv", "ctr", "cvr", "aov", "cost"];
+  const defaults = { keywords: 50, sv: 300, ctr: 15, cvr: 2.5, aov: 120, cost: "" };
+
+  function currencyInfo() {
+    const opt = $("currency").selectedOptions[0];
+    return { code: opt.value, sym: opt.dataset.sym, locale: opt.dataset.locale };
+  }
+
+  function fmtMoney(n) {
+    const c = currencyInfo();
+    try {
+      return new Intl.NumberFormat(c.locale, { style: "currency", currency: c.code, maximumFractionDigits: 0 }).format(n);
+    } catch (_) {
+      return c.sym + Math.round(n).toLocaleString();
+    }
+  }
+  function fmtInt(n) { return Math.round(n).toLocaleString(currencyInfo().locale); }
+
+  function num(id) {
+    const el = $(id);
+    const v = parseFloat(el.value);
+    const bad = el.value !== "" && (isNaN(v) || v < 0);
+    el.classList.toggle("invalid", bad);
+    return bad || el.value === "" ? null : v;
+  }
+
+  function calculate() {
+    const keywords = num("keywords") ?? 0;
+    const sv = num("sv") ?? 0;
+    const ctr = num("ctr") ?? 0;
+    const cvr = num("cvr") ?? 0;
+    const aov = num("aov") ?? 0;
+    const cost = num("cost");
+
+    const total = keywords * sv;
+    const visits = total * (ctr / 100);
+    const conv = visits * (cvr / 100);
+    const revenue = conv * aov;
+
+    $("r-total").textContent = fmtInt(total);
+    $("r-visits").textContent = fmtInt(visits);
+    $("r-conv").textContent = fmtInt(conv);
+    $("r-revenue").textContent = fmtMoney(revenue);
+    $("r-annual").textContent = fmtMoney(revenue * 12);
+
+    const roiEl = $("r-roi");
+    roiEl.className = "val roi";
+    if (cost === null) {
+      $("r-profit").textContent = "–";
+      roiEl.textContent = "–";
+      $("r-note").textContent = "Enter a monthly SEO cost to see profit and ROI.";
+    } else if (cost === 0) {
+      $("r-profit").textContent = fmtMoney(revenue);
+      roiEl.textContent = "n/a";
+      $("r-note").textContent = "ROI cannot be calculated when SEO cost is zero.";
+    } else {
+      const profit = revenue - cost;
+      const roi = (profit / cost) * 100;
+      $("r-profit").textContent = fmtMoney(profit);
+      roiEl.textContent = (roi >= 0 ? "+" : "") + roi.toFixed(0) + "%";
+      roiEl.classList.add(roi >= 0 ? "good" : "bad");
+      $("r-note").textContent = roi >= 0
+        ? `Every ${currencyInfo().sym}1 spent on SEO returns ${currencyInfo().sym}${(revenue / cost).toFixed(2)} in revenue.`
+        : "Revenue is below SEO cost. Try more keywords, better rankings or a higher conversion rate.";
+    }
+  }
+
+  function updateSymbols() {
+    const s = currencyInfo().sym;
+    $("cursym").textContent = s;
+    $("cursym2").textContent = s;
+  }
+
+  function toQuery() {
+    const p = new URLSearchParams();
+    fields.forEach((f) => { if ($(f).value !== "") p.set(f, $(f).value); });
+    p.set("cur", $("currency").value);
+    return p.toString();
+  }
+
+  function fromQuery() {
+    const p = new URLSearchParams(location.search);
+    if (![...p.keys()].length) return;
+    fields.forEach((f) => { if (p.has(f)) $(f).value = p.get(f); });
+    if (p.has("cur")) {
+      const opt = [...$("currency").options].find((o) => o.value === p.get("cur"));
+      if (opt) opt.selected = true;
+    }
+  }
+
+  // Live recalculation on every keystroke
+  fields.forEach((f) => $(f).addEventListener("input", calculate));
+  $("currency").addEventListener("change", () => { updateSymbols(); calculate(); });
+  $("form").addEventListener("submit", (e) => { e.preventDefault(); calculate(); $("results").scrollIntoView({ behavior: "smooth", block: "nearest" }); });
+  $("reset").addEventListener("click", () => {
+    fields.forEach((f) => { $(f).value = defaults[f]; $(f).classList.remove("invalid"); });
+    $("currency").value = "USD";
+    updateSymbols();
+    calculate();
+  });
+  $("copy").addEventListener("click", async () => {
+    const url = location.origin + location.pathname + "?" + toQuery();
+    try {
+      await navigator.clipboard.writeText(url);
+      $("copy").textContent = "Link copied";
+    } catch (_) {
+      prompt("Copy this link:", url);
+    }
+    setTimeout(() => { $("copy").textContent = "Copy link"; }, 1500);
+  });
+
+  fromQuery();
+  updateSymbols();
+  calculate();
+</script>
+</body>
+</html>
