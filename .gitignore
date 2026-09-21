@@ -1,0 +1,13 @@
+.netlify
+node_modules
+dist
+package-lock.json
+
+# Local-only files
+creator-tools/.out
+creator-tools/config.json
+passive-array-brand/.render
+
+# OS and editor
+.DS_Store
+Thumbs.db
