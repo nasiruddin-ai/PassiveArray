@@ -1,0 +1,5 @@
+{
+  "YOUTUBE_API_KEY": "paste your Google Cloud API key with YouTube Data API v3 enabled",
+  "TWITCH_CLIENT_ID": "paste the Client ID from dev.twitch.tv/console",
+  "TWITCH_CLIENT_SECRET": "paste the Client Secret from dev.twitch.tv/console"
+}

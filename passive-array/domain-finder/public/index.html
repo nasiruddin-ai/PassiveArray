@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Domain Finder</title>
+<style>
+  :root {
+    --bg: #f4f6fb;
+    --card: #ffffff;
+    --text: #1b2433;
+    --muted: #64708a;
+    --line: #dfe4ee;
+    --accent: #1f4e78;
+    --accent-text: #ffffff;
+    --ok-bg: #e3f5ea;
+    --ok-text: #0f5e35;
+    --maybe-bg: #fff4d6;
+    --maybe-text: #7a4b00;
+    --taken-bg: #f1f3f7;
+    --taken-text: #64708a;
+    --err-bg: #fdecec;
+    --err-text: #9b1c1c;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    padding: 24px 16px 48px;
+    line-height: 1.5;
+  }
+  .wrap { max-width: 880px; margin: 0 auto; }
+  h1 { font-size: 1.75rem; margin: 0 0 6px; }
+  .sub { color: var(--muted); margin: 0 0 20px; }
+  .card {
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    padding: 20px;
+    margin-top: 16px;
+  }
+  label.block { display: block; font-weight: 600; margin-bottom: 6px; }
+  .hint { color: var(--muted); font-size: .9rem; margin: 4px 0 0; }
+  textarea, input[type="text"] {
+    width: 100%;
+    font-size: 1.05rem;
+    font-family: inherit;
+    padding: 12px 14px;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    background: var(--card);
+    color: var(--text);
+  }
+  textarea { min-height: 70px; resize: vertical; }
+  textarea:focus, input:focus { outline: 2px solid var(--accent); border-color: var(--accent); }
+  .tlds { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; }
+  .tlds label {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 6px 12px; border: 1px solid var(--line); border-radius: 999px;
+    cursor: pointer; user-select: none; font-size: .95rem; background: var(--card);
+  }
+  .tlds label:has(input:checked) { border-color: var(--accent); background: #e8f0f8; }
+  .tlds input { margin: 0; }
+  .row { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; margin-top: 16px; }
+  .row .grow { flex: 1 1 200px; }
+  .check { display: inline-flex; align-items: center; gap: 8px; cursor: pointer; }
+  button {
+    font-size: 1.05rem;
+    padding: 12px 20px;
+    border: 0;
+    border-radius: 8px;
+    background: var(--accent);
+    color: var(--accent-text);
+    cursor: pointer;
+  }
+  button.secondary { background: var(--card); color: var(--accent); border: 1px solid var(--accent); }
+  button.small { font-size: .9rem; padding: 8px 14px; }
+  button[disabled] { opacity: .6; cursor: default; }
+  .toolbar { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; justify-content: space-between; }
+  .progress { height: 6px; background: var(--line); border-radius: 3px; overflow: hidden; margin-top: 12px; }
+  .progress div { height: 100%; width: 0; background: var(--accent); transition: width .2s; }
+  .summary { color: var(--muted); font-size: .95rem; }
+  .summary strong { color: var(--text); }
+  .table-wrap { overflow-x: auto; margin-top: 12px; }
+  table { width: 100%; border-collapse: collapse; }
+  th, td { text-align: left; padding: 10px 8px; border-bottom: 1px solid var(--line); vertical-align: top; }
+  th { color: var(--muted); font-weight: 600; font-size: .85rem; text-transform: uppercase; letter-spacing: .03em; }
+  td.name { font-weight: 600; word-break: break-all; }
+  td.note { color: var(--muted); font-size: .9rem; max-width: 320px; }
+  .badge { display: inline-block; padding: 3px 10px; border-radius: 999px; font-size: .85rem; font-weight: 600; white-space: nowrap; }
+  .badge.available { background: var(--ok-bg); color: var(--ok-text); }
+  .badge.maybe { background: var(--maybe-bg); color: var(--maybe-text); }
+  .badge.taken { background: var(--taken-bg); color: var(--taken-text); }
+  .badge.unknown { background: var(--err-bg); color: var(--err-text); }
+  .badge.pending { background: var(--taken-bg); color: var(--muted); font-weight: 500; }
+  .buy a { display: inline-block; margin: 2px 8px 2px 0; color: var(--accent); font-size: .9rem; white-space: nowrap; }
+  tr.taken td { opacity: .65; }
+  .error { background: var(--err-bg); color: var(--err-text); border-color: transparent; }
+  .foot { color: var(--muted); font-size: .85rem; margin-top: 28px; }
+  @media (max-width: 600px) { th:nth-child(3), td:nth-child(3) { display: none; } }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Domain Finder</h1>
+  <p class="sub">Type a name idea and see which domains are free to buy right now.</p>
+
+  <form id="form" class="card" autocomplete="off">
+    <label class="block" for="names">Name ideas</label>
+    <textarea id="names" placeholder="squareko&#10;square-ko&#10;or a full domain like squareko.com" autofocus></textarea>
+    <p class="hint">One per line or separated by commas. A name with a dot (like <em>myshop.io</em>) is checked exactly as written.</p>
+
+    <div style="margin-top:16px">
+      <label class="block">Domain endings to check</label>
+      <div class="tlds" id="tlds"></div>
+      <div class="row">
+        <div class="grow"><input type="text" id="custom" placeholder="Add more endings: pk, co.in, store"></div>
+        <label class="check"><input type="checkbox" id="variations"> Also try variations (get&hellip;, &hellip;app, &hellip;hq)</label>
+      </div>
+    </div>
+
+    <div class="row">
+      <button type="submit" id="btn">Find available domains</button>
+      <button type="button" id="stop" class="secondary" hidden>Stop</button>
+      <span class="summary" id="count"></span>
+    </div>
+  </form>
+
+  <div id="results" class="card" hidden>
+    <div class="toolbar">
+      <span class="summary" id="summary"></span>
+      <span>
+        <label class="check"><input type="checkbox" id="onlyAvail"> Show only available</label>
+        &nbsp;&nbsp;
+        <button type="button" class="secondary small" id="copy">Copy available list</button>
+      </span>
+    </div>
+    <div class="progress"><div id="bar"></div></div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Domain</th><th>Status</th><th>Details</th><th>Buy it at</th></tr></thead>
+        <tbody id="tbody"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <div id="error" class="card error" hidden></div>
+
+  <p class="foot">Availability comes from DNS and the public RDAP registry system. "Available" means the registry has no record for the name; a registrar may still hold some names as premium or reserved. Prices are shown on the registrar's page.</p>
+</div>
+
+<script>
+  // Endings shown as buttons. The first group is ticked by default.
+  const DEFAULT_TLDS = ["com", "net", "org", "io", "co", "ai", "app", "dev"];
+  const EXTRA_TLDS = ["xyz", "me", "in", "co.uk", "us", "ca", "tech", "store", "shop", "online", "site", "pro", "agency", "studio", "digital", "cloud"];
+
+  const PREFIXES = ["get", "try", "my", "use"];
+  const SUFFIXES = ["app", "hq", "hub", "labs", "ly"];
+  const PARALLEL = 4; // how many checks run at the same time
+
+  const REGISTRARS = [
+    { name: "Namecheap", url: (d) => "https://www.namecheap.com/domains/registration/results/?domain=" + encodeURIComponent(d) },
+    { name: "Porkbun", url: (d) => "https://porkbun.com/checkout/search?q=" + encodeURIComponent(d) },
+    { name: "GoDaddy", url: (d) => "https://www.godaddy.com/domainsearch/find?domainToCheck=" + encodeURIComponent(d) },
+  ];
+
+  const form = document.getElementById("form");
+  const namesEl = document.getElementById("names");
+  const tldsEl = document.getElementById("tlds");
+  const customEl = document.getElementById("custom");
+  const variationsEl = document.getElementById("variations");
+  const btn = document.getElementById("btn");
+  const stopBtn = document.getElementById("stop");
+  const countEl = document.getElementById("count");
+  const results = document.getElementById("results");
+  const summary = document.getElementById("summary");
+  const bar = document.getElementById("bar");
+  const tbody = document.getElementById("tbody");
+  const onlyAvail = document.getElementById("onlyAvail");
+  const copyBtn = document.getElementById("copy");
+  const errorEl = document.getElementById("error");
+
+  // Build the ending buttons.
+  for (const tld of DEFAULT_TLDS.concat(EXTRA_TLDS)) {
+    const label = document.createElement("label");
+    const cb = document.createElement("input");
+    cb.type = "checkbox";
+    cb.value = tld;
+    cb.checked = DEFAULT_TLDS.includes(tld);
+    label.appendChild(cb);
+    label.appendChild(document.createTextNode("." + tld));
+    tldsEl.appendChild(label);
+  }
+
+  function esc(s) {
+    return String(s).replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+  }
+
+  function cleanLabel(s) {
+    return s.toLowerCase().replace(/^[a-z]+:\/\//, "").replace(/^www\./, "").replace(/[^a-z0-9.-]/g, "").replace(/^[.-]+|[.-]+$/g, "");
+  }
+
+  function selectedTlds() {
+    const picked = Array.from(tldsEl.querySelectorAll("input:checked")).map(i => i.value);
+    const custom = customEl.value.split(/[\s,]+/).map(cleanLabel).filter(Boolean);
+    return Array.from(new Set(picked.concat(custom)));
+  }
+
+  // Turn the typed ideas into the full list of domains to check.
+  function buildCandidates() {
+    const raw = namesEl.value.split(/[\n,]+/).map(s => cleanLabel(s.trim())).filter(Boolean);
+    const tlds = selectedTlds();
+    const out = [];
+    const seen = new Set();
+    const add = (d) => { if (d && !seen.has(d)) { seen.add(d); out.push(d); } };
+
+    for (const item of raw) {
+      if (item.includes(".")) { add(item); continue; } // full domain typed: check it exactly
+      const bases = [item];
+      if (variationsEl.checked) {
+        for (const p of PREFIXES) bases.push(p + item);
+        for (const s of SUFFIXES) bases.push(item + s);
+      }
+      for (const b of bases) for (const t of tlds) add(b + "." + t);
+    }
+    return { candidates: out, hadNames: raw.length > 0, hadTlds: tlds.length > 0 };
+  }
+
+  // Live preview of how many domains will be checked.
+  function updateCount() {
+    const { candidates } = buildCandidates();
+    countEl.textContent = candidates.length ? candidates.length + " domain" + (candidates.length === 1 ? "" : "s") + " to check" : "";
+  }
+  [namesEl, customEl, variationsEl, tldsEl].forEach(el => { el.addEventListener("input", updateCount); el.addEventListener("change", updateCount); });
+
+  // ---------- running a search ----------
+
+  let rows = new Map(); // domain -> { tr, data }
+  let stopped = false;
+
+  function rank(data) {
+    if (!data) return 4;
+    if (data.status === "available" && data.verified) return 0;
+    if (data.status === "available") return 1;
+    if (data.status === "unknown") return 2;
+    return 3; // taken
+  }
+
+  function badgeFor(data) {
+    if (!data) return '<span class="badge pending">Checking…</span>';
+    if (data.status === "available" && data.verified) return '<span class="badge available">Available</span>';
+    if (data.status === "available") return '<span class="badge maybe">Probably available</span>';
+    if (data.status === "taken") return '<span class="badge taken">Taken</span>';
+    return '<span class="badge unknown">Could not check</span>';
+  }
+
+  function buyLinks(domain) {
+    return REGISTRARS.map(r => `<a href="${esc(r.url(domain))}" target="_blank" rel="noopener">${r.name}</a>`).join("");
+  }
+
+  function renderRow(domain) {
+    const row = rows.get(domain);
+    const d = row.data;
+    row.tr.className = d ? (d.status === "taken" ? "taken" : d.status) : "pending";
+    row.tr.innerHTML = `
+      <td class="name">${esc(domain)}</td>
+      <td>${badgeFor(d)}</td>
+      <td class="note">${d ? esc(d.note || d.error || "") : ""}</td>
+      <td class="buy">${d && d.status === "available" ? buyLinks(domain) : ""}</td>`;
+    applyFilter(row);
+  }
+
+  function applyFilter(row) {
+    const hide = onlyAvail.checked && !(row.data && row.data.status === "available");
+    row.tr.hidden = hide;
+  }
+  onlyAvail.addEventListener("change", () => rows.forEach(applyFilter));
+
+  function sortRows() {
+    const list = Array.from(rows.values()).sort((a, b) => rank(a.data) - rank(b.data) || a.domain.localeCompare(b.domain));
+    for (const r of list) tbody.appendChild(r.tr);
+  }
+
+  function updateSummary(done, total) {
+    let avail = 0, maybe = 0, taken = 0, unknown = 0;
+    rows.forEach(r => {
+      const d = r.data; if (!d) return;
+      if (d.status === "available" && d.verified) avail++;
+      else if (d.status === "available") maybe++;
+      else if (d.status === "taken") taken++;
+      else unknown++;
+    });
+    bar.style.width = total ? Math.round(done / total * 100) + "%" : "0";
+    summary.innerHTML = `<strong>${avail}</strong> available` + (maybe ? `, <strong>${maybe}</strong> probably available` : "") +
+      `, ${taken} taken` + (unknown ? `, ${unknown} could not check` : "") +
+      (done < total ? ` · checked ${done} of ${total}` : (stopped ? " · stopped" : " · done"));
+  }
+
+  async function checkOne(domain) {
+    try {
+      // Relative path on purpose: works at http://localhost:3200/ and at https://site/domain-finder/
+      const res = await fetch("api/check?domain=" + encodeURIComponent(domain));
+      return await res.json();
+    } catch (err) {
+      return { ok: false, status: "unknown", error: "Is the server still running? " + err.message };
+    }
+  }
+
+  async function runSearch(candidates) {
+    rows = new Map();
+    stopped = false;
+    tbody.innerHTML = "";
+    results.hidden = false;
+    errorEl.hidden = true;
+    btn.disabled = true;
+    btn.textContent = "Checking…";
+    stopBtn.hidden = false;
+
+    for (const domain of candidates) {
+      const tr = document.createElement("tr");
+      rows.set(domain, { domain, tr, data: null });
+      renderRow(domain);
+      tbody.appendChild(tr);
+    }
+    let done = 0;
+    updateSummary(done, candidates.length);
+
+    // Simple worker pool: PARALLEL checks run at once, each taking the next name in line.
+    let next = 0;
+    async function worker() {
+      while (next < candidates.length && !stopped) {
+        const domain = candidates[next++];
+        const data = await checkOne(domain);
+        if (!data.ok && !data.status) data.status = "unknown";
+        rows.get(domain).data = data;
+        renderRow(domain);
+        done++;
+        updateSummary(done, candidates.length);
+      }
+    }
+    await Promise.all(Array.from({ length: PARALLEL }, worker));
+
+    if (stopped) {
+      rows.forEach(r => { if (!r.data) { r.data = { status: "unknown", note: "Stopped before this one was checked." }; renderRow(r.domain); } });
+    }
+    sortRows();
+    updateSummary(stopped ? candidates.length : done, candidates.length);
+    btn.disabled = false;
+    btn.textContent = "Find available domains";
+    stopBtn.hidden = true;
+  }
+
+  form.addEventListener("submit", (e) => {
+    e.preventDefault();
+    const { candidates, hadNames, hadTlds } = buildCandidates();
+    if (!hadNames) { showError("Type at least one name idea first."); return; }
+    if (!candidates.length) { showError(hadTlds ? "Nothing to check." : "Tick at least one domain ending, or type a full domain like example.com."); return; }
+    if (candidates.length > 300) { showError("That is " + candidates.length + " domains. Please keep it under 300 per search so the registries do not block you."); return; }
+    runSearch(candidates);
+  });
+
+  stopBtn.addEventListener("click", () => { stopped = true; stopBtn.disabled = true; setTimeout(() => stopBtn.disabled = false, 500); });
+
+  function showError(msg) {
+    errorEl.textContent = msg;
+    errorEl.hidden = false;
+  }
+
+  copyBtn.addEventListener("click", async () => {
+    const list = Array.from(rows.values()).filter(r => r.data && r.data.status === "available").map(r => r.domain + (r.data.verified ? "" : "  (probably available)"));
+    if (!list.length) { copyBtn.textContent = "Nothing available yet"; setTimeout(() => copyBtn.textContent = "Copy available list", 1500); return; }
+    try {
+      await navigator.clipboard.writeText(list.join("\n"));
+      copyBtn.textContent = "Copied " + list.length + "!";
+    } catch (_) {
+      window.prompt("Copy this list:", list.join("\n"));
+      copyBtn.textContent = "Copy available list";
+      return;
+    }
+    setTimeout(() => copyBtn.textContent = "Copy available list", 1500);
+  });
+</script>
+</body>
+</html>

@@ -1,0 +1,21 @@
+# Netlify settings for the Squareko tools site.
+#
+# Build:    node build.js copies every tool page into dist/
+# Publish:  dist/ is what visitors see
+# Functions: netlify/functions/*.mjs provide each tool's /api routes.
+#            included_files makes sure the shared logic in each tool's lib/
+#            folder (and the plagiarism config) is packaged with the functions.
+
+[build]
+  command = "node build.js"
+  publish = "dist"
+
+[functions]
+  node_bundler = "esbuild"
+  included_files = [
+    "domain-finder/lib/**",
+    "domain-age-checker/lib/**",
+    "plagiarism-checker/lib/**",
+    "plagiarism-checker/config.json",
+    "creator-tools/lib/**",
+  ]
