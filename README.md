@@ -22,12 +22,21 @@ Free tools for creators and brands. One repository, one Netlify site.
 
 5. Trigger a deploy after adding variables. Every later push to `main` redeploys automatically.
 
+## Deploy on Vercel instead
+
+The repository also works on Vercel. Import it, keep the detected settings
+(`vercel.json` sets the build command and the `dist` output folder), add the same
+environment variables under Settings, Environment Variables, and deploy. The
+API routes run as Vercel Functions from the `api/` folder; `vercel.json` maps the
+tool URLs onto them, so the pages need no changes.
+
 ## How it is built
 
 ```
 build.js                 Builds dist/: home page, web tool pages, creator tools, brand files
 netlify.toml             Netlify settings and function packaging
-netlify/functions/       Serverless API routes (YouTube, Twitch, AI, domain and plagiarism lookups)
+netlify/functions/       API routes on Netlify (YouTube, Twitch, AI, domain and plagiarism lookups)
+api/                     The same routes for Vercel; vercel.json rewrites the tool URLs to them
 creator-tools/           tools.js (the list of tools), build-tools.js (page generator), public/ (CSS and JS), lib/ (API helpers)
 passive-array-brand/     Logo SVGs, favicons, social images, brand-guide.html, make-brand.js
 domain-finder/ ...       The web tools, each with its own README and a Start.bat for local use

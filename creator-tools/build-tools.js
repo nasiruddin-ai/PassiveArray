@@ -14,8 +14,14 @@ const path = require("path");
 const { tools } = require("./tools");
 
 const HERE = __dirname;
-// Netlify sets URL to the site's primary address at build time. Change the fallback when the domain is live.
-const SITE = (process.env.URL || "https://passivearray.com").replace(/\/$/, "");
+// Netlify sets URL, Vercel sets VERCEL_PROJECT_PRODUCTION_URL (host only). SITE_URL overrides both.
+// Change the fallback when the real domain is live.
+const SITE = (
+  process.env.SITE_URL ||
+  process.env.URL ||
+  (process.env.VERCEL_PROJECT_PRODUCTION_URL ? "https://" + process.env.VERCEL_PROJECT_PRODUCTION_URL : "") ||
+  "https://passivearray.com"
+).replace(/\/$/, "");
 const BRAND = "Passive Array";
 const TAGLINE = "Free tools for creators and brands";
 

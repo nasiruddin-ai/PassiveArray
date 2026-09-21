@@ -1,0 +1,17 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "buildCommand": "node build.js",
+  "outputDirectory": "dist",
+  "framework": null,
+  "rewrites": [
+    { "source": "/creator-tools/api/youtube", "destination": "/api/creator-youtube" },
+    { "source": "/creator-tools/api/twitch", "destination": "/api/creator-twitch" },
+    { "source": "/creator-tools/api/ai", "destination": "/api/creator-ai" },
+    { "source": "/domain-age-checker/api/age", "destination": "/api/domain-age" },
+    { "source": "/domain-finder/api/check", "destination": "/api/domain-finder-check" },
+    { "source": "/plagiarism-checker/api/:action", "destination": "/api/plagiarism?action=:action" }
+  ],
+  "headers": [
+    { "source": "/creator-tools/(.*)\\.(css|js)", "headers": [{ "key": "Cache-Control", "value": "public, max-age=3600" }] }
+  ]
+}
