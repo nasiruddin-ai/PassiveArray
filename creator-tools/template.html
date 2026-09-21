@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{{name}} | Squareko Creator Tools</title>
+<meta name="description" content="{{short}}">
+<link rel="canonical" href="{{canonical}}">
+<meta property="og:title" content="{{name}}">
+<meta property="og:description" content="{{short}}">
+<meta property="og:type" content="website">
+<link rel="stylesheet" href="../shared.css">
+<script type="application/ld+json">{{jsonld}}</script>
+</head>
+<body>
+<div class="wrap">
+  <div class="crumbs"><a href="../../">Squareko Tools</a> / <a href="../">Creator Tools</a> / {{platform}}</div>
+  <h1>{{name}} <span class="badge {{platform}}">{{platform}}</span></h1>
+  <p class="sub">{{intro}}</p>
+
+  <div class="grid">
+    <div class="card">
+      <form id="form" novalidate>{{form}}
+        <div class="actions">
+          <button type="submit" id="go">{{button}}</button>
+          <button type="button" class="secondary" id="reset">Clear</button>
+          <span class="status" id="status"></span>
+        </div>
+      </form>
+    </div>
+    <div class="card">
+      <div class="results" id="results"></div>
+    </div>
+  </div>
+
+  <h2>How it works</h2>
+  <ul class="how">{{how}}</ul>
+
+  <h2>More {{platform}} tools</h2>
+  <div class="tools">{{related}}</div>
+
+  <p class="foot">Estimates are calculated from public numbers and typical industry rates. They are a starting point for a conversation, not a guarantee. Built by <a href="https://squareko.com">Squareko</a>.</p>
+</div>
+<script>window.TOOL = {{tooljson}};</script>
+<script src="../shared.js"></script>
+</body>
+</html>
