@@ -65,7 +65,8 @@ export default async (req) => {
       system:
         "You write social media assets for a free web tool. Reply with JSON only, no markdown fences, no commentary, exactly this shape: " +
         spec.shape +
-        ". Content must be safe for a general audience and must not include anything hateful, sexual or misleading.",
+        ". Content must be safe for a general audience and must not include anything hateful, sexual or misleading. " +
+        "Never invent facts, numbers, client counts, awards or testimonials. Use only what the inputs say; if an input is empty, write around it instead of making something up.",
       messages: [{ role: "user", content: spec.task + "\n\nInputs:\n" + JSON.stringify(inputs, null, 2) }],
     });
 
