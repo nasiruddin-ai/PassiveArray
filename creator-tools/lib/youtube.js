@@ -209,7 +209,17 @@ async function searchChannels({ q, country, minSubs, maxSubs, exclude }) {
 
 async function lookalike(input) {
   const seed = await getChannel(input);
-  const terms = [...seed.keywords.slice(0, 4), ...seed.topics.slice(0, 2)];
+  // Build the search from topics and keywords, leaving out the channel's own name
+  // so the results are similar channels rather than the seed channel again.
+  const squash = (t) => t.toLowerCase().replace(/[^a-z0-9]/g, "");
+  const nameBits = (seed.title + " " + seed.handle).toLowerCase().replace(/[^a-z0-9 ]/g, " ").split(/\s+/).filter((w) => w.length > 2).map(squash);
+  const clean = (t) => t.replace(/\(.*?\)/g, "").trim();
+  const topics = seed.topics.map(clean).filter(Boolean).slice(0, 3);
+  const keywords = seed.keywords
+    .map(clean)
+    .filter((k) => k && !nameBits.some((n) => squash(k).includes(n)))
+    .slice(0, 4);
+  const terms = [...keywords, ...topics];
   const q = (terms.length ? terms : seed.title.split(/\s+/).slice(0, 3)).join(" ").slice(0, 100);
   const found = await searchChannels({ q, exclude: seed.id, minSubs: 0, maxSubs: 0 });
   const rank = (c) => Math.abs(Math.log10(c.subscribers + 1) - Math.log10(seed.subscribers + 1));
