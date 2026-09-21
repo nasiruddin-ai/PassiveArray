@@ -1,4 +1,4 @@
-# Squareko Tools
+# Passive Array (Squareko tools site)
 
 A collection of small web tools. Each tool folder works on its own on your PC
 (double-click its `Start.bat`), and this root folder also deploys all of them
@@ -23,7 +23,7 @@ together as one website on Netlify.
 Squareko/
   netlify.toml            Netlify settings (build command, publish folder, functions)
   build.js                Copies each tool page into dist/  (run by Netlify, or: node build.js)
-  home.html               The home page listing the tools -> becomes dist/index.html
+  creator-tools/build-tools.js  Generates the Passive Array home page (dist/index.html), the tools directory and 35 tool pages
   netlify/functions/      The /api routes for the tools that need a backend
     domain-finder-check.mjs   -> /domain-finder/api/check
     domain-age.mjs            -> /domain-age-checker/api/age
@@ -110,7 +110,7 @@ generator tools to AI-written output; without it they use built-in templates.
 
 1. Create the tool folder with its `index.html` (and `server.js` for local use).
 2. Add the folder to the `TOOLS` list in `build.js`.
-3. Add a card to `home.html`.
+3. Add a card to WEB_TOOLS in `creator-tools/build-tools.js` (the home page is generated).
 4. If it needs a backend, put the logic in `<tool>/lib/`, add a function in
    `netlify/functions/`, and list the lib folder under `included_files` in
    `netlify.toml`. In the page, call the API with a relative path

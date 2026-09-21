@@ -3,45 +3,59 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>{{name}} | Squareko Creator Tools</title>
+<title>{{name}} | Passive Array</title>
 <meta name="description" content="{{short}}">
 <link rel="canonical" href="{{canonical}}">
-<meta property="og:title" content="{{name}}">
+<meta property="og:title" content="{{name}} | Passive Array">
 <meta property="og:description" content="{{short}}">
 <meta property="og:type" content="website">
-<link rel="stylesheet" href="../shared.css">
+<meta property="og:url" content="{{canonical}}">
+{{head}}
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="{{root}}creator-tools/shared.css">
+<script>try{var t=localStorage.getItem("pa-theme");if(t)document.documentElement.setAttribute("data-theme",t);}catch(e){}</script>
 <script type="application/ld+json">{{jsonld}}</script>
 </head>
 <body>
-<div class="wrap">
-  <div class="crumbs"><a href="../../">Squareko Tools</a> / <a href="../">Creator Tools</a> / {{platform}}</div>
-  <h1>{{name}} <span class="badge {{platform}}">{{platform}}</span></h1>
-  <p class="sub">{{intro}}</p>
-
-  <div class="grid">
-    <div class="card">
-      <form id="form" novalidate>{{form}}
-        <div class="actions">
-          <button type="submit" id="go">{{button}}</button>
-          <button type="button" class="secondary" id="reset">Clear</button>
-          <span class="status" id="status"></span>
-        </div>
-      </form>
+{{header}}
+<main class="wrap">
+  <div class="tool-head">
+    <div>
+      <div class="crumbs"><a href="{{root}}">Home</a> / <a href="{{root}}creator-tools/">All tools</a> / <a href="{{root}}creator-tools/#{{platformSlug}}">{{platform}}</a></div>
+      <h1>{{name}} <span class="badge {{platform}}">{{platform}}</span></h1>
+      <p class="intro">{{intro}}</p>
     </div>
-    <div class="card">
-      <div class="results" id="results"></div>
-    </div>
+    <div class="siblings">{{siblings}}</div>
   </div>
 
-  <h2>How it works</h2>
-  <ul class="how">{{how}}</ul>
+  <div class="card inputcard">
+    <form id="form" novalidate>
+      {{form}}
+      <div class="actions">
+        <button type="submit" class="btn" id="go">{{button}}</button>
+        <button type="button" class="btn ghost" id="reset">Clear</button>
+        <span class="status" id="status"></span>
+      </div>
+    </form>
+  </div>
 
-  <h2>More {{platform}} tools</h2>
-  <div class="tools">{{related}}</div>
+  <div class="results" id="results"></div>
 
-  <p class="foot">Estimates are calculated from public numbers and typical industry rates. They are a starting point for a conversation, not a guarantee. Built by <a href="https://squareko.com">Squareko</a>.</p>
-</div>
+  <div class="two">
+    <section class="card how">
+      <h2 style="margin-bottom:12px">How this number is made</h2>
+      <ol>{{how}}</ol>
+    </section>
+    <section class="card next">
+      <h2>Next steps</h2>
+      {{next}}
+    </section>
+  </div>
+</main>
+{{footer}}
 <script>window.TOOL = {{tooljson}};</script>
-<script src="../shared.js"></script>
+<script src="{{root}}creator-tools/site.js"></script>
+<script src="{{root}}creator-tools/shared.js"></script>
 </body>
 </html>

@@ -104,63 +104,74 @@
   function render(out) {
     if (!out) return;
     if (out.error) {
-      results.innerHTML = '<div class="error">' + esc(out.error) + "</div>" + (out.note ? '<p class="note">' + out.note + "</p>" : "");
+      results.innerHTML = "<div class=\"error\">" + esc(out.error) + "</div>" + (out.note ? "<p class=\"note\">" + out.note + "</p>" : "");
       return;
     }
     var h = "";
-    if (out.profile) {
-      var p = out.profile;
-      h += '<div class="profile">' + (p.img ? '<img src="' + esc(p.img) + '" alt="">' : "") + "<div><div class=\"t\">" + (p.url ? '<a href="' + esc(p.url) + '" target="_blank" rel="noopener">' + esc(p.title) + "</a>" : esc(p.title)) + '</div><div class="m">' + esc(p.meta || "") + "</div></div></div>";
-    }
-    if (out.hero) {
-      h += '<div class="hero"><div class="name">' + esc(out.hero.label) + '</div><div class="val">' + out.hero.value + "</div>" + (out.hero.note ? '<div class="note">' + out.hero.note + "</div>" : "") + "</div>";
+    if (out.profile || out.hero) {
+      h += "<div class=\"herocard\">";
+      if (out.profile) {
+        var p = out.profile;
+        h += "<div class=\"profile\">" + (p.img ? "<img src=\"" + esc(p.img) + "\" alt=\"\">" : "") +
+          "<div><div class=\"t\">" + (p.url ? "<a href=\"" + esc(p.url) + "\" target=\"_blank\" rel=\"noopener\">" + esc(p.title) + "</a>" : esc(p.title)) + "</div><div class=\"m\">" + esc(p.meta || "") + "</div></div>" +
+          (p.url ? "<a class=\"open\" href=\"" + esc(p.url) + "\" target=\"_blank\" rel=\"noopener\">Open on " + esc(T.platform) + "</a>" : "") + "</div>";
+      }
+      if (out.hero) {
+        h += "<div><div class=\"k\">" + esc(String(out.hero.label).toUpperCase()) + "</div><div class=\"v\">" + out.hero.value + "</div>" + (out.hero.note ? "<div class=\"n\">" + out.hero.note + "</div>" : "") + "</div>";
+      }
+      h += "<div class=\"hactions\"><button type=\"button\" class=\"btn\" id=\"copylink\">Copy link to this result</button></div></div>";
     }
     if (out.bars) {
-      out.bars.forEach(function (b) {
-        h += '<div class="row" style="display:block"><div style="display:flex;justify-content:space-between"><span class="name">' + esc(b.label) + '</span><span class="val">' + esc(b.text) + '</span></div><div class="bar"><i style="width:' + clamp(b.value, 0, 100) + '%"></i></div></div>';
-      });
+      h += "<div class=\"card bars\">" + out.bars.map(function (b) {
+        return "<div class=\"barrow\"><div class=\"top\"><span class=\"name\">" + esc(b.label) + "</span><span class=\"val\">" + esc(b.text) + "</span></div><div class=\"bar\"><i style=\"width:" + clamp(b.value, 0, 100) + "%\"></i></div></div>";
+      }).join("") + "</div>";
     }
     if (out.rows) {
-      out.rows.forEach(function (r) {
-        h += '<div class="row"><span class="name">' + esc(r.name) + (r.sub ? "<small>" + esc(r.sub) + "</small>" : "") + '</span><span class="val ' + (r.cls || "") + '">' + r.value + "</span></div>";
-      });
+      h += "<div class=\"tiles\">" + out.rows.map(function (r) {
+        return "<div class=\"tile\"><span class=\"name\">" + esc(r.name) + (r.sub ? "<small>" + esc(r.sub) + "</small>" : "") + "</span><span class=\"val " + (r.cls || "") + "\">" + r.value + "</span></div>";
+      }).join("") + "</div>";
     }
     if (out.table) {
       var t = out.table;
-      h += '<div class="tablewrap" style="margin-top:12px"><table><thead><tr>' + t.head.map(function (c, i) { return "<th" + (i && t.numeric ? ' class="num"' : "") + ">" + esc(c) + "</th>"; }).join("") + "</tr></thead><tbody>";
+      h += "<div class=\"card\"><div class=\"tablewrap\"><table><thead><tr>" + t.head.map(function (c, i) { return "<th" + (i && t.numeric ? " class=\"num\"" : "") + ">" + esc(c) + "</th>"; }).join("") + "</tr></thead><tbody>";
       t.rows.forEach(function (r) {
         h += "<tr>" + r.map(function (c, i) {
           var cls = [];
           if (i && t.numeric) cls.push("num");
-          if (c && typeof c === "object") {
-            if (c.lead) cls.push("lead");
-            return "<td" + (cls.length ? ' class="' + cls.join(" ") + '"' : "") + ">" + c.html + "</td>";
-          }
-          return "<td" + (cls.length ? ' class="' + cls.join(" ") + '"' : "") + ">" + c + "</td>";
+          if (c && typeof c === "object") { if (c.lead) cls.push("lead"); return "<td" + (cls.length ? " class=\"" + cls.join(" ") + "\"" : "") + ">" + c.html + "</td>"; }
+          return "<td" + (cls.length ? " class=\"" + cls.join(" ") + "\"" : "") + ">" + c + "</td>";
         }).join("") + "</tr>";
       });
-      h += "</tbody></table></div>";
+      h += "</tbody></table></div></div>";
     }
     if (out.tags) {
-      h += '<div class="tags">' + out.tags.map(function (t) { return '<span class="tag ' + esc(t.size || "") + '">' + esc(t.tag) + "</span>"; }).join("") + "</div>";
+      h += "<div class=\"card\"><div class=\"tags\">" + out.tags.map(function (t) { return "<span class=\"tag " + esc(t.size || "") + "\">" + esc(t.tag) + "</span>"; }).join("") + "</div></div>";
     }
     if (out.ideas) {
-      out.ideas.forEach(function (i) {
-        h += '<div class="idea"><b>' + esc(i.title) + "</b>" + (i.hook ? '<span>Hook: "' + esc(i.hook) + '"</span>' : "") + (i.format ? ' <span class="pill">' + esc(i.format) + "</span>" : "") + (i.why ? "<span>" + esc(i.why) + "</span>" : "") + "</div>";
-      });
+      h += "<div class=\"ideas\">" + out.ideas.map(function (i) {
+        return "<div class=\"idea\"><b>" + esc(i.title) + "</b>" + (i.hook ? "<span>Hook: “" + esc(i.hook) + "”</span>" : "") + (i.format ? "<span><span class=\"pill\">" + esc(i.format) + "</span></span>" : "") + (i.why ? "<span>" + esc(i.why) + "</span>" : "") + "</div>";
+      }).join("") + "</div>";
     }
     if (out.list) {
-      h += '<ol class="list">' + out.list.map(function (i) { return "<li>" + i + "</li>"; }).join("") + "</ol>";
+      h += "<div class=\"card\"><ol class=\"list\">" + out.list.map(function (i) { return "<li>" + i + "</li>"; }).join("") + "</ol></div>";
     }
     if (out.copy) {
-      h += '<div class="copybox" id="copybox">' + esc(out.copy) + '</div><div class="actions"><button type="button" class="secondary" id="copybtn">Copy</button></div>';
+      h += "<div class=\"card\"><div class=\"copybox\" id=\"copybox\">" + esc(out.copy) + "</div><div class=\"actions\"><button type=\"button\" class=\"btn ghost\" id=\"copybtn\">Copy</button></div></div>";
     }
-    if (out.note) h += '<p class="note">' + out.note + "</p>";
+    if (out.note) h += "<p class=\"note\">" + out.note + "</p>";
     results.innerHTML = h;
     var cb = document.getElementById("copybtn");
     if (cb) cb.addEventListener("click", function () {
       navigator.clipboard.writeText(out.copy).then(function () { cb.textContent = "Copied"; setTimeout(function () { cb.textContent = "Copy"; }, 1500); });
     });
+    var cl = document.getElementById("copylink");
+    if (cl) cl.addEventListener("click", function () {
+      var u = new URL(location.origin + location.pathname);
+      var v = values();
+      Object.keys(v).forEach(function (k) { if (String(v[k]).trim() !== "") u.searchParams.set(k, v[k]); });
+      navigator.clipboard.writeText(u.toString()).then(function () { cl.textContent = "Link copied"; setTimeout(function () { cl.textContent = "Copy link to this result"; }, 1800); });
+    });
+    if (results.getBoundingClientRect().top > window.innerHeight * 0.6) results.scrollIntoView({ behavior: "smooth", block: "start" });
   }
 
   function compareTable(items, metrics) {
