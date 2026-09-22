@@ -1,9 +1,10 @@
 // Pages for the Passive Array for YouTube browser extension, built into
 //   dist/youtube-extension/index.html           landing page
 //   dist/youtube-extension/privacy/index.html   privacy policy (linked from the Chrome Web Store listing)
-// Uses the same header, footer and stylesheet as the rest of the site.
+// Uses the site's shared shell (header, footer, stylesheet) from build-tools.js.
 
-const { header, footer, esc, SITE } = require("../creator-tools/build-tools.js");
+const site = require("../creator-tools/build-tools.js");
+const { esc, ICON } = site;
 
 const NAME = "Passive Array for YouTube";
 // Paste the Chrome Web Store link here once the listing is live. Until then the
@@ -11,36 +12,13 @@ const NAME = "Passive Array for YouTube";
 const STORE_URL = "";
 const EFFECTIVE = "22 September 2026";
 
-function shell({ title, description, root, path, body, active }) {
-  const canonical = SITE + path;
-  return `<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>${esc(title)} | Passive Array</title>
-<meta name="description" content="${esc(description)}">
-<link rel="canonical" href="${canonical}">
-<meta property="og:title" content="${esc(title)} | Passive Array">
-<meta property="og:description" content="${esc(description)}">
-<meta property="og:type" content="website">
-<meta property="og:url" content="${canonical}">
-<meta property="og:image" content="${SITE}/og-image-1200x630.png">
-<link rel="icon" href="${root}favicon.ico" sizes="48x48">
-<link rel="icon" href="${root}favicon.svg" type="image/svg+xml">
-<link rel="apple-touch-icon" href="${root}apple-touch-icon.png">
-<meta name="theme-color" content="#1F2A44">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap">
-<link rel="stylesheet" href="${root}creator-tools/shared.css">
-<script>try{var t=localStorage.getItem("pa-theme");if(t)document.documentElement.setAttribute("data-theme",t);}catch(e){}</script>
-<style>
+const STYLE = `<style>
   .ext-hero { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr); gap: 32px; align-items: center; padding: 40px 0 28px; }
-  .ext-hero h1 { font-size: 2.4rem; margin-bottom: 12px; }
+  .ext-hero h1 { font-size: clamp(2rem, 3.8vw, 2.8rem); margin: 8px 0 12px; }
   .ext-hero p.lead { font-size: 1.1rem; color: var(--muted); max-width: 40ch; }
   .ext-cta { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 18px; align-items: center; }
   .ext-cta .note { font-size: .85rem; color: var(--muted); }
-  .ext-mock { border: 1px solid var(--line); border-radius: 14px; background: var(--card); padding: 14px; font-size: .85rem; box-shadow: 0 10px 40px rgba(31,42,68,.08); }
+  .ext-mock { border: 1px solid var(--line); border-radius: 14px; background: var(--card); padding: 14px; font-size: .85rem; box-shadow: var(--shadow); }
   .ext-mock .hero { background: linear-gradient(135deg, #2A9D8F, #5B6ABF); color: #fff; border-radius: 10px; padding: 12px 14px; margin-bottom: 8px; }
   .ext-mock .hero .l { font-size: .7rem; text-transform: uppercase; letter-spacing: .04em; opacity: .85; }
   .ext-mock .hero .v { font-size: 1.7rem; font-weight: 600; }
@@ -50,31 +28,13 @@ function shell({ title, description, root, path, body, active }) {
   .ext-mock .t .v { font-weight: 600; }
   .ext-mock .chips { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 8px; }
   .ext-mock .chips span { border: 1px solid var(--line); border-radius: 999px; padding: 3px 8px; font-size: .75rem; }
-  .steps { counter-reset: s; display: grid; gap: 10px; }
+  .steps { counter-reset: s; display: grid; gap: 10px; padding: 0; margin: 12px 0 0; }
   .steps li { list-style: none; position: relative; padding-left: 40px; }
   .steps li::before { counter-increment: s; content: counter(s); position: absolute; left: 0; top: 0; width: 28px; height: 28px; border-radius: 50%; background: var(--deep); color: #fff; display: grid; place-items: center; font-weight: 600; font-size: .85rem; }
-  .prose h2 { font-size: 1.3rem; margin: 28px 0 10px; }
-  .prose h3 { font-size: 1.05rem; margin: 18px 0 6px; }
-  .prose p, .prose li { color: var(--text); line-height: 1.6; }
-  .prose ul { padding-left: 20px; }
-  .prose table { width: 100%; border-collapse: collapse; font-size: .92rem; margin: 10px 0; }
-  .prose th, .prose td { text-align: left; padding: 8px 10px; border-bottom: 1px solid var(--line); vertical-align: top; }
-  .prose th { color: var(--muted); font-weight: 500; }
-  @media (max-width: 860px) { .ext-hero { grid-template-columns: 1fr; padding-top: 20px; } .ext-hero h1 { font-size: 1.9rem; } }
-</style>
-</head>
-<body>
-${header(root, active, false)}
-<main class="wrap">
-${body}
-</main>
-${footer(root, "The extension is free and needs no account. Numbers come from YouTube's public data and the official YouTube Data API.")}
-<script src="${root}creator-tools/site.js"></script>
-</body>
-</html>`;
-}
+  @media (max-width: 860px) { .ext-hero { grid-template-columns: 1fr; padding-top: 20px; } }
+</style>`;
 
-function installBlock(root) {
+function installBlock() {
   if (STORE_URL) {
     return `<div class="ext-cta"><a class="btn" href="${STORE_URL}" rel="noopener">Add to Chrome, it's free</a><span class="note">Works in Chrome, Edge and Brave. No account.</span></div>`;
   }
@@ -89,7 +49,7 @@ function landingPage() {
       <div class="crumbs"><a href="${root}">Home</a> / Browser extension</div>
       <h1>See what a YouTube video is really doing</h1>
       <p class="lead">Engagement rate, hidden tags, views per day and a keyword score, right on the YouTube page. Free, no sign-up, no ads.</p>
-      ${installBlock(root)}
+      ${installBlock()}
     </div>
     <div class="ext-mock" aria-hidden="true">
       <div class="hero"><div class="l">Engagement rate by views</div><div class="v">4.82% <span style="font-size:.7rem;background:#8FD3C7;color:#0E2E29;border-radius:999px;padding:3px 8px;vertical-align:middle">Good</span></div></div>
@@ -137,22 +97,25 @@ function landingPage() {
     <div class="grid c2">
       <div class="card"><h3>Is it really free?</h3><p>Yes. The YouTube numbers come from the official YouTube Data API on a free allowance, and the video panel does not use the API at all.</p></div>
       <div class="card"><h3>Do I need an account?</h3><p>No. Nothing to sign up for, nothing to log in to, and the extension never sees your Google account.</p></div>
-      <div class="card"><h3>What does it send anywhere?</h3><p>Only the video ID, channel link or keyword you are looking at, to passivearray.vercel.app, so the API key can stay on the server. Details in the <a href="privacy/">privacy policy</a>.</p></div>
+      <div class="card"><h3>What does it send anywhere?</h3><p>Only the video ID, channel link or keyword you are looking at, to this site, so the API key can stay on the server. Details in the <a href="privacy/">privacy policy</a>.</p></div>
       <div class="card"><h3>Are the scores real search volume?</h3><p>No. They are estimates built from the top 20 results: how much they are watched, how big the channels are, how fresh they are. The tool says this on every report.</p></div>
     </div>
-  </section>`;
-  return shell({ title: NAME, description: "Free Chrome extension: engagement rate, hidden tags, views per day, channel insights, search scores and a keyword tool, right on YouTube. No account.", root, path: "/youtube-extension/", body, active: "" });
+  </section>
+
+  <div class="cta-band">
+    <div><h3>Want saved reports and alerts when they launch?</h3><p>Sign up free and you get them first, plus the weekly creator report.</p></div>
+    <button type="button" class="btn mint" data-signup>Sign up free ${ICON.arrow}</button>
+  </div>`;
+  return site.shell({ title: NAME, ogTitle: NAME, description: "Free Chrome extension: engagement rate, hidden tags, views per day, channel insights, search scores and a keyword tool, right on YouTube. No account.", path: "/youtube-extension/", active: "extension", head: STYLE, body });
 }
 
 function privacyPage() {
   const root = "../../";
   const body = `
-  <div class="tool-head" style="padding-top:28px">
-    <div>
-      <div class="crumbs"><a href="${root}">Home</a> / <a href="../">Browser extension</a> / Privacy policy</div>
-      <h1>Privacy policy</h1>
-      <p class="intro">For the ${esc(NAME)} browser extension. Effective ${EFFECTIVE}.</p>
-    </div>
+  <div class="page-head">
+    <div class="crumbs"><a href="${root}">Home</a> / <a href="../">Browser extension</a> / Privacy policy</div>
+    <h1>Privacy policy</h1>
+    <p class="lead">For the ${esc(NAME)} browser extension. Effective ${EFFECTIVE}. The website has its own <a href="${root}privacy/">privacy policy</a>.</p>
   </div>
 
   <div class="card prose">
@@ -160,7 +123,7 @@ function privacyPage() {
     <ul>
       <li>The extension has no accounts and does not know who you are.</li>
       <li>It reads the YouTube page you are on to show numbers about that video, channel or search.</li>
-      <li>It sends the video ID, channel link or keyword you are looking at to our server (passivearray.vercel.app) so the YouTube API key can stay on the server instead of inside the extension.</li>
+      <li>It sends the video ID, channel link or keyword you are looking at to our server (this site) so the YouTube API key can stay on the server instead of inside the extension.</li>
       <li>It does not collect your browsing history, does not use analytics or tracking, does not show ads, and does not sell or share data with anyone.</li>
     </ul>
 
@@ -176,7 +139,7 @@ function privacyPage() {
     <h2>What is sent, and where</h2>
     <table>
       <tr><th>Sent to</th><th>What</th><th>Why</th></tr>
-      <tr><td>passivearray.vercel.app (our server, hosted on Vercel)</td><td>Channel links, lists of video IDs, keywords, and the topic, notes and related keywords you type into the AI writer</td><td>To look up public statistics through the YouTube Data API and, if the AI writer is switched on server-side, to write titles, descriptions and tags</td></tr>
+      <tr><td>This site's server (hosted on Vercel)</td><td>Channel links, lists of video IDs, keywords, and the topic, notes and related keywords you type into the AI writer</td><td>To look up public statistics through the YouTube Data API and, if the AI writer is switched on server-side, to write titles, descriptions and tags</td></tr>
       <tr><td>www.youtube.com</td><td>A request for the video or search page you are already looking at</td><td>To read the public data embedded in that page. Sent with your normal YouTube cookies, the same as your browser does</td></tr>
       <tr><td>suggestqueries.google.com</td><td>The keyword you typed</td><td>To show YouTube's own "people also search" suggestions</td></tr>
     </table>
@@ -196,7 +159,7 @@ function privacyPage() {
     <table>
       <tr><th>Permission</th><th>Used for</th></tr>
       <tr><td>Read data on www.youtube.com</td><td>Showing the panels on video, channel and search pages</td></tr>
-      <tr><td>Connect to passivearray.vercel.app</td><td>Looking up statistics through our server</td></tr>
+      <tr><td>Connect to this site</td><td>Looking up statistics through our server</td></tr>
       <tr><td>Connect to suggestqueries.google.com</td><td>Keyword suggestions</td></tr>
       <tr><td>Storage</td><td>Caching answers and remembering your settings on your device</td></tr>
       <tr><td>Active tab</td><td>Letting the popup see which YouTube page is open, only while the popup is open</td></tr>
@@ -216,9 +179,9 @@ function privacyPage() {
     <p>If this policy changes, the new version is published at this address with a new effective date. Changes that would send more data than described here will also be noted in the extension's update notes on the Chrome Web Store.</p>
 
     <h2>Contact</h2>
-    <p>Passive Array is built by Squareko. Questions about this policy: use the contact form at <a href="https://squareko.com" rel="noopener">squareko.com</a>.</p>
+    <p>Questions about this policy: use the <a href="${root}contact/">contact form</a>.</p>
   </div>`;
-  return shell({ title: "Privacy policy, " + NAME, description: "What the Passive Array for YouTube extension reads, sends and stores. No accounts, no tracking, no ads.", root, path: "/youtube-extension/privacy/", body, active: "" });
+  return site.shell({ title: "Privacy policy, " + NAME, ogTitle: "Privacy policy, " + NAME, description: "What the Passive Array for YouTube extension reads, sends and stores. No accounts, no tracking, no ads.", path: "/youtube-extension/privacy/", active: "extension", narrow: true, body });
 }
 
 module.exports = { landingPage, privacyPage, NAME, STORE_URL };

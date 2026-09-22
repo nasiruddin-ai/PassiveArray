@@ -602,7 +602,7 @@ const tools = [
     short: "Five bio options under 150 characters with a clear line for who you help and a call to action.",
     intro: "Fill in what you do, who it is for and the tone you want. You get five bios that fit Instagram's 150-character limit, each with a call to action.",
     inputs: [
-      { id: "name", label: "Name or brand", type: "text", placeholder: "Squareko" },
+      { id: "name", label: "Name or brand", type: "text", placeholder: "Your brand" },
       { id: "what", label: "What you do", type: "text", placeholder: "Squarespace websites for small businesses" },
       { id: "audience", label: "Who it is for", type: "text", placeholder: "coaches and consultants" },
       { id: "cta", label: "Call to action", type: "text", placeholder: "Book a free call", value: "Link below" },

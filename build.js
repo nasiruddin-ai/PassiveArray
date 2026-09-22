@@ -35,13 +35,40 @@ for (const [folder, page] of Object.entries(TOOLS)) {
   }
   const outDir = path.join(DIST, folder);
   fs.mkdirSync(outDir, { recursive: true });
-  fs.copyFileSync(src, path.join(outDir, "index.html"));
-  console.log(folder + "/" + page + " -> dist/" + folder + "/index.html");
+  fs.writeFileSync(path.join(outDir, "index.html"), withSiteChrome(fs.readFileSync(src, "utf8")));
+  console.log(folder + "/" + page + " -> dist/" + folder + "/index.html (+ site bar and footer)");
+}
+
+// The web tools are self-contained pages with their own styles. Give each one the
+// site's navigation bar and footer without loading the shared stylesheet, so their
+// own layouts stay untouched. Inserted right after <body> and before </body>.
+function withSiteChrome(html) {
+  const mark = `<svg viewBox="0 0 120 120" width="26" height="26" aria-hidden="true"><defs><linearGradient id="pabar-g" gradientUnits="userSpaceOnUse" x1="7" y1="7" x2="113" y2="113"><stop offset="0" stop-color="#2A9D8F"/><stop offset="1" stop-color="#5B6ABF"/></linearGradient></defs>${[7, 45, 83].map((y) => [7, 45, 83].map((x) => x === 83 && y === 83 ? `<circle cx="98" cy="98" r="15" fill="#8FD3C7"/>` : `<rect x="${x}" y="${y}" width="30" height="30" rx="7" fill="url(#pabar-g)"/>`).join("")).join("")}</svg>`;
+  const style = `<style id="pa-chrome">
+.pa-bar{max-width:960px;margin:0 auto 20px;display:flex;align-items:center;gap:14px;padding:10px 14px;border:1px solid rgba(31,42,68,.12);border-radius:14px;background:#fff;font-family:Poppins,system-ui,-apple-system,"Segoe UI",sans-serif;font-size:.92rem}
+.pa-bar .pa-brand{display:flex;align-items:center;gap:8px;color:#1F2A44;font-weight:600;text-decoration:none;white-space:nowrap}
+.pa-bar .pa-brand b{color:#2A9D8F;font-weight:600}
+.pa-bar nav{margin-left:auto;display:flex;flex-wrap:wrap;gap:16px}
+.pa-bar nav a{color:#1F2A44;text-decoration:none;font-weight:500}
+.pa-bar nav a:hover{color:#1F7F73}
+.pa-bar .pa-cta{background:#1F7F73;color:#fff;border-radius:10px;padding:8px 14px;font-weight:600;text-decoration:none;white-space:nowrap}
+.pa-foot{max-width:960px;margin:40px auto 0;padding:18px 0 8px;border-top:1px solid rgba(31,42,68,.12);font-family:Poppins,system-ui,-apple-system,"Segoe UI",sans-serif;font-size:.82rem;color:#5A6478;display:flex;flex-wrap:wrap;justify-content:space-between;gap:10px}
+.pa-foot nav{display:flex;flex-wrap:wrap;gap:14px}
+.pa-foot a{color:#5A6478;text-decoration:none}
+.pa-foot a:hover{color:#1F7F73}
+@media(max-width:640px){.pa-bar nav{display:none}.pa-bar .pa-cta{margin-left:auto}}
+</style>`;
+  const bar = `${style}<div class="pa-bar"><a class="pa-brand" href="/">${mark}<span>Passive <b>Array</b></span></a><nav><a href="/creator-tools/">Creator tools</a><a href="/#web-tools">Web tools</a><a href="/youtube-extension/">Extension</a><a href="/blog/">Blog</a></nav><a class="pa-cta" href="/#web-tools">All free tools</a></div>`;
+  const foot = `<div class="pa-foot"><span>&copy; ${new Date().getFullYear()} Passive Array. Free tools for creators and brands.</span><nav><a href="/about/">About</a><a href="/blog/">Blog</a><a href="/contact/">Contact</a><a href="/privacy/">Privacy</a><a href="/terms/">Terms</a></nav></div>`;
+  if (!/<body[^>]*>/i.test(html) || !/<\/body>/i.test(html)) return html;
+  return html.replace(/<body([^>]*)>/i, (m) => m + "\n" + bar).replace(/<\/body>/i, foot + "\n</body>");
 }
 
 // Passive Array pages: home, tools directory and one page per creator tool.
 const site = require("./creator-tools/build-tools.js");
-fs.writeFileSync(path.join(DIST, "index.html"), site.homePage());
+const blog = require("./blog/build-blog.js");
+const posts = blog.loadPosts();
+fs.writeFileSync(path.join(DIST, "index.html"), site.homePage(posts));
 console.log("home page -> dist/index.html (" + site.SITE + ")");
 const creatorCount = site.buildInto(path.join(DIST, "creator-tools"));
 console.log("creator-tools/tools.js -> dist/creator-tools/ (" + creatorCount + " tool pages + directory)");
@@ -52,6 +79,35 @@ fs.mkdirSync(path.join(DIST, "youtube-extension", "privacy"), { recursive: true 
 fs.writeFileSync(path.join(DIST, "youtube-extension", "index.html"), ext.landingPage());
 fs.writeFileSync(path.join(DIST, "youtube-extension", "privacy", "index.html"), ext.privacyPage());
 console.log("youtube-extension/pages.js -> dist/youtube-extension/ (landing + privacy)");
+
+// Blog: blog/posts/*.md -> dist/blog/
+const postCount = blog.buildInto(path.join(DIST, "blog"), posts);
+console.log("blog/posts/ -> dist/blog/ (" + postCount + " articles + index)");
+
+// Company pages: about, contact, privacy, terms.
+const pages = require("./pages/site-pages.js");
+const pagePaths = pages.buildInto(DIST);
+console.log("pages/site-pages.js -> dist/ (" + pagePaths.join(", ") + ")");
+
+// sitemap.xml and robots.txt for search engines.
+const urls = [
+  ["/", "1.0", "weekly"],
+  ["/creator-tools/", "0.9", "weekly"],
+  ...site.tools.map((t) => ["/creator-tools/" + t.slug + "/", "0.8", "monthly"]),
+  ...site.WEB_TOOLS.map(([href]) => ["/" + href, "0.7", "monthly"]),
+  ["/youtube-extension/", "0.8", "monthly"],
+  ["/youtube-extension/privacy/", "0.3", "yearly"],
+  ["/blog/", "0.8", "weekly"],
+  ...posts.map((p) => ["/blog/" + p.slug + "/", "0.7", "monthly", p.updated]),
+  ...pagePaths.map((p) => [p, p === "/about/" ? "0.5" : "0.3", "yearly"]),
+];
+const today = new Date().toISOString().slice(0, 10);
+const sitemap = '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n' +
+  urls.map(([loc, pri, freq, mod]) => `  <url><loc>${site.SITE}${loc}</loc><lastmod>${mod || today}</lastmod><changefreq>${freq}</changefreq><priority>${pri}</priority></url>`).join("\n") +
+  "\n</urlset>\n";
+fs.writeFileSync(path.join(DIST, "sitemap.xml"), sitemap);
+fs.writeFileSync(path.join(DIST, "robots.txt"), "User-agent: *\nAllow: /\nDisallow: /api/\n\nSitemap: " + site.SITE + "/sitemap.xml\n");
+console.log("sitemap.xml (" + urls.length + " urls) and robots.txt -> dist/");
 
 // Brand files at the site root: favicons, manifest, link preview image.
 const brand = path.join(ROOT, "passive-array-brand");

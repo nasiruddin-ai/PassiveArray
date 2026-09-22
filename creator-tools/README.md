@@ -2,7 +2,7 @@
 
 35 free tools for creators, brands and agencies, modelled on the free-tools
 section of influencer platforms such as HypeAuditor. One folder, one shared
-front end, one page per tool. Lives at `/creator-tools/` on the Squareko tools
+front end, one page per tool. Lives at `/creator-tools/` on the Passive Array
 site and runs on your PC with `Start.bat`.
 
 ## What is in the pack
@@ -26,7 +26,7 @@ creator-tools/
   tools.js              The list of tools: name, inputs, description. Edit this to add or change a tool.
   build-tools.js        Turns tools.js into pages. Used by the root build.js and by server.js.
   template.html         The page template every tool uses.
-  public/shared.css     Styles, matches the other Squareko tools.
+  public/shared.css     Styles, matches the rest of the site.
   public/shared.js      All the calculations and the built-in generators. One function per tool slug.
   lib/youtube.js        YouTube Data API helper (used by server.js and the Netlify Function).
   lib/twitch.js         Twitch Helix API helper.

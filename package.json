@@ -1,7 +1,7 @@
 {
-  "name": "squareko-tools",
+  "name": "passive-array",
   "private": true,
-  "description": "Squareko tools site: static pages built by build.js plus Netlify Functions.",
+  "description": "Passive Array: free creator tools, static pages built by build.js plus Vercel Functions.",
   "scripts": {
     "build": "node build.js",
     "creator-tools": "node creator-tools/server.js"

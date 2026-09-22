@@ -9,7 +9,7 @@ needed to run it.
 1. Open this folder.
 2. Double-click **Start.bat**.
 3. A black window opens and your browser opens to `http://localhost:3200`.
-4. Type a name idea (for example `squareko`), tick the endings you care about,
+4. Type a name idea (for example `mybrand`), tick the endings you care about,
    and press **Find available domains**.
 
 To stop the tool, close the black window.
@@ -84,7 +84,7 @@ refusing for a few minutes. Those names show "Could not check". Wait and retry.
 
 ## Putting it on Netlify
 
-This tool is deployed together with the other Squareko tools from the parent
+This tool is deployed together with the rest of the site from the parent
 folder. See the README in the parent folder for the steps. On the site it lives
 at `/domain-finder/`, and its backend is `netlify/functions/domain-finder-check.mjs`
 in the parent folder, which reuses `lib/check.js` from here.

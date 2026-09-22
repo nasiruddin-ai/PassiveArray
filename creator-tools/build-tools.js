@@ -54,15 +54,41 @@ function header(root, active, withSearch) {
   return `<header class="site-header"><div class="wrap">
   <a class="brand" href="${root}" aria-label="${BRAND} home">${MARK("m" + Math.random().toString(36).slice(2, 6))}<span>Passive <b>Array</b></span></a>
   ${withSearch ? `<form class="hsearch" data-search role="search">${ICON.search}<label for="hq" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);margin:0">Check a channel</label><input id="hq" type="text" placeholder="Check a channel: @handle, link or twitch.tv/name" autocomplete="off"><button type="submit">Check</button></form>` : ""}
-  <nav class="nav">${link("creator-tools/", "All tools", "tools")}${link("creator-tools/#compare", "Compare", "compare")}${link("creator-tools/#create", "Generators", "create")}${link("#web-tools", "Web tools", "web")}</nav>
-  <button type="button" class="iconbtn" data-theme-toggle aria-label="Switch to dark mode">${ICON.moon}</button>
+  <nav class="nav" id="site-nav">${link("creator-tools/", "Creator tools", "tools")}${link("#web-tools", "Web tools", "web")}${link("youtube-extension/", "Extension", "extension")}${link("blog/", "Blog", "blog")}${link("about/", "About", "about")}</nav>
+  <div class="hactions">
+    <button type="button" class="iconbtn" data-theme-toggle aria-label="Switch to dark mode">${ICON.moon}</button>
+    <button type="button" class="btn hsignup" data-signup>Sign up free</button>
+    <button type="button" class="iconbtn menubtn" data-menu aria-label="Open menu" aria-expanded="false" aria-controls="site-nav"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
+  </div>
 </div></header>`;
 }
 
+const POPULAR_SLUGS = ["youtube-money-calculator", "instagram-engagement-rate-calculator", "tiktok-fake-follower-checker", "twitch-channel-comparison", "youtube-sponsorship-price-calculator", "instagram-hashtag-generator", "youtube-channel-quality-checker", "instagram-pricing-calculator"];
+
 function footer(root, note) {
+  const col = (title, links) => `<div class="fcol"><h4>${esc(title)}</h4>${links.map(([href, label]) => `<a href="${/^https?:/.test(href) ? href : root + href}">${esc(label)}</a>`).join("")}</div>`;
+  const popular = POPULAR_SLUGS.slice(0, 6).map((s) => tools.find((t) => t.slug === s)).filter(Boolean).map((t) => [`creator-tools/${t.slug}/`, t.name]);
   return `<footer class="site-footer"><div class="wrap">
-  <span>${esc(note || "Estimates use public numbers and typical industry rates. A starting point, not a guarantee.")}</span>
-  <nav><a href="${root}creator-tools/">All tools</a><a href="${root}#web-tools">Web tools</a><a href="https://squareko.com" rel="noopener">Built by Squareko</a></nav>
+  <div class="fgrid">
+    <div class="fbrand">
+      <a class="brand" href="${root}" aria-label="${BRAND} home">${MARK("f" + Math.random().toString(36).slice(2, 6))}<span>Passive <b>Array</b></span></a>
+      <p>${TAGLINE}. Live data from official APIs, the formula on every page, nothing behind a wall.</p>
+      <form class="fnews" data-subscribe data-kind="newsletter" novalidate>
+        <label for="fn-email">Weekly creator report</label>
+        <div class="row"><input id="fn-email" type="email" name="email" placeholder="you@example.com" required autocomplete="email"><button type="submit" class="btn">Subscribe</button></div>
+        <input type="text" name="website" tabindex="-1" autocomplete="off" class="hp" aria-hidden="true">
+        <span class="fmsg" data-msg>One email a week: benchmarks, rate changes, new tools. Unsubscribe any time.</span>
+      </form>
+    </div>
+    ${col("Creator tools", [["creator-tools/#YouTube", "YouTube tools"], ["creator-tools/#Instagram", "Instagram tools"], ["creator-tools/#TikTok", "TikTok tools"], ["creator-tools/#Twitch", "Twitch tools"], ["creator-tools/#compare", "Compare creators"], ["creator-tools/#create", "Generators"], ["creator-tools/", `All ${tools.length} tools`]])}
+    ${col("Web tools", WEB_TOOLS.map(([href, name]) => [href, name]))}
+    ${col("Popular", popular)}
+    ${col("Company", [["about/", "About"], ["blog/", "Blog"], ["youtube-extension/", "Chrome extension"], ["contact/", "Contact"], ["privacy/", "Privacy policy"], ["terms/", "Terms of use"]])}
+  </div>
+  <div class="fbottom">
+    <span>&copy; ${new Date().getFullYear()} ${BRAND}. ${esc(note || "Estimates use public numbers and typical industry rates. A starting point, not a guarantee.")}</span>
+    <nav><a href="${root}privacy/">Privacy</a><a href="${root}terms/">Terms</a><a href="${root}contact/">Contact</a></nav>
+  </div>
 </div></footer>`;
 }
 
@@ -241,7 +267,7 @@ const WEB_TOOLS = [
   ["seo-roi-calculator/", "SEO ROI Calculator", "Estimate the traffic, conversions and revenue first-page rankings could bring."],
 ];
 
-function homePage() {
+function homePage(posts = []) {
   const root = "";
   const count = (fn) => tools.filter(fn).length;
   const popular = ["youtube-money-calculator", "instagram-engagement-rate-calculator", "tiktok-fake-follower-checker", "twitch-channel-comparison", "youtube-sponsorship-price-calculator", "instagram-hashtag-generator", "youtube-channel-quality-checker", "instagram-pricing-calculator"]
@@ -312,6 +338,28 @@ ${header(root, "home", false)}
     <div class="section-head"><h2>Web tools</h2><span class="sub">For websites, domains and content</span></div>
     <div class="grid c3">${WEB_TOOLS.map(([href, name, text]) => `<a class="card" href="${href}"><h3>${esc(name)}</h3><p>${esc(text)}</p></a>`).join("")}</div>
   </section>
+
+  <section class="section">
+    <div class="promo">
+      <div class="promo-text">
+        <span class="k">CHROME EXTENSION</span>
+        <h2>See the numbers on YouTube itself</h2>
+        <p>Engagement rate, hidden tags, views per day and a keyword score, right on the video, channel and search pages. Free, no account.</p>
+        <a class="btn mint" href="youtube-extension/">Get the extension ${ICON.arrow}</a>
+      </div>
+      <div class="promo-stats" aria-hidden="true">
+        <div><b>4.8%</b><span>Engagement, Good</span></div>
+        <div><b>1.4K</b><span>Views per day</span></div>
+        <div><b>16</b><span>Hidden tags</span></div>
+        <div><b>65</b><span>Keyword score</span></div>
+      </div>
+    </div>
+  </section>
+${posts.length ? `
+  <section class="section">
+    <div class="section-head"><h2>From the blog</h2><a href="blog/">All articles</a></div>
+    <div class="grid c3">${posts.slice(0, 3).map((p) => postCard(p, root)).join("")}</div>
+  </section>` : ""}
 </main>
 ${footer(root)}
 <script src="creator-tools/site.js"></script>
@@ -336,7 +384,51 @@ function buildInto(outDir) {
   return tools.length;
 }
 
-module.exports = { buildInto, homePage, tools, SITE, header, footer, esc };
+/* ------------------------------------------------------------------ shared page shell for blog, extension and company pages */
+const fmtDate = (s) => new Date(s + (String(s).length === 10 ? "T12:00:00Z" : "")).toLocaleDateString("en-US", { year: "numeric", month: "short", day: "numeric" });
+
+function postCard(p, root) {
+  return `<a class="card post" href="${root}blog/${p.slug}/"><span class="tagline"><span class="plat" style="color:var(--deep)">${esc(p.category.toUpperCase())}</span><span class="muted" style="font-size:.78rem">${p.minutes} min read</span></span><h3>${esc(p.title)}</h3><p>${esc(p.description)}</p><span class="pdate">${fmtDate(p.date)}</span></a>`;
+}
+
+// path is the site path the page is served at, e.g. "/blog/some-post/". Body goes inside <main class="wrap">.
+function shell({ title, description, path, body, active = "", head = "", scripts = "", jsonld = null, narrow = false, ogTitle }) {
+  const depth = path.split("/").filter(Boolean).length;
+  const root = "../".repeat(depth);
+  const canonical = SITE + path;
+  return `<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>${esc(title)} | ${BRAND}</title>
+<meta name="description" content="${esc(description)}">
+<link rel="canonical" href="${canonical}">
+<meta property="og:title" content="${esc(ogTitle || title)}">
+<meta property="og:description" content="${esc(description)}">
+<meta property="og:type" content="website">
+<meta property="og:url" content="${canonical}">
+${HEAD}
+${head}
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="${root}creator-tools/shared.css">
+<script>try{var t=localStorage.getItem("pa-theme");if(t)document.documentElement.setAttribute("data-theme",t);}catch(e){}</script>
+${jsonld ? `<script type="application/ld+json">${JSON.stringify(jsonld)}</script>` : ""}
+</head>
+<body data-root="${root}">
+${header(root, active, false)}
+<main class="wrap${narrow ? " narrow" : ""}">
+${body}
+</main>
+${footer(root)}
+${scripts}
+<script src="${root}creator-tools/site.js"></script>
+</body>
+</html>`;
+}
+
+module.exports = { buildInto, homePage, tools, SITE, BRAND, TAGLINE, WEB_TOOLS, header, footer, shell, postCard, fmtDate, esc, ICON };
 
 if (require.main === module) {
   const out = path.join(HERE, ".out");
