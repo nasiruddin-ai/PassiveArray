@@ -9,16 +9,17 @@
 
   /* Theme */
   function setTheme(t) {
-    if (t) root.setAttribute("data-theme", t); else root.removeAttribute("data-theme");
-    try { if (t) localStorage.setItem("pa-theme", t); else localStorage.removeItem("pa-theme"); } catch (e) { /* private mode */ }
+    t = t === "light" ? "light" : "dark";
+    root.setAttribute("data-theme", t);
+    try { localStorage.setItem("pa-theme", t); } catch (e) { /* private mode */ }
     document.querySelectorAll("[data-theme-toggle]").forEach(function (b) {
       b.setAttribute("aria-label", t === "dark" ? "Switch to light mode" : "Switch to dark mode");
     });
   }
   document.querySelectorAll("[data-theme-toggle]").forEach(function (b) {
-    b.addEventListener("click", function () { setTheme(root.getAttribute("data-theme") === "dark" ? "" : "dark"); });
+    b.addEventListener("click", function () { setTheme(root.getAttribute("data-theme") === "dark" ? "light" : "dark"); });
   });
-  if (root.getAttribute("data-theme") === "dark") setTheme("dark");
+  setTheme(root.getAttribute("data-theme") || "dark"); // dark is the default; the head script sets it before paint
 
   /* Mobile menu */
   var menuBtn = document.querySelector("[data-menu]");
