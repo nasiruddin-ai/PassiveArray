@@ -320,7 +320,7 @@
     /* Google Identity Services, loaded only when a client ID is configured. */
     function startGoogle(clientId) {
       var s = document.createElement("script");
-      s.src = "https://accounts.google.com/gsi/client";
+      s.src = "https://accounts.google.com/gsi/client?hl=en";
       s.async = true;
       s.onload = function () {
         if (!window.google || !window.google.accounts || !window.google.accounts.id) return;
@@ -410,7 +410,7 @@
   function loadGsi(cb) {
     if (window.google && window.google.accounts && window.google.accounts.id) return cb();
     var s = document.createElement("script");
-    s.src = "https://accounts.google.com/gsi/client";
+    s.src = "https://accounts.google.com/gsi/client?hl=en";
     s.async = true;
     s.onload = cb;
     document.head.appendChild(s);
