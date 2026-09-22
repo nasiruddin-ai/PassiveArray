@@ -76,30 +76,83 @@ Details in `creator-tools/README.md`. The brand guide is `passive-array-brand/br
 ## Sign-up, newsletter and contact forms
 
 The "Sign up free" button, the footer newsletter box and the contact page all
-POST to `/api/subscribe`, which forwards each entry as JSON to a webhook you
-own. Nothing is stored on the site. Until the webhook is set the forms answer
-"Sign-up is not open yet" and the tools keep working.
+POST to `/api/subscribe`, which forwards each entry as JSON to a destination
+you own. Nothing is stored on the site itself.
 
-Set it up with n8n (free) in about ten minutes:
+**Until a destination is set, the forms say "Sign-up is not open yet."** The
+buttons and the modal work; there is simply nowhere to put the email. Check
+the current state at any time:
 
-1. In n8n, create a new workflow and add a **Webhook** node. Method POST,
-   path `passive-array`. Copy the Production URL it shows.
-2. Add a **Google Sheets** node (append row) after it, pointed at a sheet with
-   the columns `kind, email, name, platform, message, source, receivedAt`.
-   Map each column to the matching field from the webhook body.
-3. Optional: add an **IF** node on `kind = contact` that sends you an email or
-   Slack message so you see contact messages straight away.
-4. Activate the workflow.
-5. In Vercel, open the project, **Settings**, **Environment Variables**, add
-   `SUBSCRIBE_WEBHOOK_URL` with the Production URL from step 1, then
-   **Deployments**, **Redeploy**.
+```
+https://passivearray.vercel.app/api/subscribe?health=1
+```
 
-Any other service that accepts a JSON POST works the same way: Make, Zapier, a
-Google Apps Script web app, or your own server.
+It answers `"configured": true` or `false`. It never reveals the destination.
 
-The JSON sent looks like:
+### Option A: Google Sheet (recommended, about five minutes)
+
+Always reachable, free, and needs no account beyond the Google one you have.
+
+1. Create a new Google Sheet. Name it something like "Passive Array sign-ups".
+2. In that sheet choose **Extensions**, **Apps Script**. A code editor opens.
+3. Delete whatever is in `Code.gs`, then paste the whole contents of
+   `setup/google-sheet-receiver.gs` from this repository. Click the save icon.
+4. Click **Deploy**, **New deployment**. Press the gear next to "Select type"
+   and choose **Web app**.
+5. Set **Execute as** to **Me**, and **Who has access** to **Anyone**. This is
+   required: Vercel calls it as an anonymous visitor. The URL is unguessable
+   and the script only ever appends rows.
+6. Click **Deploy**. Google asks you to authorise the script the first time.
+   Approve it. On the "Google hasn't verified this app" screen choose
+   **Advanced**, then **Go to (your project name)**. It is your own script.
+7. Copy the **Web app URL**. It looks like
+   `https://script.google.com/macros/s/AKfy.../exec`.
+8. Paste that URL into a browser. It should answer
+   `{"ok":true,"service":"Passive Array sign-up receiver"}`. If it asks you to
+   log in, "Who has access" is not set to Anyone.
+9. In Vercel open the project, **Settings**, **Environment Variables**. Add
+   `SUBSCRIBE_WEBHOOK_URL` with that URL. Apply it to Production.
+10. Go to **Deployments** and **Redeploy** the latest one. Environment
+    variables only reach a deployment when it is built.
+11. Open `/api/subscribe?health=1`. It should now say `"configured": true`.
+12. Sign up on the site with your own email. A row appears in the sheet within
+    a second or two, with the header row created automatically.
+
+Contact-form messages also email you, so you see them the same day. Delete the
+`MailApp.sendEmail` block in the script if you would rather they only appear
+in the sheet.
+
+### Option B: n8n
+
+Use this if your n8n is reachable from the internet. A self-hosted n8n on your
+own PC is not: Vercel cannot call `localhost`. n8n Cloud, or a self-hosted
+instance behind a public domain or a tunnel, works fine.
+
+1. New workflow, add a **Webhook** node. Method POST, path `passive-array`.
+2. Copy the **Production URL**, not the Test URL. The test URL only listens
+   while you have the editor open.
+3. Add a **Google Sheets** node (append row) or whatever storage you prefer,
+   mapping the fields below.
+4. Add a **Respond to Webhook** node returning any 200 response.
+5. **Activate** the workflow. An inactive workflow rejects production calls.
+6. Set `SUBSCRIBE_WEBHOOK_URL` in Vercel to the Production URL and redeploy.
+
+### What gets sent
+
+Any service that accepts a JSON POST works. The body is:
 
 ```
 { "kind": "signup", "email": "someone@example.com", "name": "", "platform": "YouTube",
   "message": "", "source": "/blog/", "receivedAt": "2026-09-22T10:00:00.000Z" }
 ```
+
+`kind` is `signup` from the button, `newsletter` from the footer box, or
+`contact` from the contact page. Emails arrive lowercased and trimmed. A
+hidden honeypot field blocks the common bots before anything is forwarded.
+
+### If a sign-up fails
+
+The visitor sees "Could not save that right now." The reason is written to the
+Vercel function logs: open the project, **Logs**, and filter for `subscribe`.
+The usual causes are an inactive n8n workflow, an Apps Script deployment whose
+access is not set to Anyone, or a URL that was saved without redeploying.
