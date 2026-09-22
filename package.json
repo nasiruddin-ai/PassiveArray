@@ -7,6 +7,7 @@
     "creator-tools": "node creator-tools/server.js"
   },
   "dependencies": {
-    "@anthropic-ai/sdk": "latest"
+    "@anthropic-ai/sdk": "latest",
+    "@vercel/speed-insights": "^2.0.0"
   }
 }
