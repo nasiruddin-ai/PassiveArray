@@ -65,7 +65,7 @@ function header(root, active, withSearch) {
   <div class="hactions">
     <button type="button" class="iconbtn" data-theme-toggle aria-label="Switch to dark mode">${ICON.moon}</button>
     <a class="hlogin" href="${root}login/" data-login-link>Log in</a>
-    <button type="button" class="btn hsignup" data-signup>Sign up free</button>
+    <a class="btn hsignup" href="${root}signup/" data-signup-link>Sign up free</a>
     <button type="button" class="iconbtn menubtn" data-menu aria-label="Open menu" aria-expanded="false" aria-controls="site-nav"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
   </div>
 </div></header>`;

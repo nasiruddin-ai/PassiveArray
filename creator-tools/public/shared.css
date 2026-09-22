@@ -467,3 +467,23 @@ a.card.post .pdate { margin-top: auto; font-size: .8rem; color: var(--muted); }
 
 .pref { display: flex; align-items: center; gap: 10px; cursor: pointer; font-size: .95rem; }
 .pref input { width: 18px; height: 18px; accent-color: var(--deep); cursor: pointer; flex: none; }
+
+/* ---------------------------------------------------------------- sign in */
+.gbtn { display: flex; justify-content: center; margin-bottom: 4px; min-height: 44px; }
+.orline { display: flex; align-items: center; gap: 12px; margin: 16px 0; color: var(--muted); font-size: .82rem; }
+.orline::before, .orline::after { content: ""; flex: 1; height: 1px; background: var(--line); }
+.pwfield { position: relative; display: flex; align-items: center; }
+.pwfield input { flex: 1; padding-right: 68px !important; }
+.pwshow { position: absolute; right: 8px; border: 0; background: transparent; color: var(--deep); font: 600 .82rem inherit; cursor: pointer; padding: 6px 8px; border-radius: 8px; }
+.pwshow:hover { background: var(--soft); }
+:root[data-theme="dark"] .pwshow { color: var(--mint); }
+.authalt { display: flex; flex-wrap: wrap; gap: 14px; margin-top: 14px; }
+.authalt .link { background: none; border: 0; padding: 0; color: var(--deep); font: 500 .88rem inherit; cursor: pointer; }
+.authalt .link:hover { text-decoration: underline; }
+:root[data-theme="dark"] .authalt .link { color: var(--mint); }
+.authswap { margin-top: 18px; padding-top: 16px; border-top: 1px solid var(--line); font-size: .9rem; color: var(--muted); }
+.authmsg h3 { margin-bottom: 8px; }
+.authmsg p { color: var(--muted); font-size: .95rem; line-height: 1.6; }
+ul.plain { list-style: none; padding: 0; margin: 0; display: grid; gap: 12px; }
+ul.plain li { font-size: .92rem; line-height: 1.55; color: var(--muted); }
+ul.plain b { color: var(--text); }

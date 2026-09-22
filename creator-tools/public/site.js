@@ -1,5 +1,5 @@
 /* Passive Array site chrome: theme toggle, mobile menu, universal search routing,
-   directory filters, sign-up modal and the subscribe / contact forms.
+   directory filters, the newsletter and contact forms, and sign-in.
    Loaded on every page. Tool pages also load shared.js for the calculators. */
 (function () {
   "use strict";
@@ -98,61 +98,10 @@
     }
   }
 
-  /* Sign-up modal. Built here so every page gets it without touching templates. */
-  var signed = false;
-  try { signed = localStorage.getItem("pa-signed") === "1"; } catch (e) { /* ignore */ }
-  function showSigned() {
-    document.querySelectorAll("[data-signup]").forEach(function (b) { b.textContent = "You're on the list"; b.classList.add("done"); });
-  }
-  function markSigned() {
-    signed = true;
-    try { localStorage.setItem("pa-signed", "1"); } catch (e) { /* ignore */ }
-    showSigned();
-  }
-  if (signed) showSigned();
-
-  var modal = null;
-  function buildModal() {
-    var m = document.createElement("div");
-    m.className = "modal";
-    m.hidden = true;
-    m.innerHTML =
-      '<div class="modal-back" data-close></div>' +
-      '<div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="su-title">' +
-        '<button type="button" class="iconbtn modal-x" data-close aria-label="Close">' +
-          '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button>' +
-        '<span class="k">FREE ACCOUNT</span>' +
-        '<h2 id="su-title">Sign up free</h2>' +
-        '<p class="muted">Saved reports, channel alerts and a weekly digest are next. Sign up now and you get them first, plus the weekly creator report. The tools stay free with or without an account.</p>' +
-        '<form data-subscribe data-kind="signup" novalidate>' +
-          '<label for="su-email">Email</label>' +
-          '<input id="su-email" type="email" name="email" placeholder="you@example.com" required autocomplete="email">' +
-          '<label for="su-platform">You mostly work on</label>' +
-          '<select id="su-platform" name="platform"><option>YouTube</option><option>Instagram</option><option>TikTok</option><option>Twitch</option><option>X</option><option>Several platforms</option><option>I run a brand or agency</option></select>' +
-          '<input type="text" name="website" tabindex="-1" autocomplete="off" class="hp" aria-hidden="true">' +
-          '<button type="submit" class="btn wide">Create my free account</button>' +
-          '<span class="fmsg" data-msg>No spam. One click to unsubscribe.</span>' +
-        '</form>' +
-      '</div>';
-    document.body.appendChild(m);
-    m.querySelectorAll("[data-close]").forEach(function (b) { b.addEventListener("click", closeModal); });
-    wireForm(m.querySelector("form[data-subscribe]"));
-    return m;
-  }
-  function openModal() {
-    if (!modal) modal = buildModal();
-    modal.hidden = false;
-    document.body.classList.add("modal-open");
-    var input = modal.querySelector("input[type=email]");
-    if (input) setTimeout(function () { input.focus(); }, 30);
-  }
-  function closeModal() {
-    if (!modal) return;
-    modal.hidden = true;
-    document.body.classList.remove("modal-open");
-  }
-  document.addEventListener("keydown", function (e) { if (e.key === "Escape") closeModal(); });
-  document.querySelectorAll("[data-signup]").forEach(function (b) { b.addEventListener("click", openModal); });
+  /* "Sign up free" buttons anywhere on the site go to the real sign-up page. */
+  document.querySelectorAll("button[data-signup]").forEach(function (b) {
+    b.addEventListener("click", function () { location.href = ROOT + "signup/"; });
+  });
 
   /* Subscribe, newsletter and contact forms all post to the same endpoint. */
   function wireForm(form) {
@@ -185,9 +134,7 @@
               data.kind === "newsletter" ? "You're subscribed. The next report lands in your inbox this week." :
               "You're in. Watch your inbox for the first report.";
             say(done, "good");
-            if (data.kind !== "contact") markSigned();
             form.reset();
-            if (data.kind === "signup") setTimeout(closeModal, 1800);
           } else {
             say((res && res.error) || "Something went wrong. Please try again.", res && res.code === "no_backend" ? "" : "bad");
           }
@@ -202,10 +149,10 @@
   document.querySelectorAll("form[data-subscribe]").forEach(wireForm);
 
   /* ------------------------------------------------------------- accounts */
-  /* Sign-in is passwordless: a link is emailed and exchanged for a session
-     cookie. The cookie is HttpOnly so this script cannot read it. A plain
-     localStorage marker is kept purely so the header can show the right thing
-     without a request on every page; the server is still the only authority. */
+  /* Three ways in: Google, a password, or a link emailed to you. Whichever is
+     used, the server sets one signed HttpOnly cookie. This script cannot read
+     that cookie; the localStorage marker below only decides what the header
+     shows, and the server stays the only authority. */
 
   var AUTH = "/api/auth";
   var MARK = "pa-user";
@@ -236,72 +183,169 @@
       a.textContent = email ? "Account" : "Log in";
       a.setAttribute("href", ROOT + (email ? "account/" : "login/"));
     });
-    document.querySelectorAll("[data-signup]").forEach(function (b) {
+    document.querySelectorAll("[data-signup-link], button[data-signup]").forEach(function (b) {
       b.style.display = email ? "none" : "";
     });
   }
   paintHeader();
 
-  /* Sign-in page */
-  var loginBox = document.querySelector("[data-login]");
-  if (loginBox) {
-    var form = loginBox.querySelector("[data-login-form]");
-    var sent = loginBox.querySelector("[data-login-sent]");
-    var working = loginBox.querySelector("[data-login-working]");
-    var msg = form.querySelector("[data-msg]");
-    var idleText = msg.textContent;
-    var again = loginBox.querySelector("[data-login-again]");
-
-    function showOnly(which) {
-      form.hidden = which !== "form";
-      sent.hidden = which !== "sent";
-      working.hidden = which !== "working";
-    }
-    function fail(text) {
-      showOnly("form");
-      msg.textContent = text;
-      msg.className = "fmsg bad";
-    }
-
-    again.addEventListener("click", function () {
-      showOnly("form");
-      msg.textContent = idleText;
-      msg.className = "fmsg";
-      form.reset();
+  /* Show / hide a password field. */
+  document.querySelectorAll("[data-pw-show]").forEach(function (b) {
+    b.addEventListener("click", function () {
+      var input = b.parentNode.querySelector("input");
+      if (!input) return;
+      var show = input.type === "password";
+      input.type = show ? "text" : "password";
+      b.textContent = show ? "Hide" : "Show";
+      b.setAttribute("aria-label", show ? "Hide password" : "Show password");
     });
+  });
+
+  /* ---------------------------------------------------- sign in / sign up */
+  var authCard = document.querySelector("[data-auth]");
+  if (authCard) {
+    var signupMode = authCard.getAttribute("data-auth-mode") === "signup";
+    var offBox = authCard.querySelector("[data-auth-off]");
+    var mainBox = authCard.querySelector("[data-auth-body]");
+    var form = authCard.querySelector("[data-auth-form]");
+    var emailInput = form.elements.email;
+    var pwWrap = authCard.querySelector("[data-password-wrap]");
+    var pwInput = authCard.querySelector("#a-password");
+    var pwHint = authCard.querySelector("[data-pw-hint]");
+    var submit = authCard.querySelector("[data-auth-submit]");
+    var msg = authCard.querySelector("[data-msg]");
+    var wantLink = authCard.querySelector("[data-want-link]");
+    var wantPassword = authCard.querySelector("[data-want-password]");
+    var googleWrap = authCard.querySelector("[data-google-wrap]");
+    var googleSlot = authCard.querySelector("[data-google-button]");
+    var sentBox = authCard.querySelector("[data-login-sent]");
+    var workingBox = authCard.querySelector("[data-login-working]");
+    var againBtn = authCard.querySelector("[data-login-again]");
+
+    var usePassword = false;   // false means "email me a link"
+    var methods = { link: false, google: false, password: false };
+
+    function panel(which) {
+      mainBox.hidden = which !== "form";
+      sentBox.hidden = which !== "sent";
+      workingBox.hidden = which !== "working";
+      if (offBox) offBox.hidden = which !== "off";
+    }
+    function say(text, cls) {
+      msg.textContent = text || "";
+      msg.className = "fmsg" + (cls ? " " + cls : "");
+    }
+    function paintMode() {
+      pwWrap.hidden = !usePassword;
+      if (pwHint) pwHint.hidden = !(usePassword && signupMode);
+      pwInput.setAttribute("autocomplete", signupMode ? "new-password" : "current-password");
+      submit.textContent = usePassword
+        ? (signupMode ? "Create my account" : "Sign in")
+        : "Email me a sign-in link";
+      if (wantLink) wantLink.hidden = !usePassword || !methods.link;
+      if (wantPassword) wantPassword.hidden = usePassword || !methods.password;
+      say("");
+    }
+
+    if (wantLink) wantLink.addEventListener("click", function () { usePassword = false; paintMode(); emailInput.focus(); });
+    if (wantPassword) wantPassword.addEventListener("click", function () { usePassword = true; paintMode(); pwInput.focus(); });
+    if (againBtn) againBtn.addEventListener("click", function () { panel("form"); form.reset(); say(""); });
+
+    function afterSignIn(res) {
+      marker(res.email);
+      var next = new URLSearchParams(location.search).get("next");
+      var safe = next && next.charAt(0) === "/" && next.charAt(1) !== "/" ? next : null;
+      location.replace(safe || (ROOT + "account/"));
+    }
 
     form.addEventListener("submit", function (e) {
       e.preventDefault();
-      var email = (form.elements.email.value || "").trim();
-      if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)) { fail("Enter a valid email address."); return; }
-      var btn = form.querySelector("button[type=submit]");
-      btn.disabled = true;
-      msg.textContent = "Sending…";
-      msg.className = "fmsg";
-      authCall("request", { email: email, website: form.elements.website.value, source: location.pathname }).then(function (res) {
-        btn.disabled = false;
-        if (res && res.ok) showOnly("sent");
-        else fail((res && res.error) || "Something went wrong. Please try again.");
+      var email = (emailInput.value || "").trim();
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)) { say("Enter a valid email address.", "bad"); return; }
+      if (usePassword && (pwInput.value || "").length < 1) { say("Enter your password.", "bad"); return; }
+
+      submit.disabled = true;
+      say("Working…");
+
+      var action = usePassword ? (signupMode ? "register" : "password") : "request";
+      var payload = { email: email, source: location.pathname, website: form.elements.website.value };
+      if (usePassword) payload.password = pwInput.value;
+
+      authCall(action, payload).then(function (res) {
+        submit.disabled = false;
+        if (!res || !res.ok) {
+          say((res && res.error) || "Something went wrong. Please try again.", "bad");
+          // Nudge an existing account towards the right page.
+          if (res && res.code === "exists" && signupMode) {
+            usePassword = true;
+            wantPassword.hidden = true;
+          }
+          return;
+        }
+        if (action === "request") { panel("sent"); return; }
+        afterSignIn(res);
       });
     });
 
-    /* Arriving from the emailed link. */
-    var token = new URLSearchParams(location.search).get("token");
-    if (token) {
-      showOnly("working");
-      authCall("verify", { token: token }).then(function (res) {
-        if (res && res.ok) {
-          marker(res.email);
-          location.replace(ROOT + "account/");
-        } else {
-          fail((res && res.error) || "That sign-in link did not work. Ask for a new one.");
-          history.replaceState(null, "", location.pathname);
-        }
-      });
+    /* Google Identity Services, loaded only when a client ID is configured. */
+    function startGoogle(clientId) {
+      var s = document.createElement("script");
+      s.src = "https://accounts.google.com/gsi/client";
+      s.async = true;
+      s.onload = function () {
+        if (!window.google || !window.google.accounts || !window.google.accounts.id) return;
+        window.google.accounts.id.initialize({
+          client_id: clientId,
+          locale: "en", // the rest of the site is English, so keep the button English too
+          callback: function (response) {
+            panel("working");
+            authCall("google", { credential: response.credential, source: location.pathname }).then(function (res) {
+              if (res && res.ok) afterSignIn(res);
+              else { panel("form"); say((res && res.error) || "That Google sign-in did not work.", "bad"); }
+            });
+          },
+        });
+        window.google.accounts.id.renderButton(googleSlot, {
+          theme: document.documentElement.getAttribute("data-theme") === "dark" ? "filled_black" : "outline",
+          size: "large",
+          width: Math.min(360, Math.max(240, googleSlot.clientWidth || 320)),
+          text: signupMode ? "signup_with" : "signin_with",
+          shape: "rectangular",
+        });
+        googleWrap.hidden = false;
+      };
+      s.onerror = function () { googleWrap.hidden = true; };
+      document.head.appendChild(s);
     }
+
+    /* Work out what this deployment actually supports before showing anything. */
+    authCall("health").then(function (res) {
+      if (!res || !res.enabled) { panel("off"); return; }
+      methods = res.methods || methods;
+      if (pwInput && res.minPassword) pwInput.setAttribute("placeholder", "At least " + res.minPassword + " characters");
+      if (!methods.link && !methods.google && !methods.password) { panel("off"); return; }
+
+      usePassword = methods.password;   // prefer a password when it is available
+      panel("form");
+      paintMode();
+      if (methods.google && res.googleClientId) startGoogle(res.googleClientId);
+
+      /* Arriving from an emailed link. */
+      var token = new URLSearchParams(location.search).get("token");
+      if (token) {
+        panel("working");
+        authCall("verify", { token: token }).then(function (r2) {
+          if (r2 && r2.ok) { afterSignIn(r2); return; }
+          panel("form");
+          paintMode();
+          say((r2 && r2.error) || "That sign-in link did not work. Ask for a new one.", "bad");
+          history.replaceState(null, "", location.pathname);
+        });
+      }
+    });
   }
 
-  /* Account page */
+  /* ------------------------------------------------------------- account */
   var account = document.querySelector("[data-account]");
   if (account) {
     var loading = document.querySelector("[data-account-loading]");
@@ -309,6 +353,10 @@
     var prefBox = account.querySelector("[data-pref-weekly]");
     var prefMsg = account.querySelector("[data-pref-msg]");
     var delMsg = account.querySelector("[data-delete-msg]");
+    var setpwWrap = account.querySelector("[data-setpw-wrap]");
+    var setpwForm = account.querySelector("[data-setpw-form]");
+    var setpwMsg = account.querySelector("[data-setpw-msg]");
+    var setpwTitle = account.querySelector("[data-setpw-title]");
 
     function showAccount(state) {
       if (loading) loading.hidden = state !== "loading";
@@ -317,21 +365,53 @@
     }
 
     authCall("me").then(function (res) {
-      if (res && res.ok) {
-        marker(res.email);
-        paintHeader();
-        account.querySelector("[data-account-email]").textContent = res.email;
-        var since = account.querySelector("[data-account-since]");
-        since.textContent = res.since
-          ? new Date(res.since).toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" })
-          : "–";
-        showAccount("in");
-      } else {
+      if (!res || !res.ok) {
         marker(null);
         paintHeader();
         showAccount("out");
+        return;
       }
+      marker(res.email);
+      paintHeader();
+      account.querySelector("[data-account-email]").textContent = res.email;
+      account.querySelector("[data-account-since]").textContent = res.since
+        ? new Date(res.since).toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" })
+        : "–";
+
+      var ways = [];
+      if (res.google) ways.push("Google");
+      if (res.hasPassword) ways.push("Password");
+      ways.push("Email link");
+      account.querySelector("[data-account-methods]").textContent = ways.join(", ");
+
+      if (prefBox) prefBox.checked = res.weekly !== false;
+
+      if (setpwWrap) {
+        setpwWrap.hidden = false;
+        if (setpwTitle) setpwTitle.textContent = res.hasPassword ? "Change your password" : "Add a password";
+      }
+      showAccount("in");
     });
+
+    if (setpwForm) {
+      setpwForm.addEventListener("submit", function (e) {
+        e.preventDefault();
+        var value = setpwForm.elements.password.value || "";
+        setpwMsg.textContent = "Saving…";
+        setpwMsg.className = "fmsg";
+        authCall("set-password", { password: value }).then(function (res) {
+          if (res && res.ok) {
+            setpwMsg.textContent = "Saved. You can sign in with that password from now on.";
+            setpwMsg.className = "fmsg good";
+            setpwForm.reset();
+            if (setpwTitle) setpwTitle.textContent = "Change your password";
+          } else {
+            setpwMsg.textContent = (res && res.error) || "Could not save that.";
+            setpwMsg.className = "fmsg bad";
+          }
+        });
+      });
+    }
 
     if (prefBox) {
       prefBox.addEventListener("change", function () {
@@ -364,19 +444,19 @@
     var delBtn = account.querySelector("[data-delete]");
     if (delBtn) {
       delBtn.addEventListener("click", function () {
-        if (!window.confirm("Delete your email address and preferences? This signs you out and cannot be undone. The tools keep working without an account.")) return;
+        if (!window.confirm("Delete your account, your email address and your preferences? This signs you out and cannot be undone. The tools keep working without an account.")) return;
         delBtn.disabled = true;
-        delMsg.textContent = "Sending the request…";
+        delMsg.textContent = "Deleting…";
         delMsg.className = "fmsg";
         authCall("delete", {}).then(function (res) {
           if (res && res.ok) {
             marker(null);
-            delMsg.textContent = "Done. Your data is scheduled for removal and you have been signed out.";
+            delMsg.textContent = "Done. Your account has been removed and you have been signed out.";
             delMsg.className = "fmsg good";
             setTimeout(function () { location.href = ROOT; }, 2500);
           } else {
             delBtn.disabled = false;
-            delMsg.textContent = (res && res.error) || "Could not record that.";
+            delMsg.textContent = (res && res.error) || "Could not delete that.";
             delMsg.className = "fmsg bad";
           }
         });

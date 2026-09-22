@@ -207,3 +207,60 @@ respond if you ever thought it had leaked.
   launch, not for scale. Move to a sending service if you outgrow it.
 - **`/login/` and `/account/` carry a noindex tag** and are excluded from the
   sitemap and blocked in robots.txt.
+
+### Google sign-in
+
+1. Open the [Google Cloud console](https://console.cloud.google.com/apis/credentials)
+   and pick the same project that holds your YouTube API key.
+2. **Create credentials**, **OAuth client ID**. If it asks you to configure the
+   consent screen first, do that: **External**, fill in the app name, your
+   support email and the developer email, and save. You do not need to submit
+   it for verification to sign in yourself, and sign-in with basic profile
+   scopes does not require review.
+3. Application type **Web application**. Under **Authorised JavaScript
+   origins** add both of these, exactly, with no trailing slash:
+
+```
+https://passivearray.vercel.app
+http://localhost:8099
+```
+
+4. Leave **Authorised redirect URIs** empty. The button uses the ID token
+   flow, which does not redirect.
+5. Copy the **Client ID**. It ends in `.apps.googleusercontent.com`.
+6. In Vercel add the environment variable `GOOGLE_CLIENT_ID` with that value,
+   then **Redeploy**.
+
+The client secret is not used anywhere and does not need to go into Vercel.
+
+### Password accounts
+
+Passwords need somewhere to keep the hashes, so this is the one part that
+needs a store. Vercel KV is the shortest path because it wires itself up.
+
+1. In Vercel open the project, then **Storage**, then **Create** and pick a KV
+   or Upstash Redis store. Connect it to this project.
+2. Vercel sets `KV_REST_API_URL` and `KV_REST_API_TOKEN` for you. If you use
+   Upstash directly instead, set `UPSTASH_REDIS_REST_URL` and
+   `UPSTASH_REDIS_REST_TOKEN`; either pair works.
+3. **Redeploy**, then check `/api/auth?action=health`. `methods.password`
+   should be `true`.
+
+What is stored per person: the email address, the date they joined, whether
+they want the weekly report, and a scrypt hash of the password. The password
+itself is never stored, never logged and never leaves the auth function.
+
+Passwords must be at least 10 characters, are checked against the handful of
+most-guessed strings, and cannot contain the local part of the email address.
+Sign-in attempts are rate limited per address and per connection.
+
+### What each method needs
+
+| Method | Needs | Works without a store |
+|---|---|---|
+| Email link | `AUTH_SECRET` + `SUBSCRIBE_WEBHOOK_URL` | Yes |
+| Google | `AUTH_SECRET` + `GOOGLE_CLIENT_ID` | Yes |
+| Password | `AUTH_SECRET` + KV or Upstash | No |
+
+Any method that is not configured is hidden from the sign-in page rather than
+shown and then failing. `/api/auth?action=health` reports the current state.

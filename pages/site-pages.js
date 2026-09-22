@@ -186,38 +186,97 @@ function termsPage() {
   return site.shell({ title: "Terms of use", ogTitle: "Passive Array terms of use", description: "Free tools, estimates are estimates, acceptable use, YouTube API terms, no warranty.", path: "/terms/", active: "", narrow: true, body });
 }
 
-function loginPage() {
+// One component, two entry points: /login/ and /signup/. The JS in site.js
+// asks /api/auth?action=health and hides whichever methods are not set up, so
+// the page never shows a button that cannot work.
+function authPage(mode) {
+  const signup = mode === "signup";
   const body = `
-  ${head("Sign in", "Sign in", "No password to remember. We email you a link that signs you in.")}
+  ${head(signup ? "Create account" : "Sign in", signup ? "Create your free account" : "Sign in", signup
+    ? "Free, and optional. Every tool on this site works without an account."
+    : "Use Google, a password, or a link emailed to you.")}
   <div class="two-col">
-    <div class="card form-card" data-login>
-      <form data-login-form novalidate>
-        <label for="l-email">Your email</label>
-        <input id="l-email" type="email" name="email" autocomplete="email" placeholder="you@example.com" required>
-        <input type="text" name="website" tabindex="-1" autocomplete="off" class="hp" aria-hidden="true">
-        <button type="submit" class="btn wide">Email me a sign-in link</button>
-        <span class="fmsg" data-msg>We email you a link. It stays valid for 20 minutes.</span>
-      </form>
+    <div class="card form-card" data-auth data-auth-mode="${signup ? "signup" : "signin"}">
+
+      <div class="authmsg" data-auth-off hidden>
+        <h3>Accounts are not switched on yet</h3>
+        <p class="muted">Every calculator, checker and generator works without one. Try the <a href="../creator-tools/">tools</a>.</p>
+      </div>
+
+      <div data-auth-body hidden>
+        <div data-google-wrap hidden>
+          <div class="gbtn" data-google-button></div>
+          <div class="orline"><span>or</span></div>
+        </div>
+
+        <form data-auth-form novalidate>
+          <label for="a-email">Email</label>
+          <input id="a-email" type="email" name="email" autocomplete="email" placeholder="you@example.com" required>
+
+          <div data-password-wrap hidden>
+            <label for="a-password">Password</label>
+            <div class="pwfield">
+              <input id="a-password" type="password" name="password" placeholder="At least 10 characters">
+              <button type="button" class="pwshow" data-pw-show aria-label="Show password">Show</button>
+            </div>
+            <span class="fmsg" data-pw-hint hidden>At least 10 characters. Longer beats complicated.</span>
+          </div>
+
+          <input type="text" name="website" tabindex="-1" autocomplete="off" class="hp" aria-hidden="true">
+          <button type="submit" class="btn wide" data-auth-submit>${signup ? "Create my account" : "Sign in"}</button>
+          <span class="fmsg" data-msg></span>
+        </form>
+
+        <div class="authalt">
+          <button type="button" class="link" data-want-link hidden>Email me a sign-in link instead</button>
+          <button type="button" class="link" data-want-password hidden>Use a password instead</button>
+        </div>
+
+        <p class="authswap">
+          <span data-swap-signin${signup ? "" : " hidden"}>Already have an account? <a href="../login/">Sign in</a></span>
+          <span data-swap-signup${signup ? " hidden" : ""}>New here? <a href="../signup/">Create an account</a></span>
+        </p>
+      </div>
+
       <div class="login-done" data-login-sent hidden>
         <h3>Check your inbox</h3>
         <p class="muted">A sign-in link is on its way to that address. It expires in 20 minutes. Look in spam if it has not arrived within a minute.</p>
         <button type="button" class="btn ghost" data-login-again>Use a different address</button>
       </div>
+
       <div class="login-done" data-login-working hidden>
         <h3>Signing you in…</h3>
         <p class="muted">One moment.</p>
       </div>
     </div>
+
     <div class="card">
-      <h3 style="margin-bottom:10px">Why there is no password</h3>
-      <p class="muted" style="font-size:.95rem;line-height:1.6">Passwords get reused, leaked and forgotten. We do not store any, so there are none to lose. You ask for a link, we email it, and clicking it signs you in for 30 days on that device. Treat the link like a key: anyone who reads that email within 20 minutes can use it.</p>
-      <h3 style="margin:20px 0 10px">You do not need an account</h3>
-      <p class="muted" style="font-size:.95rem;line-height:1.6">Every calculator, checker and generator on this site works without signing in, and always will. An account only holds your email preferences.</p>
+      <h3 style="margin-bottom:10px">You do not need an account</h3>
+      <p class="muted" style="font-size:.95rem;line-height:1.6">Every calculator, checker and generator on this site works without signing in, and always will. An account holds your email address and whether you want the weekly report. Nothing else.</p>
+      <h3 style="margin:20px 0 10px">Three ways in</h3>
+      <ul class="plain">
+        <li><b>Google.</b> Fastest. We receive your email address and nothing else, and never get access to your Google account.</li>
+        <li><b>Password.</b> Stored only as a scrypt hash, which cannot be reversed into your password.</li>
+        <li><b>Email link.</b> No password at all. The link stays valid for 20 minutes, so treat it like a key.</li>
+      </ul>
       <p style="margin-top:16px"><a href="../creator-tools/">Go straight to the tools</a></p>
     </div>
   </div>`;
-  return site.shell({ title: "Sign in", ogTitle: "Sign in to Passive Array", description: "Passwordless sign-in. We email you a link. Every tool on the site works without an account.", path: "/login/", active: "", head: '<meta name="robots" content="noindex">', body });
+  return site.shell({
+    title: signup ? "Create account" : "Sign in",
+    ogTitle: signup ? "Create a free Passive Array account" : "Sign in to Passive Array",
+    description: signup
+      ? "Create a free account with Google, a password or an email link. Every tool on the site works without one."
+      : "Sign in with Google, a password, or a link emailed to you.",
+    path: signup ? "/signup/" : "/login/",
+    active: "",
+    head: '<meta name="robots" content="noindex">',
+    body,
+  });
 }
+
+const loginPage = () => authPage("signin");
+const signupPage = () => authPage("signup");
 
 function accountPage() {
   const body = `
@@ -229,11 +288,25 @@ function accountPage() {
         <div class="pa-rows">
           <div class="arow"><span>Email</span><b data-account-email>–</b></div>
           <div class="arow"><span>Member since</span><b data-account-since>–</b></div>
-          <div class="arow"><span>Password</span><b>None. We sign you in by email.</b></div>
+          <div class="arow"><span>Sign-in methods</span><b data-account-methods>–</b></div>
         </div>
         <div style="display:flex;gap:8px;margin-top:18px;flex-wrap:wrap">
           <button type="button" class="btn ghost" data-logout>Sign out</button>
           <a class="btn ghost" href="../creator-tools/">Open the tools</a>
+        </div>
+
+        <div data-setpw-wrap hidden>
+          <h3 style="margin:24px 0 6px" data-setpw-title>Add a password</h3>
+          <p class="muted" style="font-size:.92rem;margin-bottom:12px">Optional. It gives you a second way in if you lose access to your email.</p>
+          <form data-setpw-form novalidate>
+            <label for="sp-password">New password</label>
+            <div class="pwfield">
+              <input id="sp-password" type="password" name="password" placeholder="At least 10 characters" autocomplete="new-password">
+              <button type="button" class="pwshow" data-pw-show aria-label="Show password">Show</button>
+            </div>
+            <button type="submit" class="btn ghost" style="margin-top:12px">Save password</button>
+            <span class="fmsg" data-setpw-msg></span>
+          </form>
         </div>
       </div>
       <div class="card">
@@ -259,11 +332,11 @@ function accountPage() {
   return site.shell({ title: "Account", ogTitle: "Your Passive Array account", description: "Manage your email preferences and your data.", path: "/account/", active: "", head: '<meta name="robots" content="noindex">', body });
 }
 
-const PAGES = { about: aboutPage, contact: contactPage, privacy: privacyPage, terms: termsPage, login: loginPage, account: accountPage };
+const PAGES = { about: aboutPage, contact: contactPage, privacy: privacyPage, terms: termsPage, login: loginPage, signup: signupPage, account: accountPage };
 
 // Pages that carry a noindex tag: they are functional, not content, so they
 // stay out of the sitemap and out of robots.
-const NOINDEX = ["login", "account"];
+const NOINDEX = ["login", "signup", "account"];
 
 function buildInto(dist) {
   const fs = require("fs");
