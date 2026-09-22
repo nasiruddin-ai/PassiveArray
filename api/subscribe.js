@@ -42,11 +42,17 @@ module.exports = async (req, res) => {
     try {
       const ctrl = new AbortController();
       const timer = setTimeout(() => ctrl.abort(), 8000);
-      const r = await fetch(url, { method: "GET", redirect: "follow", signal: ctrl.signal });
+      // ?health=1&post=1 sends a real POST (kind "health") so the exact answer to a submission is visible.
+      const asPost = !!req.query.post;
+      const r = await fetch(url, asPost
+        ? { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ kind: "health", email: "health-check@passivearray.test", receivedAt: new Date().toISOString() }), redirect: "follow", signal: ctrl.signal }
+        : { method: "GET", redirect: "follow", signal: ctrl.signal });
       clearTimeout(timer);
-      const text = (await r.text().catch(() => "")).replace(/s+/g, " ").slice(0, 160);
+      const text = (await r.text().catch(() => "")).split(/s/).filter(Boolean).join(" ").slice(0, 200);
       out.destination = {
+        method: asPost ? "POST" : "GET",
         status: r.status,
+        redirected: r.redirected,
         finalHost: (() => { try { return new URL(r.url).host; } catch (_) { return ""; } })(),
         looksLike: /Passive Array receiver/.test(text) ? "apps-script-receiver"
           : /accounts.google.com/.test(r.url) ? "google-login-wall"
