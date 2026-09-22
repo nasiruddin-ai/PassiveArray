@@ -2,7 +2,8 @@
 title: Do YouTube tags still matter in 2026?
 description: What tags do and do not do for ranking, the 500-character limit, how to see any video's hidden tags, and where to spend the effort instead.
 date: 2026-08-14
-category: YouTube
+keyword: are youtube tags important
+category: YouTube SEO
 tools: youtube-channel-quality-checker, youtube-subscriber-count-checker
 ---
 

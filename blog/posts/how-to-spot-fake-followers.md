@@ -2,8 +2,9 @@
 title: How to spot fake followers on Instagram and TikTok: 7 signals
 description: The patterns bought followers and likes leave in public numbers, how our fake-follower checker weighs them, and what a suspicious score really means.
 date: 2026-08-28
-category: Brands
-tools: instagram-fake-follower-checker, tiktok-fake-follower-checker, instagram-account-audit
+keyword: fake followers checker
+category: For brands
+tools: instagram-fake-follower-checker, tiktok-fake-follower-checker, instagram-audit
 ---
 
 Nobody sells "fake followers" as a labelled product any more. What you get today is a mix of bot accounts, inactive accounts bought in bulk, engagement pods and paid likes, and each leaves a slightly different fingerprint in the public numbers. You do not need access to the follower list to see most of them.

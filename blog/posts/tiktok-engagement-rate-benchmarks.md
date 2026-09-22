@@ -2,8 +2,9 @@
 title: TikTok engagement rate benchmarks by follower count
 description: Why TikTok rates run far higher than Instagram, the typical rate for each account size, and how to grade an account fairly.
 date: 2026-08-07
-category: TikTok
-tools: tiktok-engagement-rate-calculator, tiktok-account-audit, tiktok-fake-follower-checker
+keyword: what is average tiktok engagement rate
+category: Engagement
+tools: tiktok-engagement-rate-calculator, tiktok-audit, tiktok-fake-follower-checker
 ---
 
 Put an Instagram creator and a TikTok creator side by side and the TikTok engagement rate will look three to five times higher. That is not a sign one is better. TikTok's feed is built to show videos to people who do not follow the creator, and the like button sits under the thumb for the whole video. The benchmarks have to be different, and they are.

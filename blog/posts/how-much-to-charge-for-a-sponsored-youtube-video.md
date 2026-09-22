@@ -2,7 +2,8 @@
 title: How much to charge for a sponsored YouTube video: the CPM method
 description: Price a sponsorship from average views and the CPM brands pay for placements, with the multipliers for dedicated videos and Shorts that our calculator uses.
 date: 2026-08-21
-category: YouTube
+keyword: how much should i charge for a sponsored youtube video
+category: Sponsorships
 tools: youtube-sponsorship-price-calculator, youtube-engagement-rate-calculator, youtube-money-calculator
 ---
 

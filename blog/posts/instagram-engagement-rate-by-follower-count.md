@@ -2,8 +2,9 @@
 title: Instagram engagement rate by follower count (2026 benchmarks)
 description: Typical engagement rates for nano, micro, mid, macro and mega accounts, the formula, and how the grade in our calculator is worked out.
 date: 2026-09-04
-category: Instagram
-tools: instagram-engagement-rate-calculator, instagram-engagement-rate-benchmark, instagram-account-audit
+keyword: average instagram engagement rate
+category: Engagement
+tools: instagram-engagement-rate-calculator, instagram-engagement-rate-benchmark, instagram-audit
 ---
 
 Instagram engagement rate is the first number a brand looks at before a deal and the first number a creator checks after a post. It is also the number most often compared unfairly, because the typical rate falls steeply as an account grows. A 2% rate is excellent for one account and a warning for another.

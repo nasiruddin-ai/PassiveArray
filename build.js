@@ -87,9 +87,9 @@ fs.writeFileSync(path.join(DIST, "youtube-extension", "index.html"), ext.landing
 fs.writeFileSync(path.join(DIST, "youtube-extension", "privacy", "index.html"), ext.privacyPage());
 console.log("youtube-extension/pages.js -> dist/youtube-extension/ (landing + privacy)");
 
-// Blog: blog/posts/*.md -> dist/blog/
-const postCount = blog.buildInto(path.join(DIST, "blog"), posts);
-console.log("blog/posts/ -> dist/blog/ (" + postCount + " articles + index)");
+// Blog: blog/posts/*.md -> dist/blog/ plus one page per category
+const built = blog.buildInto(path.join(DIST, "blog"), posts);
+console.log("blog/posts/ -> dist/blog/ (" + built.posts + " articles, " + built.categories + " category pages + index)");
 
 // Company pages: about, contact, privacy, terms.
 const pages = require("./pages/site-pages.js");
@@ -105,6 +105,7 @@ const urls = [
   ["/youtube-extension/", "0.8", "monthly"],
   ["/youtube-extension/privacy/", "0.3", "yearly"],
   ["/blog/", "0.8", "weekly"],
+  ...blog.CATEGORIES.map((c) => ["/blog/category/" + c.slug + "/", "0.7", "weekly"]),
   ...posts.map((p) => ["/blog/" + p.slug + "/", "0.7", "monthly", p.updated]),
   ...pagePaths.map((p) => [p, p === "/about/" ? "0.5" : "0.3", "yearly"]),
 ];

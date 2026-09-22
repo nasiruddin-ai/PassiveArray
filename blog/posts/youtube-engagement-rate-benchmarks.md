@@ -2,7 +2,8 @@
 title: What is a good YouTube engagement rate? Benchmarks by views
 description: The engagement scale our tools use, why it is measured against views and not subscribers, and what moves a channel from "average" to "good".
 date: 2026-09-18
-category: YouTube
+keyword: good engagement rate on youtube
+category: Engagement
 tools: youtube-engagement-rate-calculator, youtube-channel-quality-checker, youtube-subscriber-count-checker
 ---
 

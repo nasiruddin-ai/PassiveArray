@@ -430,3 +430,18 @@ a.card.post .pdate { margin-top: auto; font-size: .8rem; color: var(--muted); }
 
 /* Mobile: the nav collapses, so the actions must keep the right edge. */
 @media (max-width: 900px) { .site-header .hactions { margin-left: auto; } }
+
+/* ---------------------------------------------------------------- blog category nav */
+.catnav { display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 24px; }
+.catnav a {
+  display: inline-flex; align-items: center; gap: 7px; height: 38px; padding: 0 15px;
+  border-radius: 999px; border: 1px solid var(--line); background: var(--card);
+  color: var(--text); font-size: .88rem; font-weight: 500;
+}
+.catnav a:hover { border-color: var(--teal); color: var(--deep); }
+.catnav a.on { background: var(--ink); border-color: var(--ink); color: #fff; font-weight: 600; }
+:root[data-theme="dark"] .catnav a.on { background: var(--teal); border-color: var(--teal); color: #0F1626; }
+.catnav a span { font-size: .75rem; color: var(--muted); }
+.catnav a.on span { color: rgba(255,255,255,.75); }
+:root[data-theme="dark"] .catnav a.on span { color: rgba(15,22,38,.7); }
+@media (max-width: 640px) { .catnav a { height: 34px; padding: 0 12px; font-size: .82rem; } }

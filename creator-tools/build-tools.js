@@ -394,8 +394,10 @@ function buildInto(outDir) {
 /* ------------------------------------------------------------------ shared page shell for blog, extension and company pages */
 const fmtDate = (s) => new Date(s + (String(s).length === 10 ? "T12:00:00Z" : "")).toLocaleDateString("en-US", { year: "numeric", month: "short", day: "numeric" });
 
+// A post's category is an object from blog/build-blog.js; older callers passed a string.
 function postCard(p, root) {
-  return `<a class="card post" href="${root}blog/${p.slug}/"><span class="tagline"><span class="plat" style="color:var(--deep)">${esc(p.category.toUpperCase())}</span><span class="muted" style="font-size:.78rem">${p.minutes} min read</span></span><h3>${esc(p.title)}</h3><p>${esc(p.description)}</p><span class="pdate">${fmtDate(p.date)}</span></a>`;
+  const label = typeof p.category === "string" ? p.category : p.category.label;
+  return `<a class="card post" href="${root}blog/${p.slug}/"><span class="tagline"><span class="plat" style="color:var(--deep)">${esc(label.toUpperCase())}</span><span class="muted" style="font-size:.78rem">${p.minutes} min read</span></span><h3>${esc(p.title)}</h3><p>${esc(p.description)}</p><span class="pdate">${fmtDate(p.date)}</span></a>`;
 }
 
 // path is the site path the page is served at, e.g. "/blog/some-post/". Body goes inside <main class="wrap">.

@@ -2,7 +2,8 @@
 title: How much does YouTube pay per view? RPM, CPM and a realistic range
 description: The formula behind YouTube ad earnings, why RPM and CPM are different numbers, and the range our money calculator uses by default.
 date: 2026-09-11
-category: YouTube
+keyword: how much does youtube pay per view
+category: Earnings
 tools: youtube-money-calculator, youtube-sponsorship-price-calculator
 ---
 
