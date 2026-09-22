@@ -226,6 +226,47 @@ async function lookalike(input) {
   return { seed, query: q, channels: found.sort((a, b) => rank(a) - rank(b)).slice(0, 15) };
 }
 
+// Stats for up to 50 video ids at once, plus the subscriber count of each
+// video's channel. Used by the browser extension on search result pages.
+// Cost: 1 unit for the videos, 1 unit per 50 distinct channels.
+async function getVideos(rawIds) {
+  const ids = [...new Set(String(rawIds || "").split(",").map((s) => s.trim()).filter((s) => /^[\w-]{11}$/.test(s)))].slice(0, 50);
+  if (!ids.length) throw Object.assign(new Error("Pass up to 50 video ids as ids=a,b,c."), { code: "input", status: 400 });
+  const key = "videos:" + ids.slice().sort().join(",");
+  return cached(key, async () => {
+    const vd = await yt("videos", { part: "snippet,statistics,contentDetails,liveStreamingDetails", id: ids.join(",") });
+    const videos = (vd.items || []).map((v) => ({
+      id: v.id,
+      title: v.snippet?.title,
+      channelId: v.snippet?.channelId,
+      channelTitle: v.snippet?.channelTitle,
+      publishedAt: v.snippet?.publishedAt,
+      views: n(v.statistics?.viewCount),
+      likes: n(v.statistics?.likeCount),
+      comments: n(v.statistics?.commentCount),
+      seconds: isoDurationToSeconds(v.contentDetails?.duration),
+      live: v.snippet?.liveBroadcastContent === "live",
+      wasLive: !!v.liveStreamingDetails,
+      tags: (v.snippet?.tags || []).length,
+      subscribers: 0,
+      hiddenSubscribers: false,
+    }));
+    const channelIds = [...new Set(videos.map((v) => v.channelId).filter(Boolean))];
+    const channels = await statsForIds(channelIds).catch(() => []);
+    const byId = new Map(channels.map((c) => [c.id, c]));
+    for (const v of videos) {
+      const c = byId.get(v.channelId);
+      if (c) {
+        v.subscribers = c.subscribers;
+        v.hiddenSubscribers = c.hiddenSubscribers;
+        v.channelVideos = c.videos;
+        v.channelViews = c.views;
+      }
+    }
+    return videos;
+  });
+}
+
 function errorBody(e) {
   const code = e.code || "api";
   const messages = {
@@ -252,6 +293,7 @@ async function handleRequest(action, params = {}) {
       return { code: 200, body: { ok: true, channels: await searchChannels(params) } };
     }
     if (action === "lookalike") return { code: 200, body: { ok: true, ...(await lookalike(params.channel)) } };
+    if (action === "videos") return { code: 200, body: { ok: true, videos: await getVideos(params.ids) } };
     return { code: 404, body: { ok: false, code: "action", error: "Unknown action." } };
   } catch (e) {
     return { code: e.status && e.status < 500 ? e.status : 502, body: errorBody(e) };

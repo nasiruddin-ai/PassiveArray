@@ -23,6 +23,19 @@ const SCHEMAS = {
     task: "Act as an Instagram growth strategist. From the account numbers and goal, give the 3 to 5 changes most likely to move the goal metric, in priority order. Each has a short imperative title, a 2 to 3 sentence reason that references the account's actual numbers and the benchmarks for its size, and the metric to watch. Be specific and practical, no filler.",
     shape: '{"actions":[{"title":"...","why":"...","metric":"..."}]}',
   },
+  /* YouTube generators, used by the Passive Array browser extension. */
+  yt_titles: {
+    task: "Write 10 YouTube video titles for the topic. Each under 60 characters so it is not cut off in search, with the main keyword near the start. Vary the angle: how-to, mistakes, listicle, comparison, question, story, contrarian, beginner. No clickbait that the video cannot deliver, no ALL CAPS words, at most one emoji in total. If related keywords are given, work a few of them in naturally.",
+    shape: '{"titles":[{"title":"...","angle":"how-to|mistakes|list|comparison|question|story|contrarian|beginner"}]}',
+  },
+  yt_description: {
+    task: "Write a YouTube video description for the topic. Structure: first 2 lines are a hook that repeats the main keyword (these show above the fold), then a short paragraph on what the viewer will learn from the notes, then a 'Timestamps' section with 4 to 6 placeholder chapter lines in the form 00:00 Chapter name, then a 'Links' section with placeholder lines like [Your website], then 3 to 5 hashtags on the last line. Plain text, no markdown. Use only what the notes say; write placeholders in square brackets for anything unknown.",
+    shape: '{"description":"full text with \\n line breaks"}',
+  },
+  yt_tags: {
+    task: "Write a YouTube tag list for the topic. 20 to 30 tags, total under 480 characters, mixing: the exact keyword, 2 to 4 word long-tail variations, common misspellings only if realistic, broad category tags, and the related keywords given. Lowercase unless a proper noun. No hashtags, no duplicates.",
+    shape: '{"tags":["tag one","tag two"]}',
+  },
 };
 
 function extractJson(text) {
@@ -35,10 +48,14 @@ function extractJson(text) {
 function send(res, code, body) {
   res.setHeader("Content-Type", "application/json; charset=utf-8");
   res.setHeader("Cache-Control", "no-store");
+  // Lets the Passive Array browser extension call this from youtube.com.
+  res.setHeader("Access-Control-Allow-Origin", "*");
+  res.setHeader("Access-Control-Allow-Headers", "Content-Type");
   res.status(code).send(JSON.stringify(body));
 }
 
 module.exports = async (req, res) => {
+  if (req.method === "OPTIONS") return send(res, 204, {});
   if (req.method !== "POST") return send(res, 405, { ok: false, error: "Use POST." });
   const apiKey = process.env.ANTHROPIC_API_KEY;
   if (!apiKey) return send(res, 200, { ok: false, code: "no_key" });
@@ -52,7 +69,7 @@ module.exports = async (req, res) => {
   if (!spec) return send(res, 400, { ok: false, error: "Unknown action." });
 
   const inputs = {};
-  for (const [k, v] of Object.entries(body.inputs || {})) inputs[k] = String(v).slice(0, 300);
+  for (const [k, v] of Object.entries(body.inputs || {})) inputs[k] = String(v).slice(0, k === "notes" ? 1500 : 300);
 
   try {
     const mod = require("@anthropic-ai/sdk");

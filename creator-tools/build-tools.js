@@ -336,7 +336,7 @@ function buildInto(outDir) {
   return tools.length;
 }
 
-module.exports = { buildInto, homePage, tools, SITE };
+module.exports = { buildInto, homePage, tools, SITE, header, footer, esc };
 
 if (require.main === module) {
   const out = path.join(HERE, ".out");

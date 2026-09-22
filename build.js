@@ -46,6 +46,13 @@ console.log("home page -> dist/index.html (" + site.SITE + ")");
 const creatorCount = site.buildInto(path.join(DIST, "creator-tools"));
 console.log("creator-tools/tools.js -> dist/creator-tools/ (" + creatorCount + " tool pages + directory)");
 
+// Browser extension pages: landing page and the privacy policy the Chrome Web Store links to.
+const ext = require("./youtube-extension/pages.js");
+fs.mkdirSync(path.join(DIST, "youtube-extension", "privacy"), { recursive: true });
+fs.writeFileSync(path.join(DIST, "youtube-extension", "index.html"), ext.landingPage());
+fs.writeFileSync(path.join(DIST, "youtube-extension", "privacy", "index.html"), ext.privacyPage());
+console.log("youtube-extension/pages.js -> dist/youtube-extension/ (landing + privacy)");
+
 // Brand files at the site root: favicons, manifest, link preview image.
 const brand = path.join(ROOT, "passive-array-brand");
 const copies = {

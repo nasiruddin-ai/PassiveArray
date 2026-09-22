@@ -12,5 +12,7 @@ module.exports = async (req, res) => {
   const { code, body } = await handleRequest(params.action, params);
   res.setHeader("Content-Type", "application/json; charset=utf-8");
   res.setHeader("Cache-Control", code === 200 ? "public, max-age=600" : "no-store");
+  // Public read-only data; lets the Passive Array browser extension call this from youtube.com.
+  res.setHeader("Access-Control-Allow-Origin", "*");
   res.status(code).send(JSON.stringify(body));
 };
