@@ -85,8 +85,8 @@ function megaMenu(root) {
       </div>
     </div>
     <div class="mfoot"><div class="wrap">
-      <span><b>Every tool is free.</b> No account, no credit card, no trial that expires.</span>
-      <a href="${root}compare/">See how that compares with vidIQ and TubeBuddy</a>
+      <span><b>Every tool is free.</b> No account needed. Sign up with Google if you want the weekly report and early access to saved reports.</span>
+      <span class="mfoot-right"><span class="gslot" data-google-slot data-google-size="medium" data-google-width="210" hidden></span><a href="${root}compare/">Compare with vidIQ and TubeBuddy</a></span>
     </div></div>
   </div>
   <div class="mega small" id="mega-resources" hidden>
@@ -123,10 +123,11 @@ function header(root, active, withSearch) {
     <button type="button" class="navbtn${active === "tools" ? " active" : ""}" data-mega="mega-tools" aria-expanded="false" aria-controls="mega-tools">Tools ${ICON.chev}</button>
     <button type="button" class="navbtn${["blog", "compare", "extension"].includes(active) ? " active" : ""}" data-mega="mega-resources" aria-expanded="false" aria-controls="mega-resources">Resources ${ICON.chev}</button>
     ${link("pricing/", "Pricing", "pricing")}${link("about/", "About", "about")}
-    <a class="navmob" href="${root}youtube-extension/">Extension</a><a class="navmob" href="${root}blog/">Blog</a><a class="navmob" href="${root}compare/">Compare</a></nav>
+    <span class="gslot mob" data-google-slot data-google-size="large" data-google-width="260" hidden></span><a class="navmob" href="${root}youtube-extension/">Extension</a><a class="navmob" href="${root}blog/">Blog</a><a class="navmob" href="${root}compare/">Compare</a></nav>
   <div class="hactions">
     <button type="button" class="iconbtn" data-theme-toggle aria-label="Switch to dark mode">${ICON.moon}</button>
     <a class="hlogin" href="${root}login/" data-login-link>Log in</a>
+    <span class="gslot" data-google-slot data-google-size="medium" data-google-width="196" hidden></span>
     <a class="btn hsignup" href="${root}signup/" data-signup-link>Start now</a>
     <button type="button" class="iconbtn menubtn" data-menu aria-label="Open menu" aria-expanded="false" aria-controls="site-nav"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
   </div>

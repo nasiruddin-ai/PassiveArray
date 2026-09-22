@@ -336,6 +336,7 @@
           },
         });
         window.google.accounts.id.renderButton(googleSlot, {
+          locale: "en",
           theme: document.documentElement.getAttribute("data-theme") === "dark" ? "filled_black" : "outline",
           size: "large",
           width: Math.min(360, Math.max(240, googleSlot.clientWidth || 320)),
@@ -372,6 +373,88 @@
           history.replaceState(null, "", location.pathname);
         });
       }
+    });
+  }
+
+
+  /* ----------------------------------------- Google sign-up, everywhere */
+  /* Renders Google's button into any [data-google-slot] (header, Tools menu,
+     mobile menu) and shows Google One Tap on ordinary pages, so a visitor who
+     is already logged into Google can join with one click without leaving
+     the page. Each new sign-in is forwarded to the sign-up sheet as a lead.
+     Skipped when: Google is not configured, the visitor is already signed in,
+     or the page is the sign-in / sign-up page (those render their own). */
+
+  var HEALTH_KEY = "pa-auth-health";
+  function authHealth() {
+    try {
+      var cached = JSON.parse(sessionStorage.getItem(HEALTH_KEY) || "null");
+      if (cached && cached.until > Date.now()) return Promise.resolve(cached.data);
+    } catch (e) { /* ignore */ }
+    return authCall("health").then(function (res) {
+      try { sessionStorage.setItem(HEALTH_KEY, JSON.stringify({ until: Date.now() + 3600000, data: res })); } catch (e) { /* ignore */ }
+      return res;
+    });
+  }
+
+  function toast(text) {
+    var t = document.createElement("div");
+    t.className = "toast";
+    t.setAttribute("role", "status");
+    t.textContent = text;
+    document.body.appendChild(t);
+    setTimeout(function () { t.classList.add("show"); }, 20);
+    setTimeout(function () { t.classList.remove("show"); setTimeout(function () { t.remove(); }, 400); }, 4200);
+  }
+
+  function loadGsi(cb) {
+    if (window.google && window.google.accounts && window.google.accounts.id) return cb();
+    var s = document.createElement("script");
+    s.src = "https://accounts.google.com/gsi/client";
+    s.async = true;
+    s.onload = cb;
+    document.head.appendChild(s);
+  }
+
+  var slots = document.querySelectorAll("[data-google-slot]");
+  var onAuthPage = !!document.querySelector("[data-auth]");
+  if (slots.length && !onAuthPage && !markedEmail()) {
+    authHealth().then(function (res) {
+      if (!res || !res.enabled || !res.methods || !res.methods.google || !res.googleClientId) return;
+      loadGsi(function () {
+        var g = window.google.accounts.id;
+        g.initialize({
+          client_id: res.googleClientId,
+          locale: "en",
+          itp_support: true,
+          cancel_on_tap_outside: true,
+          callback: function (response) {
+            authCall("google", { credential: response.credential, source: location.pathname }).then(function (r) {
+              if (!r || !r.ok) { toast((r && r.error) || "That Google sign-in did not work."); return; }
+              marker(r.email);
+              paintHeader();
+              document.querySelectorAll("[data-google-slot]").forEach(function (s) { s.hidden = true; });
+              document.documentElement.classList.remove("has-google");
+              toast(r.isNew ? "Welcome. You are signed up as " + r.email + "." : "Signed in as " + r.email + ".");
+            });
+          },
+        });
+        slots.forEach(function (slot) {
+          var dark = document.documentElement.getAttribute("data-theme") === "dark";
+          g.renderButton(slot, {
+            locale: "en",
+            theme: dark ? "filled_black" : "outline",
+            size: slot.getAttribute("data-google-size") || "medium",
+            shape: "pill",
+            text: "signup_with",
+            width: parseInt(slot.getAttribute("data-google-width"), 10) || 190,
+          });
+          slot.hidden = false;
+        });
+        document.documentElement.classList.add("has-google");
+        // One Tap: only on regular pages, and Google applies its own cooldown once dismissed.
+        if (!document.querySelector("[data-account]")) g.prompt();
+      });
     });
   }
 

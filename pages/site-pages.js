@@ -121,6 +121,7 @@ function privacyPage() {
     <h2>Signing in</h2>
     <p>An account is optional and holds nothing but your email address and whether you want the weekly report. Every tool works without one.</p>
     <p>Sign-in is passwordless, so there is no password to store or lose. You enter your email, we email you a link, and clicking it signs you in. The link is valid for 20 minutes; anyone who can read that email in that window can use it, so treat it like a key.</p>
+    <p>If you are already logged into a Google account, some pages may show Google's one-tap prompt offering to sign you up with that account. Dismissing it does nothing, and Google applies its own cooldown before showing it again. We receive your email address only if you accept.</p>
     <p>Being signed in sets one cookie, <code>pa_session</code>, which holds your email address and an expiry date, signed so it cannot be altered. It is marked HttpOnly and Secure, so scripts on the page cannot read it and it only travels over HTTPS. It lasts 30 days, and signing out clears it immediately. It is not used for tracking or advertising.</p>
     <p>You can delete your email address and preference at any time from the <a href="../account/">account page</a>, which also signs you out.</p>
 

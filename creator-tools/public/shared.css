@@ -700,3 +700,15 @@ p.center.sub { text-align: center; color: var(--muted); margin: 8px auto 18px; m
 .ext-mark { display:inline-flex; width:16px; height:16px; }
 .ext-mark svg { width:16px; height:16px; }
 .brand svg, .fbrand .brand svg { width:32px; height:32px; }
+
+/* Google sign-up slots and the toast */
+.gslot { display: inline-flex; align-items: center; min-height: 40px; }
+.gslot[hidden] { display: none; }
+:root.has-google .hsignup { display: none; }
+.gslot.mob { display: none; padding: 10px 0 4px; }
+.nav.open .gslot.mob:not([hidden]) { display: flex; }
+@media (max-width: 640px) { .hactions .gslot { display: none; } :root.has-google .hsignup { display: inline-flex; } }
+.mfoot-right { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
+.toast { position: fixed; left: 50%; bottom: 24px; transform: translate(-50%, 16px); z-index: 60; background: var(--ink); color: #fff; padding: 12px 18px; border-radius: 12px; font-size: .92rem; box-shadow: var(--shadow); opacity: 0; transition: opacity .25s, transform .25s; max-width: calc(100vw - 32px); }
+:root[data-theme="dark"] .toast { background: var(--teal); color: #0F1626; }
+.toast.show { opacity: 1; transform: translate(-50%, 0); }
