@@ -85,7 +85,7 @@
     <div class="banner warn" id="nokey" hidden>
       Web checking is not set up yet. Add your free Google API key and Search Engine ID to <code>config.json</code> and restart. The README explains the 5-minute setup. "Compare two texts" works without it.
     </div>
-    <textarea id="text" placeholder="Paste your text here (up to 1,000 words)…" spellcheck="false"></textarea>
+    <textarea id="text" placeholder="Paste your text here, up to 1,000 words" spellcheck="false"></textarea>
     <div class="meta">
       <span id="wc">0 / 1000 words</span>
       <span>Characters: <span id="cc">0</span></span>
@@ -93,11 +93,11 @@
     <div class="toolbar">
       <input type="file" id="file" accept=".txt,.md,.docx,.pdf" hidden>
       <button type="button" id="uploadBtn">Upload file (.txt, .docx, .pdf)</button>
-      <input type="text" id="pageUrl" placeholder="Or paste a web page URL to check…">
+      <input type="text" id="pageUrl" placeholder="Or paste a web page address to check instead">
       <button type="button" id="fetchBtn">Get text from URL</button>
     </div>
     <div class="toolbar">
-      <input type="text" id="excludeUrl" placeholder="Exclude a URL (optional, e.g. your own site)">
+      <input type="text" id="excludeUrl" placeholder="Exclude a site, e.g. your own domain (optional)">
     </div>
     <div class="actions">
       <button class="primary" id="checkBtn">Check Plagiarism</button>
@@ -110,12 +110,12 @@
     <div class="grid2">
       <div>
         <h2>Text 1</h2>
-        <textarea id="textA" placeholder="Paste the first text…" spellcheck="false"></textarea>
+        <textarea id="textA" placeholder="Paste the first text here" spellcheck="false"></textarea>
         <div class="meta"><span id="wcA">0 words</span></div>
       </div>
       <div>
         <h2>Text 2</h2>
-        <textarea id="textB" placeholder="Paste the second text…" spellcheck="false"></textarea>
+        <textarea id="textB" placeholder="Paste the second text here" spellcheck="false"></textarea>
         <div class="meta"><span id="wcB">0 words</span></div>
       </div>
     </div>

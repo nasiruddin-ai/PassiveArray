@@ -60,7 +60,7 @@ function header(root, active, withSearch) {
   const link = (href, label, key) => `<a href="${root}${href}"${active === key ? ' class="active"' : ""}>${label}</a>`;
   return `<header class="site-header"><div class="wrap">
   <a class="brand" href="${root}" aria-label="${BRAND} home">${MARK("m" + Math.random().toString(36).slice(2, 6))}<span>Passive <b>Array</b></span></a>
-  ${withSearch ? `<form class="hsearch" data-search role="search">${ICON.search}<label for="hq" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);margin:0">Check a channel</label><input id="hq" type="text" placeholder="Check a channel: @handle, link or twitch.tv/name" autocomplete="off"><button type="submit">Check</button></form>` : ""}
+  ${withSearch ? `<form class="hsearch" data-search role="search">${ICON.search}<label for="hq" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);margin:0">Check a channel</label><input id="hq" type="text" placeholder="Paste a link or @handle" autocomplete="off"><button type="submit">Check</button></form>` : ""}
   <nav class="nav" id="site-nav">${link("creator-tools/", "Creator tools", "tools")}${link("#web-tools", "Web tools", "web")}${link("youtube-extension/", "Extension", "extension")}${link("blog/", "Blog", "blog")}${link("about/", "About", "about")}</nav>
   <div class="hactions">
     <button type="button" class="iconbtn" data-theme-toggle aria-label="Switch to dark mode">${ICON.moon}</button>
@@ -251,7 +251,7 @@ ${header(root, "tools", true)}
       <h1>All ${tools.length} tools</h1>
       <p class="intro">Pick by what you want to do, or by platform. Every tool is free and needs no account.</p>
     </div>
-    <div class="search-row">${ICON.search}<label for="dq" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);margin:0">Search tools</label><input id="dq" type="search" placeholder="Search tools: engagement, money, fake, compare"></div>
+    <div class="search-row">${ICON.search}<label for="dq" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);margin:0">Search tools</label><input id="dq" type="search" placeholder="Search tools by name or by what they do"></div>
   </div>
   <div class="filters">
     <div class="row"><span class="lbl">I want to</span>${fbtn("intent", "all", "Everything", true)}${Object.entries(INTENTS).map(([k, m]) => fbtn("intent", k, m.label)).join("")}</div>
@@ -308,7 +308,7 @@ ${header(root, "home", false)}
     <form class="bigsearch" data-search role="search">
       ${ICON.search}
       <label for="q" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);margin:0">Channel link, handle or name</label>
-      <input id="q" type="text" placeholder="@mkbhd, youtube.com/@veritasium or twitch.tv/shroud" autocomplete="off" autofocus>
+      <input id="q" type="text" placeholder="Paste a YouTube or Twitch channel link, or an @handle" autocomplete="off" autofocus>
       <button type="submit" class="btn">Check ${ICON.arrow}</button>
     </form>
     <div class="tryline">

@@ -66,7 +66,7 @@ function contactPage() {
     <div class="card form-card">
       <form data-subscribe data-kind="contact" novalidate>
         <label for="c-name">Your name</label>
-        <input id="c-name" type="text" name="name" autocomplete="name" placeholder="Optional">
+        <input id="c-name" type="text" name="name" autocomplete="name" placeholder="Type your name (optional)">
         <label for="c-email">Email</label>
         <input id="c-email" type="email" name="email" autocomplete="email" placeholder="you@example.com" required>
         <label for="c-topic">Topic</label>

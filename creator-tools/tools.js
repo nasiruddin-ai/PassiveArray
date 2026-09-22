@@ -11,20 +11,20 @@
 // "compare" tools repeat the same fields for 2 or 3 accounts (prefix a_, b_, c_).
 
 const IG_FIELDS = [
-  { id: "followers", label: "Followers", type: "number", placeholder: "25000", min: 0 },
-  { id: "following", label: "Following", type: "number", placeholder: "800", min: 0 },
-  { id: "posts", label: "Posts", type: "number", placeholder: "340", min: 0 },
-  { id: "likes", label: "Average likes per post", type: "number", placeholder: "900", min: 0, hint: "Average of the last 12 posts" },
-  { id: "comments", label: "Average comments per post", type: "number", placeholder: "40", min: 0 },
+  { id: "followers", label: "Followers", type: "number", placeholder: "e.g. 25,000", min: 0 },
+  { id: "following", label: "Following", type: "number", placeholder: "e.g. 800", min: 0 },
+  { id: "posts", label: "Posts", type: "number", placeholder: "e.g. 340", min: 0 },
+  { id: "likes", label: "Average likes per post", type: "number", placeholder: "e.g. 900", min: 0, hint: "Average of the last 12 posts" },
+  { id: "comments", label: "Average comments per post", type: "number", placeholder: "e.g. 40", min: 0 },
 ];
 
 const TT_FIELDS = [
-  { id: "followers", label: "Followers", type: "number", placeholder: "50000", min: 0 },
-  { id: "totalLikes", label: "Total likes", type: "number", placeholder: "1200000", min: 0 },
-  { id: "views", label: "Average views per video", type: "number", placeholder: "30000", min: 0, hint: "Average of the last 12 videos" },
-  { id: "likes", label: "Average likes per video", type: "number", placeholder: "2500", min: 0 },
-  { id: "comments", label: "Average comments per video", type: "number", placeholder: "60", min: 0 },
-  { id: "shares", label: "Average shares per video", type: "number", placeholder: "90", min: 0 },
+  { id: "followers", label: "Followers", type: "number", placeholder: "e.g. 50,000", min: 0 },
+  { id: "totalLikes", label: "Total likes", type: "number", placeholder: "e.g. 1,200,000", min: 0 },
+  { id: "views", label: "Average views per video", type: "number", placeholder: "e.g. 30,000", min: 0, hint: "Average of the last 12 videos" },
+  { id: "likes", label: "Average likes per video", type: "number", placeholder: "e.g. 2,500", min: 0 },
+  { id: "comments", label: "Average comments per video", type: "number", placeholder: "e.g. 60", min: 0 },
+  { id: "shares", label: "Average shares per video", type: "number", placeholder: "e.g. 90", min: 0 },
 ];
 
 const COUNTRIES = [
@@ -54,7 +54,7 @@ const tools = [
     action: "channel",
     short: "Look up any channel's subscribers, views, uploads and average views per video.",
     intro: "Paste a channel link, @handle or name. You get the current subscriber count plus totals and averages taken from the channel's last 10 uploads.",
-    inputs: [{ id: "channel", label: "Channel link, @handle or name", type: "text", placeholder: "@mkbhd or https://youtube.com/@mkbhd" }],
+    inputs: [{ id: "channel", label: "Channel link, @handle or name", type: "text", placeholder: "Paste a link or @handle" }],
     how: [
       "Data comes straight from the YouTube Data API, so numbers match what YouTube shows publicly.",
       "Averages use the channel's 10 most recent uploads.",
@@ -69,7 +69,7 @@ const tools = [
     action: "channel",
     short: "Engagement per view and per subscriber from the last 10 videos, with a benchmark.",
     intro: "Enter a channel and get its engagement rate two ways: likes plus comments divided by views, and divided by subscribers. Both use the last 10 uploads.",
-    inputs: [{ id: "channel", label: "Channel link, @handle or name", type: "text", placeholder: "@veritasium" }],
+    inputs: [{ id: "channel", label: "Channel link, @handle or name", type: "text", placeholder: "Paste a link or @handle" }],
     how: [
       "Engagement by view = (likes + comments) / views x 100. Above 3 percent is good, above 6 percent is excellent.",
       "Engagement by subscriber shows how much of the audience actually reacts. Around 1 to 3 percent is typical.",
@@ -85,7 +85,7 @@ const tools = [
     short: "Estimated monthly and yearly AdSense earnings for any channel, shown as a range.",
     intro: "Estimates how much a channel earns from ads. It looks at views on videos from the last 30 days and applies a revenue-per-thousand-views range you can adjust.",
     inputs: [
-      { id: "channel", label: "Channel link, @handle or name", type: "text", placeholder: "@mrbeast" },
+      { id: "channel", label: "Channel link, @handle or name", type: "text", placeholder: "Paste a link or @handle" },
       { id: "rpmLow", label: "Low RPM ($ per 1,000 views)", type: "number", value: 0.5, step: 0.05, min: 0, hint: "Music, kids and entertainment sit near the low end" },
       { id: "rpmHigh", label: "High RPM ($ per 1,000 views)", type: "number", value: 4, step: 0.05, min: 0, hint: "Finance, tech and business can exceed $10" },
     ],
@@ -104,7 +104,7 @@ const tools = [
     short: "What a channel should charge for an integration, a dedicated video or a Shorts mention.",
     intro: "Brands pay for views, not subscribers. This tool takes the channel's average views on recent uploads and applies the CPM ranges brands typically pay for YouTube placements.",
     inputs: [
-      { id: "channel", label: "Channel link, @handle or name", type: "text", placeholder: "@ali_abdaal" },
+      { id: "channel", label: "Channel link, @handle or name", type: "text", placeholder: "Paste a link or @handle" },
       { id: "cpmLow", label: "Low CPM brands pay ($ per 1,000 views)", type: "number", value: 20, min: 0 },
       { id: "cpmHigh", label: "High CPM brands pay ($ per 1,000 views)", type: "number", value: 50, min: 0 },
     ],
@@ -123,9 +123,9 @@ const tools = [
     short: "Two or three channels side by side: subscribers, views, engagement, upload pace.",
     intro: "Enter two or three channels and see every key metric next to each other, with the leader marked on each row.",
     inputs: [
-      { id: "a", label: "Channel A", type: "text", placeholder: "@channel1" },
-      { id: "b", label: "Channel B", type: "text", placeholder: "@channel2" },
-      { id: "c", label: "Channel C (optional)", type: "text", placeholder: "@channel3", optional: true },
+      { id: "a", label: "Channel A", type: "text", placeholder: "Paste a link or @handle" },
+      { id: "b", label: "Channel B", type: "text", placeholder: "Paste a link or @handle" },
+      { id: "c", label: "Channel C (optional)", type: "text", placeholder: "Paste a link or @handle", optional: true },
     ],
     how: [
       "Averages and engagement use each channel's last 10 uploads.",
@@ -141,7 +141,7 @@ const tools = [
     action: "channel",
     short: "A 0 to 100 quality score built from engagement, reach, consistency and audience size.",
     intro: "One score that tells a brand or a creator how healthy a channel is. The breakdown shows exactly where the points come from.",
-    inputs: [{ id: "channel", label: "Channel link, @handle or name", type: "text", placeholder: "@kurzgesagt" }],
+    inputs: [{ id: "channel", label: "Channel link, @handle or name", type: "text", placeholder: "Paste a link or @handle" }],
     how: [
       "Engagement (35 points): likes plus comments per view on the last 10 uploads.",
       "Reach (25 points): average views divided by subscribers. 30 percent or more earns full marks.",
@@ -157,7 +157,7 @@ const tools = [
     short: "Search channels by topic and filter by subscriber range and country.",
     intro: "Type a topic and get a list of matching channels with subscribers, total views and video count, filtered to the size and country you want.",
     inputs: [
-      { id: "q", label: "Topic or keyword", type: "text", placeholder: "home workout" },
+      { id: "q", label: "Topic or keyword", type: "text", placeholder: "Type a topic, e.g. home workout" },
       { id: "minSubs", label: "Minimum subscribers", type: "number", value: 10000, min: 0 },
       { id: "maxSubs", label: "Maximum subscribers", type: "number", value: 1000000, min: 0 },
       { id: "country", label: "Country", type: "select", options: COUNTRIES },
@@ -178,7 +178,7 @@ const tools = [
     intro: "Pick a country and an optional keyword. Results are limited to channels that list that country on their About page.",
     inputs: [
       { id: "country", label: "Country", type: "select", options: COUNTRIES.slice(1) },
-      { id: "q", label: "Keyword (optional)", type: "text", placeholder: "cooking", optional: true },
+      { id: "q", label: "Keyword (optional)", type: "text", placeholder: "Type a keyword, e.g. cooking", optional: true },
       { id: "minSubs", label: "Minimum subscribers", type: "number", value: 1000, min: 0 },
       { id: "maxSubs", label: "Maximum subscribers", type: "number", value: 10000000, min: 0 },
     ],
@@ -196,7 +196,7 @@ const tools = [
     action: "lookalike",
     short: "Channels similar to one you already like, based on its topics and keywords.",
     intro: "Give one channel you already work with or admire. The tool reads its topics and keywords and finds channels covering the same ground.",
-    inputs: [{ id: "channel", label: "Channel link, @handle or name", type: "text", placeholder: "@marquesbrownlee" }],
+    inputs: [{ id: "channel", label: "Channel link, @handle or name", type: "text", placeholder: "Paste a link or @handle" }],
     how: [
       "Reads the seed channel's topic categories and channel keywords from the YouTube API.",
       "Searches for channels matching those terms and removes the seed channel from the list.",
@@ -213,7 +213,7 @@ const tools = [
     action: "channel",
     short: "Followers, live status, current viewers and average VOD views for any streamer.",
     intro: "Enter a Twitch username. You get the follower count, whether the channel is live right now, and average views on the last 10 videos.",
-    inputs: [{ id: "login", label: "Twitch username", type: "text", placeholder: "shroud" }],
+    inputs: [{ id: "login", label: "Twitch username", type: "text", placeholder: "Paste a twitch.tv link or username" }],
     how: [
       "Data comes from the official Twitch Helix API.",
       "Average VOD views use the 10 most recent archived broadcasts or uploads.",
@@ -229,9 +229,9 @@ const tools = [
     short: "Two or three streamers side by side: followers, live viewers, VOD views, account age.",
     intro: "Enter two or three usernames and compare followers, current viewers, average VOD views and account age in one table.",
     inputs: [
-      { id: "a", label: "Streamer A", type: "text", placeholder: "username" },
-      { id: "b", label: "Streamer B", type: "text", placeholder: "username" },
-      { id: "c", label: "Streamer C (optional)", type: "text", placeholder: "username", optional: true },
+      { id: "a", label: "Streamer A", type: "text", placeholder: "Paste a link or username" },
+      { id: "b", label: "Streamer B", type: "text", placeholder: "Paste a link or username" },
+      { id: "c", label: "Streamer C (optional)", type: "text", placeholder: "Paste a link or username", optional: true },
     ],
     how: [
       "Live viewers only appear for channels streaming at the moment you run the check.",
@@ -248,9 +248,9 @@ const tools = [
     short: "Engagement rate from followers, likes and comments, with a benchmark for the account size.",
     intro: "Type the follower count and the average likes and comments from the last 12 posts. You get the engagement rate and how it compares with accounts of the same size.",
     inputs: [
-      { id: "followers", label: "Followers", type: "number", placeholder: "25000", min: 0 },
-      { id: "likes", label: "Average likes per post", type: "number", placeholder: "900", min: 0, hint: "Average of the last 12 posts" },
-      { id: "comments", label: "Average comments per post", type: "number", placeholder: "40", min: 0 },
+      { id: "followers", label: "Followers", type: "number", placeholder: "e.g. 25,000", min: 0 },
+      { id: "likes", label: "Average likes per post", type: "number", placeholder: "e.g. 900", min: 0, hint: "Average of the last 12 posts" },
+      { id: "comments", label: "Average comments per post", type: "number", placeholder: "e.g. 40", min: 0 },
     ],
     how: [
       "Engagement rate = (average likes + average comments) / followers x 100.",
@@ -265,8 +265,8 @@ const tools = [
     short: "See where an engagement rate sits against typical rates for each follower tier.",
     intro: "Enter followers and an engagement rate. The tool places it on the benchmark table and tells you whether it is low, average, good or excellent for that size.",
     inputs: [
-      { id: "followers", label: "Followers", type: "number", placeholder: "80000", min: 0 },
-      { id: "er", label: "Engagement rate (%)", type: "number", placeholder: "2.4", min: 0, step: 0.01 },
+      { id: "followers", label: "Followers", type: "number", placeholder: "e.g. 80,000", min: 0 },
+      { id: "er", label: "Engagement rate (%)", type: "number", placeholder: "e.g. 2.4", min: 0, step: 0.01 },
     ],
     how: [
       "Benchmarks are typical 2025 to 2026 ranges by tier: nano, micro, mid, macro and mega.",
@@ -281,8 +281,8 @@ const tools = [
     short: "Ratio of followers to following and what it says about the account.",
     intro: "A quick popularity and authenticity check. Accounts that follow far more people than follow them back often grew through follow-for-follow tactics.",
     inputs: [
-      { id: "followers", label: "Followers", type: "number", placeholder: "12000", min: 0 },
-      { id: "following", label: "Following", type: "number", placeholder: "600", min: 0 },
+      { id: "followers", label: "Followers", type: "number", placeholder: "e.g. 12,000", min: 0 },
+      { id: "following", label: "Following", type: "number", placeholder: "e.g. 600", min: 0 },
     ],
     how: [
       "Ratio = followers / following. Above 10 reads as an established creator, 2 to 10 as a growing account, under 1 as a personal or follow-back account.",
@@ -297,8 +297,8 @@ const tools = [
     short: "Like rate per post as a share of followers, with a tier benchmark.",
     intro: "Shows what share of followers like a typical post. It is the simplest health check when comment data is not available.",
     inputs: [
-      { id: "followers", label: "Followers", type: "number", placeholder: "40000", min: 0 },
-      { id: "likes", label: "Average likes per post", type: "number", placeholder: "1200", min: 0 },
+      { id: "followers", label: "Followers", type: "number", placeholder: "e.g. 40,000", min: 0 },
+      { id: "likes", label: "Average likes per post", type: "number", placeholder: "e.g. 1,200", min: 0 },
     ],
     how: [
       "Like rate = average likes / followers x 100.",
@@ -313,8 +313,8 @@ const tools = [
     short: "Estimated earnings per sponsored post and per month from followers and engagement.",
     intro: "Estimates what a creator can earn from sponsored content. Enter followers, engagement rate and how many sponsored posts they run a month.",
     inputs: [
-      { id: "followers", label: "Followers", type: "number", placeholder: "60000", min: 0 },
-      { id: "er", label: "Engagement rate (%)", type: "number", placeholder: "2.5", min: 0, step: 0.01 },
+      { id: "followers", label: "Followers", type: "number", placeholder: "e.g. 60,000", min: 0 },
+      { id: "er", label: "Engagement rate (%)", type: "number", placeholder: "e.g. 2.5", min: 0, step: 0.01 },
       { id: "postsPerMonth", label: "Sponsored posts per month", type: "number", value: 4, min: 0 },
     ],
     how: [
@@ -330,8 +330,8 @@ const tools = [
     short: "Fair price ranges for a feed post, a story and a reel from one account.",
     intro: "For brands and creators negotiating a deal. Enter followers and engagement rate and get a price band for each Instagram format.",
     inputs: [
-      { id: "followers", label: "Followers", type: "number", placeholder: "150000", min: 0 },
-      { id: "er", label: "Engagement rate (%)", type: "number", placeholder: "1.8", min: 0, step: 0.01 },
+      { id: "followers", label: "Followers", type: "number", placeholder: "e.g. 150,000", min: 0 },
+      { id: "er", label: "Engagement rate (%)", type: "number", placeholder: "e.g. 1.8", min: 0, step: 0.01 },
     ],
     how: [
       "Feed post = followers / 1,000 x $10, adjusted for engagement. Reel = 1.3x a post. Story = 0.4x a post. Story set of 3 = 1x a post.",
@@ -346,12 +346,12 @@ const tools = [
     short: "Put a dollar value on impressions, likes, comments, shares and saves from a campaign.",
     intro: "Earned media value (EMV) translates organic engagement into what the same attention would cost in paid ads. Enter the totals from a post or a whole campaign.",
     inputs: [
-      { id: "impressions", label: "Impressions", type: "number", placeholder: "250000", min: 0 },
-      { id: "likes", label: "Likes", type: "number", placeholder: "8000", min: 0 },
-      { id: "comments", label: "Comments", type: "number", placeholder: "300", min: 0 },
-      { id: "shares", label: "Shares", type: "number", placeholder: "150", min: 0 },
-      { id: "saves", label: "Saves", type: "number", placeholder: "400", min: 0 },
-      { id: "clicks", label: "Link clicks (optional)", type: "number", placeholder: "0", min: 0, optional: true },
+      { id: "impressions", label: "Impressions", type: "number", placeholder: "e.g. 250,000", min: 0 },
+      { id: "likes", label: "Likes", type: "number", placeholder: "e.g. 8,000", min: 0 },
+      { id: "comments", label: "Comments", type: "number", placeholder: "e.g. 300", min: 0 },
+      { id: "shares", label: "Shares", type: "number", placeholder: "e.g. 150", min: 0 },
+      { id: "saves", label: "Saves", type: "number", placeholder: "e.g. 400", min: 0 },
+      { id: "clicks", label: "Link clicks (optional)", type: "number", placeholder: "Leave blank if none", min: 0, optional: true },
     ],
     how: [
       "Impressions are valued at $6 per 1,000 (a typical Instagram ad CPM), likes at $0.10, comments at $0.50, shares at $1.50, saves at $0.40 and clicks at $0.60.",
@@ -380,8 +380,8 @@ const tools = [
     intro: "A one-page health check for any Instagram account. Enter the visible numbers plus the follower count from 30 days ago and how often the account posts.",
     inputs: [
       ...IG_FIELDS,
-      { id: "followersBefore", label: "Followers 30 days ago", type: "number", placeholder: "24000", min: 0, hint: "Use Social Blade or the account's own insights" },
-      { id: "postsPerWeek", label: "Posts per week", type: "number", placeholder: "4", min: 0, step: 0.5 },
+      { id: "followersBefore", label: "Followers 30 days ago", type: "number", placeholder: "e.g. 24,000", min: 0, hint: "Use Social Blade or the account's own insights" },
+      { id: "postsPerWeek", label: "Posts per week", type: "number", placeholder: "e.g. 4", min: 0, step: 0.5 },
     ],
     how: [
       "Engagement 35 points, authenticity 25, growth 20, consistency 20.",
@@ -395,7 +395,7 @@ const tools = [
     platform: "Instagram",
     short: "Two or three accounts side by side on followers, ratio, engagement and like rate.",
     intro: "Enter the visible numbers for two or three accounts. Each metric is shown side by side with the leader marked.",
-    compare: { labels: ["Account A", "Account B", "Account C"], fields: [{ id: "name", label: "Username", type: "text", placeholder: "@name" }, ...IG_FIELDS] },
+    compare: { labels: ["Account A", "Account B", "Account C"], fields: [{ id: "name", label: "Username", type: "text", placeholder: "Type the @username" }, ...IG_FIELDS] },
     how: [
       "Engagement rate = (likes + comments) / followers x 100.",
       "Comment rate = comments / likes x 100, a rough authenticity check.",
@@ -408,7 +408,7 @@ const tools = [
     platform: "Instagram",
     short: "Length, hashtags, mentions, emoji, call to action and readability for any caption.",
     intro: "Paste a caption before you post it. The analyzer checks it against Instagram's limits and the habits of high-performing posts.",
-    inputs: [{ id: "caption", label: "Caption", type: "textarea", placeholder: "Paste the caption here, hashtags included.", rows: 8 }],
+    inputs: [{ id: "caption", label: "Caption", type: "textarea", placeholder: "Paste the caption here, hashtags included", rows: 8 }],
     how: [
       "Instagram cuts captions at 2,200 characters and shows only the first 125 before 'more'.",
       "3 to 5 relevant hashtags outperform 30 generic ones for most accounts.",
@@ -424,11 +424,11 @@ const tools = [
     short: "Engagement by views and by followers from likes, comments and shares.",
     intro: "TikTok reach depends on the For You page, so engagement should be measured against views as well as followers. Enter averages from the last 12 videos.",
     inputs: [
-      { id: "followers", label: "Followers", type: "number", placeholder: "50000", min: 0 },
-      { id: "views", label: "Average views per video", type: "number", placeholder: "30000", min: 0 },
-      { id: "likes", label: "Average likes per video", type: "number", placeholder: "2500", min: 0 },
-      { id: "comments", label: "Average comments per video", type: "number", placeholder: "60", min: 0 },
-      { id: "shares", label: "Average shares per video", type: "number", placeholder: "90", min: 0 },
+      { id: "followers", label: "Followers", type: "number", placeholder: "e.g. 50,000", min: 0 },
+      { id: "views", label: "Average views per video", type: "number", placeholder: "e.g. 30,000", min: 0 },
+      { id: "likes", label: "Average likes per video", type: "number", placeholder: "e.g. 2,500", min: 0 },
+      { id: "comments", label: "Average comments per video", type: "number", placeholder: "e.g. 60", min: 0 },
+      { id: "shares", label: "Average shares per video", type: "number", placeholder: "e.g. 90", min: 0 },
     ],
     how: [
       "Engagement by views = (likes + comments + shares) / views x 100. 5 to 9 percent is typical, above 12 is excellent.",
@@ -443,8 +443,8 @@ const tools = [
     short: "Total likes per follower, the number shown on every TikTok profile.",
     intro: "Every TikTok profile shows followers and total likes. Their ratio tells you whether the account earns its audience with content or grew some other way.",
     inputs: [
-      { id: "followers", label: "Followers", type: "number", placeholder: "50000", min: 0 },
-      { id: "totalLikes", label: "Total likes", type: "number", placeholder: "1200000", min: 0 },
+      { id: "followers", label: "Followers", type: "number", placeholder: "e.g. 50,000", min: 0 },
+      { id: "totalLikes", label: "Total likes", type: "number", placeholder: "e.g. 1,200,000", min: 0 },
     ],
     how: [
       "Ratio = total likes / followers. Healthy creator accounts usually sit between 10 and 40.",
@@ -459,10 +459,10 @@ const tools = [
     short: "Creator Rewards estimate from monthly views plus a sponsored video price band.",
     intro: "Two income lines in one: what TikTok's Creator Rewards Program pays on qualified views, and what a brand would pay for a sponsored video.",
     inputs: [
-      { id: "followers", label: "Followers", type: "number", placeholder: "120000", min: 0 },
-      { id: "monthlyViews", label: "Total views per month", type: "number", placeholder: "2000000", min: 0 },
+      { id: "followers", label: "Followers", type: "number", placeholder: "e.g. 120,000", min: 0 },
+      { id: "monthlyViews", label: "Total views per month", type: "number", placeholder: "e.g. 2,000,000", min: 0 },
       { id: "qualifiedShare", label: "Share of views on videos over 1 minute (%)", type: "number", value: 60, min: 0, max: 100 },
-      { id: "avgViews", label: "Average views per video", type: "number", placeholder: "40000", min: 0 },
+      { id: "avgViews", label: "Average views per video", type: "number", placeholder: "e.g. 40,000", min: 0 },
     ],
     how: [
       "Creator Rewards pays roughly $0.40 to $1.00 per 1,000 qualified views. Only videos over one minute qualify.",
@@ -477,9 +477,9 @@ const tools = [
     short: "Fair price range for a sponsored TikTok from average views and engagement.",
     intro: "For negotiating a sponsored TikTok. Views matter more than followers here because the For You page decides reach.",
     inputs: [
-      { id: "followers", label: "Followers", type: "number", placeholder: "120000", min: 0 },
-      { id: "avgViews", label: "Average views per video", type: "number", placeholder: "40000", min: 0 },
-      { id: "er", label: "Engagement rate by views (%)", type: "number", placeholder: "7", min: 0, step: 0.1 },
+      { id: "followers", label: "Followers", type: "number", placeholder: "e.g. 120,000", min: 0 },
+      { id: "avgViews", label: "Average views per video", type: "number", placeholder: "e.g. 40,000", min: 0 },
+      { id: "er", label: "Engagement rate by views (%)", type: "number", placeholder: "e.g. 7", min: 0, step: 0.1 },
     ],
     how: [
       "Price = average views / 1,000 x $10 to $20, adjusted 0.7x to 1.4x by engagement.",
@@ -508,8 +508,8 @@ const tools = [
     intro: "A quick health check for any TikTok account before a deal. Enter the public numbers plus the follower count 30 days ago.",
     inputs: [
       ...TT_FIELDS,
-      { id: "followersBefore", label: "Followers 30 days ago", type: "number", placeholder: "46000", min: 0 },
-      { id: "videosPerWeek", label: "Videos per week", type: "number", placeholder: "5", min: 0, step: 0.5 },
+      { id: "followersBefore", label: "Followers 30 days ago", type: "number", placeholder: "e.g. 46,000", min: 0 },
+      { id: "videosPerWeek", label: "Videos per week", type: "number", placeholder: "e.g. 5", min: 0, step: 0.5 },
     ],
     how: [
       "Engagement 30 points, reach (views per follower) 25, authenticity 25, growth and consistency 20.",
@@ -523,7 +523,7 @@ const tools = [
     platform: "TikTok",
     short: "Two or three TikTok accounts side by side on reach, engagement and likes per follower.",
     intro: "Enter the public numbers for two or three accounts and compare them metric by metric.",
-    compare: { labels: ["Account A", "Account B", "Account C"], fields: [{ id: "name", label: "Username", type: "text", placeholder: "@name" }, ...TT_FIELDS] },
+    compare: { labels: ["Account A", "Account B", "Account C"], fields: [{ id: "name", label: "Username", type: "text", placeholder: "Type the @username" }, ...TT_FIELDS] },
     how: [
       "Views per follower shows how well each account reaches beyond its followers.",
       "Engagement by views = (likes + comments + shares) / views x 100.",
@@ -539,8 +539,8 @@ const tools = [
     short: "Ratio of followers to following on X and what it signals.",
     intro: "On X the follower to following ratio is the first thing people look at. Enter both numbers to get the ratio and a plain reading of it.",
     inputs: [
-      { id: "followers", label: "Followers", type: "number", placeholder: "18000", min: 0 },
-      { id: "following", label: "Following", type: "number", placeholder: "900", min: 0 },
+      { id: "followers", label: "Followers", type: "number", placeholder: "e.g. 18,000", min: 0 },
+      { id: "following", label: "Following", type: "number", placeholder: "e.g. 900", min: 0 },
     ],
     how: [
       "Ratio = followers / following. Above 10 reads as an authority account, 1 to 10 as a normal active user, under 1 as a follow-back account.",
@@ -557,13 +557,13 @@ const tools = [
     compare: {
       labels: ["Account A", "Account B", "Account C"],
       fields: [
-        { id: "name", label: "Username", type: "text", placeholder: "@name" },
-        { id: "followers", label: "Followers", type: "number", placeholder: "18000", min: 0 },
-        { id: "following", label: "Following", type: "number", placeholder: "900", min: 0 },
-        { id: "posts", label: "Posts", type: "number", placeholder: "5400", min: 0 },
-        { id: "likes", label: "Average likes per post", type: "number", placeholder: "120", min: 0 },
-        { id: "reposts", label: "Average reposts per post", type: "number", placeholder: "15", min: 0 },
-        { id: "replies", label: "Average replies per post", type: "number", placeholder: "10", min: 0 },
+        { id: "name", label: "Username", type: "text", placeholder: "Type the @username" },
+        { id: "followers", label: "Followers", type: "number", placeholder: "e.g. 18,000", min: 0 },
+        { id: "following", label: "Following", type: "number", placeholder: "e.g. 900", min: 0 },
+        { id: "posts", label: "Posts", type: "number", placeholder: "e.g. 5,400", min: 0 },
+        { id: "likes", label: "Average likes per post", type: "number", placeholder: "e.g. 120", min: 0 },
+        { id: "reposts", label: "Average reposts per post", type: "number", placeholder: "e.g. 15", min: 0 },
+        { id: "replies", label: "Average replies per post", type: "number", placeholder: "e.g. 10", min: 0 },
       ],
     },
     how: [
@@ -583,7 +583,7 @@ const tools = [
     short: "30 hashtags for any topic, mixed across broad, medium and niche sizes, ready to copy.",
     intro: "Type your topic and niche. You get a hashtag set built the way growth accounts do it: a few broad tags for discovery, most in the middle, and niche tags where you can actually rank.",
     inputs: [
-      { id: "topic", label: "Post topic", type: "text", placeholder: "morning skincare routine" },
+      { id: "topic", label: "Post topic", type: "text", placeholder: "Type the post topic, e.g. morning skincare routine" },
       { id: "niche", label: "Niche", type: "select", options: NICHES.map((n) => [n, n[0].toUpperCase() + n.slice(1)]) },
       { id: "count", label: "How many hashtags", type: "select", options: [["10", "10"], ["15", "15"], ["20", "20"], ["30", "30"]], value: "20" },
     ],
@@ -602,10 +602,10 @@ const tools = [
     short: "Five bio options under 150 characters with a clear line for who you help and a call to action.",
     intro: "Fill in what you do, who it is for and the tone you want. You get five bios that fit Instagram's 150-character limit, each with a call to action.",
     inputs: [
-      { id: "name", label: "Name or brand", type: "text", placeholder: "Your brand" },
-      { id: "what", label: "What you do", type: "text", placeholder: "Squarespace websites for small businesses" },
-      { id: "audience", label: "Who it is for", type: "text", placeholder: "coaches and consultants" },
-      { id: "cta", label: "Call to action", type: "text", placeholder: "Book a free call", value: "Link below" },
+      { id: "name", label: "Name or brand", type: "text", placeholder: "Type your name or brand" },
+      { id: "what", label: "What you do", type: "text", placeholder: "Say what you do in a few words" },
+      { id: "audience", label: "Who it is for", type: "text", placeholder: "Say who it is for, e.g. coaches and consultants" },
+      { id: "cta", label: "Call to action", type: "text", placeholder: "Type your call to action, e.g. Book a free call", value: "Link below" },
       { id: "tone", label: "Tone", type: "select", options: TONES },
     ],
     how: [
@@ -623,8 +623,8 @@ const tools = [
     short: "Twelve post ideas for your niche and audience across reels, carousels and stories.",
     intro: "Stuck on what to post? Enter your niche, your audience and the format you want, and get a dozen concrete ideas with a hook for each.",
     inputs: [
-      { id: "niche", label: "Niche", type: "text", placeholder: "Squarespace web design" },
-      { id: "audience", label: "Audience", type: "text", placeholder: "small business owners" },
+      { id: "niche", label: "Niche", type: "text", placeholder: "Type your niche, e.g. web design" },
+      { id: "audience", label: "Audience", type: "text", placeholder: "Describe your audience, e.g. small business owners" },
       { id: "format", label: "Format", type: "select", options: [["mixed", "Mixed"], ["reel", "Reels"], ["carousel", "Carousels"], ["story", "Stories"], ["post", "Single posts"]] },
     ],
     how: [
@@ -642,13 +642,13 @@ const tools = [
     short: "A prioritised action plan from your current numbers and your goal.",
     intro: "Enter where the account is now and what you want. You get the three to five changes most likely to move the number, in priority order, with the reason for each.",
     inputs: [
-      { id: "followers", label: "Followers", type: "number", placeholder: "3200", min: 0 },
-      { id: "er", label: "Engagement rate (%)", type: "number", placeholder: "3.1", min: 0, step: 0.1 },
-      { id: "postsPerWeek", label: "Posts per week", type: "number", placeholder: "3", min: 0, step: 0.5 },
-      { id: "reelsShare", label: "Share of posts that are reels (%)", type: "number", placeholder: "30", min: 0, max: 100 },
-      { id: "storiesPerWeek", label: "Stories per week", type: "number", placeholder: "5", min: 0 },
+      { id: "followers", label: "Followers", type: "number", placeholder: "e.g. 3,200", min: 0 },
+      { id: "er", label: "Engagement rate (%)", type: "number", placeholder: "e.g. 3.1", min: 0, step: 0.1 },
+      { id: "postsPerWeek", label: "Posts per week", type: "number", placeholder: "e.g. 3", min: 0, step: 0.5 },
+      { id: "reelsShare", label: "Share of posts that are reels (%)", type: "number", placeholder: "e.g. 30", min: 0, max: 100 },
+      { id: "storiesPerWeek", label: "Stories per week", type: "number", placeholder: "e.g. 5", min: 0 },
       { id: "goal", label: "Main goal", type: "select", options: [["followers", "More followers"], ["engagement", "More engagement"], ["leads", "More leads and sales"], ["brand", "Brand deals"]] },
-      { id: "niche", label: "Niche", type: "text", placeholder: "web design", optional: true },
+      { id: "niche", label: "Niche", type: "text", placeholder: "Type your niche, e.g. web design", optional: true },
     ],
     how: [
       "Rules compare your numbers with what works for accounts of your size and goal, then rank the gaps.",
