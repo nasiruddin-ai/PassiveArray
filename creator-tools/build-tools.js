@@ -44,7 +44,7 @@ const ICON = {
 // Google Search Console verification. The same tag goes on every page, including
 // the standalone web tools (build.js injects it there). Replace the token if the
 // property is ever re-verified; an empty string leaves the tag out.
-const GOOGLE_VERIFICATION = "3qaRFljqi7Cu0kEW2dZ6urg4sneGrXK1bp-81v2vR-M";
+const GOOGLE_VERIFICATION = "iEH5a0QzRXb2Kg7UB2k-xXTEPeNOa-NQFCKFZ8pfG8Q";
 const VERIFY_TAG = GOOGLE_VERIFICATION ? `<meta name="google-site-verification" content="${GOOGLE_VERIFICATION}">` : "";
 
 const HEAD = `${VERIFY_TAG}
