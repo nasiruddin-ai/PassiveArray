@@ -32,13 +32,40 @@ module.exports = async (req, res) => {
   // Owner health check. Reports configuration only, never the destination.
   if (req.method === "GET") {
     if (!(req.query && req.query.health)) return send(res, 405, { ok: false, error: "Use POST." });
-    return send(res, 200, {
-      ok: true,
-      configured: !!url,
-      hint: url
-        ? "A destination is set. Sign-ups are being forwarded to it."
-        : "SUBSCRIBE_WEBHOOK_URL is not set on this deployment. Add it in Vercel settings, then redeploy.",
-    });
+    const out = { ok: true, configured: !!url };
+    if (!url) {
+      out.hint = "SUBSCRIBE_WEBHOOK_URL is not set on this deployment. Add it in Vercel settings, then redeploy.";
+      return send(res, 200, out);
+    }
+    // Probe the destination with a GET so the owner can see what it answers.
+    // The URL itself is never included in the response.
+    try {
+      const ctrl = new AbortController();
+      const timer = setTimeout(() => ctrl.abort(), 8000);
+      const r = await fetch(url, { method: "GET", redirect: "follow", signal: ctrl.signal });
+      clearTimeout(timer);
+      const text = (await r.text().catch(() => "")).replace(/s+/g, " ").slice(0, 160);
+      out.destination = {
+        status: r.status,
+        finalHost: (() => { try { return new URL(r.url).host; } catch (_) { return ""; } })(),
+        looksLike: /Passive Array receiver/.test(text) ? "apps-script-receiver"
+          : /accounts.google.com/.test(r.url) ? "google-login-wall"
+          : /webhook.*not registered|not registered for/i.test(text) ? "n8n-inactive-or-test-url"
+          : /n8n/i.test(text) ? "n8n"
+          : r.status === 404 ? "not-found"
+          : "unknown",
+        preview: text,
+      };
+      out.hint = out.destination.looksLike === "apps-script-receiver" ? "Destination reachable. If POSTs still fail, check the Vercel logs for the status it returned."
+        : out.destination.looksLike === "google-login-wall" ? "The Apps Script deployment is not set to Anyone. Redeploy it with Who has access = Anyone."
+        : out.destination.looksLike === "n8n-inactive-or-test-url" ? "n8n says this webhook is not registered: the workflow is inactive or this is the Test URL. Activate it and use the Production URL."
+        : out.destination.looksLike === "not-found" ? "The destination URL answers 404. It has probably changed: copy the current Web app URL or Production URL and update SUBSCRIBE_WEBHOOK_URL, then redeploy."
+        : "See destination.preview for what the URL answered.";
+    } catch (e) {
+      out.destination = { error: e && e.name === "AbortError" ? "timeout after 8s" : String(e && e.message || e) };
+      out.hint = "The destination did not answer. Check the URL is reachable from the internet (a localhost n8n is not).";
+    }
+    return send(res, 200, out);
   }
 
   if (req.method !== "POST") return send(res, 405, { ok: false, error: "Use POST." });
