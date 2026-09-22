@@ -41,13 +41,20 @@ const ICON = {
 };
 
 // <head> lines for favicons and the link preview image. Files are copied to the site root by build.js.
+// Speed Insights script for Vercel analytics
+const SPEED_INSIGHTS = `<script>
+  window.si = window.si || function () { (window.siq = window.siq || []).push(arguments); };
+</script>
+<script defer src="/_vercel/speed-insights/script.js"></script>`;
+
 const HEAD = `<link rel="icon" href="/favicon.ico" sizes="48x48">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="manifest" href="/site.webmanifest">
 <meta name="theme-color" content="#1F2A44">
 <meta property="og:image" content="${SITE}/og-image-1200x630.png">
-<meta name="twitter:card" content="summary_large_image">`;
+<meta name="twitter:card" content="summary_large_image">
+${SPEED_INSIGHTS}`;
 
 function header(root, active, withSearch) {
   const link = (href, label, key) => `<a href="${root}${href}"${active === key ? ' class="active"' : ""}>${label}</a>`;
