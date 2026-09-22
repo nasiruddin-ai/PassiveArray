@@ -37,6 +37,35 @@
     });
   }
 
+  /* Tools mega-menu. Opens on hover with a pointer, on click or keyboard
+     otherwise, and closes on Escape or a click elsewhere. */
+  document.querySelectorAll("[data-mega]").forEach(function (btn) {
+    var panel = document.getElementById(btn.getAttribute("data-mega"));
+    if (!panel) return;
+    var closeTimer = null;
+    function open(yes) {
+      clearTimeout(closeTimer);
+      panel.hidden = !yes;
+      btn.setAttribute("aria-expanded", yes ? "true" : "false");
+    }
+    btn.addEventListener("click", function (e) { e.stopPropagation(); open(panel.hidden); });
+    btn.addEventListener("mouseenter", function () { if (window.matchMedia("(hover: hover)").matches) open(true); });
+    [btn, panel].forEach(function (el) {
+      el.addEventListener("mouseleave", function () {
+        if (!window.matchMedia("(hover: hover)").matches) return;
+        closeTimer = setTimeout(function () { open(false); }, 180);
+      });
+      el.addEventListener("mouseenter", function () { clearTimeout(closeTimer); });
+    });
+    document.addEventListener("click", function (e) {
+      if (!panel.hidden && !panel.contains(e.target) && e.target !== btn) open(false);
+    });
+    document.addEventListener("keydown", function (e) { if (e.key === "Escape") open(false); });
+    panel.addEventListener("focusout", function () {
+      setTimeout(function () { if (!panel.contains(document.activeElement) && document.activeElement !== btn) open(false); }, 0);
+    });
+  });
+
   /* Universal search: a link or handle goes to the right live checker. */
   function route(raw) {
     var v = String(raw || "").trim();

@@ -332,7 +332,369 @@ function accountPage() {
   return site.shell({ title: "Account", ogTitle: "Your Passive Array account", description: "Manage your email preferences and your data.", path: "/account/", active: "", head: '<meta name="robots" content="noindex">', body });
 }
 
-const PAGES = { about: aboutPage, contact: contactPage, privacy: privacyPage, terms: termsPage, login: loginPage, signup: signupPage, account: accountPage };
+/* ------------------------------------------------------------ comparisons
+   These pages exist because "vidiq alternative" and "tubebuddy alternative"
+   are real searches, and because someone deciding between us deserves a
+   straight answer including the parts where the other product wins. A
+   comparison that only lists the competitor's faults is not persuasive and
+   does not deserve to rank. */
+
+const CHECKED = "September 2026";
+
+function cmpTable(rows, them) {
+  return `<div class="tablewrap"><table class="cmp">
+    <thead><tr><th>What you want to do</th><th class="us">Passive Array</th><th>${esc(them)}</th></tr></thead>
+    <tbody>${rows.map((r) => `<tr><td>${esc(r[0])}</td><td class="us">${esc(r[1])}</td><td>${esc(r[2])}</td></tr>`).join("")}</tbody>
+  </table></div>`;
+}
+
+function comparePage(opts) {
+  const n = site.tools.length;
+  const body = `
+  <div class="page-head">
+    <div class="crumbs"><a href="../../">Home</a> / <a href="../">Compare</a> / ${esc(opts.them)}</div>
+    <h1>${esc(opts.h1)}</h1>
+    <p class="lead">${esc(opts.lead)}</p>
+    <div class="meta"><b>CHECKED</b><span>${CHECKED}, from ${esc(opts.them)}'s own public pages</span></div>
+  </div>
+
+  <div class="card compare-strip">${cmpTable(opts.rows, opts.them)}
+    <p class="note">${esc(opts.tableNote)}</p>
+  </div>
+
+  <div class="two-col" style="margin-top:28px">
+    <div class="card prose">
+      <h2 style="margin-top:0">The short answer</h2>
+      ${opts.shortAnswer}
+
+      <h2>Where ${esc(opts.them)} genuinely wins</h2>
+      <p>These are not concessions for the sake of looking fair. They are things we cannot do, and if you need them, ${esc(opts.them)} is the better buy.</p>
+      <ul>${opts.theyWin.map((x) => `<li>${x}</li>`).join("")}</ul>
+
+      <h2>Where we win</h2>
+      <ul>${opts.weWin.map((x) => `<li>${x}</li>`).join("")}</ul>
+
+      <h2>Who should use which</h2>
+      ${opts.whoShould}
+    </div>
+    <div>
+      <div class="card">
+        <h3 style="margin-bottom:10px">Try the overlap first</h3>
+        <p class="muted" style="font-size:.92rem;margin-bottom:14px">These do the same job as the ${esc(opts.them)} features people use most, and they need no account.</p>
+        <div style="display:grid;gap:8px">
+          ${opts.tryTools.map((s) => {
+            const t = site.tools.find((x) => x.slug === s);
+            return t ? `<a class="btn ghost" href="../../creator-tools/${t.slug}/">${esc(t.name.replace(/^YouTube /, ""))}</a>` : "";
+          }).join("")}
+        </div>
+      </div>
+      <div class="card" style="margin-top:16px">
+        <h3 style="margin-bottom:10px">On YouTube itself</h3>
+        <p class="muted" style="font-size:.92rem;margin-bottom:14px">Both of them are best known for their browser extension. Ours is free and shows engagement rate, hidden tags and a keyword score on every video and search page.</p>
+        <a class="btn" href="../../youtube-extension/">See the extension</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="cta-band">
+    <div><h3>Nothing to sign up for. Pick a tool and get an answer.</h3><p>${n} tools, no account, no card, no trial that expires.</p></div>
+    <a class="btn mint" href="../../creator-tools/">Browse all ${n} tools</a>
+  </div>`;
+
+  return site.shell({
+    title: opts.title,
+    ogTitle: opts.h1,
+    description: opts.description,
+    path: opts.path,
+    active: "compare",
+    body,
+    jsonld: {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      mainEntity: opts.faq.map(([q, a]) => ({ "@type": "Question", name: q, acceptedAnswer: { "@type": "Answer", text: a } })),
+    },
+    head: opts.faqHtml ? "" : "",
+  });
+}
+
+function vidiqPage() {
+  const n = site.tools.length;
+  return comparePage({
+    them: "vidIQ",
+    path: "/compare/vidiq-alternative/",
+    title: "Free vidIQ Alternative",
+    h1: "A free vidIQ alternative, with no account and no credit limit",
+    lead: "vidIQ is a good product. This page is about the one thing it will not do, which is let you use it properly without signing up and, past a point, without paying.",
+    description: `Passive Array is a free vidIQ alternative: ${n} tools for keywords, titles, tags and earnings, with no account, no AI credit limit and no trial.`,
+    tableNote: `Checked ${CHECKED} against vidIQ's own pricing and tools pages. vidIQ's paid tiers do considerably more than this table shows; the comparison is deliberately limited to what you can do without paying, because that is what people searching for an alternative are asking about.`,
+    rows: [
+      ["Use it without creating an account", "Yes, nothing is gated", "No, sign-up required first"],
+      ["Generate titles, descriptions and tags", "Unlimited", "Limited by a monthly AI credit allowance"],
+      ["Keyword research", "Unlimited", "Limited on the free plan"],
+      ["Score a title before publishing", "Yes, with every check shown", "Yes, on the paid tiers"],
+      ["Channel statistics from the official API", "Yes", "Yes"],
+      ["Browser extension", "Free", "Free, with paid features inside it"],
+      ["Instagram, TikTok and Twitch tools", "Included", "YouTube and Instagram"],
+      ["See the formula behind a number", "On every page", "No"],
+      ["Cost to lift the limits", "There are no limits to lift", "From roughly $17 a month"],
+    ],
+    shortAnswer: `<p>If you want keyword ideas, a title scored properly, tags inside the character limit, a description laid out for the two lines that matter, and an honest earnings range, everything here does that for nothing and asks for no email address.</p>
+      <p>If you want vidIQ's coaching, its publishing and scheduling, or its daily personalised ideas tuned to your own channel's analytics, you need vidIQ. Those depend on a connection to your YouTube account that we deliberately do not ask for.</p>`,
+    theyWin: [
+      "<strong>Access to your own private analytics.</strong> Connect your channel and vidIQ can see watch time, click-through rate and traffic sources. We never ask for that access, so we can only ever work from public data.",
+      "<strong>Daily personalised ideas and coaching.</strong> Their suggestions are tuned to your channel's own history. Ours are tuned to your topic.",
+      "<strong>Publishing and scheduling.</strong> They can upload and manage videos for you. We are a set of calculators and generators, not a publishing tool.",
+      "<strong>Tracking over time.</strong> They store your numbers and chart the trend. We store nothing, which is a privacy feature and a tracking limitation at the same time.",
+      "<strong>Thumbnail generation.</strong> They will make you an image. We will not, because doing it well needs paid image generation.",
+    ],
+    weWin: [
+      "<strong>No account, ever.</strong> No email, no Google sign-in, no card. Open a tool and use it.",
+      "<strong>No credit limit.</strong> Generate a hundred titles today and a hundred tomorrow. There is no allowance to run down.",
+      "<strong>The formula is on the page.</strong> Every estimate shows how it was calculated and what assumption drives each end of the range.",
+      "<strong>No invented search volume.</strong> Nobody outside Google has YouTube's volume data. We show what the top results are actually doing instead of a modelled number presented as fact.",
+      "<strong>More platforms.</strong> Instagram, TikTok, Twitch and X tools are included rather than being a different product.",
+    ],
+    whoShould: `<p><strong>Use Passive Array if</strong> you are deciding what to make, writing the title and description, checking a channel before a deal, or sanity-checking an earnings claim. Also if you simply do not want another subscription or another account.</p>
+      <p><strong>Use vidIQ if</strong> you want software that watches your own channel continuously, tells you what to do next based on your own retention data, and publishes for you. That is a different job and worth paying for if you need it.</p>
+      <p><strong>Plenty of people use both</strong>, which is entirely sensible. Ours costs nothing to keep in a browser tab.</p>`,
+    tryTools: ["youtube-keyword-generator", "youtube-title-generator", "youtube-title-analyzer", "youtube-tag-generator", "youtube-money-calculator"],
+    faq: [
+      ["Is Passive Array really a free vidIQ alternative?", "For the research, title, tag, description and earnings jobs, yes, with no account and no credit allowance. It does not replace vidIQ's access to your own private channel analytics or its publishing features, because those require connecting your YouTube account."],
+      ["Does Passive Array have a browser extension like vidIQ?", "Yes, and it is free. It shows engagement rate, hidden tags, views per day and a keyword score on YouTube's video, channel and search pages."],
+      ["Do I need to sign up to use Passive Array?", "No. Every tool works without an account. An account is optional and only stores your email address and whether you want the weekly report."],
+      ["Why does Passive Array not show search volume like vidIQ does?", "Because no tool outside Google has YouTube's search volume data. Any figure you see is modelled, usually from web search data. We show measured signals from the actual top results instead."],
+    ],
+  });
+}
+
+function tubebuddyPage() {
+  const n = site.tools.length;
+  return comparePage({
+    them: "TubeBuddy",
+    path: "/compare/tubebuddy-alternative/",
+    title: "Free TubeBuddy Alternative",
+    h1: "A free TubeBuddy alternative that does not need a Google sign-in",
+    lead: "TubeBuddy is built around connecting to your YouTube account, which is exactly what makes it powerful and exactly what some people would rather not do. This is what you can get without that.",
+    description: `Passive Array is a free TubeBuddy alternative: ${n} tools for keywords, tags, titles and earnings, with no Google sign-in and no paid tier.`,
+    tableNote: `Checked ${CHECKED} against TubeBuddy's own features and pricing pages. TubeBuddy's paid plans include bulk channel management features that have no equivalent here by design, because they require write access to your YouTube account.`,
+    rows: [
+      ["Use it without signing in with Google", "Yes", "No, Google sign-in required"],
+      ["Keyword research", "Unlimited", "Limited on the free plan"],
+      ["Tag generation inside the 500-character limit", "Unlimited", "Limited on the free plan"],
+      ["Title scoring before you publish", "Yes, every check shown", "Yes, on paid tiers"],
+      ["Thumbnail A/B testing", "No", "Yes, a genuine strength"],
+      ["Bulk edits across your videos", "No", "Yes, on paid tiers"],
+      ["Instagram, TikTok and Twitch tools", "Included", "YouTube only"],
+      ["See the formula behind a number", "On every page", "No"],
+      ["Cost to lift the limits", "There are no limits to lift", "Paid monthly or annual plans"],
+    ],
+    shortAnswer: `<p>TubeBuddy's best features change things inside your YouTube account: testing two thumbnails against each other, editing end screens across a back catalogue, bulk-updating descriptions. All of that needs permission to write to your channel.</p>
+      <p>We never ask for that permission, so we cannot do any of it. What we can do is everything that happens before you hit publish, and everything you would want to know about a channel that is not yours.</p>`,
+    theyWin: [
+      "<strong>Thumbnail A/B testing.</strong> Genuinely the best reason to pay for TubeBuddy. Running two thumbnails against each other on live traffic is the only reliable way to know which works, and it requires account access we do not have.",
+      "<strong>Bulk editing.</strong> Updating end screens, cards or descriptions across hundreds of videos at once. If you have a large back catalogue this alone justifies the subscription.",
+      "<strong>Your own channel's private analytics.</strong> Retention curves, click-through rate and traffic sources are invisible from outside. TubeBuddy can read them; nobody without your permission can.",
+      "<strong>Published, tracked history.</strong> They keep your numbers over time and show the trend. We hold nothing, so every look is a fresh snapshot.",
+    ],
+    weWin: [
+      "<strong>No Google sign-in.</strong> Nothing here touches your YouTube account, so there is no permission to grant and nothing to revoke later.",
+      "<strong>Nothing is limited.</strong> No credit allowance, no locked buttons, no upgrade prompt in the middle of a task.",
+      "<strong>Research any channel, not just your own.</strong> Comparison, quality scoring and engagement benchmarks work on anyone's public channel.",
+      "<strong>The formula is shown.</strong> Every number says how it was produced, so you can argue with it rather than trust it blindly.",
+      "<strong>Four platforms, not one.</strong> Instagram, TikTok, Twitch and X tools are included.",
+    ],
+    whoShould: `<p><strong>Use Passive Array if</strong> you are researching a topic, writing titles and tags, checking someone else's channel, or pricing a sponsorship. Also if you would rather not grant write access to your channel to any third party.</p>
+      <p><strong>Use TubeBuddy if</strong> you want to test thumbnails properly or manage a large back catalogue. Nothing free replaces those, including us.</p>
+      <p><strong>Using both is reasonable.</strong> Plan and write here, publish and test there.</p>`,
+    tryTools: ["youtube-keyword-generator", "youtube-tag-generator", "youtube-title-analyzer", "youtube-channel-quality-checker", "youtube-thumbnail-downloader"],
+    faq: [
+      ["Is there a free TubeBuddy alternative?", "For keyword research, tags, titles, descriptions, channel checks and earnings estimates, Passive Array does those without an account or a paid tier. It does not replace thumbnail A/B testing or bulk editing, which require write access to your YouTube account."],
+      ["Does Passive Array need access to my YouTube account?", "No. It reads only public data through the official YouTube API, so there is no permission to grant and nothing to revoke."],
+      ["Can Passive Array A/B test thumbnails?", "No. Testing thumbnails against live traffic requires permission to change your video, which we do not ask for. TubeBuddy is the right tool for that."],
+      ["Is Passive Array's extension like TubeBuddy's?", "It covers the research side: engagement rate, hidden tags, views per day and keyword scoring on video, channel and search pages. It does not edit your channel."],
+    ],
+  });
+}
+
+function compareHubPage() {
+  const n = site.tools.length;
+  const card = (href, name, text) => `<a class="card" href="${href}"><span class="tagline"><span class="plat" style="color:var(--deep)">COMPARISON</span></span><h3>${esc(name)}</h3><p>${esc(text)}</p></a>`;
+  const body = `
+  ${head("Compare", "How Passive Array compares", "Straight comparisons with the tools people weigh us against, including the parts where they are better. Checked " + CHECKED + ".")}
+  <div class="grid c2">
+    ${card("vidiq-alternative/", "Passive Array vs vidIQ", "What you get without the monthly AI credit allowance, and the three things vidIQ does that we cannot.")}
+    ${card("tubebuddy-alternative/", "Passive Array vs TubeBuddy", "What you get without a Google sign-in, and why thumbnail A/B testing is still worth paying for.")}
+  </div>
+
+  <div class="card compare-strip" style="margin-top:24px">
+    <h2 style="padding:14px 14px 0;font-size:1.25rem">The one-line version</h2>
+    <div class="tablewrap"><table class="cmp">
+      <thead><tr><th></th><th class="us">Passive Array</th><th>vidIQ</th><th>TubeBuddy</th></tr></thead>
+      <tbody>
+        <tr><td>Account needed</td><td class="us">No</td><td>Yes</td><td>Yes, Google</td></tr>
+        <tr><td>Free tier limits</td><td class="us">None</td><td>Monthly AI credits</td><td>Feature limits</td></tr>
+        <tr><td>Reads your private analytics</td><td class="us">No, by design</td><td>Yes, if connected</td><td>Yes, if connected</td></tr>
+        <tr><td>Edits your channel</td><td class="us">No, by design</td><td>Yes</td><td>Yes</td></tr>
+        <tr><td>Platforms covered</td><td class="us">YouTube, Instagram, TikTok, Twitch, X</td><td>YouTube, Instagram</td><td>YouTube</td></tr>
+        <tr><td>Shows the formula</td><td class="us">Always</td><td>No</td><td>No</td></tr>
+        <tr><td>Price</td><td class="us">Free</td><td>Free tier, paid from about $17/mo</td><td>Free tier, paid plans</td></tr>
+      </tbody>
+    </table></div>
+    <p class="note">Both are capable products and neither is a scam. The honest summary is that they are subscriptions with a sample attached, and we are a free toolset with a narrower job. If you need software that watches and edits your own channel, pay them. If you need answers before you publish, you do not need to pay anyone.</p>
+  </div>
+
+  <div class="cta-band">
+    <div><h3>Decide by using it, not by reading about it</h3><p>${n} tools, no account, no card.</p></div>
+    <a class="btn mint" href="../creator-tools/">Browse all ${n} tools</a>
+  </div>`;
+  return site.shell({
+    title: "Compare",
+    ogTitle: "Passive Array compared with vidIQ and TubeBuddy",
+    description: "Honest comparisons of Passive Array with vidIQ and TubeBuddy, including what they do better. No account needed for any Passive Array tool.",
+    path: "/compare/",
+    active: "compare",
+    body,
+  });
+}
+
+/* ---------------------------------------------------------------- pricing */
+function pricingPage() {
+  const n = site.tools.length;
+  const live = site.tools.filter((t) => t.api === "youtube" || t.api === "twitch").length;
+  const body = `
+  ${head("Pricing", "Pricing", "There is one plan. It is free, and it is the whole thing.")}
+  <div class="grid c2" style="align-items:start">
+    <div class="card" style="border-color:var(--teal);border-width:2px">
+      <span class="k" style="font-size:.76rem;font-weight:700;letter-spacing:.06em;color:var(--deep)">EVERYTHING</span>
+      <div style="font-size:3rem;font-weight:600;letter-spacing:-.03em;line-height:1.1;margin:8px 0 4px">$0</div>
+      <p class="muted" style="margin-bottom:18px">Not a trial. Not a freemium tier. The price.</p>
+      <ul class="plain">
+        <li><b>All ${n} tools</b>, with no feature locked</li>
+        <li><b>${live} tools with live data</b> from the official YouTube and Twitch APIs</li>
+        <li><b>Unlimited generations.</b> No credit allowance to run down</li>
+        <li><b>The Chrome extension</b>, free as well</li>
+        <li><b>No account required.</b> No email, no card, no Google sign-in</li>
+        <li><b>No ads</b> between you and the answer</li>
+      </ul>
+      <a class="btn wide" href="../creator-tools/" style="margin-top:20px">Start using them</a>
+    </div>
+    <div class="card prose">
+      <h2 style="margin-top:0">How it can be free</h2>
+      <p>Because it is cheap to run. The site is static pages served from a free hosting tier. The live lookups use the free allowances YouTube and Twitch give every developer. There is no database of scraped profiles to maintain and no sales team.</p>
+      <p>The expensive parts of a product like vidIQ are the parts we deliberately do not build: storing your history, watching your channel continuously, and holding write access to your account. Those need real infrastructure, and that is what a subscription pays for.</p>
+
+      <h2>What we would charge for, if ever</h2>
+      <p>If paid features arrive, they will be things that cost real money to run: saved reports, alerts when a channel you track moves, and exports. Everything on this site today stays free when that happens. We would rather say that now and be held to it.</p>
+
+      <h2>What we do not do</h2>
+      <ul>
+        <li>No ads, and no affiliate links dressed up as recommendations.</li>
+        <li>No selling or sharing of anything you type in. Most tools never send it anywhere.</li>
+        <li>No email wall in front of a result.</li>
+      </ul>
+
+      <h2>If you want to help</h2>
+      <p>Tell someone. Or <a href="../contact/">report a number that looks wrong</a>, which is genuinely more useful than money at this stage.</p>
+    </div>
+  </div>
+
+  <div class="card compare-strip" style="margin-top:28px">
+    <h2 style="padding:14px 14px 0;font-size:1.25rem">Compared with the paid options</h2>
+    <div class="tablewrap"><table class="cmp">
+      <thead><tr><th></th><th class="us">Passive Array</th><th>vidIQ</th><th>TubeBuddy</th></tr></thead>
+      <tbody>
+        <tr><td>Entry price</td><td class="us">Free</td><td>Free tier, then about $17/mo</td><td>Free tier, then paid plans</td></tr>
+        <tr><td>Free tier limits</td><td class="us">None</td><td>Monthly AI credit allowance</td><td>Feature limits</td></tr>
+        <tr><td>Account required to start</td><td class="us">No</td><td>Yes</td><td>Yes</td></tr>
+      </tbody>
+    </table></div>
+    <p class="note">Checked ${CHECKED} from both companies' public pricing pages. Prices change; <a href="../contact/">tell us</a> if this is stale. Full detail on the <a href="../compare/">comparison pages</a>.</p>
+  </div>`;
+  return site.shell({
+    title: "Pricing",
+    ogTitle: "Passive Array pricing: free, with no tier above it",
+    description: `All ${n} Passive Array tools are free with no account, no credit limit and no paid tier. Here is how that works and what we would ever charge for.`,
+    path: "/pricing/",
+    active: "pricing",
+    body,
+    jsonld: {
+      "@context": "https://schema.org", "@type": "Product", name: "Passive Array",
+      description: `${n} free tools for creators and brands.`,
+      offers: { "@type": "Offer", price: "0", priceCurrency: "USD", availability: "https://schema.org/InStock", url: SITE + "/pricing/" },
+    },
+  });
+}
+
+/* -------------------------------------------------------------------- FAQ */
+const FAQ_SECTIONS = [
+  ["About the tools", [
+    ["Is Passive Array really free?", "Yes, and there is no trial to expire. Every tool works without an account, without a card and without a credit limit. The site runs on free hosting and free API allowances, which is why it can stay that way."],
+    ["Do I need an account?", "No. Nothing is behind a sign-in. An account is optional and holds your email address and whether you want the weekly report, nothing else."],
+    ["Will the tools I use today start costing money?", "No. If paid features ever arrive they will be new things that cost real money to run, such as saved reports and alerts. What is on the site today stays free."],
+    ["Is there a catch, like ads or selling my data?", "There are no ads and nothing you type is sold or shared. Most tools never send your input anywhere at all; the ones that do say so on the page."],
+  ]],
+  ["Where the numbers come from", [
+    ["How accurate are the earnings figures?", "They are ranges, not payslips. Revenue per thousand views swings with niche, audience country and Shorts share, so any single figure would be misleading. We show the range and the assumption behind each end, and you can change the assumptions."],
+    ["Why does the subscriber count not match YouTube exactly?", "YouTube rounds public subscriber counts to three significant figures in its API, so 1,234,567 reaches every third-party tool as 1.23M. Views and video counts are exact."],
+    ["Why do you not show search volume for keywords?", "Because nobody outside Google has YouTube's search volume. Every tool showing one is modelling it, then presenting the guess with a precision it has not earned. We show what the top results are actually doing, which is measured."],
+    ["Why are the Instagram and TikTok tools based on numbers I type in?", "Neither platform offers a free public API for follower and engagement data, and scraping them breaks their terms. Rather than build on something that would break or get us blocked, those tools ask you for the numbers and are honest about it."],
+    ["What does the quality score actually measure?", "Engagement rate against the benchmark for that channel size, views per subscriber, upload consistency and channel age, combined into a score out of 100. The page lists each part and its weight."],
+  ]],
+  ["Using the tools", [
+    ["A tool says the quota is used up. What now?", "The live YouTube and Twitch tools run on a free daily allowance that resets at midnight Pacific time. Everything that does not need live data keeps working."],
+    ["Can I link to a result?", "Yes. Most tools accept the input in the address, for example adding ?channel=@handle, and every result page has a copy-link button."],
+    ["Is there a browser extension?", "Yes, and it is free. It puts engagement rate, hidden tags, views per day and a keyword score on YouTube's video, channel and search pages."],
+    ["Do the AI generators make things up?", "They are instructed not to, and they only work from what you type. If an input is empty they write a [placeholder] in square brackets rather than inventing a fact, a number or a testimonial."],
+  ]],
+  ["Compared with other tools", [
+    ["How is this different from vidIQ?", "vidIQ is a subscription with a free sample attached: a monthly AI credit allowance and a sign-up before you see anything. Here nothing is gated. vidIQ does things we cannot, such as reading your own private analytics and publishing for you. The full comparison is on its own page."],
+    ["How is this different from TubeBuddy?", "TubeBuddy connects to your YouTube account and can change things inside it, including running thumbnail A/B tests, which is genuinely worth paying for. We never ask for that access, so we cover everything that happens before you publish."],
+    ["Should I use Passive Array instead of paying for one of them?", "For research, titles, tags, descriptions, channel checks and pricing, yes. If you need thumbnail testing, bulk editing or coaching tuned to your own retention data, pay for the tool that does it. Plenty of people use both."],
+  ]],
+];
+
+function faqPage() {
+  const all = FAQ_SECTIONS.flatMap(([, qs]) => qs);
+  const body = `
+  ${head("FAQ", "Questions and straight answers", "Including the awkward ones about where the numbers come from and what we cannot do.")}
+  ${FAQ_SECTIONS.map(([title, qs]) => `
+    <h2 style="margin:32px 0 12px;font-size:1.3rem">${esc(title)}</h2>
+    <div class="card faq">${qs.map(([q, a]) => `<details><summary>${esc(q)}</summary><p>${esc(a)}</p></details>`).join("")}</div>
+  `).join("")}
+  <div class="cta-band">
+    <div><h3>Not answered here?</h3><p>Ask directly. Replies come by email, usually within two working days.</p></div>
+    <a class="btn mint" href="../contact/">Ask a question</a>
+  </div>`;
+  return site.shell({
+    title: "FAQ",
+    ogTitle: "Passive Array FAQ",
+    description: "Is it really free, where do the numbers come from, why is there no search volume, and how it compares with vidIQ and TubeBuddy.",
+    path: "/faq/",
+    active: "",
+    narrow: true,
+    body,
+    jsonld: {
+      "@context": "https://schema.org", "@type": "FAQPage",
+      mainEntity: all.map(([q, a]) => ({ "@type": "Question", name: q, acceptedAnswer: { "@type": "Answer", text: a } })),
+    },
+  });
+}
+
+// Keys are site paths, so a key may contain slashes for a nested page.
+const PAGES = {
+  about: aboutPage,
+  contact: contactPage,
+  pricing: pricingPage,
+  faq: faqPage,
+  compare: compareHubPage,
+  "compare/vidiq-alternative": vidiqPage,
+  "compare/tubebuddy-alternative": tubebuddyPage,
+  privacy: privacyPage,
+  terms: termsPage,
+  login: loginPage,
+  signup: signupPage,
+  account: accountPage,
+};
 
 // Pages that carry a noindex tag: they are functional, not content, so they
 // stay out of the sitemap and out of robots.

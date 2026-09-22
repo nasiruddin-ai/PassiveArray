@@ -965,6 +965,571 @@
     };
   });
 
+  /* ========================================================== YouTube studio
+     Title analysis, keyword expansion, naming, niche research, thumbnails and
+     the YouTube generators. Everything here runs in the browser; the generators
+     upgrade to AI when the server has a key, and fall back to patterns when not. */
+
+  var YEAR_NOW = new Date().getFullYear();
+
+  function words(s) { return String(s || "").trim().split(/\s+/).filter(Boolean); }
+  function titleCaseWords(s) { return String(s || "").replace(/\b([a-z])/g, function (m) { return m.toUpperCase(); }); }
+  function uniq(list) {
+    var seen = {}, out = [];
+    list.forEach(function (x) {
+      var k = String(x).toLowerCase().trim();
+      if (!k || seen[k]) return;
+      seen[k] = 1; out.push(String(x).trim());
+    });
+    return out;
+  }
+  function copyBlock(lines) { return lines.join("\n"); }
+
+  /* ------------------------------------------------- 1. title analyzer */
+  var POWER_WORDS = ["how", "why", "best", "worst", "stop", "never", "always", "secret", "truth", "mistake", "mistakes", "easy", "fast", "free", "proven", "ultimate", "complete", "honest", "actually", "finally", "before", "after", "vs", "versus", "nobody", "everyone", "real", "simple", "quick", "guide", "tutorial", "beginners", "explained", "review", "tested", "results"];
+  var EMOTION_WORDS = ["shocking", "surprising", "painful", "brutal", "insane", "crazy", "unbelievable", "amazing", "terrible", "hate", "love", "regret", "warning", "danger", "avoid", "wrong", "failed", "worth"];
+
+  function analyzeTitle(title, keyword) {
+    var t = String(title || "").trim();
+    var low = t.toLowerCase();
+    var len = t.length;
+    var ws = words(t);
+    var checks = [];
+    var tips = [];
+
+    /* Length, scored against the 60 characters where YouTube truncates. */
+    var lenScore, lenText;
+    if (len === 0) { lenScore = 0; lenText = "Empty"; }
+    else if (len < 25) { lenScore = 45; lenText = len + " characters, short"; tips.push("At " + len + " characters you are leaving room unused. You have until about 60 before YouTube starts cutting the title off, and a little more detail usually earns the click."); }
+    else if (len < 40) { lenScore = 78; lenText = len + " characters, a little short"; }
+    else if (len <= 60) { lenScore = 100; lenText = len + " characters, ideal"; }
+    else if (len <= 70) { lenScore = 62; lenText = len + " characters, tight"; tips.push("At " + len + " characters the end of your title will be cut off in search and on mobile. Move anything essential into the first 60."); }
+    else { lenScore = 28; lenText = len + " characters, too long"; tips.push("At " + len + " characters a good part of this title is invisible where most people see it. Cut it to 60 or fewer."); }
+    checks.push({ label: "Length", value: lenScore, text: lenText });
+
+    /* Keyword presence and, more importantly, position. */
+    var kw = String(keyword || "").trim().toLowerCase();
+    var kwScore = null, kwText = "";
+    if (kw) {
+      var at = low.indexOf(kw);
+      if (at < 0) {
+        kwScore = 0; kwText = "Not in the title";
+        tips.push("Your keyword “" + keyword.trim() + "” does not appear in the title. Search cannot match what is not there, so work it in naturally near the front.");
+      } else {
+        var third = Math.max(1, len / 3);
+        if (at <= third) { kwScore = 100; kwText = "Near the front, where it counts"; }
+        else if (at <= len * 0.66) { kwScore = 72; kwText = "In the middle"; tips.push("Your keyword sits in the middle of the title. Moving it closer to the front helps both search matching and the half-second a viewer spends deciding."); }
+        else { kwScore = 48; kwText = "Near the end"; tips.push("Your keyword is at the end, which is the weakest place for it and the part most likely to be cut off. Lead with it instead."); }
+      }
+      checks.push({ label: "Keyword position", value: kwScore, text: kwText });
+    }
+
+    /* Click appeal: the things that reliably correlate with a higher click rate. */
+    var appeal = 0, appealBits = [];
+    var hasNumber = /\d/.test(t);
+    var hasBracket = /[\[\(]/.test(t);
+    var powerHits = uniq(ws.filter(function (w) { return POWER_WORDS.indexOf(w.toLowerCase().replace(/[^a-z]/g, "")) >= 0; }));
+    var emotionHits = uniq(ws.filter(function (w) { return EMOTION_WORDS.indexOf(w.toLowerCase().replace(/[^a-z]/g, "")) >= 0; }));
+    var isQuestion = /\?\s*$/.test(t) || /^(how|what|why|when|which|who|is|are|does|do|can|should)\b/i.test(t);
+
+    if (hasNumber) { appeal += 30; appealBits.push("a number"); }
+    if (hasBracket) { appeal += 15; appealBits.push("a bracket"); }
+    if (powerHits.length) { appeal += Math.min(30, powerHits.length * 12); appealBits.push(powerHits.length === 1 ? "a strong word" : powerHits.length + " strong words"); }
+    if (emotionHits.length) { appeal += Math.min(15, emotionHits.length * 8); appealBits.push("an emotional word"); }
+    if (isQuestion) { appeal += 12; appealBits.push("a question"); }
+    appeal = clamp(appeal, 0, 100);
+    checks.push({ label: "Click appeal", value: appeal, text: appealBits.length ? appealBits.join(", ") : "Nothing pulling the eye" });
+    if (appeal < 40) tips.push("Nothing in this title creates a reason to click right now. A number, a specific promise, or a clear “you will learn X” all lift click-through without overpromising.");
+
+    /* Trust: what loses clicks rather than winning them. */
+    var trust = 100, trustBits = [];
+    var capsWords = ws.filter(function (w) { return w.length > 2 && w === w.toUpperCase() && /[A-Z]/.test(w); });
+    if (capsWords.length > 1) { trust -= 35; trustBits.push(capsWords.length + " words in capitals"); tips.push("Capitals on " + capsWords.length + " words reads as shouting. One capitalised word for emphasis is fine; more of them measurably lowers trust."); }
+    else if (capsWords.length === 1) trustBits.push("one capitalised word, fine");
+    if (/[!?]{2,}|\.{3,}/.test(t)) { trust -= 25; trustBits.push("stacked punctuation"); tips.push("Repeated exclamation or question marks read as clickbait. One is enough."); }
+    if (/\b(you won'?t believe|shocking truth|gone wrong|gone sexual|omg)\b/i.test(t)) { trust -= 30; trustBits.push("worn-out clickbait phrasing"); tips.push("Phrases like this were everywhere in 2017 and now suppress clicks from exactly the audience worth having. Say what the video actually delivers instead."); }
+    if (ws.length > 14) { trust -= 15; trustBits.push("a lot of words to scan"); }
+    trust = clamp(trust, 0, 100);
+    checks.push({ label: "Trust", value: trust, text: trustBits.length ? trustBits.join(", ") : "Nothing working against you" });
+
+    /* Weighted score. Without a keyword its weight goes to length and appeal. */
+    var score;
+    if (kw) score = lenScore * 0.25 + kwScore * 0.25 + appeal * 0.30 + trust * 0.20;
+    else score = lenScore * 0.38 + appeal * 0.42 + trust * 0.20;
+    score = Math.round(clamp(score, 0, 100));
+
+    return { score: score, checks: checks, tips: tips, len: len, wordCount: ws.length, hasNumber: hasNumber, isQuestion: isQuestion };
+  }
+
+  function titleGrade(s) {
+    if (s >= 80) return { label: "Strong", cls: "good" };
+    if (s >= 62) return { label: "Good", cls: "good" };
+    if (s >= 45) return { label: "Needs work", cls: "warn" };
+    return { label: "Weak", cls: "bad" };
+  }
+
+  COMPUTE["youtube-title-analyzer"] = function (v) {
+    var title = String(v.title || "").trim();
+    if (!title) return { error: "Paste a title to score it." };
+    var a = analyzeTitle(title, v.keyword);
+    var g = titleGrade(a.score);
+    var shown = a.len > 60 ? title.slice(0, 60) : title;
+    return {
+      hero: {
+        label: "Title score",
+        value: a.score + " / 100 " + pill(g),
+        note: "Weighted across length, keyword position, click appeal and trust. Every part is shown below.",
+      },
+      bars: a.checks.map(function (c) { return { label: c.label, value: c.value, text: c.text }; }),
+      rows: [
+        { name: "Characters", sub: "60 is where YouTube truncates", value: a.len },
+        { name: "Words", value: a.wordCount },
+        { name: "Contains a number", value: a.hasNumber ? "Yes" : "No" },
+        { name: "Reads as a question", value: a.isQuestion ? "Yes" : "No" },
+      ],
+      list: a.tips.length ? a.tips.map(esc) : ["Nothing to fix. This title is doing the things that earn clicks without overpromising."],
+      copy: a.len > 60 ? shown + "…" : title,
+      note: a.len > 60
+        ? "The box above shows what a viewer actually sees in search: the first 60 characters. Everything after that is hidden."
+        : "The box above is your title. Copy it straight into YouTube Studio.",
+    };
+  };
+
+  /* --------------------------------------------- 2. keyword generator */
+  var KW_GROUPS = [
+    { name: "How-to and tutorials", want: "Step-by-step help", video: "A walkthrough that finishes the job on screen", forms: ["how to {k}", "{k} tutorial", "{k} step by step", "how to do {k} for free", "{k} explained"] },
+    { name: "Beginner", want: "A starting point", video: "Assume nothing, define the terms", forms: ["{k} for beginners", "{k} basics", "beginner {k} guide", "{k} for complete beginners", "getting started with {k}"] },
+    { name: "Questions", want: "One clear answer", video: "Answer in the first 30 seconds, then justify it", forms: ["what is {k}", "why is {k} important", "is {k} worth it", "does {k} work", "how much does {k} cost"] },
+    { name: "Best and comparison", want: "Help choosing", video: "A real test, with a verdict you commit to", forms: ["best {k}", "best {k} " + YEAR_NOW, "{k} vs", "top 10 {k}", "cheapest {k}"] },
+    { name: "Problems and mistakes", want: "To avoid getting it wrong", video: "Name the mistake, show the fix", forms: ["{k} mistakes", "{k} not working", "common {k} problems", "stop doing {k}", "{k} fails"] },
+    { name: "Current and trending", want: "What changed recently", video: "Date it clearly and update it yearly", forms: ["{k} " + YEAR_NOW, "{k} update", "is {k} still worth it in " + YEAR_NOW, "new {k} features", "{k} trends"] },
+    { name: "Tools and money", want: "Something to use or buy", video: "Show it working, name the price", forms: ["free {k} tool", "{k} software", "how to make money with {k}", "{k} pricing", "{k} alternatives"] },
+  ];
+
+  COMPUTE["youtube-keyword-generator"] = function (v) {
+    var k = String(v.keyword || "").trim().toLowerCase();
+    if (!k) return { error: "Type a seed keyword first." };
+    var niche = String(v.niche || "").trim();
+    var rows = [], all = [];
+
+    KW_GROUPS.forEach(function (g) {
+      g.forms.forEach(function (form, i) {
+        var phrase = form.replace(/\{k\}/g, k);
+        all.push(phrase);
+        rows.push([
+          i === 0 ? { html: "<b>" + esc(phrase) + "</b>" } : esc(phrase),
+          i === 0 ? esc(g.name) : "",
+          i === 0 ? esc(g.video) : "",
+        ]);
+      });
+    });
+
+    if (niche) {
+      ["{k} for " + niche, niche + " " + k, "best {k} for " + niche].forEach(function (form) {
+        var phrase = form.replace(/\{k\}/g, k);
+        all.push(phrase);
+        rows.push([{ html: "<b>" + esc(phrase) + "</b>" }, "Your niche", "Narrower audience, far less competition"]);
+      });
+    }
+
+    all = uniq(all);
+    return {
+      hero: { label: "Keyword ideas", value: all.length, note: "Built from “" + esc(k) + "” across " + KW_GROUPS.length + " kinds of search intent" },
+      table: { head: ["Keyword", "Group", "What wins it"], rows: rows },
+      copy: copyBlock(all),
+      note: "No search volume is shown, because nobody outside Google has YouTube's volume data. To judge demand, search a phrase and look at the top ten: if channels smaller than yours are ranking with more views than they have subscribers, the door is open. The <a href=\"../../youtube-extension/\">free extension</a> scores that automatically.",
+    };
+  };
+
+  /* ----------------------------------------- 3. channel name generator */
+  var NAME_ROLES = { descriptive: ["Hub", "Lab", "Works", "Studio", "Guide", "School", "Notes", "Daily", "Weekly", "Report"], personal: ["Talks", "Tries", "Tests", "Builds", "Makes", "Explains", "Reviews"], authority: ["Institute", "Authority", "Academy", "Journal", "Collective", "Standard", "Society", "Bureau"], playful: ["Gang", "Club", "Corner", "Nest", "Pals", "Crew", "Shack", "Den", "Cave", "Squad"] };
+  var NAME_PREFIX = { descriptive: ["The", "All About", "Simply", "Plain"], personal: ["", "", "Just"], authority: ["The", "The Real", "Pro"], playful: ["Hey", "Oi", "Super", "Little"] };
+
+  COMPUTE["youtube-channel-name-generator"] = function (v) {
+    var topic = String(v.topic || "").trim();
+    if (!topic) return { error: "Type what the channel is about." };
+    var style = v.style || "descriptive";
+    var word = String(v.word || "").trim();
+    var tw = words(topic).map(function (w) { return w.replace(/[^A-Za-z0-9]/g, ""); }).filter(Boolean);
+    var head = titleCaseWords(tw.join(" "));
+    var oneWord = titleCaseWords(tw[tw.length - 1] || topic);
+    var firstWord = titleCaseWords(tw[0] || topic);
+    var me = titleCaseWords(word);
+
+    var roles = NAME_ROLES[style] || NAME_ROLES.descriptive;
+    var prefixes = NAME_PREFIX[style] || NAME_PREFIX.descriptive;
+    var out = [];
+
+    roles.forEach(function (r) { out.push(head + " " + r); });
+    prefixes.forEach(function (p) { out.push((p ? p + " " : "") + head); });
+    out.push(oneWord + firstWord, firstWord + oneWord);
+    if (me) {
+      out.push(me + " " + roles[0], me + " Does " + head, head + " with " + me, me + "'s " + head);
+    }
+    out.push(head + " " + YEAR_NOW, "Mr " + oneWord, "Everyday " + head, head + " Made Simple");
+
+    var names = uniq(out).filter(function (n) { return n.length > 2; }).slice(0, 20);
+
+    return {
+      hero: { label: "Name ideas", value: names.length, note: "Built from “" + esc(topic) + "” in the " + esc(style) + " style" },
+      table: {
+        head: ["Name", "Characters", "Reads well on mobile"],
+        rows: names.map(function (n) {
+          var long = n.length > 20;
+          return [
+            { html: "<b>" + esc(n) + "</b>" },
+            String(n.length),
+            long ? { html: "<span class=\"pill warn\">Gets cut off</span>" } : { html: "<span class=\"pill good\">Yes</span>" },
+          ];
+        }),
+      },
+      copy: copyBlock(names),
+      note: "We cannot check whether a handle is taken. Before you commit, open <code>youtube.com/@yourname</code> and see whether it loads, and search the name to make sure it is not already someone else's brand.",
+    };
+  };
+
+  /* ----------------------------------------------- 4. hashtag generator */
+  COMPUTE["youtube-hashtag-generator"] = function (v) {
+    var topic = String(v.topic || "").trim();
+    if (!topic) return { error: "Type what the video is about." };
+    var want = parseInt(v.count, 10) || 8;
+    var tw = words(topic.toLowerCase()).map(function (w) { return w.replace(/[^a-z0-9]/g, ""); }).filter(Boolean);
+    var joined = tw.join("");
+    var specific = uniq([joined, tw.join("") + "tips", tw.join("") + YEAR_NOW, tw.slice(0, 2).join(""), tw[tw.length - 1] + "tutorial"]).filter(Boolean);
+    var mid = uniq([tw[tw.length - 1], tw[0], tw[0] + "guide", tw[tw.length - 1] + "howto"]).filter(Boolean);
+    var broad = ["youtube", "tutorial", "howto", "creator", "shorts", "learn", "tips"];
+
+    var chosen = [];
+    specific.forEach(function (t) { if (chosen.length < want) chosen.push({ tag: "#" + t, size: "niche" }); });
+    mid.forEach(function (t) { if (chosen.length < want) chosen.push({ tag: "#" + t, size: "mid" }); });
+    broad.forEach(function (t) { if (chosen.length < want) chosen.push({ tag: "#" + t, size: "broad" }); });
+
+    var seen = {};
+    chosen = chosen.filter(function (c) { if (seen[c.tag]) return false; seen[c.tag] = 1; return true; });
+
+    return {
+      hero: { label: "Hashtags", value: chosen.length, note: "The first three appear above your video title. Those are the specific ones." },
+      tags: chosen,
+      rows: [
+        { name: "Shown above your title", value: chosen.slice(0, 3).map(function (c) { return c.tag; }).join(" ") },
+        { name: "Total characters", value: chosen.map(function (c) { return c.tag; }).join(" ").length },
+        { name: "YouTube's limit", sub: "more than this and all are ignored", value: "15 hashtags" },
+      ],
+      copy: chosen.map(function (c) { return c.tag; }).join(" "),
+      note: "Paste these at the end of your description. Specific tags are first on purpose: only the first three are shown above the title, and a narrow tag brings the right viewer while a broad one competes with millions of videos.",
+    };
+  };
+
+  /* ---------------------------------------------------- 5. niche finder */
+  /* Editorial judgement, clearly labelled as such on the page. RPM bands are
+     indicative ranges creators report publicly, not measured data. */
+  var NICHE_DATA = [
+    ["Personal finance and investing", "money", "High", "$12 to $30", 5, 3, "yes", "Advertisers pay the most here. Trust is everything, so faceless is hard."],
+    ["B2B software and SaaS reviews", "money", "High", "$15 to $40", 3, 4, "either", "Tiny audiences, enormous RPM, and sponsors who pay properly."],
+    ["Real estate and property", "money", "High", "$10 to $25", 4, 4, "yes", "Local angles beat national ones and face almost no competition."],
+    ["Insurance and legal explainers", "money", "High", "$15 to $35", 2, 4, "no", "Dry, faceless-friendly, and almost nobody makes it watchable."],
+    ["Make money online", "money", "Mid", "$6 to $18", 5, 2, "either", "Saturated and full of noise. You need a result you can actually show."],
+    ["Careers and interviews", "money", "Mid", "$8 to $20", 3, 2, "yes", "Steady demand, evergreen, and sponsors in recruitment and courses."],
+    ["Tech reviews and gadgets", "tech", "Mid", "$6 to $15", 5, 4, "yes", "Crowded at the top, but specific categories are wide open."],
+    ["Software tutorials", "tech", "Mid", "$7 to $18", 3, 2, "no", "Screen recording only. Search demand is deep and lasts for years."],
+    ["AI tools and automation", "tech", "Mid", "$8 to $20", 5, 2, "either", "Fast-moving and crowded, but every new tool resets the race."],
+    ["Coding and development", "tech", "Mid", "$7 to $16", 4, 4, "no", "Long watch times, loyal audiences, screen-share friendly."],
+    ["Home improvement and DIY", "life", "Mid", "$6 to $14", 3, 5, "either", "Hands only is fine. Projects take real time to film."],
+    ["Cooking and recipes", "life", "Low", "$3 to $8", 5, 3, "no", "Beautiful faceless content, but low RPM and heavy competition."],
+    ["Home office and productivity", "life", "Mid", "$6 to $15", 3, 2, "either", "Desk setups and workflow videos sell affiliate gear well."],
+    ["Travel", "life", "Low", "$2 to $7", 4, 5, "yes", "Expensive to make, lovely to watch, poorly paid per view."],
+    ["Parenting", "life", "Mid", "$5 to $12", 3, 2, "yes", "Trust-led, and brands in the space pay well for genuine voices."],
+    ["Fitness and home workouts", "body", "Low", "$3 to $9", 5, 3, "yes", "Enormous demand, enormous supply, and you are on camera."],
+    ["Nutrition and healthy eating", "body", "Mid", "$5 to $14", 4, 2, "either", "Be careful with claims. Evidence-led channels stand out fast."],
+    ["Mental health and habits", "body", "Mid", "$5 to $13", 4, 2, "either", "Faceless essay format works well. Sensitive subject, handle with care."],
+    ["Gaming walkthroughs", "play", "Low", "$2 to $6", 5, 1, "no", "Easiest to start, hardest to stand out, worst RPM."],
+    ["Gaming news and analysis", "play", "Low", "$3 to $8", 4, 2, "no", "Faster to produce than gameplay and easier to differentiate."],
+    ["Film and TV analysis", "play", "Low", "$3 to $8", 4, 3, "no", "Watch out for copyright. Commentary needs real transformation."],
+    ["True stories and documentaries", "play", "Mid", "$4 to $11", 3, 5, "no", "Faceless and highly watchable, but scripting is slow work."],
+    ["Language learning", "learn", "Mid", "$5 to $13", 3, 3, "either", "Evergreen search demand and obvious course monetisation."],
+    ["Exam prep and study skills", "learn", "Mid", "$5 to $12", 2, 2, "either", "Seasonal spikes, low competition, very loyal viewers."],
+    ["Music theory and instruments", "learn", "Low", "$3 to $9", 3, 3, "either", "Hands-only works. Watch the copyright on anything you play."],
+    ["Craft and making", "learn", "Low", "$3 to $8", 2, 4, "no", "Faceless, satisfying, low pay per view, strong product sales."],
+  ];
+
+  COMPUTE["youtube-niche-finder"] = function (v) {
+    var goal = v.goal || "money";
+    var area = String(v.area || "");
+    var camera = v.camera || "either";
+    var rpmScore = { High: 100, Mid: 62, Low: 28 };
+
+    var list = NICHE_DATA
+      .filter(function (n) { return !area || n[1] === area; })
+      .filter(function (n) {
+        if (camera === "no") return n[6] === "no" || n[6] === "either";
+        if (camera === "yes") return true;
+        return true;
+      })
+      .map(function (n) {
+        var money = rpmScore[n[2]];
+        var openness = (6 - n[4]) * 20;   // lower competition scores higher
+        var ease = (6 - n[5]) * 20;       // lower effort scores higher
+        var score;
+        if (goal === "money") score = money * 0.6 + openness * 0.3 + ease * 0.1;
+        else if (goal === "growth") score = openness * 0.5 + ease * 0.3 + money * 0.2;
+        else if (goal === "easy") score = ease * 0.6 + openness * 0.3 + money * 0.1;
+        else score = money * 0.34 + openness * 0.33 + ease * 0.33;
+        if (camera === "no" && n[6] === "no") score += 6;
+        return { name: n[0], band: n[2], rpm: n[3], comp: n[4], effort: n[5], cam: n[6], why: n[7], score: Math.round(clamp(score, 0, 100)) };
+      })
+      .sort(function (a, b) { return b.score - a.score; });
+
+    if (!list.length) return { error: "No niches match that combination. Try “Show me everything”." };
+
+    var top = list[0];
+    var stars = function (n) { return "●".repeat(n) + "○".repeat(5 - n); };
+    var goalText = { money: "earning the most per view", growth: "growing fastest", easy: "the least effort to start", balanced: "a balance of all three" }[goal];
+
+    return {
+      hero: {
+        label: "Best fit for " + esc(goalText),
+        value: esc(top.name),
+        note: esc(top.why),
+      },
+      table: {
+        head: ["Niche", "Score", "RPM band", "Competition", "Effort", "Faceless"],
+        rows: list.slice(0, 14).map(function (n) {
+          return [
+            { html: "<b>" + esc(n.name) + "</b><br><small style=\"color:var(--muted)\">" + esc(n.why) + "</small>" },
+            String(n.score),
+            esc(n.band) + " <small style=\"color:var(--muted)\">" + esc(n.rpm) + "</small>",
+            stars(n.comp),
+            stars(n.effort),
+            n.cam === "no" ? "Yes" : n.cam === "either" ? "Possible" : "No",
+          ];
+        }),
+      },
+      note: "RPM bands are indicative ranges creators report publicly, not measured data, and they swing with your audience's country. Competition and effort are our editorial read, scored 1 to 5, filled circles meaning more. Treat the ranking as a shortlist to research, then check real demand with the <a href=\"../youtube-keyword-generator/\">keyword generator</a>.",
+    };
+  };
+
+  /* ---------------------------------------------- 6. thumbnail downloader */
+  function videoIdFrom(raw) {
+    var s = String(raw || "").trim();
+    if (!s) return null;
+    if (/^[\w-]{11}$/.test(s)) return s;
+    var m = s.match(/(?:v=|\/shorts\/|\/embed\/|youtu\.be\/|\/v\/|\/live\/)([\w-]{11})/);
+    if (m) return m[1];
+    m = s.match(/([\w-]{11})/);
+    return m ? m[1] : null;
+  }
+
+  COMPUTE["youtube-thumbnail-downloader"] = function (v) {
+    var id = videoIdFrom(v.video);
+    if (!id) return { error: "That does not look like a YouTube link or video ID. Paste a watch link, a Shorts link, or the 11-character ID." };
+    var sizes = [
+      ["Maximum", "maxresdefault", "1280 x 720", "Only exists if the creator uploaded a thumbnail this large"],
+      ["Standard", "sddefault", "640 x 480", "Almost always available"],
+      ["High", "hqdefault", "480 x 360", "Always available"],
+      ["Medium", "mqdefault", "320 x 180", "Always available"],
+      ["Small", "default", "120 x 90", "Always available"],
+    ];
+    var base = "https://i.ytimg.com/vi/" + id + "/";
+    return {
+      hero: {
+        label: "Video",
+        value: "<code>" + esc(id) + "</code>",
+        note: "<a href=\"https://www.youtube.com/watch?v=" + esc(id) + "\" target=\"_blank\" rel=\"noopener\">Open the video on YouTube</a>",
+      },
+      table: {
+        head: ["Size", "Preview", "Dimensions", "Download"],
+        rows: sizes.map(function (s) {
+          var url = base + s[1] + ".jpg";
+          return [
+            { html: "<b>" + esc(s[0]) + "</b><br><small style=\"color:var(--muted)\">" + esc(s[3]) + "</small>" },
+            { html: "<img src=\"" + esc(url) + "\" alt=\"\" loading=\"lazy\" style=\"width:160px;max-width:100%;border-radius:8px;display:block\" onerror=\"this.parentNode.innerHTML='<small style=&quot;color:var(--muted)&quot;>Not available for this video</small>'\">" },
+            esc(s[2]),
+            { html: "<a href=\"" + esc(url) + "\" target=\"_blank\" rel=\"noopener\" download>Open full size</a>" },
+          ];
+        }),
+      },
+      note: "Right-click any preview and choose “Save image as”, or open the full size and save from there. Thumbnails belong to the creator who made them, so use these for research and comparison rather than republishing.",
+    };
+  };
+
+  /* ================================================ YouTube AI generators
+     Each has a local fallback so the tool works with no API key at all. */
+
+  var YT_TITLE_PATTERNS = [
+    ["How to {T} (Step by Step)", "how-to"], ["{T}: {n} Mistakes Everyone Makes", "mistakes"],
+    ["{T} Explained in Under 10 Minutes", "beginner"], ["I Tried {T} for 30 Days", "story"],
+    ["The Truth About {T} Nobody Tells You", "contrarian"], ["{T} vs The Alternatives: Which Wins?", "comparison"],
+    ["Stop Doing This With {T}", "mistakes"], ["{n} {T} Tips That Actually Work", "list"],
+    ["Is {T} Worth It? Honest Answer", "question"], ["{T} for Beginners: Everything You Need", "beginner"],
+  ];
+
+  function ytTitlesLocal(v) {
+    var topic = String(v.topic || "your topic").trim();
+    var T2 = titleCaseWords(topic);
+    var nums = [3, 5, 7, 10];
+    var chosen = pick(YT_TITLE_PATTERNS, 10, seedOf(topic));
+    return {
+      titles: chosen.map(function (p, i) {
+        return { title: p[0].replace(/\{T\}/g, T2).replace(/\{n\}/g, nums[i % nums.length]), angle: p[1] };
+      }),
+    };
+  }
+  function ytTitlesOut(res, fromAI, v) {
+    var list = (res.titles || []).slice(0, 10);
+    return {
+      hero: { label: "Titles", value: list.length, note: "Each one measured against the 60 characters YouTube shows in search" },
+      table: {
+        head: ["Title", "Characters", "Angle"],
+        rows: list.map(function (t) {
+          var len = String(t.title || "").length;
+          return [
+            { html: "<b>" + esc(t.title) + "</b>" },
+            len > 60 ? { html: "<span class=\"pill warn\">" + len + "</span>" } : { html: "<span class=\"pill good\">" + len + "</span>" },
+            esc(t.angle || ""),
+          ];
+        }),
+      },
+      copy: copyBlock(list.map(function (t) { return t.title; })),
+      note: (fromAI ? "Written by AI from your topic. " : "Built from title patterns that reliably earn clicks, filled with your topic. ") +
+        "Anything over 60 characters is flagged because the end gets cut off in search and on mobile. Score your favourite with the <a href=\"../youtube-title-analyzer/\">title analyzer</a>.",
+    };
+  }
+
+  function ytDescriptionLocal(v) {
+    var topic = String(v.topic || "your topic").trim();
+    var T2 = titleCaseWords(topic);
+    var notes = String(v.notes || "").trim();
+    var related = String(v.related || "").split(",").map(function (s) { return s.trim(); }).filter(Boolean);
+    var tags = uniq([topic].concat(related.slice(0, 3))).map(function (t) { return "#" + t.replace(/[^a-z0-9]+/gi, "").toLowerCase(); }).filter(function (t) { return t.length > 1; });
+    return {
+      description:
+        T2 + ": everything you need to know, explained simply.\n" +
+        "In this video I walk through " + topic.toLowerCase() + " step by step so you can do it yourself.\n\n" +
+        (notes || "[Write two or three sentences on what the video covers and who it is for.]") + "\n\n" +
+        "Timestamps\n00:00 Intro\n00:45 What " + topic.toLowerCase() + " is\n03:10 Step by step\n07:30 Common mistakes\n10:00 Final tips\n\n" +
+        "Links\n[Your website]\n[Free resource mentioned in the video]\n\n" +
+        (related.length ? "Related: " + related.slice(0, 4).join(", ") + "\n" : "") +
+        tags.join(" "),
+    };
+  }
+  function ytDescriptionOut(res, fromAI) {
+    var text = String(res.description || "");
+    return {
+      hero: { label: "Description", value: fmt(text.length) + " characters", note: "YouTube allows 5,000. Only the first two lines show before “more”." },
+      copy: text,
+      rows: [
+        { name: "Above the fold", sub: "all most viewers read", value: esc(text.split("\n").slice(0, 2).join(" ").slice(0, 90)) + "…" },
+        { name: "Chapter timestamps", value: (text.match(/\d{1,2}:\d{2}/g) || []).length },
+        { name: "Hashtags", value: (text.match(/#\w+/g) || []).length },
+      ],
+      note: (fromAI ? "Written by AI from your notes. " : "Built from a description structure that works, filled with your topic. ") +
+        "Replace everything in [square brackets] before you publish, and set the timestamps to your real chapters. Chapters give you a second set of entries in search.",
+    };
+  }
+
+  function ytTagsLocal(v) {
+    var topic = String(v.topic || "").trim().toLowerCase();
+    var related = String(v.related || "").split(",").map(function (s) { return s.trim().toLowerCase(); }).filter(Boolean);
+    var ws = words(topic);
+    var list = [topic, topic + " tutorial", "how to " + topic, topic + " for beginners", topic + " tips", topic + " " + YEAR_NOW, topic + " explained", "best " + topic, topic + " guide", topic + " mistakes", "learn " + topic]
+      .concat(related)
+      .concat(ws.length > 1 ? [ws[0], ws[ws.length - 1], ws.slice(0, 2).join(" ")] : []);
+    var out = [], total = 0;
+    uniq(list).forEach(function (t) {
+      if (!t || t.length > 30) return;
+      if (total + t.length + 1 > 480) return;
+      out.push(t); total += t.length + 1;
+    });
+    return { tags: out };
+  }
+  function ytTagsOut(res, fromAI) {
+    var tags = (res.tags || []).map(String);
+    var joined = tags.join(", ");
+    return {
+      hero: { label: "Tags", value: tags.length, note: fmt(joined.length) + " of YouTube's 500 characters used" },
+      tags: tags.map(function (t, i) { return { tag: t, size: i < 3 ? "niche" : i < 10 ? "mid" : "broad" }; }),
+      copy: joined,
+      note: (fromAI ? "Written by AI from your topic. " : "Built from your topic and the variations people actually type. ") +
+        "Paste the copied list straight into the Tags box in YouTube Studio. Tags are a small signal: they help most when your subject is commonly misspelled, and they will not rescue a weak title.",
+    };
+  }
+
+  function ytIdeasLocal(v) {
+    var res = ideasLocal({ niche: v.niche, audience: v.audience, format: "mixed" });
+    var f = v.format || "mixed";
+    var label = f === "short" ? "Shorts" : f === "long" ? "Long-form" : null;
+    return { ideas: (res.ideas || []).map(function (i) { return { title: i.title, hook: i.hook, format: label || (i.format === "reel" ? "Shorts" : "Long-form") }; }) };
+  }
+  function ytIdeasOut(res, fromAI) {
+    var ideas = (res.ideas || []).slice(0, 12);
+    return {
+      hero: { label: "Video ideas", value: ideas.length, note: "Each with the opening line that earns the first thirty seconds" },
+      ideas: ideas,
+      copy: copyBlock(ideas.map(function (i) { return i.title + "  |  Hook: " + (i.hook || ""); })),
+      note: (fromAI ? "Written by AI for your niche and audience. " : "Built from content patterns that work in any niche, filled with your subject and audience. ") +
+        "Pick one, then run it through the <a href=\"../youtube-title-generator/\">title generator</a> and check the topic is open with the <a href=\"../youtube-keyword-generator/\">keyword generator</a>.",
+    };
+  }
+
+  function ytScriptLocal(v) {
+    var topic = String(v.topic || "your topic").trim();
+    var who = String(v.audience || "").trim();
+    var mins = parseInt(v.minutes, 10) || 8;
+    var T2 = titleCaseWords(topic);
+    if (mins <= 1) {
+      return {
+        sections: [
+          { at: "0:00", name: "Hook", detail: "“Most people get " + topic + " wrong in the first five seconds. Here is what to do instead.” Say it over the action, not a title card." },
+          { at: "0:03", name: "The point", detail: "State the single thing this Short teaches. One idea only." },
+          { at: "0:12", name: "Show it", detail: "Demonstrate rather than describe. No intro, no channel branding." },
+          { at: "0:40", name: "Payoff and loop", detail: "Land the result, then end on a line that makes the first frame worth watching again." },
+        ],
+      };
+    }
+    var beats = [
+      ["Hook", "Open on the result or the problem, never on a greeting. “If " + topic + " is not working for you, it is almost always one of these.”"],
+      ["Promise", "Tell them exactly what they will be able to do by the end, and roughly how long it takes."],
+      ["Context", "The minimum background needed" + (who ? " for " + who : "") + ". Cut anything they already know."],
+      ["Main point one", "The first substantial step. Show it happening on screen."],
+      ["Main point two", "The second step, building on the first. This is usually where retention dips, so put your strongest visual here."],
+      ["Main point three", "The third step or the common mistake that undoes the first two."],
+      ["Proof", "A result, a before and after, or a number. This is what makes the advice believable."],
+      ["Recap", "Three sentences maximum. Repeat the promise and confirm it was delivered."],
+      ["Next click", "Point at one specific next video, not a subscribe plea. Say why it follows from this one."],
+    ];
+    if (mins <= 5) beats.splice(5, 1);
+    var step = (mins * 60) / beats.length;
+    return {
+      sections: beats.map(function (b, i) {
+        var sec = Math.round(i * step);
+        return { at: Math.floor(sec / 60) + ":" + String(sec % 60).padStart(2, "0"), name: b[0], detail: b[1] };
+      }),
+    };
+  }
+  function ytScriptOut(res, fromAI, v) {
+    var sections = res.sections || [];
+    return {
+      hero: { label: "Script outline", value: sections.length + " sections", note: "Timed across your target length. The opening is written out because it decides everything after it." },
+      table: {
+        head: ["At", "Section", "What happens"],
+        rows: sections.map(function (s) { return [esc(s.at || ""), { html: "<b>" + esc(s.name || "") + "</b>" }, esc(s.detail || "")]; }),
+      },
+      copy: copyBlock(sections.map(function (s) { return (s.at ? s.at + "  " : "") + (s.name || "") + "\n" + (s.detail || "") + "\n"; })),
+      note: (fromAI ? "Written by AI from your topic. " : "Built from a structure that holds retention, filled with your topic. ") +
+        "Timings are a guide, not a rule. If a section is running long, that is usually the sign it should be its own video.",
+    };
+  }
+
+  var YT_LOCAL = { yt_titles: ytTitlesLocal, yt_description: ytDescriptionLocal, yt_tags: ytTagsLocal, yt_ideas: ytIdeasLocal, yt_script: ytScriptLocal };
+  var YT_OUT = { yt_titles: ytTitlesOut, yt_description: ytDescriptionOut, yt_tags: ytTagsOut, yt_ideas: ytIdeasOut, yt_script: ytScriptOut };
+  ["youtube-title-generator", "youtube-description-generator", "youtube-tag-generator", "youtube-video-ideas-generator", "youtube-script-outline-generator"].forEach(function (slug) {
+    COMPUTE[slug] = function (v, d) {
+      var fromAI = !!(d && d.ok && d.result);
+      var res = fromAI ? d.result : YT_LOCAL[T.action](v);
+      return YT_OUT[T.action](res, fromAI, v);
+    };
+  });
+
   /* ----------------------------------------------------------- form plumbing */
   function values() {
     var v = {};

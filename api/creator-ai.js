@@ -36,6 +36,14 @@ const SCHEMAS = {
     task: "Write a YouTube tag list for the topic. 20 to 30 tags, total under 480 characters, mixing: the exact keyword, 2 to 4 word long-tail variations, common misspellings only if realistic, broad category tags, and the related keywords given. Lowercase unless a proper noun. No hashtags, no duplicates.",
     shape: '{"tags":["tag one","tag two"]}',
   },
+  yt_ideas: {
+    task: "Write 12 concrete YouTube video ideas for the niche and audience. Each has a specific publishable title (never a category or a theme), a hook of under 15 words that would be the first spoken line, and a format. Respect the requested format: 'short' means all Shorts, 'long' means all long-form, 'mixed' means vary them. Vary the angles across how-to, mistakes, comparison, story, test and contrarian. Be concrete enough that the creator could film it tomorrow.",
+    shape: '{"ideas":[{"title":"...","hook":"...","format":"Shorts|Long-form"}]}',
+  },
+  yt_script: {
+    task: "Write a YouTube script outline for the topic, timed across the requested length in minutes. Return sections in order, each with a timestamp like 0:00, a short section name, and a detail line saying what happens. Write the hook section out as the actual words to say, in quotes, because the first thirty seconds decide retention. Later sections describe what to cover rather than full script. Use 4 sections for a Short and 8 to 9 for long-form. Never open with a greeting or channel branding.",
+    shape: '{"sections":[{"at":"0:00","name":"Hook","detail":"..."}]}',
+  },
 };
 
 function extractJson(text) {
