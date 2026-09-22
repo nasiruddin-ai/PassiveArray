@@ -94,7 +94,7 @@ console.log("blog/posts/ -> dist/blog/ (" + built.posts + " articles, " + built.
 // Company pages: about, contact, privacy, terms.
 const pages = require("./pages/site-pages.js");
 const pagePaths = pages.buildInto(DIST);
-console.log("pages/site-pages.js -> dist/ (" + pagePaths.join(", ") + ")");
+console.log("pages/site-pages.js -> dist/ (" + pagePaths.all.join(", ") + ")");
 
 // sitemap.xml and robots.txt for search engines.
 const urls = [
@@ -107,14 +107,15 @@ const urls = [
   ["/blog/", "0.8", "weekly"],
   ...blog.CATEGORIES.map((c) => ["/blog/category/" + c.slug + "/", "0.7", "weekly"]),
   ...posts.map((p) => ["/blog/" + p.slug + "/", "0.7", "monthly", p.updated]),
-  ...pagePaths.map((p) => [p, p === "/about/" ? "0.5" : "0.3", "yearly"]),
+  ...pagePaths.indexable.map((p) => [p, p === "/about/" ? "0.5" : "0.3", "yearly"]),
 ];
 const today = new Date().toISOString().slice(0, 10);
 const sitemap = '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n' +
   urls.map(([loc, pri, freq, mod]) => `  <url><loc>${site.SITE}${loc}</loc><lastmod>${mod || today}</lastmod><changefreq>${freq}</changefreq><priority>${pri}</priority></url>`).join("\n") +
   "\n</urlset>\n";
 fs.writeFileSync(path.join(DIST, "sitemap.xml"), sitemap);
-fs.writeFileSync(path.join(DIST, "robots.txt"), "User-agent: *\nAllow: /\nDisallow: /api/\n\nSitemap: " + site.SITE + "/sitemap.xml\n");
+const disallow = ["/api/"].concat(pagePaths.noindex).map((p) => "Disallow: " + p).join("\n");
+fs.writeFileSync(path.join(DIST, "robots.txt"), "User-agent: *\nAllow: /\n" + disallow + "\n\nSitemap: " + site.SITE + "/sitemap.xml\n");
 console.log("sitemap.xml (" + urls.length + " urls) and robots.txt -> dist/");
 
 // Brand files at the site root: favicons, manifest, link preview image.

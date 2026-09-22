@@ -64,6 +64,7 @@ function header(root, active, withSearch) {
   <nav class="nav" id="site-nav">${link("creator-tools/", "Creator tools", "tools")}${link("#web-tools", "Web tools", "web")}${link("youtube-extension/", "Extension", "extension")}${link("blog/", "Blog", "blog")}${link("about/", "About", "about")}</nav>
   <div class="hactions">
     <button type="button" class="iconbtn" data-theme-toggle aria-label="Switch to dark mode">${ICON.moon}</button>
+    <a class="hlogin" href="${root}login/" data-login-link>Log in</a>
     <button type="button" class="btn hsignup" data-signup>Sign up free</button>
     <button type="button" class="iconbtn menubtn" data-menu aria-label="Open menu" aria-expanded="false" aria-controls="site-nav"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
   </div>
@@ -90,7 +91,7 @@ function footer(root, note) {
     ${col("Creator tools", [["creator-tools/#YouTube", "YouTube tools"], ["creator-tools/#Instagram", "Instagram tools"], ["creator-tools/#TikTok", "TikTok tools"], ["creator-tools/#Twitch", "Twitch tools"], ["creator-tools/#compare", "Compare creators"], ["creator-tools/#create", "Generators"], ["creator-tools/", `All ${tools.length} tools`]])}
     ${col("Web tools", WEB_TOOLS.map(([href, name]) => [href, name]))}
     ${col("Popular", popular)}
-    ${col("Company", [["about/", "About"], ["blog/", "Blog"], ["youtube-extension/", "Chrome extension"], ["contact/", "Contact"], ["privacy/", "Privacy policy"], ["terms/", "Terms of use"]])}
+    ${col("Company", [["about/", "About"], ["blog/", "Blog"], ["youtube-extension/", "Chrome extension"], ["contact/", "Contact"], ["login/", "Sign in"], ["privacy/", "Privacy policy"], ["terms/", "Terms of use"]])}
   </div>
   <div class="fbottom">
     <span>&copy; ${new Date().getFullYear()} ${BRAND}. ${esc(note || "Estimates use public numbers and typical industry rates. A starting point, not a guarantee.")}</span>

@@ -200,4 +200,187 @@
     form.addEventListener("input", function () { if (msg && msg.classList.contains("bad")) say(idle); });
   }
   document.querySelectorAll("form[data-subscribe]").forEach(wireForm);
+
+  /* ------------------------------------------------------------- accounts */
+  /* Sign-in is passwordless: a link is emailed and exchanged for a session
+     cookie. The cookie is HttpOnly so this script cannot read it. A plain
+     localStorage marker is kept purely so the header can show the right thing
+     without a request on every page; the server is still the only authority. */
+
+  var AUTH = "/api/auth";
+  var MARK = "pa-user";
+
+  function authCall(action, body) {
+    var opts = { method: body ? "POST" : "GET", credentials: "same-origin", cache: "no-store" };
+    if (body) {
+      opts.headers = { "Content-Type": "application/json" };
+      opts.body = JSON.stringify(body);
+    }
+    return fetch(AUTH + "?action=" + action, opts)
+      .then(function (r) { return r.json(); })
+      .catch(function () { return { ok: false, error: "Could not reach the server. Check your connection and try again." }; });
+  }
+  function marker(email) {
+    try {
+      if (email) localStorage.setItem(MARK, email); else localStorage.removeItem(MARK);
+    } catch (e) { /* private mode */ }
+  }
+  function markedEmail() {
+    try { return localStorage.getItem(MARK); } catch (e) { return null; }
+  }
+
+  /* Header: swap the log-in link for an account link when signed in. */
+  function paintHeader() {
+    var email = markedEmail();
+    document.querySelectorAll("[data-login-link]").forEach(function (a) {
+      a.textContent = email ? "Account" : "Log in";
+      a.setAttribute("href", ROOT + (email ? "account/" : "login/"));
+    });
+    document.querySelectorAll("[data-signup]").forEach(function (b) {
+      b.style.display = email ? "none" : "";
+    });
+  }
+  paintHeader();
+
+  /* Sign-in page */
+  var loginBox = document.querySelector("[data-login]");
+  if (loginBox) {
+    var form = loginBox.querySelector("[data-login-form]");
+    var sent = loginBox.querySelector("[data-login-sent]");
+    var working = loginBox.querySelector("[data-login-working]");
+    var msg = form.querySelector("[data-msg]");
+    var idleText = msg.textContent;
+    var again = loginBox.querySelector("[data-login-again]");
+
+    function showOnly(which) {
+      form.hidden = which !== "form";
+      sent.hidden = which !== "sent";
+      working.hidden = which !== "working";
+    }
+    function fail(text) {
+      showOnly("form");
+      msg.textContent = text;
+      msg.className = "fmsg bad";
+    }
+
+    again.addEventListener("click", function () {
+      showOnly("form");
+      msg.textContent = idleText;
+      msg.className = "fmsg";
+      form.reset();
+    });
+
+    form.addEventListener("submit", function (e) {
+      e.preventDefault();
+      var email = (form.elements.email.value || "").trim();
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)) { fail("Enter a valid email address."); return; }
+      var btn = form.querySelector("button[type=submit]");
+      btn.disabled = true;
+      msg.textContent = "Sending…";
+      msg.className = "fmsg";
+      authCall("request", { email: email, website: form.elements.website.value, source: location.pathname }).then(function (res) {
+        btn.disabled = false;
+        if (res && res.ok) showOnly("sent");
+        else fail((res && res.error) || "Something went wrong. Please try again.");
+      });
+    });
+
+    /* Arriving from the emailed link. */
+    var token = new URLSearchParams(location.search).get("token");
+    if (token) {
+      showOnly("working");
+      authCall("verify", { token: token }).then(function (res) {
+        if (res && res.ok) {
+          marker(res.email);
+          location.replace(ROOT + "account/");
+        } else {
+          fail((res && res.error) || "That sign-in link did not work. Ask for a new one.");
+          history.replaceState(null, "", location.pathname);
+        }
+      });
+    }
+  }
+
+  /* Account page */
+  var account = document.querySelector("[data-account]");
+  if (account) {
+    var loading = document.querySelector("[data-account-loading]");
+    var signedOut = document.querySelector("[data-account-out]");
+    var prefBox = account.querySelector("[data-pref-weekly]");
+    var prefMsg = account.querySelector("[data-pref-msg]");
+    var delMsg = account.querySelector("[data-delete-msg]");
+
+    function showAccount(state) {
+      if (loading) loading.hidden = state !== "loading";
+      account.hidden = state !== "in";
+      if (signedOut) signedOut.hidden = state !== "out";
+    }
+
+    authCall("me").then(function (res) {
+      if (res && res.ok) {
+        marker(res.email);
+        paintHeader();
+        account.querySelector("[data-account-email]").textContent = res.email;
+        var since = account.querySelector("[data-account-since]");
+        since.textContent = res.since
+          ? new Date(res.since).toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" })
+          : "–";
+        showAccount("in");
+      } else {
+        marker(null);
+        paintHeader();
+        showAccount("out");
+      }
+    });
+
+    if (prefBox) {
+      prefBox.addEventListener("change", function () {
+        prefMsg.textContent = "Saving…";
+        prefMsg.className = "fmsg";
+        authCall("preferences", { weekly: prefBox.checked }).then(function (res) {
+          if (res && res.ok) {
+            prefMsg.textContent = res.weekly ? "Saved. You will get the weekly report." : "Saved. You are off the weekly report.";
+            prefMsg.className = "fmsg good";
+          } else {
+            prefBox.checked = !prefBox.checked;
+            prefMsg.textContent = (res && res.error) || "Could not save that.";
+            prefMsg.className = "fmsg bad";
+          }
+        });
+      });
+    }
+
+    var outBtn = account.querySelector("[data-logout]");
+    if (outBtn) {
+      outBtn.addEventListener("click", function () {
+        outBtn.disabled = true;
+        authCall("logout", {}).then(function () {
+          marker(null);
+          location.href = ROOT;
+        });
+      });
+    }
+
+    var delBtn = account.querySelector("[data-delete]");
+    if (delBtn) {
+      delBtn.addEventListener("click", function () {
+        if (!window.confirm("Delete your email address and preferences? This signs you out and cannot be undone. The tools keep working without an account.")) return;
+        delBtn.disabled = true;
+        delMsg.textContent = "Sending the request…";
+        delMsg.className = "fmsg";
+        authCall("delete", {}).then(function (res) {
+          if (res && res.ok) {
+            marker(null);
+            delMsg.textContent = "Done. Your data is scheduled for removal and you have been signed out.";
+            delMsg.className = "fmsg good";
+            setTimeout(function () { location.href = ROOT; }, 2500);
+          } else {
+            delBtn.disabled = false;
+            delMsg.textContent = (res && res.error) || "Could not record that.";
+            delMsg.className = "fmsg bad";
+          }
+        });
+      });
+    }
+  }
 })();

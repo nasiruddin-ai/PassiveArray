@@ -156,3 +156,54 @@ The visitor sees "Could not save that right now." The reason is written to the
 Vercel function logs: open the project, **Logs**, and filter for `subscribe`.
 The usual causes are an inactive n8n workflow, an Apps Script deployment whose
 access is not set to Anyone, or a URL that was saved without redeploying.
+
+## Accounts and sign-in
+
+Sign-in is passwordless. There are no passwords stored and no user database:
+a link is signed with a secret, emailed, and exchanged for a session cookie.
+The account page holds the person's email address and one preference, nothing
+more, and every tool on the site works without an account.
+
+### Turning it on
+
+1. Set up the sign-up destination first (the section above). The same Apps
+   Script delivers the sign-in emails, so no extra service is needed.
+2. Generate a secret:
+
+```
+node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"
+```
+
+3. In Vercel add the environment variable `AUTH_SECRET` with that value, and
+   `SITE_URL` set to `https://passivearray.vercel.app` so the links point at
+   the right place. Then **Redeploy**.
+4. Check it: `https://passivearray.vercel.app/api/auth?action=health` should
+   answer `"enabled": true, "canEmail": true`.
+5. Go to `/login/`, enter your own email, and click the link that arrives.
+
+Changing `AUTH_SECRET` later signs everybody out, which is also how you would
+respond if you ever thought it had leaked.
+
+### How it works
+
+| Step | What happens |
+|---|---|
+| Ask for a link | `/api/auth?action=request` signs `{email, expiry}` with `AUTH_SECRET` and sends it to the webhook as `kind: "login"` |
+| Email | The Apps Script sees that kind and emails the link. It is never written to the sheet |
+| Click the link | `/login/` posts the token to `?action=verify`, which checks the signature and expiry |
+| Session | A signed cookie `pa_session` is set: HttpOnly, Secure, SameSite=Lax, 30 days |
+| Every page | The header reads a localStorage marker so it can show "Account" without a request. The server is still the only authority |
+
+### Deliberate limits
+
+- **Links are valid for 20 minutes, not single-use.** Marking a link as spent
+  needs somewhere to record it, and there is no database here by design. The
+  short window is the mitigation. Do not describe the link as one-time in any
+  copy, because it is not.
+- **No rate limiting on link requests.** Anyone can ask for a link to any
+  address; only the inbox owner can use it. If this is ever abused, put the
+  endpoint behind Vercel's firewall rules or add a counter in the sheet.
+- **Free Gmail sends about 100 emails a day** through Apps Script. Fine for
+  launch, not for scale. Move to a sending service if you outgrow it.
+- **`/login/` and `/account/` carry a noindex tag** and are excluded from the
+  sitemap and blocked in robots.txt.

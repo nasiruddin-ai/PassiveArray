@@ -445,3 +445,25 @@ a.card.post .pdate { margin-top: auto; font-size: .8rem; color: var(--muted); }
 .catnav a.on span { color: rgba(255,255,255,.75); }
 :root[data-theme="dark"] .catnav a.on span { color: rgba(15,22,38,.7); }
 @media (max-width: 640px) { .catnav a { height: 34px; padding: 0 12px; font-size: .82rem; } }
+
+/* ---------------------------------------------------------------- accounts */
+.hlogin { font-size: .92rem; font-weight: 500; color: var(--text); white-space: nowrap; padding: 0 4px; }
+.hlogin:hover { color: var(--deep); }
+:root[data-theme="dark"] .hlogin:hover { color: var(--mint); }
+@media (max-width: 480px) { .hlogin { display: none; } }
+
+.btn.wide { width: 100%; }
+.btn.ghost.danger { color: var(--bad); border-color: var(--line); }
+.btn.ghost.danger:hover { color: var(--bad); border-color: var(--bad); }
+
+.form-card .btn.wide { margin-top: 18px; }
+.login-done h3 { margin-bottom: 8px; }
+.login-done p { color: var(--muted); font-size: .95rem; line-height: 1.6; margin-bottom: 16px; }
+
+.arow { display: flex; justify-content: space-between; align-items: baseline; gap: 16px; padding: 10px 0; border-bottom: 1px solid var(--line); font-size: .95rem; }
+.arow:first-child { border-top: 1px solid var(--line); }
+.arow span { color: var(--muted); flex: none; }
+.arow b { font-weight: 600; text-align: right; word-break: break-word; }
+
+.pref { display: flex; align-items: center; gap: 10px; cursor: pointer; font-size: .95rem; }
+.pref input { width: 18px; height: 18px; accent-color: var(--deep); cursor: pointer; flex: none; }

@@ -118,8 +118,14 @@ function privacyPage() {
     <h2>Sign-up, newsletter and contact forms</h2>
     <p>When you sign up, subscribe or send a message, we receive your email address, the platform or topic you picked, your message if any, and the page you sent it from. It is forwarded to the mailing and inbox tool we use to send the newsletter and reply to you. You can unsubscribe from any email with one click, or <a href="../contact/">ask us</a> to delete your address.</p>
 
+    <h2>Signing in</h2>
+    <p>An account is optional and holds nothing but your email address and whether you want the weekly report. Every tool works without one.</p>
+    <p>Sign-in is passwordless, so there is no password to store or lose. You enter your email, we email you a link, and clicking it signs you in. The link is valid for 20 minutes; anyone who can read that email in that window can use it, so treat it like a key.</p>
+    <p>Being signed in sets one cookie, <code>pa_session</code>, which holds your email address and an expiry date, signed so it cannot be altered. It is marked HttpOnly and Secure, so scripts on the page cannot read it and it only travels over HTTPS. It lasts 30 days, and signing out clears it immediately. It is not used for tracking or advertising.</p>
+    <p>You can delete your email address and preference at any time from the <a href="../account/">account page</a>, which also signs you out.</p>
+
     <h2>Cookies and local storage</h2>
-    <p>The site sets no cookies. It uses your browser's local storage for two preferences only: light or dark theme, and whether you have already signed up (so the button changes). Both stay in your browser and are never sent to us.</p>
+    <p>Apart from the sign-in cookie described above, the site sets no cookies. It uses your browser's local storage for three things only: light or dark theme, whether you have already signed up (so the button changes), and your email address when signed in (so the header can show the right link without asking the server on every page). All three stay in your browser.</p>
 
     <h2>Hosting and logs</h2>
     <p>The site and its server functions run on Vercel. Vercel keeps standard request logs (IP address, time, address requested) for a short period for security and debugging, under <a href="https://vercel.com/legal/privacy-policy" rel="noopener">Vercel's privacy policy</a>. We do not build profiles from these logs.</p>
@@ -180,7 +186,84 @@ function termsPage() {
   return site.shell({ title: "Terms of use", ogTitle: "Passive Array terms of use", description: "Free tools, estimates are estimates, acceptable use, YouTube API terms, no warranty.", path: "/terms/", active: "", narrow: true, body });
 }
 
-const PAGES = { about: aboutPage, contact: contactPage, privacy: privacyPage, terms: termsPage };
+function loginPage() {
+  const body = `
+  ${head("Sign in", "Sign in", "No password to remember. We email you a link that signs you in.")}
+  <div class="two-col">
+    <div class="card form-card" data-login>
+      <form data-login-form novalidate>
+        <label for="l-email">Your email</label>
+        <input id="l-email" type="email" name="email" autocomplete="email" placeholder="you@example.com" required>
+        <input type="text" name="website" tabindex="-1" autocomplete="off" class="hp" aria-hidden="true">
+        <button type="submit" class="btn wide">Email me a sign-in link</button>
+        <span class="fmsg" data-msg>We email you a link. It stays valid for 20 minutes.</span>
+      </form>
+      <div class="login-done" data-login-sent hidden>
+        <h3>Check your inbox</h3>
+        <p class="muted">A sign-in link is on its way to that address. It expires in 20 minutes. Look in spam if it has not arrived within a minute.</p>
+        <button type="button" class="btn ghost" data-login-again>Use a different address</button>
+      </div>
+      <div class="login-done" data-login-working hidden>
+        <h3>Signing you in…</h3>
+        <p class="muted">One moment.</p>
+      </div>
+    </div>
+    <div class="card">
+      <h3 style="margin-bottom:10px">Why there is no password</h3>
+      <p class="muted" style="font-size:.95rem;line-height:1.6">Passwords get reused, leaked and forgotten. We do not store any, so there are none to lose. You ask for a link, we email it, and clicking it signs you in for 30 days on that device. Treat the link like a key: anyone who reads that email within 20 minutes can use it.</p>
+      <h3 style="margin:20px 0 10px">You do not need an account</h3>
+      <p class="muted" style="font-size:.95rem;line-height:1.6">Every calculator, checker and generator on this site works without signing in, and always will. An account only holds your email preferences.</p>
+      <p style="margin-top:16px"><a href="../creator-tools/">Go straight to the tools</a></p>
+    </div>
+  </div>`;
+  return site.shell({ title: "Sign in", ogTitle: "Sign in to Passive Array", description: "Passwordless sign-in. We email you a link. Every tool on the site works without an account.", path: "/login/", active: "", head: '<meta name="robots" content="noindex">', body });
+}
+
+function accountPage() {
+  const body = `
+  ${head("Account", "Your account", "Your email preferences and your data. Nothing else is stored.")}
+  <div data-account hidden>
+    <div class="two-col">
+      <div class="card">
+        <h3 style="margin-bottom:14px">Signed in</h3>
+        <div class="pa-rows">
+          <div class="arow"><span>Email</span><b data-account-email>–</b></div>
+          <div class="arow"><span>Member since</span><b data-account-since>–</b></div>
+          <div class="arow"><span>Password</span><b>None. We sign you in by email.</b></div>
+        </div>
+        <div style="display:flex;gap:8px;margin-top:18px;flex-wrap:wrap">
+          <button type="button" class="btn ghost" data-logout>Sign out</button>
+          <a class="btn ghost" href="../creator-tools/">Open the tools</a>
+        </div>
+      </div>
+      <div class="card">
+        <h3 style="margin-bottom:6px">Weekly creator report</h3>
+        <p class="muted" style="font-size:.92rem;margin-bottom:14px">Benchmarks, rate changes and new tools. One email a week.</p>
+        <label class="pref"><input type="checkbox" data-pref-weekly><span>Send me the weekly report</span></label>
+        <span class="fmsg" data-pref-msg></span>
+        <h3 style="margin:24px 0 6px">Your data</h3>
+        <p class="muted" style="font-size:.92rem;margin-bottom:14px">We hold your email address and your preference above. Nothing you type into a tool is stored. See the <a href="../privacy/">privacy policy</a>.</p>
+        <button type="button" class="btn ghost danger" data-delete>Delete my data</button>
+        <span class="fmsg" data-delete-msg></span>
+      </div>
+    </div>
+  </div>
+  <div class="card" data-account-out hidden>
+    <h3 style="margin-bottom:8px">You are not signed in</h3>
+    <p class="muted" style="margin-bottom:16px">Sign in by email to manage your preferences. The tools do not need it.</p>
+    <a class="btn" href="../login/">Go to sign in</a>
+  </div>
+  <div class="card" data-account-loading>
+    <p class="muted">Checking your session…</p>
+  </div>`;
+  return site.shell({ title: "Account", ogTitle: "Your Passive Array account", description: "Manage your email preferences and your data.", path: "/account/", active: "", head: '<meta name="robots" content="noindex">', body });
+}
+
+const PAGES = { about: aboutPage, contact: contactPage, privacy: privacyPage, terms: termsPage, login: loginPage, account: accountPage };
+
+// Pages that carry a noindex tag: they are functional, not content, so they
+// stay out of the sitemap and out of robots.
+const NOINDEX = ["login", "account"];
 
 function buildInto(dist) {
   const fs = require("fs");
@@ -190,7 +273,11 @@ function buildInto(dist) {
     fs.mkdirSync(dir, { recursive: true });
     fs.writeFileSync(path.join(dir, "index.html"), make());
   }
-  return Object.keys(PAGES).map((s) => `/${s}/`);
+  return {
+    all: Object.keys(PAGES).map((s) => `/${s}/`),
+    indexable: Object.keys(PAGES).filter((s) => !NOINDEX.includes(s)).map((s) => `/${s}/`),
+    noindex: NOINDEX.map((s) => `/${s}/`),
+  };
 }
 
-module.exports = { buildInto, PAGES };
+module.exports = { buildInto, PAGES, NOINDEX };
