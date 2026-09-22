@@ -41,7 +41,14 @@ const ICON = {
 };
 
 // <head> lines for favicons and the link preview image. Files are copied to the site root by build.js.
-const HEAD = `<link rel="icon" href="/favicon.ico" sizes="48x48">
+// Google Search Console verification. The same tag goes on every page, including
+// the standalone web tools (build.js injects it there). Replace the token if the
+// property is ever re-verified; an empty string leaves the tag out.
+const GOOGLE_VERIFICATION = "3qaRFljqi7Cu0kEW2dZ6urg4sneGrXK1bp-81v2vR-M";
+const VERIFY_TAG = GOOGLE_VERIFICATION ? `<meta name="google-site-verification" content="${GOOGLE_VERIFICATION}">` : "";
+
+const HEAD = `${VERIFY_TAG}
+<link rel="icon" href="/favicon.ico" sizes="48x48">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="manifest" href="/site.webmanifest">
@@ -428,7 +435,7 @@ ${scripts}
 </html>`;
 }
 
-module.exports = { buildInto, homePage, tools, SITE, BRAND, TAGLINE, WEB_TOOLS, header, footer, shell, postCard, fmtDate, esc, ICON };
+module.exports = { buildInto, homePage, tools, SITE, BRAND, TAGLINE, WEB_TOOLS, header, footer, shell, postCard, fmtDate, esc, ICON, VERIFY_TAG };
 
 if (require.main === module) {
   const out = path.join(HERE, ".out");

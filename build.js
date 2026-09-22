@@ -24,6 +24,9 @@ const TOOLS = {
 const ROOT = __dirname;
 const DIST = path.join(ROOT, "dist");
 
+// Required up here because withSiteChrome() below uses it while copying the web tools.
+const site = require("./creator-tools/build-tools.js");
+
 fs.rmSync(DIST, { recursive: true, force: true });
 fs.mkdirSync(DIST, { recursive: true });
 
@@ -61,11 +64,15 @@ function withSiteChrome(html) {
   const bar = `${style}<div class="pa-bar"><a class="pa-brand" href="/">${mark}<span>Passive <b>Array</b></span></a><nav><a href="/creator-tools/">Creator tools</a><a href="/#web-tools">Web tools</a><a href="/youtube-extension/">Extension</a><a href="/blog/">Blog</a></nav><a class="pa-cta" href="/#web-tools">All free tools</a></div>`;
   const foot = `<div class="pa-foot"><span>&copy; ${new Date().getFullYear()} Passive Array. Free tools for creators and brands.</span><nav><a href="/about/">About</a><a href="/blog/">Blog</a><a href="/contact/">Contact</a><a href="/privacy/">Privacy</a><a href="/terms/">Terms</a></nav></div>`;
   if (!/<body[^>]*>/i.test(html) || !/<\/body>/i.test(html)) return html;
-  return html.replace(/<body([^>]*)>/i, (m) => m + "\n" + bar).replace(/<\/body>/i, foot + "\n</body>");
+  let out = html.replace(/<body([^>]*)>/i, (m) => m + "\n" + bar).replace(/<\/body>/i, foot + "\n</body>");
+  // Search Console verification tag, same one the generated pages carry.
+  if (site.VERIFY_TAG && !out.includes("google-site-verification")) {
+    out = out.replace(/<head([^>]*)>/i, (m) => m + "\n" + site.VERIFY_TAG);
+  }
+  return out;
 }
 
 // Passive Array pages: home, tools directory and one page per creator tool.
-const site = require("./creator-tools/build-tools.js");
 const blog = require("./blog/build-blog.js");
 const posts = blog.loadPosts();
 fs.writeFileSync(path.join(DIST, "index.html"), site.homePage(posts));
