@@ -139,4 +139,24 @@ for (const [from, to] of Object.entries(copies)) {
 }
 console.log("brand files -> dist/ (" + copied + "/" + Object.keys(copies).length + ")");
 
+
+// Cache-busting: every page links shared.css, site.js and shared.js with a
+// version derived from their contents, so a new build can never be paired
+// with a stylesheet a browser or the CDN cached from the previous one.
+const crypto = require("crypto");
+const assetVersion = crypto.createHash("md5").update(
+  ["shared.css", "site.js", "shared.js"].map((f) => fs.readFileSync(path.join(ROOT, "creator-tools", "public", f))).join("")
+).digest("hex").slice(0, 10);
+let stamped = 0;
+(function walk(dir) {
+  for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
+    const p = path.join(dir, entry.name);
+    if (entry.isDirectory()) { walk(p); continue; }
+    if (!entry.name.endsWith(".html")) continue;
+    const html = fs.readFileSync(p, "utf8");
+    const out = html.replace(/creator-tools\/(shared\.css|site\.js|shared\.js)"/g, (m, f) => "creator-tools/" + f + "?v=" + assetVersion + "\"");
+    if (out !== html) { fs.writeFileSync(p, out); stamped++; }
+  }
+})(DIST);
+console.log("asset version " + assetVersion + " stamped into " + stamped + " pages");
 console.log("Build done.");

@@ -696,3 +696,7 @@ p.center.sub { text-align: center; color: var(--muted); margin: 8px auto 18px; m
 :root[data-theme="dark"] a.btn.ghost { color: var(--text); }
 :root[data-theme="dark"] a.btn.mint, a.btn.mint, .btn.mint { color: #1F2A44; }
 :root[data-theme="dark"] a.btn.mint:hover, a.btn.mint:hover { color: #1F2A44; }
+
+.ext-mark { display:inline-flex; width:16px; height:16px; }
+.ext-mark svg { width:16px; height:16px; }
+.brand svg, .fbrand .brand svg { width:32px; height:32px; }

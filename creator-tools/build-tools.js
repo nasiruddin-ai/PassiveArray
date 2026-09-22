@@ -34,11 +34,11 @@ const ICON = {
   search: `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>`,
   moon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>`,
   arrow: `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>`,
-  check: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>`,
-  compare: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="10" width="5" height="10" rx="1"/><rect x="10" y="4" width="5" height="16" rx="1"/><rect x="17" y="13" width="4" height="7" rx="1"/></svg>`,
-  money: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v10M9.5 9.5h3.75a1.75 1.75 0 0 1 0 3.5H10.5a1.75 1.75 0 0 0 0 3.5H15"/></svg>`,
+  check: `<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>`,
+  compare: `<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="10" width="5" height="10" rx="1"/><rect x="10" y="4" width="5" height="16" rx="1"/><rect x="17" y="13" width="4" height="7" rx="1"/></svg>`,
+  money: `<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v10M9.5 9.5h3.75a1.75 1.75 0 0 1 0 3.5H10.5a1.75 1.75 0 0 0 0 3.5H15"/></svg>`,
   chev: `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>`,
-  create: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M5.6 18.4l2.1-2.1M16.3 7.7l2.1-2.1"/><circle cx="12" cy="12" r="3"/></svg>`,
+  create: `<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M5.6 18.4l2.1-2.1M16.3 7.7l2.1-2.1"/><circle cx="12" cy="12" r="3"/></svg>`,
 };
 
 // <head> lines for favicons and the link preview image. Files are copied to the site root by build.js.
@@ -406,11 +406,11 @@ function homePage(posts = []) {
 
   // Platform badges for the tool grid.
   const PLAT_ICON = {
-    YouTube: `<span class="pbadge yt" aria-hidden="true"><svg viewBox="0 0 24 24"><path fill="#fff" d="M9.5 8.5v7l6-3.5z"/></svg></span>`,
-    Instagram: `<span class="pbadge ig" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><rect x="4" y="4" width="16" height="16" rx="5"/><circle cx="12" cy="12" r="3.5"/><circle cx="17" cy="7" r="1" fill="#fff" stroke="none"/></svg></span>`,
-    TikTok: `<span class="pbadge tt" aria-hidden="true"><svg viewBox="0 0 24 24"><path fill="#fff" d="M13.5 4h2.6c.2 1.8 1.4 3.2 3.2 3.4v2.6c-1.2 0-2.3-.4-3.2-1v6.2a4.9 4.9 0 1 1-4.9-4.9c.3 0 .6 0 .9.1v2.7a2.3 2.3 0 1 0 1.4 2.1z"/></svg></span>`,
-    Twitch: `<span class="pbadge tw" aria-hidden="true"><svg viewBox="0 0 24 24"><path fill="#fff" d="M5 4h14v9l-4 4h-3l-2 2H8v-2H5zm2 2v8h3v2l2-2h3l2-2V6zm6 2h2v4h-2zm-4 0h2v4H9z"/></svg></span>`,
-    X: `<span class="pbadge x" aria-hidden="true"><svg viewBox="0 0 24 24"><path fill="#fff" d="M5 5h3.5l3.4 4.7L15.8 5H19l-5.6 6.5L19.5 19H16l-3.7-5L8 19H4.8l6-6.9z"/></svg></span>`,
+    YouTube: `<span class="pbadge yt" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24"><path fill="#fff" d="M9.5 8.5v7l6-3.5z"/></svg></span>`,
+    Instagram: `<span class="pbadge ig" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><rect x="4" y="4" width="16" height="16" rx="5"/><circle cx="12" cy="12" r="3.5"/><circle cx="17" cy="7" r="1" fill="#fff" stroke="none"/></svg></span>`,
+    TikTok: `<span class="pbadge tt" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24"><path fill="#fff" d="M13.5 4h2.6c.2 1.8 1.4 3.2 3.2 3.4v2.6c-1.2 0-2.3-.4-3.2-1v6.2a4.9 4.9 0 1 1-4.9-4.9c.3 0 .6 0 .9.1v2.7a2.3 2.3 0 1 0 1.4 2.1z"/></svg></span>`,
+    Twitch: `<span class="pbadge tw" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24"><path fill="#fff" d="M5 4h14v9l-4 4h-3l-2 2H8v-2H5zm2 2v8h3v2l2-2h3l2-2V6zm6 2h2v4h-2zm-4 0h2v4H9z"/></svg></span>`,
+    X: `<span class="pbadge x" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24"><path fill="#fff" d="M5 5h3.5l3.4 4.7L15.8 5H19l-5.6 6.5L19.5 19H16l-3.7-5L8 19H4.8l6-6.9z"/></svg></span>`,
   };
   const gridCard = (slug) => {
     const t = bySlug(slug);
@@ -439,7 +439,7 @@ function homePage(posts = []) {
     ${art}
   </a>`;
 
-  const tick = `<svg class="tick" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12 5 5L20 7"/></svg>`;
+  const tick = `<svg class="tick" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12 5 5L20 7"/></svg>`;
   const CMP = [
     ["Keyword research", "Free", "Limited", "Limited"],
     ["Tag and title generation", "Free, unlimited", "AI credits", "Limited"],
@@ -559,7 +559,7 @@ ${header(root, "home", false)}
           <div class="ext-body">
             <div class="ext-video"><div class="ext-play"></div><div class="ext-line w80"></div><div class="ext-line w50"></div></div>
             <div class="ext-panel">
-              <div class="ext-ph">${MARK("h" + Math.random().toString(36).slice(2, 6))}<b>Passive Array</b></div>
+              <div class="ext-ph"><span class="ext-mark">${MARK("h" + Math.random().toString(36).slice(2, 6))}</span><b>Passive Array</b></div>
               <div class="ext-hero"><span>Engagement rate</span><b>4.82%</b></div>
               <div class="ext-tiles"><div><b>128K</b><span>Views</span></div><div><b>5.9K</b><span>Likes</span></div><div><b>1.4K</b><span>Views/day</span></div><div><b>16</b><span>Tags</span></div></div>
             </div>
