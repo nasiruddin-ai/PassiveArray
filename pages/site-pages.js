@@ -1,6 +1,7 @@
 // Company pages: /about/, /contact/, /privacy/, /terms/. Built by build.js.
 
 const site = require("../creator-tools/build-tools.js");
+const ANALYTICS_ON = !!site.GTM_ID;
 const { esc, BRAND, SITE } = site;
 const EFFECTIVE = "22 September 2026";
 
@@ -103,7 +104,9 @@ function privacyPage() {
   <div class="card prose">
     <h2 style="margin-top:0">The short version</h2>
     <ul>
-      <li>No accounts are needed to use any tool, and there are no advertising or analytics trackers on this site.</li>
+      ${ANALYTICS_ON
+        ? `<li>No accounts are needed to use any tool. There are no advertising trackers. Analytics is switched off until you accept it, and you can change your mind at any time.</li>`
+        : `<li>No accounts are needed to use any tool, and there are no advertising or analytics trackers on this site.</li>`}
       <li>What you type into a tool is used to compute the result and is not stored.</li>
       <li>If you sign up or subscribe, your email is forwarded to our mailing tool so we can send what you asked for.</li>
       <li>Nothing is sold or shared with anyone for marketing.</li>
@@ -125,8 +128,15 @@ function privacyPage() {
     <p>Being signed in sets one cookie, <code>pa_session</code>, which holds your email address and an expiry date, signed so it cannot be altered. It is marked HttpOnly and Secure, so scripts on the page cannot read it and it only travels over HTTPS. It lasts 30 days, and signing out clears it immediately. It is not used for tracking or advertising.</p>
     <p>You can delete your email address and preference at any time from the <a href="../account/">account page</a>, which also signs you out.</p>
 
+${ANALYTICS_ON ? `
+    <h2>Analytics</h2>
+    <p>We use Google Analytics, loaded through Google Tag Manager, to count which pages and tools get used. It tells us that a tool was opened and roughly where in the world from, not who opened it.</p>
+    <p><strong>It is switched off when you arrive.</strong> Google's consent mode is set to deny every kind of storage before the page loads, so no analytics cookie is written and no advertising identifier is sent unless you accept in the banner. Declining, or ignoring it, leaves analytics off.</p>
+    <p>If you accept, Google Analytics sets its own cookie so a repeat visit is not counted as a new person. You can withdraw that at any time with the <strong>Cookie choices</strong> link at the bottom of any page, which switches it straight back off. Google's own handling is described in the <a href="https://policies.google.com/privacy" rel="noopener">Google Privacy Policy</a>.</p>
+    <p>Analytics is never used for advertising. We do not run ads, we do not build profiles, and nothing from it is sold or shared.</p>
+` : ``}
     <h2>Cookies and local storage</h2>
-    <p>Apart from the sign-in cookie described above, the site sets no cookies. It uses your browser's local storage for three things only: light or dark theme, whether you have already signed up (so the button changes), and your email address when signed in (so the header can show the right link without asking the server on every page). All three stay in your browser.</p>
+    <p>Apart from the sign-in cookie described above${ANALYTICS_ON ? `, and the Google Analytics cookie you can choose to allow` : ``}, the site sets no cookies. It uses your browser's local storage for three things only: light or dark theme, whether you have already signed up (so the button changes), and your email address when signed in (so the header can show the right link without asking the server on every page). All three stay in your browser.</p>
 
     <h2>Hosting and logs</h2>
     <p>The site and its server functions run on Vercel. Vercel keeps standard request logs (IP address, time, address requested) for a short period for security and debugging, under <a href="https://vercel.com/legal/privacy-policy" rel="noopener">Vercel's privacy policy</a>. We do not build profiles from these logs.</p>
@@ -632,7 +642,7 @@ const FAQ_SECTIONS = [
     ["Is Passive Array really free?", "Yes, and there is no trial to expire. Every tool works without an account, without a card and without a credit limit. The site runs on free hosting and free API allowances, which is why it can stay that way."],
     ["Do I need an account?", "No. Nothing is behind a sign-in. An account is optional and holds your email address and whether you want the weekly report, nothing else."],
     ["Will the tools I use today start costing money?", "No. If paid features ever arrive they will be new things that cost real money to run, such as saved reports and alerts. What is on the site today stays free."],
-    ["Is there a catch, like ads or selling my data?", "There are no ads and nothing you type is sold or shared. Most tools never send your input anywhere at all; the ones that do say so on the page."],
+    ["Is there a catch, like ads or selling my data?", "There are no ads and nothing you type is sold or shared. Most tools never send your input anywhere at all; the ones that do say so on the page." + (ANALYTICS_ON ? " We do count which tools get used, with Google Analytics, and only after you accept it in the banner. You can turn it back off from the Cookie choices link in the footer." : "")],
   ]],
   ["Where the numbers come from", [
     ["How accurate are the earnings figures?", "They are ranges, not payslips. Revenue per thousand views swings with niche, audience country and Shorts share, so any single figure would be misleading. We show the range and the assumption behind each end, and you can change the assumptions."],

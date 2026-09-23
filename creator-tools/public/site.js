@@ -377,6 +377,55 @@
   }
 
 
+  /* ------------------------------------------------- analytics consent */
+  /* Tag Manager is loaded with every storage type denied, in the head script.
+     Nothing is stored and no identifier is sent until somebody accepts here.
+     If analytics is not configured at all, none of this runs. */
+  var CONSENT_KEY = "pa-consent";
+  function consentChoice() {
+    try { return localStorage.getItem(CONSENT_KEY); } catch (e) { return null; }
+  }
+  function setConsent(granted) {
+    try { localStorage.setItem(CONSENT_KEY, granted ? "granted" : "denied"); } catch (e) { /* private mode */ }
+    if (typeof window.gtag === "function") {
+      window.gtag("consent", "update", {
+        analytics_storage: granted ? "granted" : "denied",
+        ad_storage: "denied",
+        ad_user_data: "denied",
+        ad_personalization: "denied",
+      });
+    }
+  }
+
+  var consentBar = null;
+  function showConsent() {
+    if (consentBar) { consentBar.hidden = false; return; }
+    consentBar = document.createElement("div");
+    consentBar.className = "consent";
+    consentBar.setAttribute("role", "dialog");
+    consentBar.setAttribute("aria-label", "Analytics choice");
+    consentBar.innerHTML =
+      '<p>We would like to count which tools get used, with Google Analytics. It is <b>off right now</b>: ' +
+      'nothing is stored unless you accept. No ads, and nothing is ever sold. ' +
+      '<a href="' + ROOT + 'privacy/">How this works</a>.</p>' +
+      '<div class="consent-actions">' +
+        '<button type="button" class="btn ghost" data-consent-no>No thanks</button>' +
+        '<button type="button" class="btn mint" data-consent-yes>Accept</button>' +
+      '</div>';
+    document.body.appendChild(consentBar);
+    consentBar.querySelector("[data-consent-yes]").addEventListener("click", function () { setConsent(true); consentBar.hidden = true; });
+    consentBar.querySelector("[data-consent-no]").addEventListener("click", function () { setConsent(false); consentBar.hidden = true; });
+    setTimeout(function () { consentBar.classList.add("show"); }, 40);
+  }
+
+  if (window.PA_ANALYTICS) {
+    document.querySelectorAll("[data-consent-open]").forEach(function (b) {
+      b.hidden = false;
+      b.addEventListener("click", function (e) { e.preventDefault(); showConsent(); });
+    });
+    if (!consentChoice()) showConsent();
+  }
+
   /* ----------------------------------------- Google sign-up, everywhere */
   /* Renders Google's button into any [data-google-slot] (header, Tools menu,
      mobile menu) and shows Google One Tap on ordinary pages, so a visitor who

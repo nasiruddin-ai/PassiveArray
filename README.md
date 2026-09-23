@@ -264,3 +264,65 @@ Sign-in attempts are rate limited per address and per connection.
 
 Any method that is not configured is hidden from the sign-in page rather than
 shown and then failing. `/api/auth?action=health` reports the current state.
+
+## Google Tag Manager and analytics
+
+Analytics is **off until you set a container id**. With `GTM_ID` unset, not one
+byte of Google code is emitted anywhere on the site, which is the default so
+the site can never start tracking people by accident.
+
+### Turning it on
+
+1. Go to [tagmanager.google.com](https://tagmanager.google.com), create an
+   account and a **Web** container for `passivearray.vercel.app`.
+2. Copy the container id from the top of the workspace. It looks like
+   `GTM-XXXXXXX`. You do **not** need to paste the two code snippets Google
+   shows you; the site generates them itself.
+3. In Vercel open the project, then **Settings**, then **Environment
+   Variables**, and add:
+
+```
+GTM_ID    GTM-XXXXXXX
+```
+
+4. Go to **Deployments** and click **Redeploy**. The id is read when the site
+   is built, so a saved variable does nothing until a build runs.
+5. Load any page and check the source for `googletagmanager.com`. The consent
+   banner should appear at the bottom on your first visit.
+
+Inside Tag Manager, add your Google Analytics 4 tag as normal and publish the
+container. Nothing else about the site needs to change.
+
+### Consent, and why it is built this way
+
+The site tells people there are no advertising trackers and that nothing is
+stored without permission. Tag Manager is wired so that stays true:
+
+- **Consent Mode v2 is declared before the container loads**, with
+  `analytics_storage`, `ad_storage`, `ad_user_data` and `ad_personalization`
+  all set to `denied`. Google's tags see that before they fire, so no
+  analytics cookie is written and no advertising identifier is sent.
+- **A banner asks once.** Accepting calls `gtag('consent','update',...)` and
+  remembers the answer in `localStorage` under `pa-consent`. Declining, or
+  ignoring it, leaves everything denied.
+- **The choice is reversible.** A "Cookie choices" link appears in the footer
+  whenever analytics is configured, and reopens the banner.
+- **Advertising storage is never granted**, even on accept. The site does not
+  run ads and should not be building advertising audiences.
+
+If you add anything through Tag Manager that sets cookies, set it to wait for
+`analytics_storage` in its trigger, or the consent promise stops being true.
+
+### Where the code lives
+
+| Piece | File |
+|---|---|
+| Container id, head snippet, `noscript` frame | `creator-tools/build-tools.js` (`GTM_ID`, `GTM_HEAD`, `GTM_BODY`) |
+| Injection into the five standalone web tools | `build.js` (`withSiteChrome`) |
+| Placeholder on tool pages | `creator-tools/template.html` (`{{gtmbody}}`) |
+| Banner and consent updates | `creator-tools/public/site.js` |
+| Wording that changes with the setting | `pages/site-pages.js` (`ANALYTICS_ON`) |
+
+The privacy policy rewrites itself from `ANALYTICS_ON`: with analytics off it
+says there are no analytics trackers, and with it on it gains an Analytics
+section describing the cookie, the consent default and how to withdraw.

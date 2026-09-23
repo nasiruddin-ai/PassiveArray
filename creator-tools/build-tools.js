@@ -48,6 +48,23 @@ const ICON = {
 const GOOGLE_VERIFICATION = "iEH5a0QzRXb2Kg7UB2k-xXTEPeNOa-NQFCKFZ8pfG8Q";
 const VERIFY_TAG = GOOGLE_VERIFICATION ? `<meta name="google-site-verification" content="${GOOGLE_VERIFICATION}">` : "";
 
+// Google Tag Manager. Set GTM_ID in the environment (a GTM-XXXXXXX container id)
+// to switch it on. Left unset, not a single byte of analytics is emitted, which
+// is the default so the site never quietly starts tracking people.
+//
+// Consent Mode v2 is declared before the container loads, with everything that
+// stores or shares data denied. Nothing is written and no identifiers are sent
+// until the visitor accepts in the banner that site.js shows. That keeps the
+// promise on the privacy page true rather than approximately true.
+const GTM_ID = (process.env.GTM_ID || "").trim();
+const GTM_HEAD = GTM_ID ? `<script>
+window.PA_ANALYTICS=true;window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}
+gtag('consent','default',{ad_storage:'denied',ad_user_data:'denied',ad_personalization:'denied',analytics_storage:'denied',personalization_storage:'denied',functionality_storage:'granted',security_storage:'granted'});
+try{if(localStorage.getItem('pa-consent')==='granted')gtag('consent','update',{analytics_storage:'granted'});}catch(e){}
+</script>
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer','${GTM_ID}');</script>` : "";
+const GTM_BODY = GTM_ID ? `<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=${GTM_ID}" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>` : "";
+
 const HEAD = `${VERIFY_TAG}
 <link rel="icon" href="/favicon.ico" sizes="48x48">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
@@ -55,7 +72,8 @@ const HEAD = `${VERIFY_TAG}
 <link rel="manifest" href="/site.webmanifest">
 <meta name="theme-color" content="#1F2A44">
 <meta property="og:image" content="${SITE}/og-image-1200x630.png">
-<meta name="twitter:card" content="summary_large_image">`;
+<meta name="twitter:card" content="summary_large_image">
+${GTM_HEAD}`;
 
 // The tools mega-menu. Built from the tool list so it can never drift out of
 // date, and grouped the way people arrive: by what they are trying to do.
@@ -159,7 +177,7 @@ function footer(root, note) {
   </div>
   <div class="fbottom">
     <span>&copy; ${new Date().getFullYear()} ${BRAND}. ${esc(note || "Estimates use public numbers and typical industry rates. A starting point, not a guarantee.")}</span>
-    <nav><a href="${root}privacy/">Privacy</a><a href="${root}terms/">Terms</a><a href="${root}contact/">Contact</a></nav>
+    <nav><a href="${root}privacy/">Privacy</a><a href="${root}terms/">Terms</a><a href="${root}contact/">Contact</a><button type="button" class="flink" data-consent-open hidden>Cookie choices</button></nav>
   </div>
 </div></footer>`;
 }
@@ -274,6 +292,7 @@ function toolPage(template, t) {
     .replace(/{{platformSlug}}/g, esc(t.platform))
     .replace(/{{canonical}}/g, url)
     .replace("{{head}}", HEAD)
+    .replace("{{gtmbody}}", GTM_BODY)
     .replace("{{header}}", header(root, "tools", true))
     .replace("{{footer}}", footer(root, `Data for live tools comes from the official ${t.platform === "Twitch" ? "Twitch" : "YouTube"} API. Estimates are a starting point, not a guarantee.`))
     .replace("{{jsonld}}", jsonLd(t, url))
@@ -310,7 +329,7 @@ ${HEAD}
 <link rel="stylesheet" href="shared.css">
 <script>try{var t=localStorage.getItem("pa-theme");document.documentElement.setAttribute("data-theme",t||"dark");}catch(e){}</script>
 </head>
-<body data-root="${root}">
+<body data-root="${root}">${GTM_BODY}
 ${header(root, "tools", true)}
 <main class="wrap" data-directory>
   <div class="tool-head">
@@ -486,7 +505,7 @@ ${HEAD}
 <script>try{var t=localStorage.getItem("pa-theme");document.documentElement.setAttribute("data-theme",t||"dark");}catch(e){}</script>
 <script type="application/ld+json">${JSON.stringify(jsonld)}</script>
 </head>
-<body data-root="${root}" class="home">
+<body data-root="${root}" class="home">${GTM_BODY}
 ${header(root, "home", false)}
 <main class="wrap">
 
@@ -645,7 +664,7 @@ ${head}
 <script>try{var t=localStorage.getItem("pa-theme");document.documentElement.setAttribute("data-theme",t||"dark");}catch(e){}</script>
 ${jsonld ? `<script type="application/ld+json">${JSON.stringify(jsonld)}</script>` : ""}
 </head>
-<body data-root="${root}">
+<body data-root="${root}">${GTM_BODY}
 ${header(root, active, false)}
 <main class="wrap${narrow ? " narrow" : ""}">
 ${body}
@@ -657,7 +676,7 @@ ${scripts}
 </html>`;
 }
 
-module.exports = { buildInto, homePage, tools, SITE, BRAND, TAGLINE, WEB_TOOLS, header, footer, shell, postCard, fmtDate, esc, ICON, VERIFY_TAG };
+module.exports = { GTM_HEAD, GTM_BODY, GTM_ID, buildInto, homePage, tools, SITE, BRAND, TAGLINE, WEB_TOOLS, header, footer, shell, postCard, fmtDate, esc, ICON, VERIFY_TAG };
 
 if (require.main === module) {
   const out = path.join(HERE, ".out");

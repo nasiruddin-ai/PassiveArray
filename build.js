@@ -64,10 +64,14 @@ function withSiteChrome(html) {
   const bar = `${style}<div class="pa-bar"><a class="pa-brand" href="/">${mark}<span>Passive <b>Array</b></span></a><nav><a href="/creator-tools/">Creator tools</a><a href="/#web-tools">Web tools</a><a href="/youtube-extension/">Extension</a><a href="/blog/">Blog</a></nav><a class="pa-cta" href="/#web-tools">All free tools</a></div>`;
   const foot = `<div class="pa-foot"><span>&copy; ${new Date().getFullYear()} Passive Array. Free tools for creators and brands.</span><nav><a href="/about/">About</a><a href="/blog/">Blog</a><a href="/contact/">Contact</a><a href="/privacy/">Privacy</a><a href="/terms/">Terms</a></nav></div>`;
   if (!/<body[^>]*>/i.test(html) || !/<\/body>/i.test(html)) return html;
-  let out = html.replace(/<body([^>]*)>/i, (m) => m + "\n" + bar).replace(/<\/body>/i, foot + "\n</body>");
+  let out = html.replace(/<body([^>]*)>/i, (m) => m + "\n" + (site.GTM_BODY || "") + bar).replace(/<\/body>/i, foot + "\n</body>");
   // Search Console verification tag, same one the generated pages carry.
   if (site.VERIFY_TAG && !out.includes("google-site-verification")) {
     out = out.replace(/<head([^>]*)>/i, (m) => m + "\n" + site.VERIFY_TAG);
+  }
+  // Tag Manager, same container and same denied-by-default consent as the rest of the site.
+  if (site.GTM_HEAD && !out.includes("googletagmanager.com/gtm.js")) {
+    out = out.replace(/<head([^>]*)>/i, (m) => m + "\n" + site.GTM_HEAD);
   }
   return out;
 }
