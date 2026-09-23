@@ -69,9 +69,9 @@ function withSiteChrome(html) {
   if (site.VERIFY_TAG && !out.includes("google-site-verification")) {
     out = out.replace(/<head([^>]*)>/i, (m) => m + "\n" + site.VERIFY_TAG);
   }
-  // Tag Manager, same container and same denied-by-default consent as the rest of the site.
-  if (site.GTM_HEAD && !out.includes("googletagmanager.com/gtm.js")) {
-    out = out.replace(/<head([^>]*)>/i, (m) => m + "\n" + site.GTM_HEAD);
+  // Analytics, with the same denied-by-default consent as the rest of the site.
+  if (site.ANALYTICS_HEAD && !out.includes("PA_ANALYTICS")) {
+    out = out.replace(/<head([^>]*)>/i, (m) => m + "\n" + site.ANALYTICS_HEAD);
   }
   return out;
 }

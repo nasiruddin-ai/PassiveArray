@@ -48,21 +48,35 @@ const ICON = {
 const GOOGLE_VERIFICATION = "iEH5a0QzRXb2Kg7UB2k-xXTEPeNOa-NQFCKFZ8pfG8Q";
 const VERIFY_TAG = GOOGLE_VERIFICATION ? `<meta name="google-site-verification" content="${GOOGLE_VERIFICATION}">` : "";
 
-// Google Tag Manager. Set GTM_ID in the environment (a GTM-XXXXXXX container id)
-// to switch it on. Left unset, not a single byte of analytics is emitted, which
-// is the default so the site never quietly starts tracking people.
+// Analytics. Google Analytics 4 is the measurement stream; GTM_ID can also be
+// set later if a tag manager container is ever wanted. Either one switches
+// analytics on; with both blank the site emits no Google code at all.
 //
-// Consent Mode v2 is declared before the container loads, with everything that
-// stores or shares data denied. Nothing is written and no identifiers are sent
-// until the visitor accepts in the banner that site.js shows. That keeps the
-// promise on the privacy page true rather than approximately true.
+// The measurement id is public (it appears in the page source), so it lives
+// here rather than in an environment variable, and can still be overridden.
+const GA4_ID = (process.env.GA4_ID !== undefined ? process.env.GA4_ID : "G-ZPSB0F8VM4").trim();
 const GTM_ID = (process.env.GTM_ID || "").trim();
-const GTM_HEAD = GTM_ID ? `<script>
+const ANALYTICS = !!(GA4_ID || GTM_ID);
+
+// Consent first, always. This runs before any Google script loads and denies
+// every kind of storage, so no cookie is written and no advertising identifier
+// is sent until the visitor accepts in the banner that site.js shows. A stored
+// acceptance is applied here, before the tags fire, so a returning visitor is
+// measured immediately instead of losing the first page of the session.
+const CONSENT_HEAD = ANALYTICS ? `<script>
 window.PA_ANALYTICS=true;window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}
 gtag('consent','default',{ad_storage:'denied',ad_user_data:'denied',ad_personalization:'denied',analytics_storage:'denied',personalization_storage:'denied',functionality_storage:'granted',security_storage:'granted'});
 try{if(localStorage.getItem('pa-consent')==='granted')gtag('consent','update',{analytics_storage:'granted'});}catch(e){}
-</script>
-<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer','${GTM_ID}');</script>` : "";
+</script>` : "";
+
+// GA4 itself. dataLayer and gtag already exist above, so this only loads the
+// library and configures the stream.
+const GA4_HEAD = GA4_ID ? `<script async src="https://www.googletagmanager.com/gtag/js?id=${GA4_ID}"></script>
+<script>gtag('js',new Date());gtag('config','${GA4_ID}');</script>` : "";
+
+const GTM_SCRIPT = GTM_ID ? `<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer','${GTM_ID}');</script>` : "";
+
+const ANALYTICS_HEAD = [CONSENT_HEAD, GA4_HEAD, GTM_SCRIPT].filter(Boolean).join("\n");
 const GTM_BODY = GTM_ID ? `<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=${GTM_ID}" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>` : "";
 
 const HEAD = `${VERIFY_TAG}
@@ -73,7 +87,7 @@ const HEAD = `${VERIFY_TAG}
 <meta name="theme-color" content="#1F2A44">
 <meta property="og:image" content="${SITE}/og-image-1200x630.png">
 <meta name="twitter:card" content="summary_large_image">
-${GTM_HEAD}`;
+${ANALYTICS_HEAD}`;
 
 // The tools mega-menu. Built from the tool list so it can never drift out of
 // date, and grouped the way people arrive: by what they are trying to do.
@@ -676,7 +690,7 @@ ${scripts}
 </html>`;
 }
 
-module.exports = { GTM_HEAD, GTM_BODY, GTM_ID, buildInto, homePage, tools, SITE, BRAND, TAGLINE, WEB_TOOLS, header, footer, shell, postCard, fmtDate, esc, ICON, VERIFY_TAG };
+module.exports = { ANALYTICS_HEAD, GTM_BODY, GTM_ID, GA4_ID, ANALYTICS, buildInto, homePage, tools, SITE, BRAND, TAGLINE, WEB_TOOLS, header, footer, shell, postCard, fmtDate, esc, ICON, VERIFY_TAG };
 
 if (require.main === module) {
   const out = path.join(HERE, ".out");

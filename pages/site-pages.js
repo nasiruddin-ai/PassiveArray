@@ -1,7 +1,7 @@
 // Company pages: /about/, /contact/, /privacy/, /terms/. Built by build.js.
 
 const site = require("../creator-tools/build-tools.js");
-const ANALYTICS_ON = !!site.GTM_ID;
+const ANALYTICS_ON = !!site.ANALYTICS;
 const { esc, BRAND, SITE } = site;
 const EFFECTIVE = "22 September 2026";
 
@@ -130,7 +130,7 @@ function privacyPage() {
 
 ${ANALYTICS_ON ? `
     <h2>Analytics</h2>
-    <p>We use Google Analytics, loaded through Google Tag Manager, to count which pages and tools get used. It tells us that a tool was opened and roughly where in the world from, not who opened it.</p>
+    <p>We use Google Analytics to count which pages and tools get used. It tells us that a tool was opened and roughly where in the world from, not who opened it.</p>
     <p><strong>It is switched off when you arrive.</strong> Google's consent mode is set to deny every kind of storage before the page loads, so no analytics cookie is written and no advertising identifier is sent unless you accept in the banner. Declining, or ignoring it, leaves analytics off.</p>
     <p>If you accept, Google Analytics sets its own cookie so a repeat visit is not counted as a new person. You can withdraw that at any time with the <strong>Cookie choices</strong> link at the bottom of any page, which switches it straight back off. Google's own handling is described in the <a href="https://policies.google.com/privacy" rel="noopener">Google Privacy Policy</a>.</p>
     <p>Analytics is never used for advertising. We do not run ads, we do not build profiles, and nothing from it is sold or shared.</p>
