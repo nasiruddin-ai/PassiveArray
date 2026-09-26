@@ -30,6 +30,39 @@ environment variables under Settings, Environment Variables, and deploy. The
 API routes run as Vercel Functions from the `api/` folder; `vercel.json` maps the
 tool URLs onto them, so the pages need no changes.
 
+## Research section
+
+`/research/` is YouTube keyword research built only from measured sources:
+YouTube autocomplete (free, no quota) plus the top 10 results for the phrase
+from the Data API. It shows competing videos, the top 10 with live views and
+channel sizes, an opportunity score with its formula, and every phrase
+YouTube autocompletes around the keyword. It never shows a search volume
+figure, because nobody outside Google has one for YouTube.
+
+Code: `lib/research.js` (logic), `api/research.js` and
+`netlify/functions/research.mjs` (routes), `pages/research-pages.js` (page),
+`creator-tools/public/research.js` (browser side).
+
+### Quota and the key-value store
+
+One keyword analysis costs 102 YouTube quota units; a free key has 10,000 a
+day. Results are cached for 7 days and a daily guard stops fresh analyses at
+`RESEARCH_DAILY_UNITS` (default 8,000), so the other live tools keep working.
+Without a store the cache lives only in each function instance and the guard
+resets whenever Vercel starts a new one, so add the store before promoting
+the page:
+
+1. In Vercel open the project, **Storage**, **Create Database**, choose
+   **Upstash** (Redis), free plan, and connect it to the project. Vercel adds
+   `KV_REST_API_URL` and `KV_REST_API_TOKEN` automatically. Alternatively
+   create a database at upstash.com and add `UPSTASH_REDIS_REST_URL` and
+   `UPSTASH_REDIS_REST_TOKEN` yourself.
+2. Redeploy. Cached keywords then survive across instances, the quota counter
+   is shared, and every analysed keyword starts filling `idx:channels`, the
+   channel index the upcoming outlier and growth feeds are built from.
+
+The same store already powers sign-ups and rate limits (`lib/store.js`).
+
 ## How it is built
 
 ```

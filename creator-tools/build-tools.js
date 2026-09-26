@@ -154,7 +154,7 @@ function header(root, active, withSearch) {
   <nav class="nav" id="site-nav">
     <button type="button" class="navbtn${active === "tools" ? " active" : ""}" data-mega="mega-tools" aria-expanded="false" aria-controls="mega-tools">Tools ${ICON.chev}</button>
     <button type="button" class="navbtn${["blog", "compare", "extension"].includes(active) ? " active" : ""}" data-mega="mega-resources" aria-expanded="false" aria-controls="mega-resources">Resources ${ICON.chev}</button>
-    ${link("pricing/", "Pricing", "pricing")}${link("about/", "About", "about")}
+    ${link("research/", "Research", "research")}${link("pricing/", "Pricing", "pricing")}${link("about/", "About", "about")}
     <span class="gslot mob" data-google-slot data-google-size="large" data-google-width="260" hidden></span><a class="navmob" href="${root}youtube-extension/">Extension</a><a class="navmob" href="${root}blog/">Blog</a><a class="navmob" href="${root}compare/">Compare</a></nav>
   <div class="hactions">
     <button type="button" class="iconbtn" data-theme-toggle aria-label="Switch to dark mode">${ICON.moon}</button>
@@ -631,7 +631,7 @@ ${footer(root)}
 function buildInto(outDir) {
   const template = fs.readFileSync(path.join(HERE, "template.html"), "utf8");
   fs.mkdirSync(outDir, { recursive: true });
-  for (const asset of ["shared.css", "shared.js", "site.js"]) fs.copyFileSync(path.join(HERE, "public", asset), path.join(outDir, asset));
+  for (const asset of ["shared.css", "shared.js", "site.js", "research.js"]) fs.copyFileSync(path.join(HERE, "public", asset), path.join(outDir, asset));
   fs.writeFileSync(path.join(outDir, "index.html"), directoryPage());
   const seen = new Set();
   for (const t of tools) {

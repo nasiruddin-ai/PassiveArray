@@ -18,4 +18,5 @@
     "plagiarism-checker/lib/**",
     "plagiarism-checker/config.json",
     "creator-tools/lib/**",
+    "lib/**",
   ]

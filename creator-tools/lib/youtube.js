@@ -300,4 +300,4 @@ async function handleRequest(action, params = {}) {
   }
 }
 
-module.exports = { configure, handleRequest, parseChannelInput };
+module.exports = { configure, handleRequest, parseChannelInput, yt, statsForIds, n, isoDurationToSeconds, cached };

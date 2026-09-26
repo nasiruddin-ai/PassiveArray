@@ -1,0 +1,76 @@
+{
+  "manifest_version": 3,
+  "name": "Passive Array SERP Exporter",
+  "version": "1.0.0",
+  "description": "Export Google results to CSV: rank, site name, title, URL and snippet, plus each page's real meta title, description and H1.",
+  "homepage_url": "https://passivearray.vercel.app/",
+  "icons": {
+    "16": "icons/icon-16.png",
+    "48": "icons/icon-48.png",
+    "128": "icons/icon-128.png",
+    "192": "icons/icon-192.png"
+  },
+  "action": {
+    "default_title": "Export these Google results",
+    "default_popup": "popup.html",
+    "default_icon": {
+      "16": "icons/icon-16.png",
+      "48": "icons/icon-48.png"
+    }
+  },
+  "permissions": [
+    "storage",
+    "activeTab",
+    "scripting",
+    "downloads"
+  ],
+  "host_permissions": [
+    "https://www.google.com/*",
+    "https://www.google.com.bd/*",
+    "https://www.google.co.uk/*",
+    "https://www.google.ca/*",
+    "https://www.google.com.au/*",
+    "https://www.google.co.in/*",
+    "https://www.google.com.pk/*",
+    "https://www.google.de/*",
+    "https://www.google.fr/*",
+    "https://www.google.es/*",
+    "https://www.google.it/*",
+    "https://www.google.nl/*",
+    "https://www.google.com.br/*",
+    "https://www.google.com.mx/*",
+    "https://www.google.co.jp/*",
+    "https://www.google.ae/*",
+    "https://www.google.com.sg/*",
+    "https://www.google.co.za/*",
+    "https://www.google.ie/*",
+    "https://www.google.co.nz/*",
+    "https://www.google.com.ph/*",
+    "https://www.google.com.my/*",
+    "https://www.google.com.ng/*",
+    "https://www.google.com.tr/*",
+    "https://www.google.pl/*",
+    "https://www.google.se/*",
+    "https://www.google.ch/*",
+    "https://www.google.be/*",
+    "https://www.google.at/*",
+    "https://www.google.dk/*",
+    "https://www.google.no/*",
+    "https://www.google.fi/*",
+    "https://www.google.pt/*",
+    "https://www.google.com.sa/*",
+    "https://www.google.com.eg/*",
+    "https://www.google.co.id/*",
+    "https://www.google.com.vn/*",
+    "https://www.google.com.ar/*",
+    "https://www.google.co.kr/*",
+    "https://www.google.ru/*"
+  ],
+  "optional_host_permissions": [
+    "https://*/*",
+    "http://*/*"
+  ],
+  "background": {
+    "service_worker": "background.js"
+  }
+}

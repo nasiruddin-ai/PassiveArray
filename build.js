@@ -98,6 +98,11 @@ console.log("blog/posts/ -> dist/blog/ (" + built.posts + " articles, " + built.
 // Company pages: about, contact, privacy, terms.
 const pages = require("./pages/site-pages.js");
 const pagePaths = pages.buildInto(DIST);
+
+// Research: keyword research page (pages/research-pages.js).
+const research = require("./pages/research-pages.js");
+const researchPaths = research.buildInto(DIST);
+console.log("pages/research-pages.js -> dist/ (" + researchPaths.join(", ") + ")");
 console.log("pages/site-pages.js -> dist/ (" + pagePaths.all.join(", ") + ")");
 
 // sitemap.xml and robots.txt for search engines.
@@ -106,6 +111,7 @@ const urls = [
   ["/creator-tools/", "0.9", "weekly"],
   ...site.tools.map((t) => ["/creator-tools/" + t.slug + "/", "0.8", "monthly"]),
   ...site.WEB_TOOLS.map(([href]) => ["/" + href, "0.7", "monthly"]),
+  ["/research/", "0.8", "weekly"],
   ["/youtube-extension/", "0.8", "monthly"],
   ["/youtube-extension/privacy/", "0.3", "yearly"],
   ["/blog/", "0.8", "weekly"],
@@ -149,7 +155,7 @@ console.log("brand files -> dist/ (" + copied + "/" + Object.keys(copies).length
 // with a stylesheet a browser or the CDN cached from the previous one.
 const crypto = require("crypto");
 const assetVersion = crypto.createHash("md5").update(
-  ["shared.css", "site.js", "shared.js"].map((f) => fs.readFileSync(path.join(ROOT, "creator-tools", "public", f))).join("")
+  ["shared.css", "site.js", "shared.js", "research.js"].map((f) => fs.readFileSync(path.join(ROOT, "creator-tools", "public", f))).join("")
 ).digest("hex").slice(0, 10);
 let stamped = 0;
 (function walk(dir) {
@@ -158,7 +164,7 @@ let stamped = 0;
     if (entry.isDirectory()) { walk(p); continue; }
     if (!entry.name.endsWith(".html")) continue;
     const html = fs.readFileSync(p, "utf8");
-    const out = html.replace(/creator-tools\/(shared\.css|site\.js|shared\.js)"/g, (m, f) => "creator-tools/" + f + "?v=" + assetVersion + "\"");
+    const out = html.replace(/creator-tools\/(shared\.css|site\.js|shared\.js|research\.js)"/g, (m, f) => "creator-tools/" + f + "?v=" + assetVersion + "\"");
     if (out !== html) { fs.writeFileSync(p, out); stamped++; }
   }
 })(DIST);

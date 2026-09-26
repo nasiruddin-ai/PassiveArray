@@ -4,14 +4,44 @@
   "outputDirectory": "dist",
   "framework": null,
   "rewrites": [
-    { "source": "/creator-tools/api/youtube", "destination": "/api/creator-youtube" },
-    { "source": "/creator-tools/api/twitch", "destination": "/api/creator-twitch" },
-    { "source": "/creator-tools/api/ai", "destination": "/api/creator-ai" },
-    { "source": "/domain-age-checker/api/age", "destination": "/api/domain-age" },
-    { "source": "/domain-finder/api/check", "destination": "/api/domain-finder-check" },
-    { "source": "/plagiarism-checker/api/:action", "destination": "/api/plagiarism?action=:action" }
+    {
+      "source": "/creator-tools/api/youtube",
+      "destination": "/api/creator-youtube"
+    },
+    {
+      "source": "/creator-tools/api/twitch",
+      "destination": "/api/creator-twitch"
+    },
+    {
+      "source": "/creator-tools/api/ai",
+      "destination": "/api/creator-ai"
+    },
+    {
+      "source": "/domain-age-checker/api/age",
+      "destination": "/api/domain-age"
+    },
+    {
+      "source": "/domain-finder/api/check",
+      "destination": "/api/domain-finder-check"
+    },
+    {
+      "source": "/plagiarism-checker/api/:action",
+      "destination": "/api/plagiarism?action=:action"
+    },
+    {
+      "source": "/research/api/:action",
+      "destination": "/api/research?action=:action"
+    }
   ],
   "headers": [
-    { "source": "/creator-tools/(.*)\\.(css|js)", "headers": [{ "key": "Cache-Control", "value": "public, max-age=3600" }] }
+    {
+      "source": "/creator-tools/(.*)\\.(css|js)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=3600"
+        }
+      ]
+    }
   ]
 }
