@@ -112,6 +112,8 @@ const urls = [
   ...site.tools.map((t) => ["/creator-tools/" + t.slug + "/", "0.8", "monthly"]),
   ...site.WEB_TOOLS.map(([href]) => ["/" + href, "0.7", "monthly"]),
   ["/research/", "0.8", "weekly"],
+  ["/research/outliers/", "0.8", "daily"],
+  ["/research/shorts/", "0.7", "daily"],
   ["/youtube-extension/", "0.8", "monthly"],
   ["/youtube-extension/privacy/", "0.3", "yearly"],
   ["/blog/", "0.8", "weekly"],

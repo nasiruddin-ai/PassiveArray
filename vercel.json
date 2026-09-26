@@ -43,5 +43,16 @@
         }
       ]
     }
-  ]
+  ],
+  "crons": [
+    {
+      "path": "/api/research-cron",
+      "schedule": "15 5 * * *"
+    }
+  ],
+  "functions": {
+    "api/research-cron.js": {
+      "maxDuration": 60
+    }
+  }
 }

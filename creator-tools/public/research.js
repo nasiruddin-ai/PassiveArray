@@ -160,3 +160,82 @@
   var initial = new URLSearchParams(location.search).get("q");
   if (initial) research(initial, false);
 })();
+
+/* Outlier and Shorts feeds: /research/outliers/ and /research/shorts/. */
+(function () {
+  "use strict";
+  var filters = document.getElementById("ofilters");
+  if (!filters) return;
+  var kind = filters.dataset.kind === "shorts" ? "shorts" : "videos";
+  var grid = document.getElementById("ogrid");
+  var count = document.getElementById("ocount");
+  var statusEl = document.getElementById("ostatus");
+  var topicSel = document.getElementById("otopic");
+  var minSel = document.getElementById("omin");
+  var daysSel = document.getElementById("odays");
+  var sortSel = document.getElementById("osort");
+  var viewBtn = document.getElementById("oview");
+  var params = new URLSearchParams(location.search);
+  var view = params.get("view") === "thumbs" ? "thumbs" : "cards";
+  var topicsLoaded = false;
+
+  function esc(s) { return String(s == null ? "" : s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;"); }
+  function compact(n) {
+    if (n == null || !isFinite(n)) return "n/a";
+    var a = Math.abs(n);
+    if (a >= 1e9) return (n / 1e9).toFixed(2).replace(/\.?0+$/, "") + "B";
+    if (a >= 1e6) return (n / 1e6).toFixed(2).replace(/\.?0+$/, "") + "M";
+    if (a >= 1e4) return (n / 1e3).toFixed(1).replace(/\.0$/, "") + "K";
+    return Number(n).toLocaleString("en-US");
+  }
+  function ago(days) { return days < 1 ? "today" : days < 30 ? days + "d ago" : Math.round(days / 30) + "mo ago"; }
+  function dur(s) { return s >= 3600 ? Math.floor(s / 3600) + ":" + String(Math.floor((s % 3600) / 60)).padStart(2, "0") + ":" + String(s % 60).padStart(2, "0") : Math.floor(s / 60) + ":" + String(s % 60).padStart(2, "0"); }
+
+  function applyView() {
+    grid.classList.toggle("thumbs", view === "thumbs");
+    viewBtn.textContent = view === "thumbs" ? "Card view" : "Thumbnail grid";
+    viewBtn.classList.toggle("on", view === "thumbs");
+  }
+
+  function card(i) {
+    var mult = i.multiplier >= 100 ? ">100x" : i.multiplier + "x";
+    return "<a class=\"ocard\" href=\"" + esc(i.url) + "\" target=\"_blank\" rel=\"noopener\" title=\"" + esc(i.title) + "\">" +
+      "<div class=\"th\"><img loading=\"lazy\" src=\"" + esc(i.thumbnail) + "\" alt=\"\"><span class=\"x" + (i.multiplier >= 10 ? " hot" : "") + "\">" + mult + "</span>" + (i.seconds ? "<span class=\"dur\">" + dur(i.seconds) + "</span>" : "") + "</div>" +
+      "<div class=\"body\"><div class=\"t\">" + esc(i.title) + "</div>" +
+      "<div class=\"c\">" + (i.channelThumb ? "<img loading=\"lazy\" src=\"" + esc(i.channelThumb) + "\" alt=\"\">" : "") + "<span>" + esc(i.channelTitle) + (i.hiddenSubscribers ? "" : " · " + compact(i.subscribers) + " subs") + "</span></div>" +
+      "<div class=\"m\"><b>" + compact(i.views) + "</b> views vs a normal <b>" + compact(i.median) + "</b> · " + ago(i.ageDays) + "</div></div></a>";
+  }
+
+  function load() {
+    var q = new URLSearchParams({ type: kind, topic: topicSel.value, minX: minSel.value, days: daysSel.value, sort: sortSel.value, limit: "120" });
+    count.textContent = "Loading…";
+    fetch("../api/outliers?" + q.toString())
+      .then(function (r) { return r.json(); })
+      .catch(function () { return { ok: false, error: "Could not reach the server." }; })
+      .then(function (d) {
+        if (!d || !d.ok) { grid.innerHTML = "<div class=\"error\">" + esc((d && d.error) || "Something went wrong.") + "</div>"; count.textContent = ""; return; }
+        if (!topicsLoaded && d.topics && d.topics.length) {
+          topicsLoaded = true;
+          d.topics.forEach(function (t) { var o = document.createElement("option"); o.value = t.name; o.textContent = t.name + " (" + t.count + ")"; topicSel.appendChild(o); });
+          if (params.get("topic")) topicSel.value = params.get("topic");
+        }
+        if (d.updatedAt) statusEl.innerHTML = "<b>UPDATED</b> " + esc(new Date(d.updatedAt).toLocaleString());
+        if (!d.items.length) {
+          grid.innerHTML = "";
+          count.textContent = d.updatedAt ? "No videos match these filters yet. Widen the filters, or research more keywords: every keyword adds channels to the index." : "The first daily scan has not run yet. Research a few keywords to seed the index; the feed fills after the next scheduled run.";
+          return;
+        }
+        count.textContent = d.total + (kind === "shorts" ? " Shorts" : " videos") + " matched. Showing " + d.items.length + ", sorted by " + sortSel.options[sortSel.selectedIndex].text.toLowerCase() + ".";
+        grid.innerHTML = d.items.map(card).join("");
+      });
+  }
+
+  [topicSel, minSel, daysSel, sortSel].forEach(function (s) { s.addEventListener("change", load); });
+  viewBtn.addEventListener("click", function () {
+    view = view === "thumbs" ? "cards" : "thumbs";
+    applyView();
+    try { var u = new URL(location.href); if (view === "thumbs") u.searchParams.set("view", "thumbs"); else u.searchParams.delete("view"); history.replaceState(null, "", u.toString()); } catch (e) { /* file:// */ }
+  });
+  applyView();
+  load();
+})();

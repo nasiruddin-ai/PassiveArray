@@ -63,6 +63,25 @@ the page:
 
 The same store already powers sign-ups and rate limits (`lib/store.js`).
 
+### Outlier videos and Shorts
+
+`/research/outliers/` and `/research/shorts/` list uploads from the last 90
+days that did 3x or more what their channel's other recent uploads did
+(`views / median views of the channel's other last-10 uploads`). Filters by
+topic, minimum multiplier, age and sort, plus a thumbnail-grid view.
+
+The feed is built by a daily job, `api/research-cron.js`, scheduled in
+`vercel.json` (`crons`, 05:15 UTC, the once-a-day cadence the free plan
+allows). It walks the channel index (`idx:channels`), scans up to
+`OUTLIER_CHANNELS_PER_RUN` channels (default 250) within
+`OUTLIER_UNITS_PER_RUN` quota units (default 3,000), writes the feed to
+`outliers:latest` and one snapshot per channel per day (`snap:<id>:<date>`)
+for the growth rankings. On an empty index it first seeds a dozen broad
+niches. A store lock stops it running more than once every 6 hours.
+
+Optional: set `CRON_SECRET` so only Vercel's scheduler (and you, with
+`/api/research-cron?key=...`) can trigger the job. Logic: `lib/outliers.js`.
+
 ## How it is built
 
 ```

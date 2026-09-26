@@ -1,20 +1,32 @@
-// Research section: /research/ (keyword research). Built by build.js.
-// Future tabs (outlier videos, Shorts, channels, thumbnails) are built on the
-// same index that this page starts filling; see lib/research.js.
+// Research section: /research/ (keywords), /research/outliers/ (videos doing far
+// better than their channel normally does), /research/shorts/ (the same for
+// Shorts). Built by build.js. Data comes from lib/research.js and lib/outliers.js.
 
 const fs = require("fs");
 const path = require("path");
 const site = require("../creator-tools/build-tools.js");
 const { esc, ICON } = site;
 
-function researchPage() {
+const TABS = [
+  ["keywords", "Keywords", "research/"],
+  ["outliers", "Outlier videos", "research/outliers/"],
+  ["shorts", "Shorts", "research/shorts/"],
+];
+
+function tabs(active, root) {
+  return `<nav class="rtabs" aria-label="Research sections">${TABS.map(([key, label, href]) => `<a href="${root}${href}"${key === active ? ' class="on"' : ""}>${esc(label)}</a>`).join("")}<a href="${root}research/outliers/?view=thumbs">Thumbnails</a><a href="${root}creator-tools/find-youtube-influencers-by-niche/">Channels <span class="soon">GROWTH SOON</span></a></nav>`;
+}
+
+function keywordsPage() {
+  const root = "../";
   const body = `
   <div class="page-head">
-    <div class="crumbs"><a href="../">Home</a> / Research</div>
+    <div class="crumbs"><a href="${root}">Home</a> / Research</div>
     <h1>YouTube keyword research, measured</h1>
     <p class="lead">Type a phrase. See what YouTube autocompletes around it, who ranks for it today and how beatable they are. Every number on this page is measured from YouTube, never modelled.</p>
     <div class="meta"><span><b>FREE</b> no account</span><span><b>LIVE</b> YouTube Data API</span><span><b>HONEST</b> no invented search volume</span></div>
   </div>
+  ${tabs("keywords", root)}
 
   <form class="bigsearch" id="kwform" role="search" style="margin:0 0 10px">
     ${ICON.search}
@@ -49,11 +61,11 @@ function researchPage() {
       </ol>
     </section>
     <section class="card next">
-      <h2>Coming next in Research</h2>
-      <a href="../creator-tools/youtube-channel-quality-checker/">Outlier videos: uploads doing 5x to 100x their channel's normal <b>Soon</b></a>
-      <a href="../creator-tools/find-youtube-influencers-by-niche/">Fast-growing channels by niche <b>Soon</b></a>
-      <a href="../creator-tools/youtube-lookalike-finder/">Thumbnail study grid for any keyword <b>Soon</b></a>
-      <a href="../youtube-extension/">The same keyword score inside YouTube search <b>Extension</b></a>
+      <h2>More research</h2>
+      <a href="${root}research/outliers/">Videos doing 3x to 100x their channel's normal, updated daily <b>Outliers</b></a>
+      <a href="${root}research/shorts/">The same feed, Shorts only <b>Shorts</b></a>
+      <a href="${root}research/outliers/?view=thumbs">Study the thumbnails that broke out <b>Thumbnails</b></a>
+      <a href="${root}youtube-extension/">The same keyword score inside YouTube search <b>Extension</b></a>
     </section>
   </div>`;
 
@@ -64,20 +76,78 @@ function researchPage() {
     path: "/research/",
     active: "research",
     body,
-    scripts: `<script src="../creator-tools/research.js"></script>`,
-    jsonld: {
-      "@context": "https://schema.org", "@type": "WebApplication", name: "YouTube Keyword Research", url: site.SITE + "/research/",
-      description: "Free YouTube keyword research with measured numbers.", applicationCategory: "UtilitiesApplication", operatingSystem: "Any",
-      offers: { "@type": "Offer", price: "0", priceCurrency: "USD" }, provider: { "@type": "Organization", name: site.BRAND, url: site.SITE },
-    },
+    scripts: `<script src="${root}creator-tools/research.js"></script>`,
+    jsonld: webApp("YouTube Keyword Research", "/research/", "Free YouTube keyword research with measured numbers."),
   });
 }
 
-function buildInto(dist) {
-  const dir = path.join(dist, "research");
-  fs.mkdirSync(dir, { recursive: true });
-  fs.writeFileSync(path.join(dir, "index.html"), researchPage());
-  return ["/research/"];
+function outliersPage(kind) {
+  const root = "../../";
+  const shorts = kind === "shorts";
+  const body = `
+  <div class="page-head">
+    <div class="crumbs"><a href="${root}">Home</a> / <a href="${root}research/">Research</a> / ${shorts ? "Shorts" : "Outlier videos"}</div>
+    <h1>${shorts ? "Shorts that broke out" : "Outlier videos"}</h1>
+    <p class="lead">${shorts ? "Shorts from the last 90 days that did 3x to 100x what their channel's other uploads did." : "Videos from the last 90 days that did 3x to 100x what their channel's other uploads did. Not the biggest videos, the biggest surprises."} Measured from the YouTube API and refreshed daily.</p>
+    <div class="meta"><span><b>DAILY</b> updated by a scheduled job</span><span><b>MEASURED</b> views / channel median</span><span id="ostatus"></span></div>
+  </div>
+  ${tabs(kind, root)}
+
+  <div class="ofilters" id="ofilters" data-kind="${kind}">
+    <select id="otopic" aria-label="Topic"><option value="">All topics</option></select>
+    <select id="omin" aria-label="Minimum multiplier"><option value="3">3x and above</option><option value="5">5x and above</option><option value="10">10x and above</option><option value="25">25x and above</option></select>
+    <select id="odays" aria-label="Published within"><option value="90">Last 90 days</option><option value="30">Last 30 days</option><option value="7">Last 7 days</option></select>
+    <select id="osort" aria-label="Sort"><option value="multiplier">Biggest multiplier</option><option value="views">Most views</option><option value="newest">Newest</option></select>
+    <button type="button" class="fbtn" id="oview" data-on="cards">Thumbnail grid</button>
+  </div>
+  <p class="ostat" id="ocount"></p>
+  <div class="ogrid" id="ogrid"></div>
+
+  <div class="two">
+    <section class="card how">
+      <h2 style="margin-bottom:12px">How this works</h2>
+      <ol>
+        <li>Every keyword researched on this site adds the channels that rank for it to an index. A daily job walks that index and pulls each channel's last 10 uploads from the YouTube Data API.</li>
+        <li>For every upload from the last 90 days, the multiplier is its views divided by the median views of the channel's other recent uploads. A 20x video did twenty times what that channel normally does.</li>
+        <li>Videos with a multiplier of 3 or more and at least 1,000 views make the feed. Live streams are skipped. ${shorts ? "This page keeps only uploads of 60 seconds or less." : "Shorts have their own page."}</li>
+        <li>Topics come from YouTube's own channel categories. The feed grows as more keywords are researched, so a niche you care about gets richer the more you use the keyword tool.</li>
+      </ol>
+    </section>
+    <section class="card next">
+      <h2>Do something with it</h2>
+      <a href="${root}research/">Research the keyword behind a breakout <b>Keywords</b></a>
+      <a href="${root}creator-tools/youtube-channel-quality-checker/">Grade the channel that had the outlier <b>Check</b></a>
+      <a href="${root}creator-tools/youtube-sponsorship-price-calculator/">What a sponsor should pay that channel now <b>Price</b></a>
+      <a href="${root}creator-tools/youtube-lookalike-finder/">Find channels like it <b>Lookalikes</b></a>
+    </section>
+  </div>`;
+
+  return site.shell({
+    title: shorts ? "YouTube Shorts Outliers" : "YouTube Outlier Videos",
+    ogTitle: (shorts ? "Shorts that broke out" : "YouTube outlier videos") + ", measured daily | Passive Array",
+    description: shorts ? "Shorts from the last 90 days that did 3x to 100x their channel's normal views. Measured from the YouTube API, refreshed daily, free." : "Videos from the last 90 days that did 3x to 100x their channel's normal views, by topic. Measured from the YouTube API, refreshed daily, free.",
+    path: shorts ? "/research/shorts/" : "/research/outliers/",
+    active: "research",
+    body,
+    scripts: `<script src="${root}creator-tools/research.js"></script>`,
+    jsonld: webApp(shorts ? "YouTube Shorts Outliers" : "YouTube Outlier Videos", shorts ? "/research/shorts/" : "/research/outliers/", "Videos that did far better than their channel normally does, updated daily."),
+  });
 }
 
-module.exports = { researchPage, buildInto };
+function webApp(name, p, description) {
+  return {
+    "@context": "https://schema.org", "@type": "WebApplication", name, url: site.SITE + p, description,
+    applicationCategory: "UtilitiesApplication", operatingSystem: "Any",
+    offers: { "@type": "Offer", price: "0", priceCurrency: "USD" }, provider: { "@type": "Organization", name: site.BRAND, url: site.SITE },
+  };
+}
+
+function buildInto(dist) {
+  const write = (rel, html) => { const dir = path.join(dist, rel); fs.mkdirSync(dir, { recursive: true }); fs.writeFileSync(path.join(dir, "index.html"), html); };
+  write("research", keywordsPage());
+  write(path.join("research", "outliers"), outliersPage("outliers"));
+  write(path.join("research", "shorts"), outliersPage("shorts"));
+  return ["/research/", "/research/outliers/", "/research/shorts/"];
+}
+
+module.exports = { keywordsPage, outliersPage, buildInto };
