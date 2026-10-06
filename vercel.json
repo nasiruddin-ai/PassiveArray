@@ -53,6 +53,9 @@
   "functions": {
     "api/research-cron.js": {
       "maxDuration": 60
+    },
+    "api/creator-youtube.js": {
+      "maxDuration": 30
     }
   }
 }

@@ -62,6 +62,22 @@ const tools = [
     ],
   },
   {
+    slug: "youtube-monetization-checker",
+    name: "YouTube Monetization Checker",
+    platform: "YouTube",
+    api: "youtube",
+    action: "monetization",
+    short: "Is a channel monetized? Public eligibility signals plus ad placements on recent uploads, with a confidence score.",
+    intro: "Paste a channel link, @handle or name. The checker reads the public eligibility numbers and looks for ad placements on the channel's recent videos, then gives a verdict with a confidence score and shows every signal behind it.",
+    inputs: [{ id: "channel", label: "Channel link, @handle or name", type: "text", placeholder: "Paste a link or @handle" }],
+    how: [
+      "YouTube publishes nothing about Partner Program status. This tool reads what is public: subscribers, uploads in the last 90 days, made-for-kids flags, and whether the public watch page of each recent video carries ad placements.",
+      "Monetized videos embed an ad placement block in their page. Videos on channels that are not monetized do not. Up to 5 recent long-form uploads are sampled.",
+      "YouTube can run its own ads on some non-partner videos, so ads alone are never treated as proof. Ads plus the eligibility thresholds give a high confidence; ads without them give a low one.",
+      "Watch hours are private, so that requirement is always shown as unknown. The result is a confidence, never a certainty.",
+    ],
+  },
+  {
     slug: "youtube-engagement-rate-calculator",
     name: "YouTube Engagement Rate Calculator",
     platform: "YouTube",

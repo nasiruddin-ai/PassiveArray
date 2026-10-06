@@ -253,6 +253,35 @@
     };
   };
 
+  COMPUTE["youtube-monetization-checker"] = function (v, d) {
+    var ch = d.channel, r = ch.recent, vd = d.verdict;
+    var statusPill = function (s) {
+      return s === "pass" ? pill({ label: "Yes", cls: "good" }) : s === "fail" ? pill({ label: "No", cls: "bad" }) : s === "mixed" ? pill({ label: "Partly", cls: "warn" }) : pill({ label: "Unknown", cls: "" });
+    };
+    var rows = [
+      { name: "Subscribers", value: ch.hiddenSubscribers ? "Hidden" : fmt(ch.subscribers) },
+      { name: "Uploads in the last 90 days", value: fmt(d.signals.filter(function (s) { return s.key === "uploads"; })[0].detail.split(" ")[0]) },
+      { name: "Ad placements found", sub: "sampled recent uploads", value: d.signalRate == null ? "Could not check" : Math.round(d.signalRate * 100) + "% (" + d.sampled.filter(function (s) { return s.ads; }).length + " of " + d.checkedCount + ")", cls: d.signalRate == null ? "warn" : d.signalRate >= 0.6 ? "good" : d.signalRate === 0 ? "bad" : "warn" },
+      { name: "Shorts share of recent uploads", value: pct(r.shortsShare * 100, 0) },
+      { name: "Uploads per month", value: fmt(r.uploadsPerMonth, 1) },
+      { name: "Channel created", value: dateStr(ch.publishedAt) },
+    ];
+    if (d.estimate) rows.unshift({ name: "Estimated monthly ad earnings", sub: "if monetized, at $0.50 to $4 RPM on " + compact(d.estimate.monthlyViews) + " monthly views", value: range(d.estimate.low, d.estimate.high), cls: "good" });
+    return {
+      profile: ytProfile(ch),
+      hero: { label: "Monetization verdict", value: esc(vd.label) + " " + pill({ label: vd.confidence + "% confidence", cls: vd.cls }), note: esc(vd.why) },
+      rows: rows,
+      list: d.signals.map(function (s) { return statusPill(s.status) + " <b>" + esc(s.label) + "</b><br><span class=\"note\">" + esc(s.detail) + "</span>"; }),
+      table: d.sampled.length ? {
+        head: ["Sampled upload", "Published", "Length", "Ads on page"],
+        rows: d.sampled.map(function (s) {
+          return ['<a href="' + esc(s.url) + '" target="_blank" rel="noopener">' + esc(s.title) + "</a>", dateStr(s.publishedAt), s.seconds ? (s.seconds <= 60 ? "Short" : Math.round(s.seconds / 60) + " min") : "n/a", !s.checked ? '<span class="pill">Not checked</span>' : s.ads ? '<span class="pill good">Yes</span>' : '<span class="pill bad">No</span>'];
+        }),
+      } : null,
+      note: "Confidence reflects how many signals agree. YouTube never publishes Partner Program status, watch hours are private, and YouTube can run its own ads on some non-partner videos, so treat this as a strong indication, not proof. Earnings, when shown, are an estimate from public view counts.",
+    };
+  };
+
   COMPUTE["youtube-engagement-rate-calculator"] = function (v, d) {
     var ch = d.channel, r = ch.recent, er = ytER(ch), g = ytGradeView(er.byView);
     return {

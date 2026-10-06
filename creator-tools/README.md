@@ -9,7 +9,7 @@ site and runs on your PC with `Start.bat`.
 
 | Group | Tools | Data source |
 |---|---|---|
-| YouTube (9) | Subscriber count checker, engagement rate calculator, money calculator, sponsorship price calculator, channel comparison, channel quality checker, find influencers by niche, search influencers by location, lookalike finder | Live, YouTube Data API v3 |
+| YouTube (10) | Subscriber count checker, monetization checker, engagement rate calculator, money calculator, sponsorship price calculator, channel comparison, channel quality checker, find influencers by niche, search influencers by location, lookalike finder | Live, YouTube Data API v3 |
 | Twitch (2) | Follower count checker, channel comparison | Live, Twitch Helix API |
 | Instagram (15) | Engagement rate calculator, engagement benchmark, follower to following ratio, likes to followers ratio, money calculator, pricing calculator, EMV calculator, fake follower estimator, account audit, account comparison, caption analyzer, hashtag generator, bio generator, content ideas generator, growth advisor | Numbers you type in (Instagram has no free public API) |
 | TikTok (7) | Engagement rate calculator, likes to followers ratio, money calculator, pricing calculator, fake follower estimator, account audit, account comparison | Numbers you type in |

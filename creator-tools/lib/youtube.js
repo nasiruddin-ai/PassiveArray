@@ -129,7 +129,7 @@ async function recentVideos(uploadsPlaylist) {
   const pl = await yt("playlistItems", { part: "contentDetails", playlistId: uploadsPlaylist, maxResults: 10 }).catch(() => ({ items: [] }));
   const ids = (pl.items || []).map((i) => i.contentDetails.videoId).filter(Boolean);
   if (!ids.length) return [];
-  const vd = await yt("videos", { part: "snippet,statistics,contentDetails", id: ids.join(",") });
+  const vd = await yt("videos", { part: "snippet,statistics,contentDetails,status", id: ids.join(",") });
   return (vd.items || []).map((v) => ({
     id: v.id,
     title: v.snippet?.title,
@@ -138,6 +138,7 @@ async function recentVideos(uploadsPlaylist) {
     likes: n(v.statistics?.likeCount),
     comments: n(v.statistics?.commentCount),
     seconds: isoDurationToSeconds(v.contentDetails?.duration),
+    madeForKids: !!v.status?.madeForKids,
     url: "https://www.youtube.com/watch?v=" + v.id,
   }));
 }
@@ -267,6 +268,95 @@ async function getVideos(rawIds) {
   });
 }
 
+/* ------------------------------------------------------------------ monetization signals
+   YouTube publishes nothing about a channel's Partner Program status. What is public:
+   the eligibility numbers (subscribers, recent uploads) and whether the public watch
+   page of a video carries ad placements. Monetized videos embed an "adPlacements"
+   block in the page; videos on channels that are not monetized do not. YouTube can
+   also run its own ads on some non-partner videos, so ads alone are read together
+   with the eligibility signals, and the result is a confidence, never a certainty. */
+const WATCH_HEADERS = {
+  "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36",
+  "Accept-Language": "en-US,en;q=0.9",
+  Cookie: "CONSENT=YES+1; SOCS=CAI",
+};
+
+async function probeAds(videoId) {
+  return cached("ads:" + videoId, async () => {
+    const ctrl = new AbortController();
+    const timer = setTimeout(() => ctrl.abort(), 6000);
+    try {
+      const res = await fetch("https://www.youtube.com/watch?v=" + videoId + "&hl=en", { headers: WATCH_HEADERS, signal: ctrl.signal, redirect: "follow" });
+      const html = await res.text();
+      // A real watch page is large and carries the player response. Consent walls and bot
+      // checks are small pages without it. "recaptcha" alone is not a signal: normal pages mention it.
+      const blocked = !res.ok || html.length < 200000 || !/ytInitialPlayerResponse/.test(html) || /google\.com\/sorry/i.test(html);
+      if (blocked) return { id: videoId, checked: false, ads: false };
+      const ads = /"adPlacements"/.test(html) || /yt_ad/.test(html);
+      return { id: videoId, checked: true, ads };
+    } catch (_) {
+      return { id: videoId, checked: false, ads: false };
+    } finally {
+      clearTimeout(timer);
+    }
+  });
+}
+
+async function monetizationCheck(input) {
+  const ch = await getChannel(input);
+  const vids = ch.recent.videos || [];
+  const now = Date.now();
+  const last90 = vids.filter((v) => now - new Date(v.publishedAt).getTime() <= 90 * 86400000);
+  const longForm = vids.filter((v) => v.seconds > 60);
+  const sample = (longForm.length >= 3 ? longForm : vids).slice(0, 5);
+  const probes = await Promise.all(sample.map((v) => probeAds(v.id)));
+  const byId = new Map(probes.map((p) => [p.id, p]));
+  const sampled = sample.map((v) => ({ id: v.id, title: v.title, url: v.url, publishedAt: v.publishedAt, seconds: v.seconds, views: v.views, ...(byId.get(v.id) || { checked: false, ads: false }) }));
+  const checked = sampled.filter((s) => s.checked);
+  const withAds = checked.filter((s) => s.ads);
+  const rate = checked.length ? withAds.length / checked.length : null;
+  const kids = vids.filter((v) => v.madeForKids).length;
+  const subsKnown = !ch.hiddenSubscribers;
+
+  const signals = [
+    { key: "subs1000", label: "1,000 subscribers (ads and revenue sharing)", status: !subsKnown ? "unknown" : ch.subscribers >= 1000 ? "pass" : "fail", detail: subsKnown ? ch.subscribers.toLocaleString("en-US") + " subscribers" : "Subscriber count hidden by the channel" },
+    { key: "subs500", label: "500 subscribers (fan funding, memberships)", status: !subsKnown ? "unknown" : ch.subscribers >= 500 ? "pass" : "fail", detail: subsKnown ? (ch.subscribers >= 500 ? "Meets the lower tier" : "Below the lower tier") : "Hidden" },
+    { key: "uploads", label: "3 public uploads in the last 90 days", status: last90.length >= 3 ? "pass" : "fail", detail: last90.length + " of the last " + vids.length + " uploads are from the last 90 days" },
+    { key: "watch", label: "4,000 public watch hours or 10M Shorts views in 90 days", status: "unknown", detail: "Not public. Only the channel owner sees watch hours." },
+    { key: "ads", label: "Ad placements on recent videos", status: rate == null ? "unknown" : rate >= 0.6 ? "pass" : rate > 0 ? "mixed" : "fail", detail: rate == null ? "The public watch pages could not be read from this server right now" : withAds.length + " of " + checked.length + " sampled videos carry ad placements" },
+    { key: "kids", label: "Not made for kids", status: vids.length && kids === vids.length ? "fail" : kids > 0 ? "mixed" : "pass", detail: kids ? kids + " of " + vids.length + " recent uploads are marked made for kids, which limits ads" : "No recent upload is marked made for kids" },
+  ];
+
+  const eligible = subsKnown && ch.subscribers >= 1000 && last90.length >= 3;
+  let verdict;
+  if (subsKnown && !eligible) {
+    // Below a public threshold: revenue sharing is not possible yet, whatever the ads say.
+    const adsNote = rate ? " Ads on " + withAds.length + " sampled upload" + (withAds.length === 1 ? "" : "s") + " are YouTube's own: it can run ads on non-partner videos without paying the creator." : "";
+    verdict = { label: "Not eligible yet", cls: "bad", confidence: rate == null ? 70 : 85, why: "The channel misses at least one public eligibility threshold, so ad revenue sharing is not possible yet." + adsNote };
+  } else if (rate != null && checked.length >= 2) {
+    if (rate >= 0.6 && eligible) verdict = { label: "Likely monetized", cls: "good", confidence: Math.min(95, 70 + Math.round(rate * 15) + checked.length * 2), why: "Ads run on most sampled uploads and the channel clears the public eligibility thresholds." };
+    else if (rate >= 0.6) verdict = { label: "Ads shown, partner status unclear", cls: "warn", confidence: 55, why: "Ads appear on the videos, but the subscriber count is hidden so eligibility cannot be confirmed. YouTube also places its own ads on some non-partner videos." };
+    else if (rate === 0) verdict = { label: "Likely not monetized", cls: "bad", confidence: Math.min(90, 65 + checked.length * 5), why: "No ad placements on any sampled upload, even though the public thresholds are met. The channel may not have applied, may be under review, or may have ads turned off." };
+    else verdict = { label: "Partly monetized or changing", cls: "warn", confidence: 50, why: "Ads appear on some sampled uploads but not others. This happens when monetization was switched on recently, when some videos are limited, or when some uploads are reused content." };
+  } else if (rate != null) {
+    verdict = { label: rate > 0 ? "Ads detected on a small sample" : "No ads on a small sample", cls: "warn", confidence: 45, why: "Only " + checked.length + " video could be checked, so this is a weak reading." };
+  } else {
+    verdict = eligible
+      ? { label: "Eligible, ads unconfirmed", cls: "warn", confidence: 40, why: "The channel clears the public thresholds, but the ad check could not run from this server right now. Try again in a few minutes." }
+      : { label: "Not eligible yet", cls: "bad", confidence: 60, why: "The channel misses at least one public eligibility threshold, so ads revenue sharing is not possible yet regardless of ads." };
+  }
+
+  let estimate = null;
+  if (verdict.cls === "good") {
+    const r = ch.recent;
+    const monthlyViews = r.last30Count >= 2 ? r.last30Views : r.avgViews * Math.max(r.uploadsPerMonth, 1);
+    estimate = { monthlyViews: Math.round(monthlyViews), low: Math.round((monthlyViews / 1000) * 0.5), high: Math.round((monthlyViews / 1000) * 4), basis: r.last30Count >= 2 ? r.last30Count + " videos uploaded in the last 30 days" : "average views x uploads per month" };
+  }
+
+  const { videos, ...recent } = ch.recent;
+  return { channel: { ...ch, recent }, sampled, signalRate: rate, checkedCount: checked.length, signals, verdict, estimate, checkedAt: new Date().toISOString() };
+}
+
 function errorBody(e) {
   const code = e.code || "api";
   const messages = {
@@ -294,10 +384,11 @@ async function handleRequest(action, params = {}) {
     }
     if (action === "lookalike") return { code: 200, body: { ok: true, ...(await lookalike(params.channel)) } };
     if (action === "videos") return { code: 200, body: { ok: true, videos: await getVideos(params.ids) } };
+    if (action === "monetization") return { code: 200, body: { ok: true, ...(await monetizationCheck(params.channel)) } };
     return { code: 404, body: { ok: false, code: "action", error: "Unknown action." } };
   } catch (e) {
     return { code: e.status && e.status < 500 ? e.status : 502, body: errorBody(e) };
   }
 }
 
-module.exports = { configure, handleRequest, parseChannelInput, yt, statsForIds, n, isoDurationToSeconds, cached };
+module.exports = { configure, handleRequest, parseChannelInput, yt, statsForIds, n, isoDurationToSeconds, cached, monetizationCheck, probeAds };
