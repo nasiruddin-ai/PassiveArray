@@ -275,6 +275,7 @@ async function getVideos(rawIds) {
    block in the page; videos on channels that are not monetized do not. YouTube can
    also run its own ads on some non-partner videos, so ads alone are read together
    with the eligibility signals, and the result is a confidence, never a certainty. */
+const ADS_CANARY_VIDEO = "9bZkp7q19f0"; // PSY, Gangnam Style: monetized for over a decade
 const WATCH_HEADERS = {
   "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36",
   "Accept-Language": "en-US,en;q=0.9",
@@ -309,9 +310,16 @@ async function monetizationCheck(input) {
   const last90 = vids.filter((v) => now - new Date(v.publishedAt).getTime() <= 90 * 86400000);
   const longForm = vids.filter((v) => v.seconds > 60);
   const sample = (longForm.length >= 3 ? longForm : vids).slice(0, 5);
-  const probes = await Promise.all(sample.map((v) => probeAds(v.id)));
+  // Canary: a video known to carry ads. If this server cannot see ads on it, YouTube
+  // is serving ad-free pages to this environment (common for data-centre addresses),
+  // so "no ads" would be meaningless and the ad signal is reported as unavailable.
+  const [canary, ...probes] = await Promise.all([probeAds(ADS_CANARY_VIDEO), ...sample.map((v) => probeAds(v.id))]);
+  const adsVisible = !!(canary.checked && canary.ads);
   const byId = new Map(probes.map((p) => [p.id, p]));
-  const sampled = sample.map((v) => ({ id: v.id, title: v.title, url: v.url, publishedAt: v.publishedAt, seconds: v.seconds, views: v.views, ...(byId.get(v.id) || { checked: false, ads: false }) }));
+  const sampled = sample.map((v) => {
+    const p = byId.get(v.id) || { checked: false, ads: false };
+    return { id: v.id, title: v.title, url: v.url, publishedAt: v.publishedAt, seconds: v.seconds, views: v.views, checked: adsVisible && p.checked, ads: adsVisible && p.ads };
+  });
   const checked = sampled.filter((s) => s.checked);
   const withAds = checked.filter((s) => s.ads);
   const rate = checked.length ? withAds.length / checked.length : null;
@@ -323,7 +331,7 @@ async function monetizationCheck(input) {
     { key: "subs500", label: "500 subscribers (fan funding, memberships)", status: !subsKnown ? "unknown" : ch.subscribers >= 500 ? "pass" : "fail", detail: subsKnown ? (ch.subscribers >= 500 ? "Meets the lower tier" : "Below the lower tier") : "Hidden" },
     { key: "uploads", label: "3 public uploads in the last 90 days", status: last90.length >= 3 ? "pass" : "fail", detail: last90.length + " of the last " + vids.length + " uploads are from the last 90 days" },
     { key: "watch", label: "4,000 public watch hours or 10M Shorts views in 90 days", status: "unknown", detail: "Not public. Only the channel owner sees watch hours." },
-    { key: "ads", label: "Ad placements on recent videos", status: rate == null ? "unknown" : rate >= 0.6 ? "pass" : rate > 0 ? "mixed" : "fail", detail: rate == null ? "The public watch pages could not be read from this server right now" : withAds.length + " of " + checked.length + " sampled videos carry ad placements" },
+    { key: "ads", label: "Ad placements on recent videos", status: rate == null ? "unknown" : rate >= 0.6 ? "pass" : rate > 0 ? "mixed" : "fail", detail: rate == null ? (adsVisible ? "The public watch pages could not be read from this server right now" : "YouTube is serving this server ad-free pages, so ad placements cannot be read right now. The verdict below rests on the public eligibility signals.") : withAds.length + " of " + checked.length + " sampled videos carry ad placements" },
     { key: "kids", label: "Not made for kids", status: vids.length && kids === vids.length ? "fail" : kids > 0 ? "mixed" : "pass", detail: kids ? kids + " of " + vids.length + " recent uploads are marked made for kids, which limits ads" : "No recent upload is marked made for kids" },
   ];
 
@@ -342,7 +350,7 @@ async function monetizationCheck(input) {
     verdict = { label: rate > 0 ? "Ads detected on a small sample" : "No ads on a small sample", cls: "warn", confidence: 45, why: "Only " + checked.length + " video could be checked, so this is a weak reading." };
   } else {
     verdict = eligible
-      ? { label: "Eligible, ads unconfirmed", cls: "warn", confidence: 40, why: "The channel clears the public thresholds, but the ad check could not run from this server right now. Try again in a few minutes." }
+      ? { label: "Eligible, ads unconfirmed", cls: "warn", confidence: 40, why: adsVisible ? "The channel clears the public thresholds, but the ad check could not run from this server right now. Try again in a few minutes." : "The channel clears every public threshold. The ad check is unavailable from this server right now, so partner status cannot be confirmed from here." }
       : { label: "Not eligible yet", cls: "bad", confidence: 60, why: "The channel misses at least one public eligibility threshold, so ads revenue sharing is not possible yet regardless of ads." };
   }
 
@@ -354,7 +362,7 @@ async function monetizationCheck(input) {
   }
 
   const { videos, ...recent } = ch.recent;
-  return { channel: { ...ch, recent }, sampled, signalRate: rate, checkedCount: checked.length, signals, verdict, estimate, checkedAt: new Date().toISOString() };
+  return { channel: { ...ch, recent }, sampled, signalRate: rate, checkedCount: checked.length, adsVisible, signals, verdict, estimate, checkedAt: new Date().toISOString() };
 }
 
 function errorBody(e) {

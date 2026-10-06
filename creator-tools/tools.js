@@ -75,6 +75,7 @@ const tools = [
       "Monetized videos embed an ad placement block in their page. Videos on channels that are not monetized do not. Up to 5 recent long-form uploads are sampled.",
       "YouTube can run its own ads on some non-partner videos, so ads alone are never treated as proof. Ads plus the eligibility thresholds give a high confidence; ads without them give a low one.",
       "Watch hours are private, so that requirement is always shown as unknown. The result is a confidence, never a certainty.",
+      "The ad check first probes a video known to carry ads. If YouTube serves this server an ad-free page for it, the ad signal is reported as unavailable rather than as a no, and the verdict rests on the eligibility signals alone.",
     ],
   },
   {
