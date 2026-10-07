@@ -31,6 +31,22 @@
     {
       "source": "/research/api/:action",
       "destination": "/api/research?action=:action"
+    },
+    {
+      "source": "/api/watch",
+      "destination": "/api/pro?fn=watch"
+    },
+    {
+      "source": "/api/watch-cron",
+      "destination": "/api/pro?fn=watch-cron"
+    },
+    {
+      "source": "/api/billing",
+      "destination": "/api/pro?fn=billing"
+    },
+    {
+      "source": "/api/stripe-webhook",
+      "destination": "/api/pro?fn=stripe-webhook"
     }
   ],
   "headers": [
@@ -61,7 +77,7 @@
     "api/creator-youtube.js": {
       "maxDuration": 30
     },
-    "api/watch-cron.js": {
+    "api/pro.js": {
       "maxDuration": 60
     }
   }

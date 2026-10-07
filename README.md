@@ -338,10 +338,11 @@ behind Pro later.
 | `lib/pro.js` | Plan rules: prices, limits, `isPro(user)` |
 | `lib/watch.js` | Add, remove, list with change; daily snapshots; the digest email HTML |
 | `lib/session.js` | Reads the `pa_session` cookie so other functions know who is calling |
-| `api/watch.js` | `/api/watch?action=list|add|remove` (signed-in only) |
-| `api/watch-cron.js` | Daily at 05:45 UTC: snapshots every watched channel; Mondays sends the digest via the Apps Script (`kind: "digest"`) |
-| `api/billing.js` | Stripe Checkout and customer portal, plain REST, no SDK |
-| `api/stripe-webhook.js` | Verifies Stripe's signature and sets `pro` on the user record |
+| `lib/api-watch.js` | `/api/watch?action=list|add|remove` (signed-in only) |
+| `lib/api-watch-cron.js` | Daily at 05:45 UTC: snapshots every watched channel; Mondays sends the digest via the Apps Script (`kind: "digest"`) |
+| `lib/api-billing.js` | Stripe Checkout and customer portal, plain REST, no SDK |
+| `lib/api-stripe-webhook.js` | Verifies Stripe's signature and sets `pro` on the user record |
+| `api/pro.js` | The one Vercel Function that serves all four, through rewrites in `vercel.json`. The Hobby plan allows 12 functions per deployment, so new endpoints should be added here rather than as new files under `api/` |
 
 Data lives in the same Upstash store as the research section: the user record
 `u:<email>` gains `watch: [...]` and `pro: {...}`; `watch:all` is the set of
@@ -389,7 +390,7 @@ reach your bank in about two days once the account is verified.
 
 ### The Monday email
 
-`api/watch-cron.js` posts `kind: "digest"` with the finished HTML to
+`lib/api-watch-cron.js` posts `kind: "digest"` with the finished HTML to
 `SUBSCRIBE_WEBHOOK_URL`, and the Apps Script in `setup/google-sheet-receiver.gs`
 emails it to the member. Redeploy the Apps Script after pulling this version
 of the file, or digests are logged but not sent. Free Gmail allows about 100
