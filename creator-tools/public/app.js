@@ -8,7 +8,7 @@
   var ROOT = document.body.getAttribute("data-root") || "../";
   var TOOLS = window.PA_TOOLS || [];
   var POSTS = window.PA_POSTS || [];
-  var me = null, watch = null, outliers = null, shorts = null, recentKw = null, monet = null, mine = null;
+  var me = null, watch = null, outliers = null, shorts = null, recentKw = null, monet = null, mine = null, ideas = null;
 
   /* ------------------------------------------------------------ utils */
   function esc(s) { return String(s == null ? "" : s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;"); }
@@ -116,7 +116,7 @@
     var needsChannel = me && me.ok && !me.channel;
     return (needsChannel ? onboardingCard() : channelCard(false)) + (needsChannel ? "" : moversCard()) +
       card("Quick actions", "The tools most people open first.", quickHtml) +
-      outliersCard(outliers && outliers.items, "Breaking out this week", [ROOT + "research/outliers/", "Full feed"], 6);
+      (me && me.ok && me.channel ? nicheCard(6) : outliersCard(outliers && outliers.items, "Breaking out this week", [ROOT + "research/outliers/", "Full feed"], 6));
   };
   function delta(d, key, base) {
     if (!d || d[key] == null) return "<span class=\"flat\" title=\"Snapshots started today; change appears after a few days\">–</span>";
@@ -179,7 +179,28 @@
     var table = watch.channels.length ? "<div class=\"tablewrap\"><table class=\"wltable\"><thead><tr><th>Channel</th><th class=\"num\">Subscribers</th><th class=\"num\">7 days</th><th class=\"num\">30 days</th><th class=\"num\">Views, 7d</th><th></th><th></th></tr></thead><tbody>" + rows + "</tbody></table></div>" : "<p class=\"empty\">Nothing watched yet. Add a channel, or press Watch this channel on any YouTube tool result.</p>";
     return card("Watchlist", watch.channels.length + " of " + watch.limit + " on the " + watch.plan + " plan. Snapshots run daily at 05:45 UTC.", "<form class=\"aform\" data-watch-add style=\"margin-bottom:14px\"><input type=\"text\" name=\"channel\" placeholder=\"@handle, channel link or name\" required><button class=\"btn\" type=\"submit\">Watch</button></form><span class=\"fmsg\" data-watch-msg></span>" + table, { link: [ROOT + "account/", "Export and settings"] });
   };
+  function basedOnLine() {
+    if (!ideas || !ideas.basedOn) return "";
+    var b = ideas.basedOn;
+    var terms = (b.focus || []).concat((b.titleWords || []).slice(0, 4)).filter(function (t, i, a) { return a.indexOf(t) === i; }).slice(0, 7);
+    return "Matched to your channel: " + (terms.length ? terms.map(function (t) { return "<b>" + esc(t) + "</b>"; }).join(", ") : "its topics") + (b.custom ? " (your focus keywords)" : "") + ". <a href=\"#ideas\" data-edit-focus>Edit</a>";
+  }
+  function nicheCard(limit) {
+    if (!ideas) return card("Breaking out in your niche", "Matching the outlier index to your channel…", "<p class=\"empty\">Loading…</p>");
+    if (!ideas.ok) return card("Breaking out in your niche", "", "<p class=\"empty\">" + esc(ideas.error || "Could not match ideas.") + "</p>");
+    if (!ideas.outliers.length) {
+      var rk = ideas.ranking || [];
+      return card("What ranks for your keywords", basedOnLine() + " No outlier in the index matches your niche yet; the next daily scan includes the channels found below.",
+        rk.length ? "<div class=\"ogrid-mini\">" + rk.slice(0, limit || 6).map(rmini).join("") + "</div>" : "<p class=\"empty\">Add focus keywords under Daily ideas and this fills in.</p>", { link: ["#ideas", "All ideas"] });
+    }
+    return card("Breaking out in your niche", basedOnLine(), "<div class=\"ogrid-mini\">" + ideas.outliers.slice(0, limit || 6).map(omini).join("") + "</div>", { link: ["#ideas", "All ideas"] });
+  }
+  function rmini(t) {
+    var small = !t.hiddenSubscribers && t.subscribers && t.subscribers < 100000;
+    return "<a class=\"omini\" href=\"" + esc(t.url) + "\" target=\"_blank\" rel=\"noopener\"><div class=\"th\"><img loading=\"lazy\" src=\"" + esc(t.thumbnail) + "\" alt=\"\"><span class=\"x" + (small ? " hot" : "") + "\">" + (small ? "small channel" : "#" + t.rank) + "</span></div><div class=\"b\"><div class=\"t\">" + esc(t.title) + "</div><div class=\"m\">" + esc(t.channelTitle) + " · " + compact(t.views) + " views · " + compact(t.viewsPerDay) + "/day · for “" + esc(t.keyword) + "”</div></div></a>";
+  }
   P.ideas = function () {
+    if (me && me.ok && me.channel) return nicheIdeas();
     var items = outliers && outliers.items ? outliers.items.slice(0, 12) : null;
     var list = !items ? "<p class=\"empty\">Loading…</p>" : !items.length ? "<p class=\"empty\">No outliers yet. The daily scan fills this.</p>" : items.map(function (i) {
       var topic = i.title.replace(/[|#"“”!?:]/g, " ").replace(/\s+/g, " ").trim().slice(0, 80);
@@ -187,6 +208,25 @@
     }).join("");
     return card("Ideas from what broke out", "Not invented: every row is a real video that beat its channel's median by 3x or more in the last 90 days. Steal the angle, not the video.", list, { link: [ROOT + "research/outliers/", "Outlier feed"] });
   };
+  function ideaRow(i, why) {
+    var topic = i.title.replace(/[|#"“”!?:]/g, " ").replace(/\s+/g, " ").trim().slice(0, 80);
+    return "<div class=\"idea\"><img loading=\"lazy\" src=\"" + esc(i.thumbnail) + "\" alt=\"\"><div class=\"t\"><b>" + esc(i.title) + "</b><span>" + why + "</span><div class=\"acts\"><a href=\"" + toolUrl("youtube-title-generator") + "?topic=" + encodeURIComponent(topic) + "\" data-recent=\"youtube-title-generator\">Titles on this topic</a><a href=\"" + ROOT + "research/?q=" + encodeURIComponent(topic.split(" ").slice(0, 4).join(" ")) + "\">Research the keyword</a><a href=\"" + esc(i.url) + "\" target=\"_blank\" rel=\"noopener\">Watch</a></div></div></div>";
+  }
+  function nicheIdeas() {
+    var focusVal = ideas && ideas.basedOn ? (ideas.basedOn.custom ? ideas.basedOn.focus : ideas.basedOn.focus).join(", ") : "";
+    var focusCard = card("Your focus keywords", "Up to six topics that describe your channel. Ideas and the Monday scan are matched to these. Leave empty to use your channel keywords and recent titles.",
+      "<form class=\"aform\" data-focus-form><input type=\"text\" name=\"keywords\" value=\"" + esc(focusVal) + "\" placeholder=\"e.g. papaya farming, kitchen garden, organic fertilizer\"><button class=\"btn\" type=\"submit\">Save and refresh</button></form><span class=\"fmsg\" data-focus-msg></span>" +
+      (ideas && ideas.basedOn ? "<p class=\"sub\" style=\"margin-top:10px\">From your channel: " + ((ideas.basedOn.keywords || []).length ? ideas.basedOn.keywords.slice(0, 8).map(esc).join(", ") : "no Studio keywords set") + (ideas.basedOn.topics && ideas.basedOn.topics.length ? " · topics: " + ideas.basedOn.topics.map(esc).join(", ") : "") + "</p>" : ""), { span: 12 });
+    if (!ideas) return focusCard + card("Ideas in your niche", "", "<p class=\"empty\">Matching…</p>");
+    if (!ideas.ok) return focusCard + card("Ideas in your niche", "", "<p class=\"empty\">" + esc(ideas.error || "Could not match ideas.") + "</p>");
+    var kwLine = (ideas.keywords || []).length ? "<div class=\"chips-row\" style=\"margin-bottom:12px\">" + ideas.keywords.map(function (k) { return "<a href=\"" + ROOT + "research/?q=" + encodeURIComponent(k.keyword) + "\" title=\"Opportunity score\">" + esc(k.keyword) + (k.score != null ? " · " + k.score + "/100 " + esc(k.label || "") : k.error === "quota" ? " · quota used today" : "") + "</a>"; }).join("") + "</div>" : "";
+    var out = ideas.outliers.length ? ideas.outliers.map(function (i) { return ideaRow(i, esc(i.channelTitle) + " did <b>" + (i.multiplier >= 100 ? ">100" : i.multiplier) + "x</b> its usual views (" + compact(i.views) + " vs " + compact(i.median) + "), " + ago(i.ageDays) + ". Matched on " + (i.hits || []).map(esc).join(", ") + "."); }).join("") :
+      "<p class=\"empty\">No outlier in the index matches your niche yet. The channels ranking for your keywords (below) join the daily scan from tonight, so this fills over the week. Adding focus keywords speeds it up.</p>";
+    var rank = ideas.ranking.length ? ideas.ranking.map(function (t) { var small = !t.hiddenSubscribers && t.subscribers && t.subscribers < 100000; return ideaRow(t, "Ranks #" + t.rank + " for “" + esc(t.keyword) + "” · " + esc(t.channelTitle) + (t.hiddenSubscribers ? "" : " (" + compact(t.subscribers) + " subs)") + " · " + compact(t.views) + " views, " + compact(t.viewsPerDay) + " a day" + (small ? " · <b>small channel ranking, open topic</b>" : "") + (t.mine ? " · <b>this is you</b>" : "")); }).join("") : "<p class=\"empty\">Keyword research has not run for your terms yet.</p>";
+    return focusCard +
+      card("Ideas in your niche", "Real videos that beat their channel's median by 3x or more, matched to your channel. Steal the angle, not the video.", out, { span: 12 }) +
+      card("What ranks for your keywords right now", "Top results by views per day. Small channels ranking mean the topic is open.", kwLine + rank, { span: 12 });
+  }
   P.competitors = function () {
     var watched = watch && watch.ok && watch.channels.length >= 2 ? "<div class=\"chips-row\" style=\"margin-bottom:14px\">" + watch.channels.slice(0, 6).map(function (c) { return "<a href=\"" + toolUrl("youtube-channel-comparison") + "?a=" + encodeURIComponent(me.channel || watch.channels[0].handle) + "&b=" + encodeURIComponent(c.handle || c.id) + "\">You vs " + esc(c.title) + "</a>"; }).join("") + "</div>" : "<p class=\"sub\" style=\"margin-bottom:14px\">Watch two or more channels and one-click comparisons appear here.</p>";
     return card("Compare channels", "Side by side, leader marked on every row.", watched + toolCards(byIntent("compare").concat(bySlugs(/influencer|lookalike|find-youtube/)), 8));
@@ -237,15 +277,27 @@
       if (msg) msg.textContent = "Saving…";
       post("/api/channel?action=set", { channel: v }).then(function (r) {
         if (!r.ok) { if (msg) { msg.textContent = r.error || "Could not save."; msg.className = "fmsg bad"; } return; }
-        me.channel = v; mine = r; monet = null; rerender(); loadMonet();
+        me.channel = v; mine = r; monet = null; ideas = null; rerender(); loadMonet(); loadIdeas();
         if (current === "feed") location.hash = "channel";
       });
     });
     el.querySelectorAll("[data-fill-channel]").forEach(function (b) {
       b.addEventListener("click", function () { var i = el.querySelector("[data-set-channel] input"); if (i) { i.value = b.getAttribute("data-fill-channel"); i.focus(); } });
     });
+    var ff = el.querySelector("[data-focus-form]");
+    if (ff) ff.addEventListener("submit", function (e) {
+      e.preventDefault();
+      var msg = el.querySelector("[data-focus-msg]");
+      if (msg) { msg.textContent = "Saving and matching…"; msg.className = "fmsg"; }
+      post("/api/channel?action=focus", { keywords: ff.elements.keywords.value }).then(function (r) {
+        if (!r.ok) { if (msg) { msg.textContent = r.error || "Could not save."; msg.className = "fmsg bad"; } return; }
+        ideas = r; rerender();
+      });
+    });
+    var ef = el.querySelector("[data-edit-focus]");
+    if (ef) ef.addEventListener("click", function () { setTimeout(function () { var i = document.querySelector("[data-focus-form] input"); if (i) i.focus(); }, 400); });
     var chg = el.querySelector("[data-change-channel]");
-    if (chg) chg.addEventListener("click", function (e) { e.preventDefault(); post("/api/channel?action=clear").then(function () { me.channel = ""; mine = null; monet = null; rerender(); }); });
+    if (chg) chg.addEventListener("click", function (e) { e.preventDefault(); post("/api/channel?action=clear").then(function () { me.channel = ""; mine = null; monet = null; ideas = null; rerender(); }); });
     var add = el.querySelector("[data-watch-add]");
     if (add) add.addEventListener("submit", function (e) {
       e.preventDefault();
@@ -309,6 +361,10 @@
   });
 
   /* ------------------------------------------------------------- data */
+  function loadIdeas() {
+    if (!me || !me.ok || !me.channel) return;
+    get("/api/channel?action=ideas").then(function (r) { ideas = r; if (current === "feed" || current === "ideas") render(current); });
+  }
   function loadMonet() {
     if (!me || !me.ok || !me.channel) return;
     get(ROOT + "creator-tools/api/youtube?action=monetization&channel=" + encodeURIComponent(me.channel)).then(function (r) { monet = r; if (current === "feed" || current === "race") render(current); });
@@ -321,7 +377,10 @@
     if (me && me.ok) {
       get("/api/watch?action=list").then(function (w) { watch = w; paintRail(); render(current); });
       loadMonet();
-      if (me.channel) get("/api/channel").then(function (r) { mine = r; if (current === "channel" || current === "feed") render(current); });
+      if (me.channel) {
+        get("/api/channel").then(function (r) { mine = r; if (current === "channel" || current === "feed") render(current); });
+        loadIdeas();
+      }
       else if (!location.hash || location.hash === "#feed") { /* first visit after sign-in: the feed shows the add-channel step */ }
     }
   });
