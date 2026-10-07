@@ -87,6 +87,39 @@
   });
 
   /* Directory filters */
+  /* Home page tool finder: search + intent chips + show all. */
+  var finder = document.querySelector("[data-home-tools]");
+  if (finder) {
+    var fCards = Array.prototype.slice.call(finder.querySelectorAll("[data-tool-grid] .tcard"));
+    var fEmpty = finder.querySelector("[data-tool-empty]");
+    var fMore = finder.querySelector("[data-tool-more]");
+    var fState = { intent: "all", q: "", all: false };
+    function fApply() {
+      var shown = 0, filtering = fState.intent !== "all" || !!fState.q;
+      fCards.forEach(function (c, i) {
+        var ok = (fState.intent === "all" || c.dataset.intent === fState.intent) && (!fState.q || c.dataset.text.indexOf(fState.q) !== -1);
+        if (ok && !filtering && !fState.all && i >= 12) ok = false;
+        c.hidden = !ok;
+        if (ok) shown++;
+      });
+      if (fEmpty) fEmpty.hidden = shown > 0;
+      if (fMore) fMore.parentNode.hidden = filtering || fState.all;
+    }
+    finder.querySelectorAll("[data-intent-filter]").forEach(function (b) {
+      b.addEventListener("click", function () {
+        fState.intent = b.dataset.intentFilter;
+        finder.querySelectorAll("[data-intent-filter]").forEach(function (x) { x.classList.toggle("on", x === b); });
+        fApply();
+      });
+    });
+    var fQ = finder.querySelector("[data-tool-search]");
+    if (fQ) fQ.addEventListener("input", function () { fState.q = fQ.value.trim().toLowerCase(); fApply(); });
+    if (fMore) fMore.addEventListener("click", function () { fState.all = true; fApply(); });
+  }
+  document.querySelectorAll(".lp-try").forEach(function (b) {
+    b.addEventListener("click", function () { var i = document.getElementById("lp-monet-channel"); if (i) { i.value = b.dataset.fill; i.focus(); } });
+  });
+
   var dir = document.querySelector("[data-directory]");
   if (dir) {
     var state = { intent: "all", platform: "all", q: "" };

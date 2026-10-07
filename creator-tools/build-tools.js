@@ -435,10 +435,7 @@ const HOME_FAQ = [
 
 function homePage(posts = []) {
   const root = "";
-  const bySlug = (s) => tools.find((t) => t.slug === s);
   const liveCount = tools.filter(isLive).length;
-
-  // Platform badges for the tool grid.
   const PLAT_ICON = {
     YouTube: `<span class="pbadge yt" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24"><path fill="#fff" d="M9.5 8.5v7l6-3.5z"/></svg></span>`,
     Instagram: `<span class="pbadge ig" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><rect x="4" y="4" width="16" height="16" rx="5"/><circle cx="12" cy="12" r="3.5"/><circle cx="17" cy="7" r="1" fill="#fff" stroke="none"/></svg></span>`,
@@ -446,43 +443,45 @@ function homePage(posts = []) {
     Twitch: `<span class="pbadge tw" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24"><path fill="#fff" d="M5 4h14v9l-4 4h-3l-2 2H8v-2H5zm2 2v8h3v2l2-2h3l2-2V6zm6 2h2v4h-2zm-4 0h2v4H9z"/></svg></span>`,
     X: `<span class="pbadge x" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24"><path fill="#fff" d="M5 5h3.5l3.4 4.7L15.8 5H19l-5.6 6.5L19.5 19H16l-3.7-5L8 19H4.8l6-6.9z"/></svg></span>`,
   };
-  const gridCard = (slug) => {
-    const t = bySlug(slug);
-    if (!t) return "";
-    return `<a class="tcard" href="${root}creator-tools/${t.slug}/">
-      <div class="tcard-top">${PLAT_ICON[t.platform] || ""}<span class="tplat">${esc(t.platform)}</span></div>
+  const tick = `<svg class="tick" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12 5 5L20 7"/></svg>`;
+
+  /* ---- 3. tool finder: every tool, filtered client-side by search and intent ---- */
+  const FIRST = ["youtube-monetization-checker", "youtube-keyword-generator", "youtube-tag-generator", "youtube-channel-quality-checker", "youtube-money-calculator", "youtube-title-analyzer",
+    "instagram-engagement-rate-calculator", "tiktok-fake-follower-checker", "twitch-channel-comparison", "youtube-subscriber-count-checker", "instagram-hashtag-generator", "youtube-sponsorship-price-calculator"];
+  const ordered = FIRST.map((s) => tools.find((t) => t.slug === s)).filter(Boolean).concat(tools.filter((t) => !FIRST.includes(t.slug)));
+  const finderCard = (t, i) => `<a class="tcard" href="${root}creator-tools/${t.slug}/" data-intent="${intentOf(t)}" data-platform="${esc(t.platform)}" data-text="${esc((t.name + " " + t.short + " " + t.platform).toLowerCase())}"${i >= 12 ? " hidden data-more" : ""}>
+      <div class="tcard-top">${PLAT_ICON[t.platform] || ""}<span class="tplat">${esc(t.platform)}</span>${isLive(t) ? '<span class="live">LIVE</span>' : ""}</div>
       <h3>${esc(t.name.replace(/^(YouTube|Instagram|TikTok|Twitch|X \(Twitter\)) /, ""))}</h3>
       <p>${esc(t.short)}</p>
     </a>`;
-  };
-  const GRID = [
-    "youtube-tag-generator", "instagram-hashtag-generator", "tiktok-engagement-rate-calculator", "twitch-follower-count-checker",
-    "youtube-channel-quality-checker", "instagram-engagement-rate-calculator", "tiktok-money-calculator", "twitch-channel-comparison",
-    "youtube-thumbnail-downloader", "instagram-fake-follower-checker", "youtube-keyword-generator", "youtube-title-analyzer",
-  ];
+  const intentCounts = {};
+  tools.forEach((t) => { const k = intentOf(t); intentCounts[k] = (intentCounts[k] || 0) + 1; });
+  const CHIP_ORDER = ["rank", "check", "estimate", "create", "fake", "compare", "find"];
+  const chips = `<button type="button" class="fbtn on" data-intent-filter="all">All</button>` +
+    CHIP_ORDER.filter((k) => intentCounts[k]).map((k) => `<button type="button" class="fbtn" data-intent-filter="${k}">${esc(INTENTS[k].label)} <small>${intentCounts[k]}</small></button>`).join("");
 
-  // The four gradient feature cards. Each links to the tool it shows.
-  const FEATURES = [
-    ["Research", "Keyword &amp; niche finder", "youtube-keyword-generator", ICON.search, STEP_ART[0]],
-    ["Optimise", "Title &amp; tag generator", "youtube-title-generator", ICON.create, STEP_ART[1]],
-    ["Check", "Live channel quality &amp; engagement", "youtube-channel-quality-checker", ICON.check, STEP_ART[2]],
-    ["Earn", "YouTube money calculator", "youtube-money-calculator", ICON.money, STEP_ART[3]],
+  /* ---- 4. numbered capabilities ---- */
+  const NUMBERED = [
+    ["01", "Keyword research that is measured", "What the top results actually do for a keyword: views per day, channel sizes, freshness. Never a modelled search volume.", "research/keywords/", ICON.search, "teal"],
+    ["02", "Outlier videos, refreshed daily", "Videos and Shorts doing 3x to 100x what their channel normally does, from the last 90 days. The biggest surprises, not the biggest channels.", "research/outliers/", ICON.compare, "indigo"],
+    ["03", "Channel checks on live data", "Monetization signals, engagement rate, views per subscriber and a quality score, straight from the YouTube and Twitch APIs.", "creator-tools/youtube-channel-quality-checker/", '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l7 3v5c0 5-3.5 8.5-7 10-3.5-1.5-7-5-7-10V6z"/><path d="m9 12 2 2 4-4"/></svg>', "mint"],
+    ["04", "Watch channels over time", "Save channels to a watchlist and see 7-day and 30-day change. Pro adds a Monday email of who moved and CSV export.", "account/", ICON.money, "gold"],
   ];
-  const featCard = ([k, title, slug, icon, art]) => `<a class="feat" href="${root}creator-tools/${slug}/">
-    <div class="feat-head"><div><span class="k">${esc(k)}</span><h3>${title}</h3></div><span class="feat-ic">${icon}</span></div>
-    ${art}
-  </a>`;
+  const numbered = NUMBERED.map(([n, title, text, href, icon, tone]) => `<a class="numcard ${tone}" href="${root}${href}">
+      <div class="numcard-top"><span class="num">${n}</span><span class="numcard-ic">${icon}</span></div>
+      <h3>${esc(title)}</h3><p>${esc(text)}</p>
+    </a>`).join("");
 
-  const tick = `<svg class="tick" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12 5 5L20 7"/></svg>`;
+  /* ---- 5. comparison, on the dark band. Real rows, checked by hand. ---- */
   const CMP = [
     ["Keyword research", "Free", "Limited", "Limited"],
     ["Tag and title generation", "Free, unlimited", "AI credits", "Limited"],
-    ["Title scoring", "Free", "Paid", "Paid"],
+    ["Monetization check", "Free", "No", "No"],
     ["Channel audit and engagement", "Free", "Free", "Free"],
-    ["Money and sponsorship calculators", "Free", "Free", "Free"],
     ["Instagram, TikTok and Twitch", "Included", "Instagram only", "No"],
     ["Works without an account", "Yes", "No", "No"],
     ["Formula shown on the page", "Always", "No", "No"],
+    ["Paid plan", "$9/mo, watchlist and exports only", "From about $17/mo", "Paid plans"],
   ];
   const cmpCell = (v, us) => {
     const good = /^(free|yes|included|always)/i.test(v);
@@ -490,7 +489,6 @@ function homePage(posts = []) {
   };
 
   const faqHtml = HOME_FAQ.map(([q, a]) => `<details><summary>${esc(q)}</summary><p>${esc(a)}</p></details>`).join("");
-
   const jsonld = [
     { "@context": "https://schema.org", "@type": "WebSite", name: BRAND, url: SITE + "/", description: TAGLINE,
       potentialAction: { "@type": "SearchAction", target: SITE + "/creator-tools/youtube-subscriber-count-checker/?channel={search_term_string}", "query-input": "required name=search_term_string" } },
@@ -508,10 +506,10 @@ function homePage(posts = []) {
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>${tools.length} Free YouTube &amp; Creator Tools, No Sign-Up | ${BRAND}</title>
-<meta name="description" content="Free YouTube tools: keyword research, title generator, tag generator, money calculator, engagement rate and channel checks. ${tools.length} tools, no account, no credit card, no trial.">
+<meta name="description" content="Free YouTube tools: keyword research, monetization checker, title and tag generators, money calculator, engagement rate and channel checks. ${tools.length} tools, no account, no credit card, no trial.">
 <link rel="canonical" href="${SITE}/">
 <meta property="og:title" content="${tools.length} free YouTube and creator tools, no sign-up">
-<meta property="og:description" content="Keyword research, titles, tags, earnings and audience checks. Free, with the formula shown on every page.">
+<meta property="og:description" content="Keyword research, monetization checks, titles, tags, earnings and audience checks. Free, with the formula shown on every page.">
 ${HEAD}
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap">
@@ -519,95 +517,93 @@ ${HEAD}
 <script>try{var t=localStorage.getItem("pa-theme");document.documentElement.setAttribute("data-theme",t||"dark");}catch(e){}</script>
 <script type="application/ld+json">${JSON.stringify(jsonld)}</script>
 </head>
-<body data-root="${root}" class="home">${GTM_BODY}
+<body data-root="${root}" class="home lp">${GTM_BODY}
 ${header(root, "home", false)}
-<main class="wrap">
 
-  <section class="hero hero2">
-    <span class="eyebrow"><i></i>${tools.length} tools. No account. No card. Nothing expires.</span>
-    <h1>Free YouTube &amp; creator tools. <br class="desk-br">All of them. <em>Forever.</em></h1>
-    <p>Keyword research, titles, tags, descriptions, earnings and audience checks. The result loads first, the formula is on the page, and nothing is reserved for a paid plan.</p>
-    <div class="hero2-row">
-      <form class="bigsearch glow" data-search role="search">
-        ${ICON.search}
-        <label for="q" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);margin:0">Channel link, handle or name</label>
-        <input id="q" type="text" placeholder="Paste a YouTube or Twitch channel link, or an @handle" autocomplete="off">
-        <button type="submit" class="btn mint">Check ${ICON.arrow}</button>
-      </form>
-      <a class="score-card" href="creator-tools/youtube-title-analyzer/" aria-label="Title analyzer example: 83 out of 100">
-        <span class="sc-label"><i></i>Title score, example</span>
-        <span class="sc-title">5 YouTube SEO Mistakes That Kill Your Views</span>
-        <span class="sc-score">83<small>/100</small></span>
-        <span class="sc-bar"><i style="width:83%"></i></span>
-      </a>
+<!-- 1. Hero -->
+<section class="lp-hero">
+  <div class="wrap">
+    <span class="lp-pill"><i>✦</i>${tools.length} FREE CREATOR TOOLS · NO SIGN-UP</span>
+    <h1>The simplest way to <mark>dominate YouTube</mark> research</h1>
+    <p class="lp-lead">Keywords, monetization, titles, tags, earnings and audience checks. The result loads first, the formula is on the page, and nothing is reserved for a paid plan.</p>
+    <div class="lp-ctas">
+      <a class="btn lp-primary" href="${root}youtube-extension/">Add to browser, free</a>
+      <a class="btn ghost" href="${root}creator-tools/">Browse all tools</a>
     </div>
-    <div class="tryline">
-      <span>Works with</span><span class="chip">YouTube</span><span class="chip">Twitch</span><span class="chip" style="color:var(--muted)">Instagram, TikTok, X by numbers</span>
-      <span style="margin-left:8px">Try:</span>
-      <a href="creator-tools/youtube-subscriber-count-checker/?channel=%40mkbhd">@mkbhd</a>
-      <a href="creator-tools/youtube-subscriber-count-checker/?channel=%40veritasium">@veritasium</a>
-      <a href="creator-tools/twitch-follower-count-checker/?login=shroud">shroud</a>
+    <div class="lp-proof" aria-label="Platforms covered">
+      <span class="lp-stack">${PLAT_ICON.YouTube}${PLAT_ICON.Twitch}${PLAT_ICON.Instagram}${PLAT_ICON.TikTok}${PLAT_ICON.X}<span class="pbadge more">+5</span></span>
+      <span class="lp-proof-text">YouTube and Twitch on live API data. Instagram, TikTok and X from the numbers you type. Plus 5 web tools.</span>
     </div>
+  </div>
+  <div class="wrap lp-statwrap">
+    <div class="lp-stats">
+      <div><b>${tools.length}</b><span>Tools</span></div>
+      <div><b>${liveCount}</b><span>On live API data</span></div>
+      <div><b>100%</b><span>Free to use</span></div>
+      <div><b>0</b><span>Ads, ever</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- 2. Monetization band -->
+<section class="lp-band lp-monet">
+  <div class="wrap lp-two">
+    <div class="lp-band-text">
+      <h2>Monetization intelligence at every click</h2>
+      <ul class="lp-ticks">
+        <li>${tick}Eligibility signals from public data: subscribers, uploads in 90 days, made for kids</li>
+        <li>${tick}Ad placements read from the channel's recent uploads</li>
+        <li>${tick}A verdict with a confidence score, and every signal listed</li>
+        <li>${tick}The full check runs in your own browser with the free Chrome extension</li>
+      </ul>
+      <a class="lp-link" href="${root}creator-tools/youtube-monetization-checker/">How the check works ${ICON.arrow}</a>
+    </div>
+    <form class="lp-widget" action="${root}creator-tools/youtube-monetization-checker/" method="get">
+      <div class="lp-widget-head"><span class="pbadge yt" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24"><path fill="#fff" d="M9.5 8.5v7l6-3.5z"/></svg></span><span>YouTube</span></div>
+      <h3>YouTube Monetization Checker</h3>
+      <p>Is a channel likely in the Partner Program? Paste a link, @handle or name.</p>
+      <label for="lp-monet-channel" class="sr">Channel</label>
+      <input id="lp-monet-channel" name="channel" type="text" placeholder="@handle or channel link" autocomplete="off" required>
+      <button type="submit" class="btn lp-primary wide">Check monetization</button>
+      <small>Free. No account. Try <button type="button" class="lp-try" data-fill="@mkbhd">@mkbhd</button> or <button type="button" class="lp-try" data-fill="@veritasium">@veritasium</button></small>
+    </form>
+  </div>
+</section>
+
+<main class="wrap">
+  <!-- 3. Tool finder -->
+  <section class="section lp-finder" id="tools" data-home-tools>
+    <h2 class="center">Every tool a YouTube creator needs</h2>
+    <p class="center sub">All ${tools.length}, free, no account. Type to search or pick what you want to do.</p>
+    <div class="lp-search">${ICON.search}<label for="lp-q" class="sr">Search tools</label><input id="lp-q" type="search" placeholder="Search tools: tags, money, engagement, fake followers…" autocomplete="off" data-tool-search></div>
+    <div class="lp-chips" data-intent-chips>${chips}</div>
+    <div class="tgrid lp-tgrid" data-tool-grid>${ordered.map(finderCard).join("")}</div>
+    <p class="lp-empty" data-tool-empty hidden>Nothing matches. Try another word, or <a href="${root}creator-tools/">see every tool</a>.</p>
+    <div class="center lp-more"><button type="button" class="btn ghost" data-tool-more>Show all ${tools.length} tools</button></div>
+  </section>
+
+  <!-- 4. Numbered capabilities -->
+  <section class="section lp-numbered" id="how">
+    <div class="lp-numgrid">${numbered}</div>
   </section>
 </main>
 
-<section class="statband"><div class="wrap">
-  <div><b>${tools.length}</b><span>Free tools</span></div>
-  <div><b>0</b><span>Sign-ups required</span></div>
-  <div><b>$0</b><span>Cost, now and later</span></div>
-  <div><b>${liveCount}</b><span>With live API data</span></div>
-</div></section>
-
-<main class="wrap">
-  <section class="section" id="why">
-    <h2 class="center">Passive Array <span class="vs">vs</span> <span class="brand-vidiq">vidIQ</span> <span class="vs">vs</span> <span class="brand-tb">TubeBuddy</span></h2>
+<!-- 5. Comparison band -->
+<section class="lp-band lp-compare" id="why">
+  <div class="wrap">
+    <h2 class="center">Compared with the paid options</h2>
     <p class="center sub">What you can do without paying anyone. Checked ${new Date().toLocaleDateString("en-GB", { month: "long", year: "numeric" })} from their own public pages.</p>
-    <div class="card compare-strip cmp2">
+    <div class="card compare-strip cmp2 lp-cmp">
       <div class="tablewrap"><table class="cmp">
-        <thead><tr><th></th><th class="us">Passive Array<small>Free forever</small></th><th>vidIQ<small>Free tier, then paid</small></th><th>TubeBuddy<small>Free tier, then paid</small></th></tr></thead>
+        <thead><tr><th></th><th class="us">Passive Array<small>Free, Pro optional</small></th><th>vidIQ<small>Free tier, then paid</small></th><th>TubeBuddy<small>Free tier, then paid</small></th></tr></thead>
         <tbody>${CMP.map((r) => `<tr><td>${esc(r[0])}</td>${cmpCell(r[1], true)}${cmpCell(r[2], false)}${cmpCell(r[3], false)}</tr>`).join("")}</tbody>
       </table></div>
-      <p class="note">Both are capable products with real depth on their paid tiers, and both do things we cannot: read your private analytics, publish for you, and test thumbnails on live traffic. <a href="compare/">The full comparison says where they win.</a></p>
+      <p class="note">Both are capable products with real depth on their paid tiers, and both do things we cannot: read your private analytics, publish for you, and test thumbnails on live traffic. <a href="${root}compare/">The full comparison says where they win.</a></p>
     </div>
-  </section>
+  </div>
+</section>
 
-  <section class="section" id="how">
-    <div class="feat-grid">${FEATURES.map(featCard).join("")}</div>
-  </section>
-
-  <section class="section" id="tools">
-    <div class="section-head"><h2>Popular tools</h2><a href="creator-tools/">All ${tools.length} tools</a></div>
-    <div class="tgrid">${GRID.map(gridCard).join("")}</div>
-  </section>
-
-  <section class="section" id="web-tools">
-    <div class="section-head"><h2>Web tools</h2><span class="sub">For websites, domains and content</span></div>
-    <div class="grid c3">${WEB_TOOLS.map(([href, name, text]) => `<a class="card" href="${href}"><h3>${esc(name)}</h3><p>${esc(text)}</p></a>`).join("")}</div>
-  </section>
-
-  <section class="section" id="extension">
-    <div class="card ext-band">
-      <div class="ext-shot" aria-hidden="true">
-        <div class="ext-browser">
-          <div class="ext-bar"><i></i><i></i><i></i><span>youtube.com/watch</span></div>
-          <div class="ext-body">
-            <div class="ext-video"><div class="ext-play"></div><div class="ext-line w80"></div><div class="ext-line w50"></div></div>
-            <div class="ext-panel">
-              <div class="ext-ph"><span class="ext-mark">${MARK("h" + Math.random().toString(36).slice(2, 6))}</span><b>Passive Array</b></div>
-              <div class="ext-hero"><span>Engagement rate</span><b>4.82%</b></div>
-              <div class="ext-tiles"><div><b>128K</b><span>Views</span></div><div><b>5.9K</b><span>Likes</span></div><div><b>1.4K</b><span>Views/day</span></div><div><b>16</b><span>Tags</span></div></div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="ext-text">
-        <span class="k">CHROME EXTENSION</span>
-        <h2>Supercharge your browser</h2>
-        <p>Engagement rate, hidden tags, views per day and a keyword score, right on YouTube's video, channel and search pages. Free, with no account.</p>
-        <a class="btn mint" href="youtube-extension/">Add to Chrome, free ${ICON.arrow}</a>
-      </div>
-    </div>
-  </section>
+<main class="wrap">
 ${posts.length ? `
   <section class="section">
     <div class="section-head"><h2>From the blog</h2><a href="blog/">All articles</a></div>
