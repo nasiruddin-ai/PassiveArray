@@ -249,6 +249,7 @@ async function getVideos(rawIds) {
       live: v.snippet?.liveBroadcastContent === "live",
       wasLive: !!v.liveStreamingDetails,
       tags: (v.snippet?.tags || []).length,
+      tagList: (v.snippet?.tags || []).slice(0, 60), // the Studio tag suggester in the extension ranks these
       subscribers: 0,
       hiddenSubscribers: false,
     }));

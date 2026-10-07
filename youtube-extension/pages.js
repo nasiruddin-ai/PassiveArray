@@ -10,7 +10,7 @@ const NAME = "Passive Array for YouTube";
 // Paste the Chrome Web Store link here once the listing is live. Until then the
 // landing page shows the "load unpacked" steps instead of an install button.
 const STORE_URL = "";
-const EFFECTIVE = "22 September 2026";
+const EFFECTIVE = "October 7, 2026";
 
 const STYLE = `<style>
   .ext-hero { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr); gap: 32px; align-items: center; padding: 40px 0 28px; }
@@ -71,6 +71,7 @@ function landingPage() {
       <div class="card"><h3>Video panel</h3><p>Engagement rate with a grade, views per day, likes and comments as a share of views, and the video's hidden tags with one-click copy. Reads the page itself, no key needed.</p></div>
       <div class="card"><h3>Channel panel</h3><p>Engagement across the last 10 uploads, views per subscriber, uploads per month, Shorts share, channel keywords, and which recent videos beat the channel's average.</p></div>
       <div class="card"><h3>Search scores</h3><p>Under every result: views per day, engagement grade, channel size and a views-to-subs ratio. Small channels that are ranking get flagged, the sign of an open topic.</p></div>
+      <div class="card"><h3>Suggested tags in Studio</h3><p>Under the Tags box when you upload or edit a video: tags ranked by how many of the top 20 videos ranking for your title actually use them, then YouTube autocomplete. Click to add, or add the top 10. Hover any tag to see why it is there.</p></div>
       <div class="card"><h3>Keyword tool</h3><p>Type a topic and get an overall score, interest, competition, "people also search" ideas and the top 20 results with the numbers that matter. Cached so it stays fast.</p></div>
       <div class="card"><h3>Title, description and tag writer</h3><p>Ten title angles with character counts, a description with timestamps and links placeholders, and a tag list under 500 characters. Never invents facts.</p></div>
       <div class="card"><h3>Honest by design</h3><p>Scores are estimates from the top results, and the extension says so. No "search volume" made up from thin air, no upsell, no login wall.</p></div>
@@ -103,7 +104,7 @@ function landingPage() {
   </section>
 
   <div class="cta-band">
-    <div><h3>Want saved reports and alerts when they launch?</h3><p>Sign up free and you get them first, plus the weekly creator report.</p></div>
+    <div><h3>Want to follow channels over time?</h3><p>A free account watches 3 channels. Pro watches 100 with a Monday email of who moved, from $9 a month.</p></div>
     <button type="button" class="btn mint" data-signup>Sign up free ${ICON.arrow}</button>
   </div>`;
   return site.shell({ title: NAME, ogTitle: NAME, description: "Free Chrome extension: engagement rate, hidden tags, views per day, channel insights, search scores and a keyword tool, right on YouTube. No account.", path: "/youtube-extension/", active: "extension", head: STYLE, body });
@@ -128,20 +129,21 @@ function privacyPage() {
     </ul>
 
     <h2>What the extension reads</h2>
-    <p>The extension only runs on pages under <code>www.youtube.com</code>. On those pages it reads:</p>
+    <p>The extension only runs on pages under <code>www.youtube.com</code> and <code>studio.youtube.com</code>. On those pages it reads:</p>
     <ul>
       <li><b>Video pages:</b> the video ID in the address bar and the public data YouTube already sent to the page (title, view count, likes, comments, tags, description, publish date, channel name and subscriber count).</li>
       <li><b>Channel pages:</b> the channel handle or ID in the address bar.</li>
       <li><b>Search pages:</b> the search words in the address bar and the video IDs of the results shown.</li>
+      <li><b>YouTube Studio, upload and edit forms:</b> the title and the tags you have typed into the form, so it can suggest tags. It does not read your analytics, revenue, comments or anything else in Studio, and it never changes the form except for the tags you click to add.</li>
       <li><b>The popup:</b> the keyword or topic and notes you type in.</li>
     </ul>
 
     <h2>What is sent, and where</h2>
     <table>
       <tr><th>Sent to</th><th>What</th><th>Why</th></tr>
-      <tr><td>This site's server (hosted on Vercel)</td><td>Channel links, lists of video IDs, keywords, and the topic, notes and related keywords you type into the AI writer</td><td>To look up public statistics through the YouTube Data API and, if the AI writer is switched on server-side, to write titles, descriptions and tags</td></tr>
-      <tr><td>www.youtube.com</td><td>A request for the video or search page you are already looking at</td><td>To read the public data embedded in that page. Sent with your normal YouTube cookies, the same as your browser does</td></tr>
-      <tr><td>suggestqueries.google.com</td><td>The keyword you typed</td><td>To show YouTube's own "people also search" suggestions</td></tr>
+      <tr><td>This site's server (hosted on Vercel)</td><td>Channel links, lists of video IDs (including the IDs of videos ranking for a Studio video title), keywords, and the topic, notes and related keywords you type into the AI writer</td><td>To look up public statistics through the YouTube Data API and, if the AI writer is switched on server-side, to write titles, descriptions and tags</td></tr>
+      <tr><td>www.youtube.com</td><td>A request for the video or search page you are already looking at, or for the search results page for the video title you typed in Studio</td><td>To read the public data embedded in that page. Sent with your normal YouTube cookies, the same as your browser does</td></tr>
+      <tr><td>suggestqueries.google.com</td><td>The keyword you typed, or in Studio your video title and up to three of your tags</td><td>To show YouTube's own "people also search" suggestions</td></tr>
     </table>
     <p>Nothing else is sent anywhere. No page you visit outside YouTube is read, and no personal details, account information, passwords or payment data are ever collected.</p>
 
@@ -159,6 +161,7 @@ function privacyPage() {
     <table>
       <tr><th>Permission</th><th>Used for</th></tr>
       <tr><td>Read data on www.youtube.com</td><td>Showing the panels on video, channel and search pages</td></tr>
+      <tr><td>Read data on studio.youtube.com</td><td>Showing the Suggested tags panel under the Tags box when you upload or edit a video</td></tr>
       <tr><td>Connect to this site</td><td>Looking up statistics through our server</td></tr>
       <tr><td>Connect to suggestqueries.google.com</td><td>Keyword suggestions</td></tr>
       <tr><td>Storage</td><td>Caching answers and remembering your settings on your device</td></tr>

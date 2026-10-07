@@ -10,7 +10,7 @@ first use. Review usually takes 1 to 3 days.
    https://passivearray.vercel.app/youtube-extension/privacy/
 2. In this folder run `node make-assets.js` (128 px icon and promo tiles).
 3. Take 3 to 5 screenshots in Chrome at exactly 1280 x 800 (see below).
-4. Run `node pack.js`. Upload `store/passive-array-youtube-v1.1.0.zip`.
+4. Run `node pack.js`. Upload `store/passive-array-youtube-v1.2.0.zip`.
 
 ## Store listing tab
 
@@ -18,7 +18,7 @@ first use. Review usually takes 1 to 3 days.
 Passive Array for YouTube
 
 **Summary** (132 max)
-Engagement rate, monetization check, hidden tags, views per day, channel insights, search scores and a keyword tool, right on YouTube. Free.
+Engagement rate, monetization check, hidden tags, tag suggestions in Studio, views per day, channel insights and search scores, right on YouTube. Free.
 
 **Description**
 
@@ -40,6 +40,10 @@ ON CHANNEL PAGES
 • Views per subscriber, uploads per month, Shorts share
 • Last 30 days: uploads and views
 • Channel keywords and the recent uploads that beat the channel's average
+
+IN YOUTUBE STUDIO (upload and edit)
+• Suggested tags under the Tags box, ranked by how many top-ranking videos for your title use each one, plus YouTube autocomplete
+• One click adds a tag; Add top 10; a counter for the 500-character limit
 
 ON SEARCH RESULTS
 • Under every result: views per day, engagement grade, channel size, views-to-subs ratio and tag count
@@ -131,5 +135,5 @@ https://passivearray.vercel.app/youtube-extension/privacy/
 
 ## Versioning
 
-- `manifest.json` → `version` must go up on every upload (1.0.0 → 1.0.1 → 1.1.0).
+- `manifest.json` → `version` must go up on every upload (1.0.0 → 1.0.1 → 1.2.0).
 - Keep the popup footer's "v1.0" label roughly in sync (popup.html).

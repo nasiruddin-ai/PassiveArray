@@ -1,6 +1,6 @@
 # Passive Array for YouTube (Chrome extension)
 
-A vidIQ / TubeBuddy style extension, version 1.1.0, ready for the Chrome Web
+A vidIQ / TubeBuddy style extension, version 1.2.0, ready for the Chrome Web
 Store. Video panel, channel panel, search-result scores, a keyword tool and an
 AI writer in the popup. No login. The YouTube and Anthropic keys stay on the
 Passive Array tools site, never inside the extension.
@@ -33,6 +33,14 @@ Privacy policy: https://passivearray.vercel.app/youtube-extension/privacy/
 - Engagement rate over the last 10 uploads, subscribers, total views, videos,
   views per subscriber, last 30 days, Shorts share, created date, country,
   topics, channel keywords, and the 10 recent uploads with a "x avg" marker.
+
+**YouTube Studio, upload and edit forms** (one results-page read plus one API call, cached 12 hours)
+- A "Suggested tags" panel under the Tags box. Suggestions are ranked by how
+  many of the top 20 videos ranking on YouTube for your title use that tag,
+  then by YouTube autocomplete for your title and existing tags, then by
+  phrases from the title. Hover a tag to see why it is there. Click to add,
+  or "Add top 10". The counter tracks the 500-character limit. Nothing is
+  invented and no search volume is shown.
 
 **Search results** (one API call per 50 results, cached 1 hour)
 - Under every result: views per day, engagement rate grade, channel subs,
@@ -109,7 +117,7 @@ Works the same in Edge and Brave (`edge://extensions`, `brave://extensions`).
 2. `node make-assets.js` then `node pack.js` in this folder.
 3. Take the screenshots listed in `STORE-LISTING.md`.
 4. Go to https://chrome.google.com/webstore/devconsole, pay the one-time $5
-   fee, click New item, upload `store/passive-array-youtube-v1.1.0.zip`, and
+   fee, click New item, upload `store/passive-array-youtube-v1.2.0.zip`, and
    paste the text from `STORE-LISTING.md` into each tab.
 5. Submit for review. 1 to 3 days. Then paste the store link into
    `STORE_URL` in the passive-array repo's `youtube-extension/pages.js`.

@@ -11,7 +11,7 @@ const zlib = require("zlib");
 
 const HERE = __dirname;
 const manifest = JSON.parse(fs.readFileSync(path.join(HERE, "manifest.json"), "utf8"));
-const FILES = ["manifest.json", "background.js", "content.js", "content.css", "popup.html", "popup.js",
+const FILES = ["manifest.json", "background.js", "content.js", "content.css", "studio.js", "studio.css", "popup.html", "popup.js",
   "icons/icon-16.png", "icons/icon-48.png", "icons/icon-128.png", "icons/icon-192.png", "icons/mark.svg"];
 
 for (const f of FILES) if (!fs.existsSync(path.join(HERE, f))) fail("Missing " + f + (f.endsWith("icon-128.png") ? " (run: node make-assets.js)" : ""));

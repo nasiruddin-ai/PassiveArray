@@ -9,6 +9,7 @@
  *   { type: "api",     action, params }   GET  tools-site YouTube API (channel, videos)
  *   { type: "suggest", q }                YouTube autocomplete, no key, no quota
  *   { type: "keyword", q }                keyword report: results page + stats + score
+ *   { type: "tags",    q }                tags the top-ranking videos for q use, ranked by how many share each (Studio)
  *   { type: "ai",      action, inputs }   POST tools-site AI writer (yt_titles, yt_description, yt_tags)
  */
 var API = "https://passivearray.vercel.app/creator-tools/api/youtube";
@@ -19,6 +20,7 @@ var TTL = {
   videos: 60 * 60 * 1000,
   suggest: 24 * 60 * 60 * 1000,
   keyword: 12 * 60 * 60 * 1000,
+  tags: 12 * 60 * 60 * 1000,
   "default": 30 * 60 * 1000
 };
 
@@ -28,6 +30,7 @@ chrome.runtime.onMessage.addListener(function (msg, sender, sendResponse) {
   if (msg.type === "api") job = apiCall(msg.action, msg.params || {});
   else if (msg.type === "suggest") job = suggest(msg.q);
   else if (msg.type === "keyword") job = keyword(msg.q);
+  else if (msg.type === "tags") job = tagIdeas(msg.q);
   else if (msg.type === "ai") job = aiCall(msg.action, msg.inputs || {});
   else return false;
   job.then(sendResponse, function (e) {
@@ -55,7 +58,7 @@ async function prune() {
   var all = await chrome.storage.local.get(null);
   var now = Date.now(), dead = [];
   Object.keys(all).forEach(function (k) {
-    if ((k.indexOf("api:") === 0 || k.indexOf("kw:") === 0 || k.indexOf("sg:") === 0) && (!all[k] || !all[k].until || all[k].until < now)) dead.push(k);
+    if ((k.indexOf("api:") === 0 || k.indexOf("kw:") === 0 || k.indexOf("sg:") === 0 || k.indexOf("tg:") === 0) && (!all[k] || !all[k].until || all[k].until < now)) dead.push(k);
   });
   if (dead.length) await chrome.storage.local.remove(dead);
 }
@@ -226,5 +229,51 @@ function keyword(q) {
       videos: videos,
       fetchedAt: now
     };
+  });
+}
+
+/* ------------------------------------------------------ tag ideas (Studio) */
+
+/* Top result ids for a query from YouTube's own results page: no quota. */
+async function topResultIds(q, max) {
+  var res = await fetch("https://www.youtube.com/results?search_query=" + encodeURIComponent(q) + "&hl=en", { credentials: "include" });
+  var html = await res.text();
+  var data = extractObject(html, "ytInitialData =");
+  if (!data) return null;
+  var seen = {}, ids = [];
+  collect(data, "videoRenderer").forEach(function (r) {
+    if (r.videoId && !seen[r.videoId]) { seen[r.videoId] = true; ids.push(r.videoId); }
+  });
+  return ids.slice(0, max || 20);
+}
+
+/* Tags the top-ranking videos use, counted across those videos. The videos call is
+   shared with the keyword report cache, so a Studio check and a popup check for the
+   same phrase cost the quota once. */
+function tagIdeas(q) {
+  q = String(q || "").trim();
+  if (!q) return Promise.resolve({ ok: false, code: "input", error: "Type a title first." });
+  return remember("tg:" + q.toLowerCase(), TTL.tags, async function () {
+    var ids = await topResultIds(q, 20);
+    if (ids === null) return { ok: false, code: "parse", error: "Could not read YouTube's results page. Open youtube.com once, then try again." };
+    if (!ids.length) return { ok: false, code: "empty", error: "No videos rank for this title yet." };
+    var stats = await apiCall("videos", { ids: ids.join(",") });
+    if (!stats.ok) return stats;
+    var count = {}, withTags = 0;
+    (stats.videos || []).forEach(function (v) {
+      var list = Array.isArray(v.tagList) ? v.tagList : [];
+      if (!list.length) return;
+      withTags++;
+      var seen = {};
+      list.forEach(function (t) {
+        t = String(t).toLowerCase().trim();
+        if (!t || seen[t]) return;
+        seen[t] = true;
+        count[t] = (count[t] || 0) + 1;
+      });
+    });
+    if (!withTags) return { ok: false, code: "no_tags", error: "Tag lists are not available from the tools site yet." };
+    var tags = Object.keys(count).sort(function (a, b) { return count[b] - count[a] || a.length - b.length; }).slice(0, 60).map(function (t) { return { tag: t, count: count[t] }; });
+    return { ok: true, q: q, count: (stats.videos || []).length, withTags: withTags, tags: tags, fetchedAt: Date.now() };
   });
 }

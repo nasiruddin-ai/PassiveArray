@@ -52,7 +52,7 @@ function aboutPage() {
       </div>
       <div class="card" style="margin-top:16px">
         <h3>On YouTube itself</h3>
-        <p class="muted" style="margin:6px 0 14px;font-size:.9rem">The Chrome extension puts engagement rate, hidden tags and a keyword score on every video, channel and search page.</p>
+        <p class="muted" style="margin:6px 0 14px;font-size:.9rem">The Chrome extension puts engagement rate, hidden tags and a keyword score on every video, channel and search page, and suggests tags inside YouTube Studio.</p>
         <a class="btn" href="../youtube-extension/">See the extension</a>
       </div>
     </div>
@@ -443,7 +443,7 @@ function comparePage(opts) {
       </div>
       <div class="card" style="margin-top:16px">
         <h3 style="margin-bottom:10px">On YouTube itself</h3>
-        <p class="muted" style="font-size:.92rem;margin-bottom:14px">Both of them are best known for their browser extension. Ours is free and shows engagement rate, hidden tags and a keyword score on every video and search page.</p>
+        <p class="muted" style="font-size:.92rem;margin-bottom:14px">Both of them are best known for their browser extension. Ours is free and shows engagement rate, hidden tags and a keyword score on every video and search page, and suggests tags in Studio.</p>
         <a class="btn" href="../../youtube-extension/">See the extension</a>
       </div>
     </div>
@@ -513,7 +513,7 @@ function vidiqPage() {
     tryTools: ["youtube-keyword-generator", "youtube-title-generator", "youtube-title-analyzer", "youtube-tag-generator", "youtube-money-calculator"],
     faq: [
       ["Is Passive Array really a free vidIQ alternative?", "For the research, title, tag, description and earnings jobs, yes, with no account and no credit allowance. It does not replace vidIQ's access to your own private channel analytics or its publishing features, because those require connecting your YouTube account."],
-      ["Does Passive Array have a browser extension like vidIQ?", "Yes, and it is free. It shows engagement rate, hidden tags, views per day and a keyword score on YouTube's video, channel and search pages."],
+      ["Does Passive Array have a browser extension like vidIQ?", "Yes, and it is free. It shows engagement rate, hidden tags, views per day and a keyword score on YouTube's video, channel and search pages, and suggests tags inside YouTube Studio."],
       ["Do I need to sign up to use Passive Array?", "No. Every tool works without an account. An account is optional and only stores your email address and whether you want the weekly report."],
       ["Why does Passive Array not show search volume like vidIQ does?", "Because no tool outside Google has YouTube's search volume data. Any figure you see is modelled, usually from web search data. We show measured signals from the actual top results instead."],
     ],
@@ -564,7 +564,7 @@ function tubebuddyPage() {
       ["Is there a free TubeBuddy alternative?", "For keyword research, tags, titles, descriptions, channel checks and earnings estimates, Passive Array does those without an account or a paid tier. It does not replace thumbnail A/B testing or bulk editing, which require write access to your YouTube account."],
       ["Does Passive Array need access to my YouTube account?", "No. It reads only public data through the official YouTube API, so there is no permission to grant and nothing to revoke."],
       ["Can Passive Array A/B test thumbnails?", "No. Testing thumbnails against live traffic requires permission to change your video, which we do not ask for. TubeBuddy is the right tool for that."],
-      ["Is Passive Array's extension like TubeBuddy's?", "It covers the research side: engagement rate, hidden tags, views per day and keyword scoring on video, channel and search pages. It does not edit your channel."],
+      ["Is Passive Array's extension like TubeBuddy's?", "It covers the research side: engagement rate, hidden tags, views per day and keyword scoring on video, channel and search pages, plus tag suggestions in Studio. It never changes anything on your channel by itself."],
     ],
   });
 }
@@ -625,7 +625,7 @@ function pricingPage() {
         <li><b>All ${n} tools</b>, with no feature locked</li>
         <li><b>${live} tools with live data</b> from the official YouTube and Twitch APIs</li>
         <li><b>Unlimited generations.</b> No credit allowance to run down</li>
-        <li><b>The Chrome extension</b>, including the monetization check</li>
+        <li><b>The Chrome extension</b>, including the monetization check and Studio tag suggestions</li>
         <li><b>Research feeds:</b> keywords, outlier videos and Shorts</li>
         <li><b>No account required.</b> No email, no card, no Google sign-in</li>
         <li><b>Watch 3 channels</b> with a free account, no alerts</li>
@@ -712,7 +712,7 @@ const FAQ_SECTIONS = [
   ["Using the tools", [
     ["A tool says the quota is used up. What now?", "The live YouTube and Twitch tools run on a free daily allowance that resets at midnight Pacific time. Everything that does not need live data keeps working."],
     ["Can I link to a result?", "Yes. Most tools accept the input in the address, for example adding ?channel=@handle, and every result page has a copy-link button."],
-    ["Is there a browser extension?", "Yes, and it is free. It puts engagement rate, hidden tags, views per day and a keyword score on YouTube's video, channel and search pages."],
+    ["Is there a browser extension?", "Yes, and it is free. It puts engagement rate, hidden tags, views per day and a keyword score on YouTube's video, channel and search pages, and suggests tags inside YouTube Studio."],
     ["Do the AI generators make things up?", "They are instructed not to, and they only work from what you type. If an input is empty they write a [placeholder] in square brackets rather than inventing a fact, a number or a testimonial."],
   ]],
   ["Compared with other tools", [
