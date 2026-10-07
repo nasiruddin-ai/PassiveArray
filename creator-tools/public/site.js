@@ -243,8 +243,8 @@
   function paintHeader() {
     var email = markedEmail();
     document.querySelectorAll("[data-login-link]").forEach(function (a) {
-      a.textContent = email ? "Account" : "Log in";
-      a.setAttribute("href", ROOT + (email ? "account/" : "login/"));
+      a.textContent = email ? "Dashboard" : "Log in";
+      a.setAttribute("href", ROOT + (email ? "app/" : "login/"));
     });
     document.querySelectorAll("[data-signup-link], button[data-signup]").forEach(function (b) {
       b.style.display = email ? "none" : "";
@@ -323,7 +323,7 @@
       marker(res.email);
       var next = new URLSearchParams(location.search).get("next");
       var safe = next && next.charAt(0) === "/" && next.charAt(1) !== "/" ? next : null;
-      location.replace(safe || (ROOT + "account/"));
+      location.replace(safe || (ROOT + "app/"));
     }
 
     form.addEventListener("submit", function (e) {

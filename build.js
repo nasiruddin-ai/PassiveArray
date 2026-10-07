@@ -105,6 +105,12 @@ const researchPaths = research.buildInto(DIST);
 console.log("pages/research-pages.js -> dist/ (" + researchPaths.join(", ") + ")");
 console.log("pages/site-pages.js -> dist/ (" + pagePaths.all.join(", ") + ")");
 
+// The signed-in dashboard (pages/app-page.js), noindex.
+const appPage = require("./pages/app-page.js");
+appPage.buildInto(DIST, posts);
+pagePaths.noindex.push("/app/");
+console.log("pages/app-page.js -> dist/app/");
+
 // sitemap.xml and robots.txt for search engines.
 const urls = [
   ["/", "1.0", "weekly"],

@@ -627,7 +627,7 @@ ${footer(root)}
 function buildInto(outDir) {
   const template = fs.readFileSync(path.join(HERE, "template.html"), "utf8");
   fs.mkdirSync(outDir, { recursive: true });
-  for (const asset of ["shared.css", "shared.js", "site.js", "research.js"]) fs.copyFileSync(path.join(HERE, "public", asset), path.join(outDir, asset));
+  for (const asset of ["shared.css", "shared.js", "site.js", "research.js", "app.js"]) fs.copyFileSync(path.join(HERE, "public", asset), path.join(outDir, asset));
   fs.writeFileSync(path.join(outDir, "index.html"), directoryPage());
   const seen = new Set();
   for (const t of tools) {
@@ -686,7 +686,7 @@ ${scripts}
 </html>`;
 }
 
-module.exports = { ANALYTICS_HEAD, GTM_BODY, GTM_ID, GA4_ID, ANALYTICS, buildInto, homePage, tools, SITE, BRAND, TAGLINE, WEB_TOOLS, header, footer, shell, postCard, fmtDate, esc, ICON, VERIFY_TAG };
+module.exports = { ANALYTICS_HEAD, GTM_BODY, GTM_ID, GA4_ID, ANALYTICS, buildInto, homePage, tools, SITE, BRAND, TAGLINE, WEB_TOOLS, header, footer, shell, postCard, fmtDate, esc, ICON, VERIFY_TAG, intentOf, INTENTS };
 
 if (require.main === module) {
   const out = path.join(HERE, ".out");
