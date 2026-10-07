@@ -138,7 +138,8 @@ const CSS = `
 .idea:last-child { border-bottom: 0; }
 .idea img { width: 96px; aspect-ratio: 16/9; object-fit: cover; border-radius: 8px; flex: none; }
 .idea .t { flex: 1; min-width: 0; }
-.idea .t b { display: block; font-size: .92rem; line-height: 1.3; }
+.idea .t > b { display: block; font-size: .92rem; line-height: 1.3; }
+.idea .t span b { display: inline; font-size: inherit; color: var(--text); }
 .idea .t span { display: block; font-size: .8rem; color: var(--muted); margin-top: 3px; }
 .idea .acts { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 8px; }
 .idea .acts a { font-size: .8rem; font-weight: 600; padding: 4px 10px; border-radius: 999px; background: var(--soft); color: var(--deep); }
