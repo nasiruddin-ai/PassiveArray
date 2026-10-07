@@ -48,6 +48,10 @@
     {
       "path": "/api/research-cron",
       "schedule": "15 5 * * *"
+    },
+    {
+      "path": "/api/watch-cron",
+      "schedule": "45 5 * * *"
     }
   ],
   "functions": {
@@ -56,6 +60,9 @@
     },
     "api/creator-youtube.js": {
       "maxDuration": 30
+    },
+    "api/watch-cron.js": {
+      "maxDuration": 60
     }
   }
 }

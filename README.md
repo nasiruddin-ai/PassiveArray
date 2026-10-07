@@ -18,6 +18,7 @@ Free tools for creators and brands. One repository, one Netlify site.
 | `YOUTUBE_API_KEY` | The 9 live YouTube tools | Google Cloud, YouTube Data API v3, free. Steps in `creator-tools/README.md` |
 | `TWITCH_CLIENT_ID`, `TWITCH_CLIENT_SECRET` | The 2 live Twitch tools | dev.twitch.tv/console, free |
 | `GOOGLE_API_KEY`, `GOOGLE_CX` | Plagiarism checker web search | Google Programmable Search, see `plagiarism-checker/README.md` |
+| `STRIPE_SECRET_KEY`, `STRIPE_PRICE_ID`, `STRIPE_WEBHOOK_SECRET` | The Pro plan | Stripe, see the Pro plan section below |
 | `ANTHROPIC_API_KEY` | Optional. AI-written hashtags, bios, ideas, growth plan | console.anthropic.com, paid. Without it the generators use built-in templates |
 
 5. Trigger a deploy after adding variables. Every later push to `main` redeploys automatically.
@@ -316,6 +317,89 @@ Sign-in attempts are rate limited per address and per connection.
 
 Any method that is not configured is hidden from the sign-in page rather than
 shown and then failing. `/api/auth?action=health` reports the current state.
+
+## Pro plan: watchlist, Monday email, exports
+
+Every tool stays free. Pro ($9/month or $79/year) pays for the things that
+cost money to run: watching channels over time, the weekly email, and CSV
+export. The pricing page says exactly that, so do not move a free feature
+behind Pro later.
+
+| Feature | Free account | Pro |
+|---|---|---|
+| Watch channels (daily snapshot, 7-day and 30-day change on `/account/`) | 3 | 100 |
+| Monday email with every watched channel sorted by movement | No | Yes |
+| CSV export (watchlist, outlier and Shorts feeds) | No | Yes |
+
+### Files
+
+| File | Job |
+|---|---|
+| `lib/pro.js` | Plan rules: prices, limits, `isPro(user)` |
+| `lib/watch.js` | Add, remove, list with change; daily snapshots; the digest email HTML |
+| `lib/session.js` | Reads the `pa_session` cookie so other functions know who is calling |
+| `api/watch.js` | `/api/watch?action=list|add|remove` (signed-in only) |
+| `api/watch-cron.js` | Daily at 05:45 UTC: snapshots every watched channel; Mondays sends the digest via the Apps Script (`kind: "digest"`) |
+| `api/billing.js` | Stripe Checkout and customer portal, plain REST, no SDK |
+| `api/stripe-webhook.js` | Verifies Stripe's signature and sets `pro` on the user record |
+
+Data lives in the same Upstash store as the research section: the user record
+`u:<email>` gains `watch: [...]` and `pro: {...}`; `watch:all` is the set of
+every watched channel id; `chan:<id>` and `snap:<id>:<date>` are shared with
+the outlier job. One `channels.list` call covers 50 channels, so 100 Pro users
+each watching 100 channels costs about 200 quota units a day.
+
+### Turning Pro on (about 20 minutes)
+
+Until these are set, the account page shows "Pro is not open for purchase yet"
+and nothing else changes. Watchlists already work for free accounts as soon as
+`AUTH_SECRET` and the Upstash store are configured.
+
+1. Create a Stripe account at stripe.com and stay in **Test mode** first.
+2. **Product catalog, Add product**: name "Passive Array Pro", recurring,
+   $9 monthly. Copy the price id (`price_...`). Optionally add a second price,
+   $79 yearly, and copy that id too.
+3. **Developers, API keys**: copy the **Secret key** (`sk_test_...`).
+4. **Developers, Webhooks, Add endpoint**: URL
+   `https://passivearray.vercel.app/api/stripe-webhook`, events
+   `checkout.session.completed`, `customer.subscription.updated`,
+   `customer.subscription.deleted`, `invoice.payment_failed`. Copy the
+   **Signing secret** (`whsec_...`).
+5. **Settings, Billing, Customer portal**: turn it on and allow cancelling and
+   switching between the two prices.
+6. In Vercel, **Settings, Environment variables**, add and apply to Production:
+
+| Variable | Value |
+|---|---|
+| `STRIPE_SECRET_KEY` | `sk_test_...` (later `sk_live_...`) |
+| `STRIPE_PRICE_ID` | the monthly `price_...` |
+| `STRIPE_PRICE_ID_YEARLY` | the yearly `price_...` (optional) |
+| `STRIPE_WEBHOOK_SECRET` | `whsec_...` |
+
+7. **Redeploy**. Check `https://passivearray.vercel.app/api/billing?action=status`
+   answers `"configured": true`.
+8. Sign in on the site, open `/account/`, press **$9 a month**, and pay with
+   Stripe's test card `4242 4242 4242 4242`, any future date, any CVC. You
+   land back on the account page as Pro within a few seconds.
+9. Switch Stripe to **Live mode**, repeat steps 2 to 4 there (keys and webhook
+   secrets differ between modes), update the four variables, redeploy.
+
+Stripe takes 2.9% + 30 cents per payment; there is no monthly fee. Payouts
+reach your bank in about two days once the account is verified.
+
+### The Monday email
+
+`api/watch-cron.js` posts `kind: "digest"` with the finished HTML to
+`SUBSCRIBE_WEBHOOK_URL`, and the Apps Script in `setup/google-sheet-receiver.gs`
+emails it to the member. Redeploy the Apps Script after pulling this version
+of the file, or digests are logged but not sent. Free Gmail allows about 100
+emails a day; move to a sending service before you have more Pro members than
+that. A member who unticks **Send me the weekly email** on the account page
+gets no digest.
+
+To test without waiting for Monday: `GET /api/watch-cron?key=<CRON_SECRET>&digest=1`.
+The job keeps a 6-hour lock in `watch:lock`, so delete that key in Upstash if
+you want to run it twice in a row.
 
 ## Analytics
 

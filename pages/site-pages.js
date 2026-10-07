@@ -36,7 +36,7 @@ function aboutPage() {
         <li><strong>Clear about limits.</strong> Instagram, TikTok and X have no free public API, so those tools work from numbers you type in, and say so.</li>
       </ul>
       <h2>How it stays free</h2>
-      <p>The site runs on free hosting tiers and free API allowances, and it is deliberately light. There are no ads and nothing is sold. If paid features arrive later, such as saved reports or alerts, the tools on this site stay free.</p>
+      <p>The site runs on free hosting tiers and free API allowances, and it is deliberately light. There are no ads. The only thing sold is Pro, which pays for watching channels over time and the Monday email; every tool on this site stays free.</p>
       <h2>Who it is for</h2>
       <p>Creators checking their own growth, brands vetting a creator before a deal, agencies building a shortlist, and anyone curious what a channel is really doing. If that is you, <a href="../contact/">tell us what is missing</a>.</p>
     </div>
@@ -291,8 +291,33 @@ const signupPage = () => authPage("signup");
 
 function accountPage() {
   const body = `
-  ${head("Account", "Your account", "Your email preferences and your data. Nothing else is stored.")}
+  ${head("Account", "Your account", "Your watchlist, your plan, your email preferences and your data.")}
   <div data-account hidden>
+    <div class="card wl" data-watch style="margin-bottom:24px">
+      <div class="wl-head">
+        <div>
+          <h3 style="margin-bottom:4px">Watchlist</h3>
+          <p class="muted" style="font-size:.92rem">Channels you follow, snapshotted daily from the YouTube Data API. <span data-watch-limit></span></p>
+        </div>
+        <form class="wl-add" data-watch-form novalidate>
+          <input type="text" name="channel" placeholder="@handle, channel link or name" autocomplete="off" aria-label="Channel to watch">
+          <button type="submit" class="btn">Watch</button>
+        </form>
+      </div>
+      <span class="fmsg" data-watch-msg></span>
+      <div class="tablewrap" data-watch-table hidden><table class="wltable">
+        <thead><tr><th>Channel</th><th class="num">Subscribers</th><th class="num">7 days</th><th class="num">30 days</th><th class="num">Views, 7 days</th><th class="num">Uploads, 7 days</th><th></th></tr></thead>
+        <tbody data-watch-rows></tbody>
+      </table></div>
+      <div class="wl-empty" data-watch-empty hidden>
+        <p>Nothing watched yet. Add a channel above, or press <b>Watch this channel</b> on any YouTube tool result. Growth columns fill in after the first daily snapshot.</p>
+      </div>
+      <div class="wl-foot" data-watch-foot hidden>
+        <button type="button" class="btn ghost" data-watch-export>Export CSV</button>
+        <span class="muted" style="font-size:.85rem" data-watch-note></span>
+      </div>
+    </div>
+
     <div class="two-col">
       <div class="card">
         <h3 style="margin-bottom:14px">Signed in</h3>
@@ -300,6 +325,7 @@ function accountPage() {
           <div class="arow"><span>Email</span><b data-account-email>–</b></div>
           <div class="arow"><span>Member since</span><b data-account-since>–</b></div>
           <div class="arow"><span>Sign-in methods</span><b data-account-methods>–</b></div>
+          <div class="arow"><span>Plan</span><b data-account-plan>–</b></div>
         </div>
         <div style="display:flex;gap:8px;margin-top:18px;flex-wrap:wrap">
           <button type="button" class="btn ghost" data-logout>Sign out</button>
@@ -321,12 +347,28 @@ function accountPage() {
         </div>
       </div>
       <div class="card">
-        <h3 style="margin-bottom:6px">Weekly creator report</h3>
-        <p class="muted" style="font-size:.92rem;margin-bottom:14px">Benchmarks, rate changes and new tools. One email a week.</p>
-        <label class="pref"><input type="checkbox" data-pref-weekly><span>Send me the weekly report</span></label>
+        <div data-plan-free>
+          <h3 style="margin-bottom:6px">Passive Array Pro</h3>
+          <p class="muted" style="font-size:.92rem;margin-bottom:14px">Watch up to 100 channels, get the Monday email with every mover on your list, and export anything to CSV. Every tool stays free either way.</p>
+          <div class="plan-prices">
+            <button type="button" class="btn" data-upgrade="monthly">$9 a month</button>
+            <button type="button" class="btn ghost" data-upgrade="yearly">$79 a year</button>
+          </div>
+          <span class="fmsg" data-plan-msg></span>
+        </div>
+        <div data-plan-pro hidden>
+          <h3 style="margin-bottom:6px">You are on Pro</h3>
+          <p class="muted" style="font-size:.92rem;margin-bottom:14px">Thank you. It pays the hosting and keeps the ads off. Change card, switch plan or cancel any time.</p>
+          <button type="button" class="btn ghost" data-portal>Manage billing</button>
+          <span class="fmsg" data-plan-msg-pro></span>
+        </div>
+
+        <h3 style="margin:24px 0 6px">Weekly email</h3>
+        <p class="muted" style="font-size:.92rem;margin-bottom:14px">Your watchlist movers every Monday (Pro), plus benchmark changes and new tools.</p>
+        <label class="pref"><input type="checkbox" data-pref-weekly><span>Send me the weekly email</span></label>
         <span class="fmsg" data-pref-msg></span>
         <h3 style="margin:24px 0 6px">Your data</h3>
-        <p class="muted" style="font-size:.92rem;margin-bottom:14px">We hold your email address and your preference above. Nothing you type into a tool is stored. See the <a href="../privacy/">privacy policy</a>.</p>
+        <p class="muted" style="font-size:.92rem;margin-bottom:14px">We hold your email address, your watchlist and the preference above. Nothing you type into a tool is stored. See the <a href="../privacy/">privacy policy</a>.</p>
         <button type="button" class="btn ghost danger" data-delete>Delete my data</button>
         <span class="fmsg" data-delete-msg></span>
       </div>
@@ -334,13 +376,13 @@ function accountPage() {
   </div>
   <div class="card" data-account-out hidden>
     <h3 style="margin-bottom:8px">You are not signed in</h3>
-    <p class="muted" style="margin-bottom:16px">Sign in by email to manage your preferences. The tools do not need it.</p>
+    <p class="muted" style="margin-bottom:16px">Sign in by email to keep a watchlist and manage your preferences. The tools do not need it.</p>
     <a class="btn" href="../login/">Go to sign in</a>
   </div>
   <div class="card" data-account-loading>
     <p class="muted">Checking your session…</p>
   </div>`;
-  return site.shell({ title: "Account", ogTitle: "Your Passive Array account", description: "Manage your email preferences and your data.", path: "/account/", active: "", head: '<meta name="robots" content="noindex">', body });
+  return site.shell({ title: "Account", ogTitle: "Your Passive Array account", description: "Your watchlist, plan, email preferences and data.", path: "/account/", active: "", head: '<meta name="robots" content="noindex">', body });
 }
 
 /* ------------------------------------------------------------ comparisons
@@ -573,40 +615,51 @@ function pricingPage() {
   const n = site.tools.length;
   const live = site.tools.filter((t) => t.api === "youtube" || t.api === "twitch").length;
   const body = `
-  ${head("Pricing", "Pricing", "There is one plan. It is free, and it is the whole thing.")}
-  <div class="grid c2" style="align-items:start">
-    <div class="card" style="border-color:var(--teal);border-width:2px">
-      <span class="k" style="font-size:.76rem;font-weight:700;letter-spacing:.06em;color:var(--deep)">EVERYTHING</span>
-      <div style="font-size:3rem;font-weight:600;letter-spacing:-.03em;line-height:1.1;margin:8px 0 4px">$0</div>
-      <p class="muted" style="margin-bottom:18px">Not a trial. Not a freemium tier. The price.</p>
+  ${head("Pricing", "Pricing", "Every tool is free. Pro pays for the parts that cost real money to run: watching channels over time, the Monday email, and exports.")}
+  <div class="grid c2 plans" style="align-items:stretch">
+    <div class="card plan">
+      <span class="k" style="font-size:.76rem;font-weight:700;letter-spacing:.06em;color:var(--deep)">FREE</span>
+      <div class="price">$0</div>
+      <p class="muted" style="margin-bottom:18px">Not a trial. Not a crippled tier. All ${n} tools, forever.</p>
       <ul class="plain">
         <li><b>All ${n} tools</b>, with no feature locked</li>
         <li><b>${live} tools with live data</b> from the official YouTube and Twitch APIs</li>
         <li><b>Unlimited generations.</b> No credit allowance to run down</li>
-        <li><b>The Chrome extension</b>, free as well</li>
+        <li><b>The Chrome extension</b>, including the monetization check</li>
+        <li><b>Research feeds:</b> keywords, outlier videos and Shorts</li>
         <li><b>No account required.</b> No email, no card, no Google sign-in</li>
+        <li><b>Watch 3 channels</b> with a free account, no alerts</li>
         <li><b>No ads</b> between you and the answer</li>
       </ul>
-      <a class="btn wide" href="../creator-tools/" style="margin-top:20px">Start using them</a>
+      <a class="btn ghost wide" href="../creator-tools/" style="margin-top:auto">Start using them</a>
     </div>
-    <div class="card prose">
-      <h2 style="margin-top:0">How it can be free</h2>
-      <p>Because it is cheap to run. The site is static pages served from a free hosting tier. The live lookups use the free allowances YouTube and Twitch give every developer. There is no database of scraped profiles to maintain and no sales team.</p>
-      <p>The expensive parts of a product like vidIQ are the parts we deliberately do not build: storing your history, watching your channel continuously, and holding write access to your account. Those need real infrastructure, and that is what a subscription pays for.</p>
-
-      <h2>What we would charge for, if ever</h2>
-      <p>If paid features arrive, they will be things that cost real money to run: saved reports, alerts when a channel you track moves, and exports. Everything on this site today stays free when that happens. We would rather say that now and be held to it.</p>
-
-      <h2>What we do not do</h2>
-      <ul>
-        <li>No ads, and no affiliate links dressed up as recommendations.</li>
-        <li>No selling or sharing of anything you type in. Most tools never send it anywhere.</li>
-        <li>No email wall in front of a result.</li>
+    <div class="card plan pro" style="border-color:var(--teal);border-width:2px">
+      <span class="k" style="font-size:.76rem;font-weight:700;letter-spacing:.06em;color:var(--deep)">PRO</span>
+      <div class="price">$9<small>/month</small></div>
+      <p class="muted" style="margin-bottom:18px">or $79 a year. Cancel in two clicks from your account page.</p>
+      <ul class="plain">
+        <li><b>Everything in Free</b>, because Free is everything</li>
+        <li><b>Watch up to 100 channels.</b> Daily snapshots, 7-day and 30-day change on your account page</li>
+        <li><b>The Monday email:</b> every channel on your list, sorted by who moved most</li>
+        <li><b>CSV export</b> of your watchlist and the outlier and Shorts feeds</li>
+        <li><b>You keep the site ad-free</b> for everyone else</li>
       </ul>
-
-      <h2>If you want to help</h2>
-      <p>Tell someone. Or <a href="../contact/">report a number that looks wrong</a>, which is genuinely more useful than money at this stage.</p>
+      <a class="btn wide" href="../account/" style="margin-top:auto" data-pro-cta>Go Pro from your account</a>
+      <p class="note" style="margin:10px 0 0" data-pro-note>Card payments by Stripe. We never see your card number.</p>
     </div>
+  </div>
+
+  <div class="card prose" style="margin-top:28px">
+    <h2 style="margin-top:0">Why the tools are free and Pro is not</h2>
+    <p>A one-off lookup is cheap: static pages on a free hosting tier, plus the free allowances YouTube and Twitch give every developer. Watching a channel is not. It means storing a snapshot of every watched channel every day, keeping those for a month, computing the change and emailing you. That needs a database and a mail service that cost money as the list grows, so that is the line we charge at.</p>
+    <h2>What we do not do</h2>
+    <ul>
+      <li>No ads, and no affiliate links dressed up as recommendations.</li>
+      <li>No selling or sharing of anything you type in. Most tools never send it anywhere.</li>
+      <li>No email wall in front of a result, and no feature that was free yesterday moved behind Pro.</li>
+    </ul>
+    <h2>If Pro is not for you</h2>
+    <p>Tell someone about the tools. Or <a href="../contact/">report a number that looks wrong</a>, which is genuinely useful.</p>
   </div>
 
   <div class="card compare-strip" style="margin-top:28px">
@@ -615,7 +668,8 @@ function pricingPage() {
       <thead><tr><th></th><th class="us">Passive Array</th><th>vidIQ</th><th>TubeBuddy</th></tr></thead>
       <tbody>
         <tr><td>Entry price</td><td class="us">Free</td><td>Free tier, then about $17/mo</td><td>Free tier, then paid plans</td></tr>
-        <tr><td>Free tier limits</td><td class="us">None</td><td>Monthly AI credit allowance</td><td>Feature limits</td></tr>
+        <tr><td>Free tier limits</td><td class="us">None on the tools</td><td>Monthly AI credit allowance</td><td>Feature limits</td></tr>
+        <tr><td>Paid plan</td><td class="us">$9/mo or $79/yr, for channel watching and exports only</td><td>From about $17/mo</td><td>Paid plans</td></tr>
         <tr><td>Account required to start</td><td class="us">No</td><td>Yes</td><td>Yes</td></tr>
       </tbody>
     </table></div>
@@ -623,15 +677,19 @@ function pricingPage() {
   </div>`;
   return site.shell({
     title: "Pricing",
-    ogTitle: "Passive Array pricing: free, with no tier above it",
-    description: `All ${n} Passive Array tools are free with no account, no credit limit and no paid tier. Here is how that works and what we would ever charge for.`,
+    ogTitle: "Passive Array pricing: every tool free, Pro for channel watching",
+    description: `All ${n} Passive Array tools are free with no account and no credit limit. Pro, $9 a month, adds a 100-channel watchlist with daily snapshots, the Monday email and CSV export.`,
     path: "/pricing/",
     active: "pricing",
     body,
     jsonld: {
       "@context": "https://schema.org", "@type": "Product", name: "Passive Array",
-      description: `${n} free tools for creators and brands.`,
-      offers: { "@type": "Offer", price: "0", priceCurrency: "USD", availability: "https://schema.org/InStock", url: SITE + "/pricing/" },
+      description: `${n} free tools for creators and brands, with an optional Pro plan for watching channels.`,
+      offers: [
+        { "@type": "Offer", name: "Free", price: "0", priceCurrency: "USD", availability: "https://schema.org/InStock", url: SITE + "/pricing/" },
+        { "@type": "Offer", name: "Pro monthly", price: "9", priceCurrency: "USD", availability: "https://schema.org/InStock", url: SITE + "/pricing/" },
+        { "@type": "Offer", name: "Pro yearly", price: "79", priceCurrency: "USD", availability: "https://schema.org/InStock", url: SITE + "/pricing/" },
+      ],
     },
   });
 }
@@ -640,8 +698,8 @@ function pricingPage() {
 const FAQ_SECTIONS = [
   ["About the tools", [
     ["Is Passive Array really free?", "Yes, and there is no trial to expire. Every tool works without an account, without a card and without a credit limit. The site runs on free hosting and free API allowances, which is why it can stay that way."],
-    ["Do I need an account?", "No. Nothing is behind a sign-in. An account is optional and holds your email address and whether you want the weekly report, nothing else."],
-    ["Will the tools I use today start costing money?", "No. If paid features ever arrive they will be new things that cost real money to run, such as saved reports and alerts. What is on the site today stays free."],
+    ["Do I need an account?", "No. Every tool works without one. A free account adds a watchlist of up to 3 channels and the weekly email preference, and holds nothing else."],
+    ["Will the tools I use today start costing money?", "No. Pro, at $9 a month, only covers the things that cost real money to run: watching up to 100 channels with daily snapshots, the Monday email and CSV export. Every tool and research feed stays free."],
     ["Is there a catch, like ads or selling my data?", "There are no ads and nothing you type is sold or shared. Most tools never send your input anywhere at all; the ones that do say so on the page." + (ANALYTICS_ON ? " We do count which tools get used, with Google Analytics, and only after you accept it in the banner. You can turn it back off from the Cookie choices link in the footer." : "")],
   ]],
   ["Where the numbers come from", [

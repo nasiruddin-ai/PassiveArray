@@ -119,7 +119,8 @@
       if (out.hero) {
         h += "<div><div class=\"k\">" + esc(String(out.hero.label).toUpperCase()) + "</div><div class=\"v\">" + out.hero.value + "</div>" + (out.hero.note ? "<div class=\"n\">" + out.hero.note + "</div>" : "") + "</div>";
       }
-      h += "<div class=\"hactions\"><button type=\"button\" class=\"btn\" id=\"copylink\">Copy link to this result</button></div></div>";
+      h += "<div class=\"hactions\"><button type=\"button\" class=\"btn\" id=\"copylink\">Copy link to this result</button>" +
+        (out.profile && out.profile.watch ? "<button type=\"button\" class=\"btn watch\" id=\"watchbtn\" data-channel=\"" + esc(out.profile.watch) + "\">Watch this channel</button>" : "") + "</div></div>";
     }
     if (out.bars) {
       h += "<div class=\"card bars\">" + out.bars.map(function (b) {
@@ -164,6 +165,25 @@
     if (cb) cb.addEventListener("click", function () {
       navigator.clipboard.writeText(out.copy).then(function () { cb.textContent = "Copied"; setTimeout(function () { cb.textContent = "Copy"; }, 1500); });
     });
+    var wb = document.getElementById("watchbtn");
+    if (wb) wb.addEventListener("click", function () {
+      var signedIn = false;
+      try { signedIn = !!localStorage.getItem("pa-user"); } catch (e) { /* private mode */ }
+      if (!signedIn) { location.href = "../../login/?next=" + encodeURIComponent("/account/?watch=" + wb.getAttribute("data-channel")); return; }
+      wb.disabled = true;
+      wb.textContent = "Saving…";
+      fetch("/api/watch?action=add", { method: "POST", credentials: "same-origin", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ channel: wb.getAttribute("data-channel") }) })
+        .then(function (r) { return r.json(); })
+        .catch(function () { return { ok: false, error: "Could not reach the server." }; })
+        .then(function (res) {
+          if (res && res.ok) { wb.textContent = res.already ? "Already on your watchlist" : "Watching. Open your account"; wb.disabled = false; wb.onclick = function () { location.href = "../../account/"; }; return; }
+          if (res && res.code === "signin") { location.href = "../../login/?next=" + encodeURIComponent("/account/?watch=" + wb.getAttribute("data-channel")); return; }
+          wb.disabled = false;
+          wb.textContent = res && res.code === "limit" ? "Watchlist full. See Pro" : "Could not save";
+          if (res && res.code === "limit") wb.onclick = function () { location.href = "../../pricing/"; };
+          else setTimeout(function () { wb.textContent = "Watch this channel"; }, 2500);
+        });
+    });
     var cl = document.getElementById("copylink");
     if (cl) cl.addEventListener("click", function () {
       var u = new URL(location.origin + location.pathname);
@@ -194,7 +214,7 @@
 
   /* ----------------------------------------------------------- YouTube */
   function ytProfile(ch) {
-    return { img: ch.thumbnail, title: ch.title, url: ch.url, meta: [ch.handle, ch.country, ch.publishedAt ? "since " + new Date(ch.publishedAt).getFullYear() : ""].filter(Boolean).join(" · ") };
+    return { img: ch.thumbnail, title: ch.title, url: ch.url, watch: ch.handle || ch.url || ch.id, meta: [ch.handle, ch.country, ch.publishedAt ? "since " + new Date(ch.publishedAt).getFullYear() : ""].filter(Boolean).join(" · ") };
   }
   function ytER(ch) {
     var r = ch.recent;

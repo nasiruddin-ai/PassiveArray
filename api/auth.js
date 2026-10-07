@@ -187,6 +187,9 @@ module.exports = async (req, res) => {
       hasPassword: !!(profile && profile.pw),
       weekly: profile ? profile.weekly !== false : true,
       verified: profile ? !!profile.verified : false,
+      pro: require("../lib/pro.js").isPro(profile),
+      plan: require("../lib/pro.js").planName(profile),
+      watch: profile && Array.isArray(profile.watch) ? profile.watch.length : 0,
     });
   }
 

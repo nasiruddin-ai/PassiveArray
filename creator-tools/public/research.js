@@ -227,8 +227,38 @@
         }
         count.textContent = d.total + (kind === "shorts" ? " Shorts" : " videos") + " matched. Showing " + d.items.length + ", sorted by " + sortSel.options[sortSel.selectedIndex].text.toLowerCase() + ".";
         grid.innerHTML = d.items.map(card).join("");
+        lastItems = d.items;
       });
   }
+
+  /* CSV export: Pro. The data is public either way; export is one of the things Pro pays for. */
+  var lastItems = [];
+  var exportBtn = document.createElement("button");
+  exportBtn.type = "button";
+  exportBtn.className = "fbtn export";
+  exportBtn.innerHTML = "Export CSV <span class=\"pro-tag\">PRO</span>";
+  filters.appendChild(exportBtn);
+  fetch("/api/auth?action=me", { credentials: "same-origin", cache: "no-store" }).then(function (r) { return r.json(); }).catch(function () { return null; }).then(function (me) {
+    var pro = !!(me && me.ok && me.pro);
+    if (pro) exportBtn.textContent = "Export CSV";
+    exportBtn.addEventListener("click", function () {
+      if (!pro) { location.href = "../../pricing/"; return; }
+      if (!lastItems.length) return;
+      var head = ["Title", "URL", "Channel", "Channel subscribers", "Views", "Channel median views", "Multiplier", "Published days ago", "Seconds", "Topic"];
+      var lines = [head.join(",")].concat(lastItems.map(function (i) {
+        return [i.title, i.url, i.channelTitle, i.hiddenSubscribers ? "" : i.subscribers, i.views, i.median, i.multiplier, i.ageDays, i.seconds || "", i.topic || ""].map(function (v) {
+          v = v == null ? "" : String(v);
+          return /[",\n]/.test(v) ? "\"" + v.replace(/"/g, "\"\"") + "\"" : v;
+        }).join(",");
+      }));
+      var blob = new Blob([lines.join("\n")], { type: "text/csv;charset=utf-8" });
+      var a = document.createElement("a");
+      a.href = URL.createObjectURL(blob);
+      a.download = "passive-array-" + kind + "-" + new Date().toISOString().slice(0, 10) + ".csv";
+      document.body.appendChild(a); a.click(); a.remove();
+      setTimeout(function () { URL.revokeObjectURL(a.href); }, 2000);
+    });
+  });
 
   [topicSel, minSel, daysSel, sortSel].forEach(function (s) { s.addEventListener("change", load); });
   viewBtn.addEventListener("click", function () {

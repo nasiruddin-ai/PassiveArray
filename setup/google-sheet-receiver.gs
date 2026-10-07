@@ -35,6 +35,12 @@ function doPost(e) {
     logRow(body);
 
     var owner = Session.getEffectiveUser().getEmail();
+    if (body.kind === "digest" && body.email && body.html) {
+      // Weekly watchlist email for Pro members, sent to the member, not to you.
+      MailApp.sendEmail({ to: body.email, subject: body.subject || "Your Passive Array watchlist this week", htmlBody: body.html, body: body.message || "" , name: "Passive Array" });
+      logRow({ receivedAt: body.receivedAt, kind: "digest", email: body.email, source: body.source });
+      return json({ ok: true });
+    }
     if (owner && body.kind === "contact") {
       MailApp.sendEmail(owner, "Passive Array contact: " + (body.email || "no email"),
         "From: " + (body.name || "(no name)") + " <" + (body.email || "") + ">\n" +

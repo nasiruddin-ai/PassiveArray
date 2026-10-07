@@ -218,6 +218,11 @@
     });
   }
   paintHeader();
+  var proCta = document.querySelector("[data-pro-cta]");
+  if (proCta && !markedEmail()) {
+    proCta.textContent = "Sign in to go Pro";
+    proCta.setAttribute("href", ROOT + "login/?next=%2Faccount%2F");
+  }
 
   /* Show / hide a password field. */
   document.querySelectorAll("[data-pw-show]").forEach(function (b) {
@@ -548,6 +553,23 @@
 
       if (prefBox) prefBox.checked = res.weekly !== false;
 
+      var planEl = account.querySelector("[data-account-plan]");
+      if (planEl) planEl.textContent = res.pro ? "Pro" : "Free";
+      var planFree = account.querySelector("[data-plan-free]");
+      var planPro = account.querySelector("[data-plan-pro]");
+      if (planFree) planFree.hidden = !!res.pro;
+      if (planPro) planPro.hidden = !res.pro;
+      isPro = !!res.pro;
+      if (location.search.indexOf("upgraded=1") >= 0 && !res.pro) {
+        // Stripe sends people back before the webhook has always landed; try again shortly.
+        setTimeout(function () {
+          authCall("me").then(function (r2) {
+            if (r2 && r2.ok && r2.pro) location.replace(location.pathname);
+          });
+        }, 4000);
+      }
+      loadWatch();
+
       if (setpwWrap) {
         setpwWrap.hidden = false;
         if (setpwTitle) setpwTitle.textContent = res.hasPassword ? "Change your password" : "Add a password";
@@ -589,6 +611,171 @@
             prefMsg.className = "fmsg bad";
           }
         });
+      });
+    }
+
+    /* ---- plan: upgrade / portal ---- */
+    var isPro = false;
+    function billingCall(action, body) {
+      return fetch("/api/billing?action=" + action, { method: "POST", credentials: "same-origin", cache: "no-store", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body || {}) })
+        .then(function (r) { return r.json(); })
+        .catch(function () { return { ok: false, error: "Could not reach the server." }; });
+    }
+    account.querySelectorAll("[data-upgrade]").forEach(function (b) {
+      b.addEventListener("click", function () {
+        var msg = account.querySelector("[data-plan-msg]");
+        b.disabled = true;
+        msg.textContent = "Opening checkout…";
+        msg.className = "fmsg";
+        billingCall("checkout", { plan: b.getAttribute("data-upgrade") }).then(function (res) {
+          if (res && res.ok && res.url) { location.href = res.url; return; }
+          b.disabled = false;
+          msg.textContent = (res && res.error) || "Could not open checkout.";
+          msg.className = "fmsg " + (res && res.code === "not_open" ? "" : "bad");
+        });
+      });
+    });
+    var portalBtn = account.querySelector("[data-portal]");
+    if (portalBtn) {
+      portalBtn.addEventListener("click", function () {
+        var msg = account.querySelector("[data-plan-msg-pro]");
+        portalBtn.disabled = true;
+        msg.textContent = "Opening billing…";
+        billingCall("portal").then(function (res) {
+          if (res && res.ok && res.url) { location.href = res.url; return; }
+          portalBtn.disabled = false;
+          msg.textContent = (res && res.error) || "Could not open billing.";
+          msg.className = "fmsg bad";
+        });
+      });
+    }
+
+    /* ---- watchlist ---- */
+    var watchWrap = account.querySelector("[data-watch]");
+    var watchData = null;
+    function watchCall(action, body) {
+      var opts = { method: body ? "POST" : "GET", credentials: "same-origin", cache: "no-store" };
+      if (body) { opts.headers = { "Content-Type": "application/json" }; opts.body = JSON.stringify(body); }
+      return fetch("/api/watch?action=" + action, opts)
+        .then(function (r) { return r.json(); })
+        .catch(function () { return { ok: false, error: "Could not reach the server." }; });
+    }
+    function compact(n) {
+      if (n == null || !isFinite(n)) return "–";
+      var a = Math.abs(n);
+      if (a >= 1e9) return (n / 1e9).toFixed(2).replace(/\.?0+$/, "") + "B";
+      if (a >= 1e6) return (n / 1e6).toFixed(2).replace(/\.?0+$/, "") + "M";
+      if (a >= 1e4) return (n / 1e3).toFixed(1).replace(/\.0$/, "") + "K";
+      return Number(n).toLocaleString("en-US");
+    }
+    function esc(t) { return String(t == null ? "" : t).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;"); }
+    function delta(d, key, base) {
+      if (!d || d[key] == null) return "<span class=\"flat\" title=\"Needs more daily snapshots\">–</span>";
+      var v = d[key];
+      var pct = base && base - v ? " <small>(" + (v >= 0 ? "+" : "") + ((v / (base - v)) * 100).toFixed(1) + "%)</small>" : "";
+      return "<span class=\"" + (v > 0 ? "up" : v < 0 ? "down" : "flat") + "\">" + (v > 0 ? "+" : "") + compact(v) + pct + "</span>";
+    }
+    function paintWatch(d) {
+      if (!watchWrap || !d) return;
+      watchData = d;
+      var rows = account.querySelector("[data-watch-rows]");
+      var table = account.querySelector("[data-watch-table]");
+      var empty = account.querySelector("[data-watch-empty]");
+      var foot = account.querySelector("[data-watch-foot]");
+      var lim = account.querySelector("[data-watch-limit]");
+      var note = account.querySelector("[data-watch-note]");
+      var exportBtn = account.querySelector("[data-watch-export]");
+      if (lim) lim.textContent = d.channels.length + " of " + d.limit + " on the " + d.plan + " plan." + (d.pro ? "" : " Pro watches 100 and emails you every Monday.");
+      var has = d.channels.length > 0;
+      if (table) table.hidden = !has;
+      if (empty) empty.hidden = has;
+      if (foot) foot.hidden = !has;
+      if (rows) rows.innerHTML = d.channels.map(function (c) {
+        return "<tr data-id=\"" + esc(c.id) + "\"><td><div class=\"ch\">" + (c.thumbnail ? "<img src=\"" + esc(c.thumbnail) + "\" alt=\"\">" : "") + "<div><a href=\"" + esc(c.url) + "\" target=\"_blank\" rel=\"noopener\">" + esc(c.title) + "</a><small>" + esc(c.handle || "") + (c.seenAt ? " · updated " + esc(c.seenAt) : "") + "</small></div></div></td>" +
+          "<td class=\"num\">" + compact(c.subscribers) + "</td>" +
+          "<td class=\"num\">" + delta(c.d7, "subs", c.subscribers) + "</td>" +
+          "<td class=\"num\">" + delta(c.d30, "subs", c.subscribers) + "</td>" +
+          "<td class=\"num\">" + delta(c.d7, "views") + "</td>" +
+          "<td class=\"num\">" + delta(c.d7, "videos") + "</td>" +
+          "<td class=\"num\"><button type=\"button\" class=\"x\" data-unwatch=\"" + esc(c.id) + "\" aria-label=\"Stop watching " + esc(c.title) + "\" title=\"Stop watching\">×</button></td></tr>";
+      }).join("");
+      if (note) note.textContent = d.pro ? "Snapshots run daily at 05:45 UTC. Your Monday email lists every channel here." : "Free accounts see the table; CSV export and the Monday email are Pro.";
+      if (exportBtn) exportBtn.innerHTML = d.pro ? "Export CSV" : "Export CSV <span class=\"pro-tag\">PRO</span>";
+      account.querySelectorAll("[data-unwatch]").forEach(function (b) {
+        b.addEventListener("click", function () {
+          b.disabled = true;
+          watchCall("remove", { id: b.getAttribute("data-unwatch") }).then(function (res) {
+            if (res && res.ok) paintWatch(res); else b.disabled = false;
+          });
+        });
+      });
+    }
+    function loadWatch() {
+      if (!watchWrap) return;
+      var pending = new URLSearchParams(location.search).get("watch");
+      if (pending) {
+        history.replaceState(null, "", location.pathname);
+        var msg0 = account.querySelector("[data-watch-msg]");
+        if (msg0) { msg0.textContent = "Adding " + pending + " to your watchlist…"; msg0.className = "fmsg"; }
+        watchCall("add", { channel: pending }).then(function (res) {
+          if (res && res.ok) { paintWatch(res); if (msg0) { msg0.textContent = "Watching " + res.channel.title + "."; msg0.className = "fmsg good"; } }
+          else { loadWatch(); if (msg0) { msg0.textContent = (res && res.error) || "Could not add that."; msg0.className = "fmsg bad"; } }
+        });
+        return;
+      }
+      watchCall("list").then(function (res) {
+        var msg = account.querySelector("[data-watch-msg]");
+        if (res && res.ok) { paintWatch(res); return; }
+        if (res && res.code === "no_store") { watchWrap.hidden = true; return; }
+        if (msg) { msg.textContent = (res && res.error) || "Could not load your watchlist."; msg.className = "fmsg bad"; }
+      });
+    }
+    var watchForm = account.querySelector("[data-watch-form]");
+    if (watchForm) {
+      watchForm.addEventListener("submit", function (e) {
+        e.preventDefault();
+        var input = watchForm.elements.channel;
+        var value = (input.value || "").trim();
+        var msg = account.querySelector("[data-watch-msg]");
+        if (!value) { input.focus(); return; }
+        var btn = watchForm.querySelector("button");
+        btn.disabled = true;
+        msg.textContent = "Looking up the channel…";
+        msg.className = "fmsg";
+        watchCall("add", { channel: value }).then(function (res) {
+          btn.disabled = false;
+          if (res && res.ok) {
+            input.value = "";
+            msg.textContent = res.already ? "Already on your list." : "Watching " + res.channel.title + ".";
+            msg.className = "fmsg good";
+            paintWatch(res);
+          } else {
+            msg.innerHTML = esc((res && res.error) || "Could not add that.") + (res && res.code === "limit" && !isPro ? " <a href=\"#\" data-scroll-pro>See Pro</a>" : "");
+            msg.className = "fmsg bad";
+            var sp = msg.querySelector("[data-scroll-pro]");
+            if (sp) sp.addEventListener("click", function (ev) { ev.preventDefault(); var pf = account.querySelector("[data-plan-free]"); if (pf) pf.scrollIntoView({ behavior: "smooth", block: "center" }); });
+          }
+        });
+      });
+    }
+    var exportBtn2 = account.querySelector("[data-watch-export]");
+    if (exportBtn2) {
+      exportBtn2.addEventListener("click", function () {
+        if (!watchData) return;
+        if (!watchData.pro) { var pf = account.querySelector("[data-plan-free]"); if (pf) pf.scrollIntoView({ behavior: "smooth", block: "center" }); return; }
+        var head = ["Channel", "Handle", "URL", "Subscribers", "Subs 7d", "Subs 30d", "Views", "Views 7d", "Views 30d", "Videos", "Uploads 7d", "Updated"];
+        var lines = [head.join(",")].concat(watchData.channels.map(function (c) {
+          return [c.title, c.handle, c.url, c.subscribers, c.d7 ? c.d7.subs : "", c.d30 ? c.d30.subs : "", c.views, c.d7 ? c.d7.views : "", c.d30 ? c.d30.views : "", c.videos, c.d7 ? c.d7.videos : "", c.seenAt].map(function (v) {
+            v = v == null ? "" : String(v);
+            return /[",\n]/.test(v) ? "\"" + v.replace(/"/g, "\"\"") + "\"" : v;
+          }).join(",");
+        }));
+        var blob = new Blob([lines.join("\n")], { type: "text/csv;charset=utf-8" });
+        var a = document.createElement("a");
+        a.href = URL.createObjectURL(blob);
+        a.download = "passive-array-watchlist-" + new Date().toISOString().slice(0, 10) + ".csv";
+        document.body.appendChild(a); a.click(); a.remove();
+        setTimeout(function () { URL.revokeObjectURL(a.href); }, 2000);
       });
     }
 
