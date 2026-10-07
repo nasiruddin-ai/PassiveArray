@@ -47,6 +47,10 @@
     {
       "source": "/api/stripe-webhook",
       "destination": "/api/pro?fn=stripe-webhook"
+    },
+    {
+      "source": "/api/channel",
+      "destination": "/api/pro?fn=channel"
     }
   ],
   "headers": [

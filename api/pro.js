@@ -5,6 +5,7 @@
 //   /api/watch-cron     -> /api/pro?fn=watch-cron       lib/api-watch-cron.js   (daily cron)
 //   /api/billing        -> /api/pro?fn=billing          lib/api-billing.js
 //   /api/stripe-webhook -> /api/pro?fn=stripe-webhook   lib/api-stripe-webhook.js
+//   /api/channel        -> /api/pro?fn=channel          lib/api-channel.js      (your own channel)
 //
 // Body parsing is off so Stripe's signature can be checked over the exact bytes
 // it sent; the raw body is read once here and parsed as JSON for the others.
@@ -16,6 +17,7 @@ const HANDLERS = {
   "watch-cron": () => require("../lib/api-watch-cron.js"),
   "billing": () => require("../lib/api-billing.js"),
   "stripe-webhook": () => require("../lib/api-stripe-webhook.js"),
+  "channel": () => require("../lib/api-channel.js"),
 };
 
 function readRaw(req) {

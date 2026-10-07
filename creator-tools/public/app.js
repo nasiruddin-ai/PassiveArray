@@ -8,7 +8,7 @@
   var ROOT = document.body.getAttribute("data-root") || "../";
   var TOOLS = window.PA_TOOLS || [];
   var POSTS = window.PA_POSTS || [];
-  var me = null, watch = null, outliers = null, shorts = null, recentKw = null, monet = null;
+  var me = null, watch = null, outliers = null, shorts = null, recentKw = null, monet = null, mine = null;
 
   /* ------------------------------------------------------------ utils */
   function esc(s) { return String(s == null ? "" : s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;"); }
@@ -65,12 +65,15 @@
   var P = {};
   function body(id) { return document.querySelector("[data-panel-body=\"" + id + "\"]"); }
 
+  function onboardingCard() {
+    return "<div class=\"acard onboard\" style=\"grid-column:span 12\"><div class=\"onboard-in\"><div><span class=\"k\">STEP 1 OF 1</span><h2>Add your YouTube channel</h2><p class=\"sub\">One time. The dashboard then shows your channel insights, your progress to monetization and how each upload does against your own average. Public data only, nothing to connect or authorise.</p>" +
+      "<form class=\"aform\" data-set-channel style=\"margin-top:14px\"><input type=\"text\" name=\"channel\" placeholder=\"@yourhandle, channel link or name\" autocomplete=\"off\" required><button class=\"btn\" type=\"submit\">Add my channel</button></form><span class=\"fmsg\" data-set-channel-msg></span>" +
+      "<p class=\"sub\" style=\"margin-top:10px\">Not a creator yet? Try it with <button type=\"button\" class=\"lp-try\" data-fill-channel=\"@mkbhd\">@mkbhd</button> and change it later.</p></div>" +
+      "<div class=\"onboard-art\" aria-hidden=\"true\"><div class=\"kpis\"><div class=\"kpi\"><b>Subs</b><span>7-day change</span></div><div class=\"kpi\"><b>Views</b><span>last 30 days</span></div><div class=\"kpi\"><b>x avg</b><span>per upload</span></div><div class=\"kpi\"><b>Verdict</b><span>monetization</span></div></div></div></div></div>";
+  }
   function channelCard(full) {
     if (!me || !me.ok) return card("Your channel", "Sign in to track progress to monetization.", "<a class=\"btn\" href=\"" + ROOT + "login/?next=%2Fapp%2F\">Sign in free</a>", { span: full ? 12 : 6 });
-    if (!me.channel) {
-      return card("Your channel", "Add your channel once. The dashboard then tracks your progress to the Partner Program.",
-        "<form class=\"aform\" data-set-channel><input type=\"text\" name=\"channel\" placeholder=\"@yourhandle or channel link\" autocomplete=\"off\" required><button class=\"btn\" type=\"submit\">Track my channel</button></form><span class=\"fmsg\" data-set-channel-msg></span>", { span: full ? 12 : 6 });
-    }
+    if (!me.channel) return onboardingCard();
     if (!monet) return card("Your channel", esc(me.channel), "<p class=\"empty\">Checking the public signals…</p>", { span: full ? 12 : 6 });
     if (!monet.ok) return card("Your channel", esc(me.channel), "<p class=\"empty\">" + esc(monet.error || "Could not read that channel.") + "</p><form class=\"aform\" data-set-channel><input type=\"text\" name=\"channel\" placeholder=\"@yourhandle or channel link\" required><button class=\"btn ghost\" type=\"submit\">Change channel</button></form>", { span: full ? 12 : 6 });
     var ch = monet.channel, subs = ch.subscribers || 0, v = monet.verdict || {};
@@ -110,9 +113,45 @@
   P.feed = function () {
     var quick = [["youtube-monetization-checker", "Monetization check"], ["youtube-keyword-generator", "Keyword ideas"], ["youtube-title-analyzer", "Score a title"], ["youtube-tag-generator", "Tags for a video"], ["youtube-channel-quality-checker", "Channel quality"], ["youtube-money-calculator", "Earnings estimate"]];
     var quickHtml = "<div class=\"chips-row\">" + quick.map(function (q) { return "<a href=\"" + toolUrl(q[0]) + "\" data-recent=\"" + q[0] + "\">" + esc(q[1]) + "</a>"; }).join("") + "</div>";
-    return channelCard(false) + moversCard() +
+    var needsChannel = me && me.ok && !me.channel;
+    return (needsChannel ? onboardingCard() : channelCard(false)) + (needsChannel ? "" : moversCard()) +
       card("Quick actions", "The tools most people open first.", quickHtml) +
       outliersCard(outliers && outliers.items, "Breaking out this week", [ROOT + "research/outliers/", "Full feed"], 6);
+  };
+  function delta(d, key, base) {
+    if (!d || d[key] == null) return "<span class=\"flat\" title=\"Snapshots started today; change appears after a few days\">–</span>";
+    var v = d[key], pct = base && base - v ? " <small>(" + (v >= 0 ? "+" : "") + ((v / (base - v)) * 100).toFixed(1) + "%)</small>" : "";
+    return "<span class=\"" + (v > 0 ? "up" : v < 0 ? "down" : "flat") + "\">" + signed(v) + pct + "</span>";
+  }
+  P.channel = function () {
+    if (!me || !me.ok) return card("My channel", "Sign in, add your channel, and this page fills with insights.", "<a class=\"btn\" href=\"" + ROOT + "login/?next=%2Fapp%2F%23channel\">Sign in free</a>");
+    if (!me.channel) return onboardingCard();
+    if (!mine) return card("My channel", esc(me.channel), "<p class=\"empty\">Loading your channel…</p>");
+    if (!mine.ok) return card("My channel", esc(me.channel), "<p class=\"empty\">" + esc(mine.error || "Could not read that channel.") + "</p><form class=\"aform\" data-set-channel><input type=\"text\" name=\"channel\" placeholder=\"@yourhandle or channel link\" required><button class=\"btn ghost\" type=\"submit\">Change channel</button></form><span class=\"fmsg\" data-set-channel-msg></span>");
+    var c = mine.channel, sm = mine.summary, v = monet && monet.ok ? monet.verdict : null;
+    var head = "<div class=\"chan-head\">" + (c.thumbnail ? "<img src=\"" + esc(c.thumbnail) + "\" alt=\"\">" : "") + "<div class=\"t\"><h2>" + esc(c.title) + "</h2><div class=\"sub\">" + esc(c.handle || "") + (c.country ? " · " + esc(c.country) : "") + (c.publishedAt ? " · since " + new Date(c.publishedAt).getFullYear() : "") + " · tracked since " + esc(mine.since) + "</div></div>" +
+      (v ? "<a class=\"verdict " + esc(v.cls || "") + "\" href=\"#race\">" + esc(v.label) + (v.confidence != null ? " · " + v.confidence + "%" : "") + "</a>" : "") +
+      "<div class=\"chan-acts\"><a class=\"btn ghost\" href=\"" + esc(c.url) + "\" target=\"_blank\" rel=\"noopener\">Open on YouTube</a><a class=\"btn ghost\" href=\"" + toolUrl("youtube-channel-quality-checker") + "?channel=" + encodeURIComponent(me.channel) + "\" data-recent=\"youtube-channel-quality-checker\">Quality score</a><button type=\"button\" class=\"btn ghost\" data-change-channel>Change</button></div></div>";
+    var kpis = "<div class=\"kpis\">" +
+      "<div class=\"kpi\"><b>" + (c.hiddenSubscribers ? "hidden" : compact(c.subscribers)) + "</b><span>Subscribers · 7d " + delta(mine.d7, "subs", c.subscribers) + "</span></div>" +
+      "<div class=\"kpi\"><b>" + compact(c.views) + "</b><span>Total views · 7d " + delta(mine.d7, "views") + "</span></div>" +
+      "<div class=\"kpi\"><b>" + compact(c.videos) + "</b><span>Videos · 30d " + delta(mine.d30, "videos") + "</span></div>" +
+      "<div class=\"kpi\"><b>" + compact(sm.avgViews) + "</b><span>Avg views, last 10 uploads</span></div>" +
+      "<div class=\"kpi" + (sm.engagement >= 4 ? " good" : sm.engagement < 1 ? " bad" : "") + "\"><b>" + sm.engagement + "%</b><span>Engagement, likes+comments / views</span></div>" +
+      "<div class=\"kpi\"><b>" + (sm.viewsPerSub == null ? "–" : sm.viewsPerSub + "%") + "</b><span>Avg views per subscriber</span></div>" +
+      "<div class=\"kpi\"><b>" + sm.uploadsPerMonth + "</b><span>Uploads a month" + (sm.avgGapDays ? " · every " + sm.avgGapDays + " days" : "") + "</span></div>" +
+      "<div class=\"kpi\"><b>" + sm.last30Count + "</b><span>Uploads in 30 days · " + compact(sm.last30Views) + " views</span></div>" +
+      "<div class=\"kpi\"><b>" + sm.shortsShare + "%</b><span>Shorts share of recent uploads</span></div>" +
+      "<div class=\"kpi\"><b>" + (sm.viewsPerVideo == null ? "–" : compact(sm.viewsPerVideo)) + "</b><span>Lifetime views per video</span></div></div>";
+    var rows = mine.uploads.map(function (u) {
+      var x = u.xAvg, cls = x >= 1.5 ? "up" : x < 0.5 ? "down" : "flat";
+      return "<tr><td><a href=\"" + esc(u.url) + "\" target=\"_blank\" rel=\"noopener\" class=\"vt\">" + esc(u.title) + "</a><small>" + ago(u.days) + (u.short ? " · Short" : "") + "</small></td><td class=\"num\">" + compact(u.views) + "</td><td class=\"num\">" + compact(u.viewsPerDay) + "</td><td class=\"num\">" + u.er + "%</td><td class=\"num\"><span class=\"" + cls + "\">" + x + "x</span></td></tr>";
+    }).join("");
+    var table = mine.uploads.length ? "<div class=\"tablewrap\"><table class=\"wltable uploads\"><thead><tr><th>Upload</th><th class=\"num\">Views</th><th class=\"num\">Views/day</th><th class=\"num\">Engagement</th><th class=\"num\">vs your avg</th></tr></thead><tbody>" + rows + "</tbody></table></div>" : "<p class=\"empty\">No public uploads found.</p>";
+    var best = mine.best ? card("Best recent upload", "Highest views of the last 10.", "<a class=\"vt\" href=\"" + esc(mine.best.url) + "\" target=\"_blank\" rel=\"noopener\" style=\"font-weight:600\">" + esc(mine.best.title) + "</a><div class=\"kpis\" style=\"margin-top:12px\"><div class=\"kpi\"><b>" + compact(mine.best.views) + "</b><span>Views · " + mine.best.xAvg + "x your average</span></div><div class=\"kpi\"><b>" + mine.best.er + "%</b><span>Engagement</span></div></div><div class=\"chips-row\" style=\"margin-top:12px\"><a href=\"" + toolUrl("youtube-title-generator") + "?topic=" + encodeURIComponent(mine.best.title.slice(0, 80)) + "\" data-recent=\"youtube-title-generator\">More titles like this</a><a href=\"" + toolUrl("youtube-tag-generator") + "?topic=" + encodeURIComponent(mine.best.title.slice(0, 80)) + "\" data-recent=\"youtube-tag-generator\">Tags for a follow-up</a></div>", { span: 6 }) : "";
+    var kw = c.keywords && c.keywords.length ? card("Channel keywords", "Set in your Studio, read from the public channel record.", "<div class=\"chips-row\">" + c.keywords.slice(0, 20).map(function (k) { return "<a href=\"" + ROOT + "research/?q=" + encodeURIComponent(k) + "\">" + esc(k) + "</a>"; }).join("") + "</div>", { span: 6 }) : card("Channel keywords", "", "<p class=\"empty\">No channel keywords set. Add some in YouTube Studio, Settings, Channel, Basic info. They help YouTube understand the channel.</p>", { span: 6 });
+    return "<div class=\"acard\" style=\"grid-column:span 12\">" + head + kpis + "<p class=\"sub\" style=\"margin-top:12px\">Live from the YouTube Data API. Subscriber counts are rounded by YouTube to three figures. Daily snapshots run at 05:45 UTC, so 7-day and 30-day change appears after the first week.</p></div>" +
+      card("Last 10 uploads against your own average", "Which uploads beat your usual numbers. Anything above 1.5x is worth repeating.", table) + best + kw;
   };
   P.optimize = function () {
     return card("Before you publish", "Title, tags and description, scored and generated. The extension suggests tags inside YouTube Studio too.", toolCards(bySlugs(/title|tag|description|hashtag|thumbnail|keyword|niche/).filter(function (t) { return t.platform === "YouTube"; }))) +
@@ -166,7 +205,7 @@
   };
 
   /* ---------------------------------------------------------- router */
-  var TITLES = { feed: "Feed", optimize: "Optimize", race: "Race to monetization", research: "Research", watchlist: "Watchlist", ideas: "Daily ideas", competitors: "Competitors", create: "Create", learn: "Learn", upgrade: "Upgrade" };
+  var TITLES = { feed: "Feed", channel: "My channel", optimize: "Optimize", race: "Race to monetization", research: "Research", watchlist: "Watchlist", ideas: "Daily ideas", competitors: "Competitors", create: "Create", learn: "Learn", upgrade: "Upgrade" };
   var current = "feed";
   function show(id) {
     if (!P[id]) id = "feed";
@@ -196,13 +235,17 @@
       if (!v) return;
       var msg = el.querySelector("[data-set-channel-msg]");
       if (msg) msg.textContent = "Saving…";
-      post("/api/auth?action=preferences", { channel: v }).then(function (r) {
+      post("/api/channel?action=set", { channel: v }).then(function (r) {
         if (!r.ok) { if (msg) { msg.textContent = r.error || "Could not save."; msg.className = "fmsg bad"; } return; }
-        me.channel = v; monet = null; rerender(); loadMonet();
+        me.channel = v; mine = r; monet = null; rerender(); loadMonet();
+        if (current === "feed") location.hash = "channel";
       });
     });
+    el.querySelectorAll("[data-fill-channel]").forEach(function (b) {
+      b.addEventListener("click", function () { var i = el.querySelector("[data-set-channel] input"); if (i) { i.value = b.getAttribute("data-fill-channel"); i.focus(); } });
+    });
     var chg = el.querySelector("[data-change-channel]");
-    if (chg) chg.addEventListener("click", function (e) { e.preventDefault(); me.channel = ""; monet = null; rerender(); });
+    if (chg) chg.addEventListener("click", function (e) { e.preventDefault(); post("/api/channel?action=clear").then(function () { me.channel = ""; mine = null; monet = null; rerender(); }); });
     var add = el.querySelector("[data-watch-add]");
     if (add) add.addEventListener("submit", function (e) {
       e.preventDefault();
@@ -278,6 +321,8 @@
     if (me && me.ok) {
       get("/api/watch?action=list").then(function (w) { watch = w; paintRail(); render(current); });
       loadMonet();
+      if (me.channel) get("/api/channel").then(function (r) { mine = r; if (current === "channel" || current === "feed") render(current); });
+      else if (!location.hash || location.hash === "#feed") { /* first visit after sign-in: the feed shows the add-channel step */ }
     }
   });
   get(ROOT + "research/api/outliers?type=videos&days=7&sort=multiplier&limit=12").then(function (r) { outliers = r && r.ok ? r : { ok: true, items: [] }; render(current); });

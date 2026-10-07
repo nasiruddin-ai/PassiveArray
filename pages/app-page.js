@@ -12,6 +12,7 @@ const { esc } = site;
 
 const NAV = [
   ["feed", "Feed", "home"],
+  ["channel", "My channel", "chart"],
   ["optimize", "Optimize", "sparkle"],
   ["race", "Race to monetization", "trophy"],
   ["research", "Research", "search"],
@@ -24,6 +25,7 @@ const NAV = [
 
 const ICONS = {
   home: `<path d="M3 11.5 12 4l9 7.5"/><path d="M5 10v10h14V10"/>`,
+  chart: `<path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/>`,
   sparkle: `<path d="M12 3v4M12 17v4M3 12h4M17 12h4M5.6 5.6l2.8 2.8M15.6 15.6l2.8 2.8M5.6 18.4l2.8-2.8M15.6 8.4l2.8-2.8"/>`,
   trophy: `<path d="M8 4h8v5a4 4 0 0 1-8 0z"/><path d="M8 6H5a3 3 0 0 0 3 4M16 6h3a3 3 0 0 1-3 4M12 13v4M8 21h8M10 17h4"/>`,
   search: `<circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/>`,
@@ -152,6 +154,23 @@ const CSS = `
 .pro-card ul { margin: 12px 0 16px; padding-left: 18px; font-size: .92rem; line-height: 1.6; opacity: .95; }
 .pro-card .btn.mint { color: #1F2A44; }
 .pro-card .fmsg { color: #DDE4F0; }
+.onboard { background: linear-gradient(135deg, var(--card), var(--soft)); border-color: var(--teal); }
+.onboard-in { display: grid; grid-template-columns: minmax(0, 1.3fr) minmax(0, .7fr); gap: 24px; align-items: center; }
+.onboard .k { font-size: .72rem; font-weight: 700; letter-spacing: .08em; color: var(--deep); }
+.onboard h2 { font-size: 1.5rem; margin: 6px 0 6px; letter-spacing: -.02em; }
+.onboard-art .kpis { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.onboard-art .kpi { opacity: .75; }
+.chan-head { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; margin-bottom: 16px; }
+.chan-head img { width: 64px; height: 64px; border-radius: 50%; }
+.chan-head .t { flex: 1; min-width: 200px; }
+.chan-head .t h2 { font-size: 1.35rem; }
+.chan-head .chan-acts { display: flex; gap: 8px; flex-wrap: wrap; }
+.chan-head .chan-acts .btn { height: 38px; font-size: .85rem; }
+.uploads .vt { color: var(--text); font-weight: 600; display: block; max-width: 440px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.uploads small { color: var(--muted); font-size: .78rem; }
+.uploads .up { color: var(--good); font-weight: 700; } .uploads .down { color: var(--bad); font-weight: 700; } .uploads .flat { color: var(--muted); }
+.kpi .up { color: var(--good); } .kpi .down { color: var(--bad); } .kpi .flat { color: var(--muted); }
+@media (max-width: 900px) { .onboard-in { grid-template-columns: 1fr; } .onboard-art { display: none; } }
 .scrim { display: none; }
 @media (max-width: 1100px) { .span6, .span4, .span8, .span3 { grid-column: span 12 !important; } }
 @media (max-width: 900px) {
