@@ -172,7 +172,7 @@ let stamped = 0;
     if (entry.isDirectory()) { walk(p); continue; }
     if (!entry.name.endsWith(".html")) continue;
     const html = fs.readFileSync(p, "utf8");
-    const out = html.replace(/creator-tools\/(shared\.css|site\.js|shared\.js|research\.js)"/g, (m, f) => "creator-tools/" + f + "?v=" + assetVersion + "\"");
+    const out = html.replace(/creator-tools\/(shared\.css|site\.js|shared\.js|research\.js|app\.js)"/g, (m, f) => "creator-tools/" + f + "?v=" + assetVersion + "\"");
     if (out !== html) { fs.writeFileSync(p, out); stamped++; }
   }
 })(DIST);
