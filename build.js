@@ -163,7 +163,7 @@ console.log("brand files -> dist/ (" + copied + "/" + Object.keys(copies).length
 // with a stylesheet a browser or the CDN cached from the previous one.
 const crypto = require("crypto");
 const assetVersion = crypto.createHash("md5").update(
-  ["shared.css", "site.js", "shared.js", "research.js"].map((f) => fs.readFileSync(path.join(ROOT, "creator-tools", "public", f))).join("")
+  ["shared.css", "site.js", "shared.js", "research.js", "app.js"].map((f) => fs.readFileSync(path.join(ROOT, "creator-tools", "public", f))).join("")
 ).digest("hex").slice(0, 10);
 let stamped = 0;
 (function walk(dir) {
