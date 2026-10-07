@@ -287,6 +287,7 @@
       description: desc,
       hashtags: (desc.match(/#[\p{L}\p{N}_]+/gu) || []).length,
       links: (desc.match(/https?:\/\/\S+/g) || []).length,
+      adsOnPage: /"adPlacements"/.test(html) || /yt_ad/.test(html),
       fetchedAt: Date.now()
     };
   }
@@ -378,6 +379,7 @@
 
     var details = el("div", "pa-rows");
     details.appendChild(row("Length", d.liveNow ? "Live" : duration(d.lengthSeconds) + (d.isShort ? " · Short" : d.lengthSeconds >= 480 ? " · mid-roll ads possible" : "")));
+    if (!d.liveNow) details.appendChild(row("Ads on this video", d.adsOnPage ? "Yes · ad placements on the page" : "None seen in this browser · no ads on this video, or Premium / an ad blocker hides them"));
     details.appendChild(row("Title length", d.title.length + " chars" + (d.title.length > 70 ? " · long, may be cut in search" : d.title.length < 30 ? " · short" : "")));
     details.appendChild(row("Description", fmt(d.description.length) + " chars · " + plural(d.hashtags, "hashtag") + " · " + plural(d.links, "link")));
     details.appendChild(row("Tags", d.tags.length + (d.tags.length ? " · " + fmt(d.tags.join(",").length) + " chars of 500" : " · none set")));
@@ -514,6 +516,7 @@
     details.appendChild(row("Views per day (lifetime)", compact(safeDiv(ch.views, daysSince(ch.publishedAt) || 1))));
     if (ch.topics && ch.topics.length) details.appendChild(row("Topics", ch.topics.slice(0, 3).join(", ")));
     left.appendChild(details);
+    left.appendChild(monetizationBlock(ch));
 
     if (ch.keywords && ch.keywords.length) {
       var kw = el("div", "pa-tags");
@@ -552,6 +555,124 @@
     panel.appendChild(body);
 
     footer(panel, "From the YouTube Data API via passivearray.vercel.app. Cached for 6 hours.");
+  }
+
+  /* ====================================================== MONETIZATION
+     YouTube publishes nothing about Partner Program status. What is public: the
+     eligibility numbers, and whether a video's watch page carries ad placements.
+     This runs in the visitor's own browser, where YouTube does serve ads, so the
+     ad signal is real here (the tools site's servers get ad-free pages). A canary
+     video known to carry ads is probed first: with Premium or an ad blocker no
+     ads are visible anywhere, and the panel says so instead of guessing. */
+  var ADS_CANARY = "9bZkp7q19f0"; // PSY, Gangnam Style: monetized for over a decade
+  var monet = { cache: {} };
+
+  async function probeAds(id) {
+    try {
+      var res = await fetch("https://www.youtube.com/watch?v=" + encodeURIComponent(id) + "&hl=en", { credentials: "same-origin" });
+      var html = await res.text();
+      if (!res.ok || html.length < 200000 || html.indexOf("ytInitialPlayerResponse") < 0) return { id: id, checked: false, ads: false };
+      return { id: id, checked: true, ads: /"adPlacements"/.test(html) || /yt_ad/.test(html) };
+    } catch (e) {
+      return { id: id, checked: false, ads: false };
+    }
+  }
+
+  /* Same rules as the tools site's monetization checker. */
+  function monetizationVerdict(ch, sampled, adsVisible) {
+    var vids = (ch.recent && ch.recent.videos) || [];
+    var now = Date.now();
+    var last90 = vids.filter(function (v) { return now - new Date(v.publishedAt).getTime() <= 90 * 86400000; }).length;
+    var kids = vids.filter(function (v) { return v.madeForKids; }).length;
+    var checked = sampled.filter(function (x) { return x.checked; });
+    var withAds = checked.filter(function (x) { return x.ads; });
+    var rate = checked.length ? withAds.length / checked.length : null;
+    var subsKnown = !ch.hiddenSubscribers;
+    var subs = ch.subscribers || 0;
+    var eligible = subsKnown && subs >= 1000 && last90 >= 3;
+
+    var signals = [
+      { label: "1,000 subscribers", status: !subsKnown ? "unknown" : subs >= 1000 ? "pass" : "fail", detail: subsKnown ? fmt(subs) + " subscribers" : "hidden by the channel" },
+      { label: "3 uploads in the last 90 days", status: last90 >= 3 ? "pass" : "fail", detail: last90 + " of the last " + vids.length },
+      { label: "4,000 watch hours", status: "unknown", detail: "private, only the owner sees it" },
+      { label: "Ads on recent uploads", status: rate == null ? "unknown" : rate >= 0.6 ? "pass" : rate > 0 ? "mixed" : "fail", detail: rate == null ? (adsVisible ? "watch pages could not be read" : "no ads visible in this browser (Premium or ad blocker)") : withAds.length + " of " + checked.length + " sampled uploads" },
+      { label: "Not made for kids", status: vids.length && kids === vids.length ? "fail" : kids > 0 ? "mixed" : "pass", detail: kids ? kids + " of " + vids.length + " recent uploads marked for kids" : "no recent upload marked for kids" }
+    ];
+
+    var verdict;
+    if (subsKnown && !eligible) {
+      verdict = { label: "Not eligible yet", cls: "bad", confidence: rate == null ? 70 : 85, why: "Misses a public eligibility threshold, so ad revenue sharing is not possible yet." + (rate ? " The ads seen are YouTube\u2019s own: it runs ads on non-partner videos without paying the creator." : "") };
+    } else if (rate != null && checked.length >= 2) {
+      if (rate >= 0.6 && eligible) verdict = { label: "Likely monetized", cls: "good", confidence: Math.min(95, 70 + Math.round(rate * 15) + checked.length * 2), why: "Ads run on most sampled uploads and the channel clears the public thresholds." };
+      else if (rate >= 0.6) verdict = { label: "Ads shown, status unclear", cls: "warn", confidence: 55, why: "Ads appear, but the subscriber count is hidden so eligibility cannot be confirmed." };
+      else if (rate === 0) verdict = { label: "Likely not monetized", cls: "bad", confidence: Math.min(90, 65 + checked.length * 5), why: "No ad placements on any sampled upload although the public thresholds are met. Not applied, under review, or ads turned off." };
+      else verdict = { label: "Partly monetized or changing", cls: "warn", confidence: 50, why: "Ads on some sampled uploads but not others: recently switched on, limited videos, or reused content." };
+    } else if (rate != null) {
+      verdict = { label: rate > 0 ? "Ads on a small sample" : "No ads on a small sample", cls: "warn", confidence: 45, why: "Only " + checked.length + " upload could be checked." };
+    } else {
+      verdict = eligible
+        ? { label: "Eligible, ads unconfirmed", cls: "warn", confidence: 40, why: adsVisible ? "Clears the public thresholds; the ad check could not run right now." : "Clears the public thresholds. No ads are visible in this browser (Premium or an ad blocker), so partner status cannot be confirmed from here." }
+        : { label: "Not eligible yet", cls: "bad", confidence: 60, why: "Misses a public eligibility threshold." };
+    }
+    return { verdict: verdict, signals: signals, rate: rate, checked: checked.length, sampledCount: sampled.length };
+  }
+
+  async function computeMonetization(ch) {
+    var vids = (ch.recent && ch.recent.videos) || [];
+    var longForm = vids.filter(function (v) { return v.seconds > 60; });
+    var sample = (longForm.length >= 3 ? longForm : vids).slice(0, 5);
+    var probes = await Promise.all([probeAds(ADS_CANARY)].concat(sample.map(function (v) { return probeAds(v.id); })));
+    var canary = probes.shift();
+    var adsVisible = !!(canary.checked && canary.ads);
+    var sampled = probes.map(function (p) { return { id: p.id, checked: adsVisible && p.checked, ads: adsVisible && p.ads }; });
+    return monetizationVerdict(ch, sampled, adsVisible);
+  }
+
+  function statusWord(st) {
+    return st === "pass" ? { t: "Yes", c: "good" } : st === "fail" ? { t: "No", c: "bad" } : st === "mixed" ? { t: "Partly", c: "warn" } : { t: "Unknown", c: "" };
+  }
+
+  function monetizationBlock(ch) {
+    var box = el("div", "pa-monet");
+    var head = el("div", "pa-section-head");
+    head.appendChild(el("span", null, "Monetization"));
+    box.appendChild(head);
+    var status = el("div", "pa-note", "Checking ad placements on recent uploads\u2026");
+    box.appendChild(status);
+    var key = ch.id || ch.handle;
+    var job = monet.cache[key] ? Promise.resolve(monet.cache[key]) : computeMonetization(ch).then(function (r) { monet.cache[key] = r; return r; });
+    job.then(function (m) {
+      if (!box.isConnected) return;
+      status.remove();
+      var hero = el("div", "pa-hero");
+      hero.appendChild(el("div", "pa-hero-label", "Verdict from public signals"));
+      var hv = el("div", "pa-hero-value", m.verdict.label);
+      hv.appendChild(el("span", "pa-pill " + m.verdict.cls, m.verdict.confidence + "% confidence"));
+      hero.appendChild(hv);
+      hero.appendChild(el("div", "pa-hero-note", m.verdict.why));
+      box.appendChild(hero);
+      var rows = el("div", "pa-rows");
+      m.signals.forEach(function (sg) {
+        var r = el("div", "pa-row");
+        r.appendChild(el("span", "pa-row-name", sg.label));
+        var val = el("span", "pa-row-value");
+        var w = statusWord(sg.status);
+        val.appendChild(el("span", "pa-pill " + w.c, w.t));
+        val.appendChild(document.createTextNode(" " + sg.detail));
+        r.appendChild(val);
+        rows.appendChild(r);
+      });
+      box.appendChild(rows);
+      var foot = el("div", "pa-section-head");
+      var a = el("a", "pa-btn", "Full report");
+      a.href = TOOLS_URL + "youtube-monetization-checker/?channel=" + encodeURIComponent(ch.id || ch.handle || "");
+      a.target = "_blank";
+      a.rel = "noopener";
+      foot.appendChild(el("span", "pa-muted", "A confidence, not proof. YouTube never publishes partner status."));
+      foot.appendChild(a);
+      box.appendChild(foot);
+    });
+    return box;
   }
 
   function updateChannel(force) {

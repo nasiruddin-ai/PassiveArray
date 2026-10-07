@@ -116,3 +116,7 @@ html[dark] .pa-badge { background: #262F48; color: #E8ECF3; border-color: #34405
 html[dark] .pa-badge.good { background: #1E4B44; color: #BFEFE4; border-color: #2A6B61; }
 html[dark] .pa-badge.warn { background: #4A3A12; color: #F5DFA0; border-color: #6B561F; }
 html[dark] .pa-badge.bad { background: #4E1F1A; color: #F7C4BD; border-color: #6E2E27; }
+
+/* Monetization block on channel pages */
+.pa-panel .pa-monet { margin-top: 14px; }
+.pa-panel .pa-monet .pa-row-value .pa-pill { margin-right: 6px; }

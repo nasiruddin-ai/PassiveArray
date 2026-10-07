@@ -1,6 +1,6 @@
 # Passive Array for YouTube (Chrome extension)
 
-A vidIQ / TubeBuddy style extension, version 1.0.0, ready for the Chrome Web
+A vidIQ / TubeBuddy style extension, version 1.1.0, ready for the Chrome Web
 Store. Video panel, channel panel, search-result scores, a keyword tool and an
 AI writer in the popup. No login. The YouTube and Anthropic keys stay on the
 Passive Array tools site, never inside the extension.
@@ -12,6 +12,8 @@ Privacy policy: https://passivearray.vercel.app/youtube-extension/privacy/
 ## What it does
 
 **Video pages** (no API call, reads the page itself)
+- Ads on this video: whether the page carries ad placements, with the same
+  Premium / ad blocker caveat.
 - Engagement rate by views with the same grade scale as the creator-tools
   calculator (under 1% low, 1 to 2% below average, 2 to 4% average,
   4 to 6% good, above 6% excellent).
@@ -22,6 +24,12 @@ Privacy policy: https://passivearray.vercel.app/youtube-extension/privacy/
   are labelled. Unavailable videos show the reason.
 
 **Channel pages** (one API call, cached 6 hours)
+- Monetization check: public eligibility signals (1,000 subscribers, 3 uploads
+  in 90 days, made-for-kids) plus whether the channel's recent uploads carry
+  ad placements, read from the watch pages in your own browser. Verdict with
+  a confidence score and every signal listed. A canary video known to carry
+  ads is checked first: with YouTube Premium or an ad blocker no ads are
+  visible, and the panel says so instead of guessing.
 - Engagement rate over the last 10 uploads, subscribers, total views, videos,
   views per subscriber, last 30 days, Shorts share, created date, country,
   topics, channel keywords, and the 10 recent uploads with a "x avg" marker.
@@ -101,7 +109,7 @@ Works the same in Edge and Brave (`edge://extensions`, `brave://extensions`).
 2. `node make-assets.js` then `node pack.js` in this folder.
 3. Take the screenshots listed in `STORE-LISTING.md`.
 4. Go to https://chrome.google.com/webstore/devconsole, pay the one-time $5
-   fee, click New item, upload `store/passive-array-youtube-v1.0.0.zip`, and
+   fee, click New item, upload `store/passive-array-youtube-v1.1.0.zip`, and
    paste the text from `STORE-LISTING.md` into each tab.
 5. Submit for review. 1 to 3 days. Then paste the store link into
    `STORE_URL` in the passive-array repo's `youtube-extension/pages.js`.
