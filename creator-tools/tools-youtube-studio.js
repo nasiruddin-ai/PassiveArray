@@ -147,7 +147,7 @@ module.exports = function (NICHES) {
       name: "YouTube Keyword Generator",
       platform: "YouTube",
       intent: "rank",
-      short: "Turn one keyword into dozens of long-tail phrases people actually search.",
+      short: "Turn one keyword into dozens of long-tail keyword ideas to check in YouTube search.",
       intro: "Type a seed keyword. You get it expanded into long-tail phrases, questions, comparisons and buyer-intent variations, grouped so you can see which kind of video each one wants.",
       inputs: [
         { id: "keyword", label: "Seed keyword", type: "text", placeholder: "Type a keyword, e.g. youtube seo" },

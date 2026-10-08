@@ -25,7 +25,7 @@ const SCHEMAS = {
   },
   /* YouTube generators, used by the Passive Array browser extension. */
   yt_titles: {
-    task: "Write 10 YouTube video titles for the topic. Each under 60 characters so it is not cut off in search, with the main keyword near the start. Vary the angle: how-to, mistakes, listicle, comparison, question, story, contrarian, beginner. No clickbait that the video cannot deliver, no ALL CAPS words, at most one emoji in total. If related keywords are given, work a few of them in naturally.",
+    task: "Write 10 YouTube video titles for the topic. Each under 60 characters so it is not cut off in search, with the main keyword near the start. Vary the angle: how-to, mistakes, listicle, comparison, question, story, contrarian, beginner. No clickbait that the video cannot deliver, no ALL CAPS words, at most one emoji in total. Never invent facts, numbers, results or names the topic does not give; keep claims general or use a [placeholder]. If related keywords are given, work a few of them in naturally.",
     shape: '{"titles":[{"title":"...","angle":"how-to|mistakes|list|comparison|question|story|contrarian|beginner"}]}',
   },
   yt_description: {

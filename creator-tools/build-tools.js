@@ -12,6 +12,11 @@
 const fs = require("fs");
 const path = require("path");
 const { tools } = require("./tools");
+// Long-form guides live one per tool in creator-tools/guides/<slug>.js and are merged in here.
+for (const t of tools) {
+  const f = path.join(__dirname, "guides", t.slug + ".js");
+  if (fs.existsSync(f)) Object.assign(t, require(f));
+}
 
 const HERE = __dirname;
 // Netlify sets URL, Vercel sets VERCEL_PROJECT_PRODUCTION_URL (host only). SITE_URL overrides both.
@@ -268,6 +273,8 @@ function buttonLabel(t) {
   if (t.action === "search" || t.action === "lookalike") return "Find channels";
   if (t.api === "ai") return "Generate";
   if (t.api) return "Check";
+  if (t.buttonLabel) return t.buttonLabel;
+  if (/generator/.test(t.slug)) return "Generate";
   return "Calculate";
 }
 

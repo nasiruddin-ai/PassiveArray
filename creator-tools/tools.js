@@ -77,7 +77,7 @@ const tools = [
       "Watch hours are private, so that requirement is always shown as unknown. The result is a confidence, never a certainty.",
       "The ad check first probes a video known to carry ads. If YouTube serves this server an ad-free page for it, the ad signal is reported as unavailable rather than as a no, and the verdict rests on the eligibility signals alone.",
     ],
-    seoTitle: "YouTube Monetization Checker: Is a Channel Monetized? Free | Passive Array",
+    seoTitle: "YouTube Monetization Checker: Is It Monetized? | Passive Array",
     seoDescription: "Check if any YouTube channel is monetized. Free, no sign-up: paste a link or @handle to see Partner Program eligibility, ads on recent videos and a confidence score.",
     guideUpdated: "October 2026 against YouTube's Partner Program help pages",
     guide: [
@@ -97,7 +97,7 @@ const tools = [
         h: "How to check if a YouTube channel is monetized",
         ordered: true,
         list: [
-          "Copy the channel link, its @handle, or a link to any of its videos.",
+          "Copy the channel link or its @handle. A channel name works too, but the @handle is the most reliable.",
           "Paste it into the box above and press <b>Check</b>. No login and no channel access are needed.",
           "Read the verdict and the signal list. Green signals meet a requirement, amber ones are unclear, red ones are missing.",
         ],
@@ -178,7 +178,7 @@ const tools = [
       { id: "rpmHigh", label: "High RPM ($ per 1,000 views)", type: "number", value: 4, step: 0.05, min: 0, hint: "Finance, tech and business can exceed $10" },
     ],
     how: [
-      "Monthly views = views on videos uploaded in the last 30 days. If nothing was uploaded, the average of the last 10 videos times upload frequency is used.",
+      "Monthly views = views on videos uploaded in the last 30 days. If fewer than 2 videos went up in that time, the average of the last 10 videos times upload frequency is used instead.",
       "Earnings = monthly views / 1,000 x RPM. RPM is what the creator keeps after YouTube's 45 percent share.",
       "This is an estimate from public data. It does not include sponsorships, memberships or Shorts revenue.",
     ],
