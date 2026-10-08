@@ -84,5 +84,18 @@
     "api/pro.js": {
       "maxDuration": 60
     }
-  }
+  },
+  "redirects": [
+    {
+      "source": "/:path((?!api/|creator-tools/api/|research/api/|plagiarism-checker/api/|domain-age-checker/api/|domain-finder/api/).*)",
+      "has": [
+        {
+          "type": "host",
+          "value": "passivearray.vercel.app"
+        }
+      ],
+      "destination": "https://passivearray.com/:path",
+      "statusCode": 301
+    }
+  ]
 }
