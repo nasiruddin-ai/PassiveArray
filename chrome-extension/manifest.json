@@ -3,7 +3,7 @@
   "name": "Passive Array for YouTube",
   "version": "1.2.0",
   "description": "Engagement rate, monetization check, hidden tags, tag suggestions in Studio, views per day, channel insights and search scores, right on YouTube. Free.",
-  "homepage_url": "https://passivearray.vercel.app/youtube-extension/",
+  "homepage_url": "https://passivearray.com/youtube-extension/",
   "icons": {
     "16": "icons/icon-16.png",
     "48": "icons/icon-48.png",
@@ -23,7 +23,7 @@
     "activeTab"
   ],
   "host_permissions": [
-    "https://passivearray.vercel.app/*",
+    "https://passivearray.com/*",
     "https://www.youtube.com/*",
     "https://suggestqueries.google.com/*",
     "https://studio.youtube.com/*"

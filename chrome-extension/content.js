@@ -10,7 +10,7 @@
 
   var VIDEO_PANEL = "pa-yt-panel";
   var CHANNEL_PANEL = "pa-yt-channel";
-  var TOOLS_URL = "https://passivearray.vercel.app/creator-tools/";
+  var TOOLS_URL = "https://passivearray.com/creator-tools/";
   var enabled = true;
 
   /* ------------------------------------------------------------ helpers */
@@ -554,7 +554,7 @@
     }
     panel.appendChild(body);
 
-    footer(panel, "From the YouTube Data API via passivearray.vercel.app. Cached for 6 hours.");
+    footer(panel, "From the YouTube Data API via passivearray.com. Cached for 6 hours.");
   }
 
   /* ====================================================== MONETIZATION

@@ -7,9 +7,9 @@ first use. Review usually takes 1 to 3 days.
 ## Before you upload (checklist)
 
 1. Push the passive-array repo so the privacy policy page is live:
-   https://passivearray.vercel.app/youtube-extension/privacy/
+   https://passivearray.com/youtube-extension/privacy/
 2. In this folder run `node make-assets.js` (128 px icon and promo tiles).
-3. Take 3 to 5 screenshots in Chrome at exactly 1280 x 800 (see below).
+3. Upload the ready screenshots in store/ (screenshot-1-video.png, screenshot-3-monetization.png, screenshot-4-search.png), all 1280 x 800.
 4. Run `node pack.js`. Upload `store/passive-array-youtube-v1.2.0.zip`.
 
 ## Store listing tab
@@ -64,7 +64,7 @@ TITLE, DESCRIPTION AND TAG WRITER
 HONEST BY DESIGN
 Numbers come from the public data on the YouTube page and from the official YouTube Data API. The API key stays on our server, so nothing sensitive ships in the extension. Nothing is tracked, nothing is sold.
 
-Works in Chrome, Edge and Brave. More free creator tools at passivearray.vercel.app.
+Works in Chrome, Edge and Brave. More free creator tools at passivearray.com.
 
 **Category:** Productivity → Tools (or "Workflow & Planning" in the new taxonomy)
 **Language:** English
@@ -74,8 +74,8 @@ Works in Chrome, Edge and Brave. More free creator tools at passivearray.vercel.
 **Small promo tile (440 x 280):** `store/promo-small-440x280.png`
 **Marquee promo tile (1400 x 560, optional):** `store/marquee-1400x560.png`
 
-**Official URL / homepage:** https://passivearray.vercel.app/youtube-extension/
-**Support URL:** https://passivearray.vercel.app/contact/
+**Official URL / homepage:** https://passivearray.com/youtube-extension/
+**Support URL:** https://passivearray.com/contact/
 
 ## Screenshots to take (do this in Chrome, 1280 x 800 each)
 
@@ -105,7 +105,7 @@ Shows public YouTube statistics (engagement rate, tags, views per day, channel i
 - `storage`: caches lookups on the user's device for up to 24 hours and remembers the on/off switch and the last keyword typed, so repeated views are instant and the free API quota lasts.
 - `activeTab`: when the popup is opened, lets it read which YouTube page is open so it can offer to analyze that search or reuse that video's title. Only while the popup is open.
 - Host permission `https://www.youtube.com/*`: the content script that draws the panels runs only on YouTube pages; the popup's keyword tool also reads YouTube's own results page to find the top videos.
-- Host permission `https://passivearray.vercel.app/*`: our server, which calls the YouTube Data API with a server-side key and returns public statistics.
+- Host permission `https://passivearray.com/*`: our server, which calls the YouTube Data API with a server-side key and returns public statistics.
 - Host permission `https://suggestqueries.google.com/*`: YouTube's autocomplete, for "people also search" keyword ideas.
 
 **Remote code:** No, I am not using remote code. (All code is in the package. The extension only fetches JSON data.)
@@ -119,7 +119,7 @@ Shows public YouTube statistics (engagement rate, tags, views per day, channel i
 Certify all three statements: not sold to third parties, not used for purposes unrelated to the core function, not used for creditworthiness or lending.
 
 **Privacy policy URL**
-https://passivearray.vercel.app/youtube-extension/privacy/
+https://passivearray.com/youtube-extension/privacy/
 
 ## Distribution tab
 

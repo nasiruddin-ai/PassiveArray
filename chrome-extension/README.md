@@ -5,8 +5,8 @@ Store. Video panel, channel panel, search-result scores, a keyword tool and an
 AI writer in the popup. No login. The YouTube and Anthropic keys stay on the
 Passive Array tools site, never inside the extension.
 
-Landing page: https://passivearray.vercel.app/youtube-extension/
-Privacy policy: https://passivearray.vercel.app/youtube-extension/privacy/
+Landing page: https://passivearray.com/youtube-extension/
+Privacy policy: https://passivearray.com/youtube-extension/privacy/
 (both live once the passive-array repo is pushed)
 
 ## What it does

@@ -12,8 +12,8 @@
  *   { type: "tags",    q }                tags the top-ranking videos for q use, ranked by how many share each (Studio)
  *   { type: "ai",      action, inputs }   POST tools-site AI writer (yt_titles, yt_description, yt_tags)
  */
-var API = "https://passivearray.vercel.app/creator-tools/api/youtube";
-var AI_API = "https://passivearray.vercel.app/creator-tools/api/ai";
+var API = "https://passivearray.com/creator-tools/api/youtube";
+var AI_API = "https://passivearray.com/creator-tools/api/ai";
 var SUGGEST = "https://suggestqueries.google.com/complete/search?client=firefox&ds=yt&hl=en&q=";
 var TTL = {
   channel: 6 * 60 * 60 * 1000,

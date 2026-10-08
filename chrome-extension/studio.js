@@ -14,7 +14,7 @@
   "use strict";
 
   var PANEL_ID = "pa-studio-tags";
-  var TOOLS_URL = "https://passivearray.vercel.app/creator-tools/youtube-tag-generator/";
+  var TOOLS_URL = "https://passivearray.com/creator-tools/youtube-tag-generator/";
   var LIMIT = 500;           // YouTube's total tag length limit
   var enabled = true;
   var state = { key: null, loading: false, suggestions: [], panel: null, error: "" };
