@@ -890,3 +890,16 @@ p.center.sub { text-align: center; color: var(--muted); margin: 8px auto 18px; m
   .lp-proof-text { text-align: center; }
   .lp-ctas .btn { width: 100%; }
 }
+
+/* tool page heading row + long-form guide */
+.tool-head .h1row { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+.guide { margin-top: 24px; padding: 32px clamp(20px, 4vw, 44px); }
+.guide-sec { max-width: 820px; }
+.guide-sec + .guide-sec { margin-top: 32px; padding-top: 28px; border-top: 1px solid var(--line); }
+.guide-sec h2 { font-size: clamp(1.25rem, 2vw, 1.55rem); letter-spacing: -.02em; margin-bottom: 12px; }
+.guide-sec p { color: var(--muted); line-height: 1.7; margin: 0 0 12px; }
+.guide-sec p b, .guide-sec li b { color: var(--text); }
+.guide-sec ul, .guide-sec ol { color: var(--muted); line-height: 1.7; padding-left: 22px; margin: 0 0 12px; display: grid; gap: 6px; }
+.guide-sec table { width: 100%; font-size: .92rem; margin: 6px 0 14px; }
+.guide-sec th { text-align: left; }
+.guide-faq .faq { border: 0; padding: 0; }

@@ -77,6 +77,77 @@ const tools = [
       "Watch hours are private, so that requirement is always shown as unknown. The result is a confidence, never a certainty.",
       "The ad check first probes a video known to carry ads. If YouTube serves this server an ad-free page for it, the ad signal is reported as unavailable rather than as a no, and the verdict rests on the eligibility signals alone.",
     ],
+    seoTitle: "YouTube Monetization Checker: Is a Channel Monetized? Free | Passive Array",
+    seoDescription: "Check if any YouTube channel is monetized. Free, no sign-up: paste a link or @handle to see Partner Program eligibility, ads on recent videos and a confidence score.",
+    guideUpdated: "October 2026 against YouTube's Partner Program help pages",
+    guide: [
+      {
+        h: "What this YouTube monetization checker shows",
+        p: ["Paste any channel and you get a verdict such as <b>Likely monetized</b> or <b>Not eligible yet</b>, with a confidence score, plus every public signal behind it:"],
+        list: [
+          "<b>Subscribers</b> against the 1,000 and 500 subscriber thresholds of the YouTube Partner Program.",
+          "<b>Uploads in the last 90 days</b>, which YouTube requires for the lower tier and uses to judge whether a channel is active.",
+          "<b>Made for kids</b> flags on recent uploads, which limit the ads a video can carry.",
+          "<b>Ad placements on recent videos</b>: whether the public watch page of each sampled upload carries an ad block.",
+          "<b>The channel's basics</b>: total views, video count, average views on the last 10 uploads and when the channel started.",
+        ],
+        after: ["Watch hours and Shorts views over 90 days are private to the channel owner, so no outside tool can read them. This checker says so rather than guessing."],
+      },
+      {
+        h: "How to check if a YouTube channel is monetized",
+        ordered: true,
+        list: [
+          "Copy the channel link, its @handle, or a link to any of its videos.",
+          "Paste it into the box above and press <b>Check</b>. No login and no channel access are needed.",
+          "Read the verdict and the signal list. Green signals meet a requirement, amber ones are unclear, red ones are missing.",
+        ],
+        after: ["Checking by hand works too, but only roughly. Ads before a video, a <b>Join</b> button for memberships, <b>Super Thanks</b> on videos and a merch shelf all suggest a monetized channel. None of them proves it alone, which is why this tool combines several signals."],
+      },
+      {
+        h: "YouTube Partner Program requirements",
+        p: ["There are two levels. The lower one unlocks fan funding; the full one adds a share of ad revenue."],
+        table: {
+          head: ["Requirement", "Fan funding tier", "Ad revenue tier"],
+          rows: [
+            ["Subscribers", "500", "1,000"],
+            ["Public uploads", "3 in the last 90 days", "Not set separately"],
+            ["Long-form watch time", "3,000 public watch hours in 12 months", "4,000 public watch hours in 12 months"],
+            ["Or Shorts views", "3 million in 90 days", "10 million in 90 days"],
+            ["What you can earn", "Memberships, Super Chat, Super Thanks, Shopping", "All of those plus ad revenue and YouTube Premium revenue"],
+          ],
+        },
+        after: ["Every channel also needs to follow YouTube's monetization policies, live in a country where the program is available, have two-step verification on, and link an AdSense account. Requirements change, so confirm them in YouTube Studio under <b>Earn</b> before you apply."],
+      },
+      {
+        h: "Why ads on a video do not prove a channel is monetized",
+        p: [
+          "Since YouTube's terms changed in 2021, YouTube can show ads on videos from channels that are not in the Partner Program, and keeps that money itself. So seeing an ad tells you YouTube is monetizing the video, not that the creator is paid.",
+          "That is why this checker treats ads as one signal among several. Ads on most recent uploads <b>and</b> the public thresholds met give a high confidence. Ads on a channel with 200 subscribers give a low one.",
+        ],
+      },
+      {
+        h: "How to get your channel monetized faster",
+        ordered: true,
+        list: [
+          "<b>Check where you stand.</b> Run your own channel above, then look in YouTube Studio under <b>Earn</b> for the private watch hour and Shorts view counts.",
+          "<b>Publish on a steady schedule.</b> Three uploads in 90 days is the minimum for the lower tier; a weekly rhythm builds the watch time the full tier needs.",
+          "<b>Make original content.</b> Reused clips, compilations and mass-produced AI videos are the most common reasons applications are rejected.",
+          "<b>Find topics that already work.</b> Use the <a href=\"../../research/outliers/\">outlier feed</a> to see which videos in your niche beat their channel's usual views, and the <a href=\"../youtube-keyword-generator/\">keyword generator</a> to find searches you can rank for.",
+          "<b>Apply as soon as you qualify.</b> YouTube says reviews usually take about a month. If you are turned down you can usually reapply after 30 days.",
+        ],
+        after: ["Already monetized? Estimate what the channel earns with the <a href=\"../youtube-money-calculator/\">YouTube money calculator</a>."],
+      },
+    ],
+    faq: [
+      ["Can I check if a YouTube channel is monetized without logging in?", "Yes. This checker only reads public data, so it needs no login and no access to the channel. Paste a link or @handle and the result appears in a few seconds."],
+      ["Is this YouTube monetization checker free?", "Yes, with no sign-up and no limit beyond a fair daily quota shared by all visitors."],
+      ["How accurate is the result?", "It is a confidence, not a certainty. YouTube never publishes a channel's partner status. A high score means the channel meets the public thresholds and its recent videos carry ads; watch hours stay unknown because only the owner can see them."],
+      ["Does having ads on my videos mean I am monetized?", "No. YouTube can run ads on channels outside the Partner Program and keep the revenue. You are monetized only once YouTube approves your application and you see revenue in YouTube Studio under Earn."],
+      ["Do Shorts count toward monetization?", "Yes. Instead of 4,000 watch hours, a channel can qualify with 10 million public Shorts views in 90 days for the ad revenue tier, or 3 million for the fan funding tier."],
+      ["How long does YouTube take to review a monetization application?", "YouTube says reviews usually take about a month, sometimes longer when many channels apply. The status shows in YouTube Studio under Earn."],
+      ["Can a monetized channel lose monetization?", "Yes. YouTube can remove it for policy problems such as reused content, for repeated copyright strikes, or if a channel stops uploading or posting for six months or more."],
+      ["Can I check a channel's monetization with the Chrome extension?", "Yes. The free <a href=\"../../youtube-extension/\">Passive Array extension</a> runs the same check right on YouTube channel pages, and reads ad placements from your own browser, which makes the ad signal more reliable."],
+    ],
   },
   {
     slug: "youtube-engagement-rate-calculator",

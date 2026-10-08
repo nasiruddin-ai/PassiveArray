@@ -3,11 +3,11 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>{{name}} | Passive Array</title>
-<meta name="description" content="{{short}}">
+<title>{{title}}</title>
+<meta name="description" content="{{description}}">
 <link rel="canonical" href="{{canonical}}">
-<meta property="og:title" content="{{name}} | Passive Array">
-<meta property="og:description" content="{{short}}">
+<meta property="og:title" content="{{title}}">
+<meta property="og:description" content="{{description}}">
 <meta property="og:type" content="website">
 <meta property="og:url" content="{{canonical}}">
 {{head}}
@@ -23,7 +23,7 @@
   <div class="tool-head">
     <div>
       <div class="crumbs"><a href="{{root}}">Home</a> / <a href="{{root}}creator-tools/">All tools</a> / <a href="{{root}}creator-tools/#{{platformSlug}}">{{platform}}</a></div>
-      <h1>{{name}} <span class="badge {{platform}}">{{platform}}</span></h1>
+      <div class="h1row"><h1>{{name}}</h1><span class="badge {{platform}}">{{platform}}</span></div>
       <p class="intro">{{intro}}</p>
     </div>
     <div class="siblings">{{siblings}}</div>
@@ -52,6 +52,7 @@
       {{next}}
     </section>
   </div>
+  {{guide}}
 </main>
 {{footer}}
 <script>window.TOOL = {{tooljson}};</script>

@@ -272,12 +272,25 @@ function buttonLabel(t) {
 }
 
 function jsonLd(t, url) {
-  return JSON.stringify({
+  const app = {
     "@context": "https://schema.org", "@type": "WebApplication", name: t.name, description: t.short, url,
     applicationCategory: "UtilitiesApplication", operatingSystem: "Any",
     offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },
     provider: { "@type": "Organization", name: BRAND, url: SITE },
-  });
+  };
+  if (!t.faq || !t.faq.length) return JSON.stringify(app);
+  // The FAQ is also printed on the page (guideHtml), which is what Google requires for FAQPage markup.
+  const faq = { "@context": "https://schema.org", "@type": "FAQPage", mainEntity: t.faq.map(([q, a]) => ({ "@type": "Question", name: q, acceptedAnswer: { "@type": "Answer", text: a.replace(/<[^>]+>/g, "") } })) };
+  return JSON.stringify([app, faq]);
+}
+
+/* Long-form guide and FAQ under a tool. Sections: { h, p: [html], list: [html], table: { head, rows } }.
+   Written for people first; related phrases appear where they answer a real question, never as lists. */
+function guideHtml(t) {
+  if (!t.guide && !t.faq) return "";
+  const sec = (s) => `<section class="guide-sec"><h2>${esc(s.h)}</h2>${(s.p || []).map((p) => `<p>${p}</p>`).join("")}${s.list ? `<${s.ordered ? "ol" : "ul"}>${s.list.map((li) => `<li>${li}</li>`).join("")}</${s.ordered ? "ol" : "ul"}>` : ""}${s.table ? `<div class="tablewrap"><table><thead><tr>${s.table.head.map((h) => `<th>${esc(h)}</th>`).join("")}</tr></thead><tbody>${s.table.rows.map((r) => `<tr>${r.map((c) => `<td>${c}</td>`).join("")}</tr>`).join("")}</tbody></table></div>` : ""}${(s.after || []).map((p) => `<p>${p}</p>`).join("")}</section>`;
+  const faq = t.faq && t.faq.length ? `<section class="guide-sec guide-faq"><h2>${esc(t.faqTitle || "Frequently asked questions")}</h2><div class="faq">${t.faq.map(([q, a]) => `<details><summary>${esc(q)}</summary><p>${a}</p></details>`).join("")}</div></section>` : "";
+  return `<article class="card guide">${(t.guide || []).map(sec).join("")}${faq}${t.guideUpdated ? `<p class="note">Rules and figures checked ${esc(t.guideUpdated)}.</p>` : ""}</article>`;
 }
 
 /* ------------------------------------------------------------------ tool page */
@@ -298,6 +311,8 @@ function toolPage(template, t) {
     inputs: (t.inputs || []).map((f) => ({ id: f.id, label: f.label, type: f.type, optional: !!f.optional })),
   };
   return template
+    .replace(/{{title}}/g, esc(t.seoTitle || t.name + " | " + BRAND))
+    .replace(/{{description}}/g, esc(t.seoDescription || t.short))
     .replace(/{{root}}/g, root)
     .replace(/{{name}}/g, esc(t.name))
     .replace(/{{short}}/g, esc(t.short))
@@ -315,6 +330,7 @@ function toolPage(template, t) {
     .replace("{{siblings}}", siblings)
     .replace("{{how}}", (t.how || []).map((h) => `<li>${esc(h)}</li>`).join(""))
     .replace("{{next}}", nextList)
+    .replace("{{guide}}", guideHtml(t))
     .replace("{{tooljson}}", JSON.stringify(clientTool).replace(/</g, "\\u003c"));
 }
 
