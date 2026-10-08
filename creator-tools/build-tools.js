@@ -107,8 +107,8 @@ function megaMenu(root) {
 
   return `<div class="mega" id="mega-tools" hidden>
     <div class="wrap mgrid">
-      ${col("Check a channel", ["youtube-subscriber-count-checker", "youtube-engagement-rate-calculator", "youtube-channel-quality-checker", "youtube-channel-comparison", "twitch-follower-count-checker"], ["creator-tools/#check", "All checkers"])}
-      ${col("Create content", ["youtube-title-generator", "youtube-description-generator", "youtube-video-ideas-generator", "youtube-script-outline-generator", "youtube-channel-name-generator", "youtube-thumbnail-downloader"], ["creator-tools/#create", "All generators"])}
+      ${col("Check a channel", ["youtube-monetization-checker", "youtube-subscriber-count-checker", "youtube-engagement-rate-calculator", "youtube-channel-quality-checker", "youtube-channel-comparison"], ["creator-tools/#check", "All checkers"])}
+      ${col("Create content", ["youtube-title-generator", "youtube-description-generator", "youtube-video-ideas-generator", "youtube-script-outline-generator", "youtube-thumbnail-downloader"], ["creator-tools/#create", "All generators"])}
       ${col("Rank on YouTube", ["youtube-keyword-generator", "youtube-tag-generator", "youtube-title-analyzer", "youtube-niche-finder", "youtube-hashtag-generator"], ["creator-tools/#rank", "All SEO tools"])}
       ${col("Money and pricing", ["youtube-money-calculator", "youtube-sponsorship-price-calculator", "instagram-pricing-calculator", "tiktok-money-calculator", "instagram-emv-calculator"], ["creator-tools/#estimate", "All calculators"])}
       <div class="mcol">
@@ -122,7 +122,7 @@ function megaMenu(root) {
       </div>
     </div>
     <div class="mfoot"><div class="wrap">
-      <span><b>Every tool is free.</b> No account needed. Sign up with Google if you want the weekly report and early access to saved reports.</span>
+      <span><b>Every tool is free.</b> No account needed. Sign in to track your channel and watch competitors from your dashboard.</span>
       <span class="mfoot-right"><span class="gslot" data-google-slot data-google-size="medium" data-google-width="210" hidden></span><a href="${root}compare/">Compare with vidIQ and TubeBuddy</a></span>
     </div></div>
   </div>
@@ -139,7 +139,7 @@ function megaMenu(root) {
         <a href="${root}compare/vidiq-alternative/">Passive Array vs vidIQ</a>
         <a href="${root}compare/tubebuddy-alternative/">Passive Array vs TubeBuddy</a>
         <a href="${root}compare/">All comparisons</a>
-        <a href="${root}pricing/">Pricing, which is free</a>
+        <a href="${root}pricing/">Pricing: free tools, optional Pro</a>
       </div>
       <div class="mcol"><h4>Product</h4>
         <a href="${root}youtube-extension/">Chrome extension</a>
@@ -171,7 +171,7 @@ function header(root, active, withSearch) {
 </div>${megaMenu(root)}</header>`;
 }
 
-const POPULAR_SLUGS = ["youtube-money-calculator", "instagram-engagement-rate-calculator", "tiktok-fake-follower-checker", "twitch-channel-comparison", "youtube-sponsorship-price-calculator", "instagram-hashtag-generator", "youtube-channel-quality-checker", "instagram-pricing-calculator"];
+const POPULAR_SLUGS = ["youtube-monetization-checker", "youtube-money-calculator", "youtube-tag-generator", "youtube-subscriber-count-checker", "youtube-engagement-rate-calculator", "youtube-keyword-generator", "youtube-title-generator", "youtube-sponsorship-price-calculator"];
 
 function footer(root, note) {
   const col = (title, links) => `<div class="fcol"><h4>${esc(title)}</h4>${links.map(([href, label]) => `<a href="${/^https?:/.test(href) ? href : root + href}">${esc(label)}</a>`).join("")}</div>`;
