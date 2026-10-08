@@ -132,10 +132,16 @@
     var head = "<div class=\"chan-head\">" + (c.thumbnail ? "<img src=\"" + esc(c.thumbnail) + "\" alt=\"\">" : "") + "<div class=\"t\"><h2>" + esc(c.title) + "</h2><div class=\"sub\">" + esc(c.handle || "") + (c.country ? " · " + esc(c.country) : "") + (c.publishedAt ? " · since " + new Date(c.publishedAt).getFullYear() : "") + " · tracked since " + esc(mine.since) + "</div></div>" +
       (v ? "<a class=\"verdict " + esc(v.cls || "") + "\" href=\"#race\">" + esc(v.label) + (v.confidence != null ? " · " + v.confidence + "%" : "") + "</a>" : "") +
       "<div class=\"chan-acts\"><a class=\"btn ghost\" href=\"" + esc(c.url) + "\" target=\"_blank\" rel=\"noopener\">Open on YouTube</a><a class=\"btn ghost\" href=\"" + toolUrl("youtube-channel-quality-checker") + "?channel=" + encodeURIComponent(me.channel) + "\" data-recent=\"youtube-channel-quality-checker\">Quality score</a><button type=\"button\" class=\"btn ghost\" data-change-channel>Change</button></div></div>";
+    function growth(key, base) {
+      if (mine.d7) return "7d " + delta(mine.d7, key, base);
+      var st = mine.sinceStart;
+      if (st) return delta(st, key, base) + " in " + st.days + " day" + (st.days === 1 ? "" : "s");
+      return "<span class=\"flat\">change shows from tomorrow</span>";
+    }
     var kpis = "<div class=\"kpis\">" +
-      "<div class=\"kpi\"><b>" + (c.hiddenSubscribers ? "hidden" : compact(c.subscribers)) + "</b><span>Subscribers · 7d " + delta(mine.d7, "subs", c.subscribers) + "</span></div>" +
-      "<div class=\"kpi\"><b>" + compact(c.views) + "</b><span>Total views · 7d " + delta(mine.d7, "views") + "</span></div>" +
-      "<div class=\"kpi\"><b>" + compact(c.videos) + "</b><span>Videos · 30d " + delta(mine.d30, "videos") + "</span></div>" +
+      "<div class=\"kpi\"><b>" + (c.hiddenSubscribers ? "hidden" : compact(c.subscribers)) + "</b><span>Subscribers · " + growth("subs", c.subscribers) + "</span></div>" +
+      "<div class=\"kpi\"><b>" + compact(c.views) + "</b><span>Total views · " + growth("views") + "</span></div>" +
+      "<div class=\"kpi\"><b>" + compact(c.videos) + "</b><span>Videos · " + (mine.d30 ? "30d " + delta(mine.d30, "videos") : "<span class=\"up\">+" + sm.last30Count + "</span> uploaded in 30 days") + "</span></div>" +
       "<div class=\"kpi\"><b>" + compact(sm.avgViews) + "</b><span>Avg views, last 10 uploads</span></div>" +
       "<div class=\"kpi" + (sm.engagement >= 4 ? " good" : sm.engagement < 1 ? " bad" : "") + "\"><b>" + sm.engagement + "%</b><span>Engagement, likes+comments / views</span></div>" +
       "<div class=\"kpi\"><b>" + (sm.viewsPerSub == null ? "–" : sm.viewsPerSub + "%") + "</b><span>Avg views per subscriber</span></div>" +
@@ -150,7 +156,7 @@
     var table = mine.uploads.length ? "<div class=\"tablewrap\"><table class=\"wltable uploads\"><thead><tr><th>Upload</th><th class=\"num\">Views</th><th class=\"num\">Views/day</th><th class=\"num\">Engagement</th><th class=\"num\">vs your avg</th></tr></thead><tbody>" + rows + "</tbody></table></div>" : "<p class=\"empty\">No public uploads found.</p>";
     var best = mine.best ? card("Best recent upload", "Highest views of the last 10.", "<a class=\"vt\" href=\"" + esc(mine.best.url) + "\" target=\"_blank\" rel=\"noopener\" style=\"font-weight:600\">" + esc(mine.best.title) + "</a><div class=\"kpis\" style=\"margin-top:12px\"><div class=\"kpi\"><b>" + compact(mine.best.views) + "</b><span>Views · " + mine.best.xAvg + "x your average</span></div><div class=\"kpi\"><b>" + mine.best.er + "%</b><span>Engagement</span></div></div><div class=\"chips-row\" style=\"margin-top:12px\"><a href=\"" + toolUrl("youtube-title-generator") + "?topic=" + encodeURIComponent(mine.best.title.slice(0, 80)) + "\" data-recent=\"youtube-title-generator\">More titles like this</a><a href=\"" + toolUrl("youtube-tag-generator") + "?topic=" + encodeURIComponent(mine.best.title.slice(0, 80)) + "\" data-recent=\"youtube-tag-generator\">Tags for a follow-up</a></div>", { span: 6 }) : "";
     var kw = c.keywords && c.keywords.length ? card("Channel keywords", "Set in your Studio, read from the public channel record.", "<div class=\"chips-row\">" + c.keywords.slice(0, 20).map(function (k) { return "<a href=\"" + ROOT + "research/?q=" + encodeURIComponent(k) + "\">" + esc(k) + "</a>"; }).join("") + "</div>", { span: 6 }) : card("Channel keywords", "", "<p class=\"empty\">No channel keywords set. Add some in YouTube Studio, Settings, Channel, Basic info. They help YouTube understand the channel.</p>", { span: 6 });
-    return "<div class=\"acard\" style=\"grid-column:span 12\">" + head + kpis + "<p class=\"sub\" style=\"margin-top:12px\">Live from the YouTube Data API. Subscriber counts are rounded by YouTube to three figures. Daily snapshots run at 05:45 UTC, so 7-day and 30-day change appears after the first week.</p></div>" +
+    return "<div class=\"acard\" style=\"grid-column:span 12\">" + head + kpis + "<p class=\"sub\" style=\"margin-top:12px\">Live from the YouTube Data API. Subscriber counts are rounded by YouTube to three figures. Daily snapshots run at 05:45 UTC. Until a full week is tracked, growth is shown since tracking started; the 7-day figure starts on " + esc(mine.fullWeekOn || "") + ".</p></div>" +
       card("Last 10 uploads against your own average", "Which uploads beat your usual numbers. Anything above 1.5x is worth repeating.", table) + best + kw;
   };
   P.optimize = function () {
