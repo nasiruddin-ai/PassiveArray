@@ -230,6 +230,9 @@ ${p.html}
   });
 }
 
+let CAT_INTROS = {};
+try { CAT_INTROS = require("./category-intros.js"); } catch (_) { /* optional */ }
+
 function categoryPage(cat, posts, counts) {
   const root = "../../../";
   const mine = posts.filter((p) => p.category.slug === cat.slug);
@@ -242,6 +245,7 @@ function categoryPage(cat, posts, counts) {
   </div>
   ${catNav(cat.slug, root, counts)}
   <div class="grid c3">${mine.map((p) => card(p, root)).join("")}</div>
+  ${CAT_INTROS[cat.slug] ? site.guideHtml({ guide: CAT_INTROS[cat.slug].sections }) : ""}
   ${toolCards(cat.tools, root, "The tools behind these articles")}
   ${signupBand("New " + cat.label.toLowerCase() + " articles, once a week", "One email a week with the new benchmarks and tools. Unsubscribe any time.")}`;
   return site.shell({

@@ -38,7 +38,7 @@ for (const [folder, page] of Object.entries(TOOLS)) {
   }
   const outDir = path.join(DIST, folder);
   fs.mkdirSync(outDir, { recursive: true });
-  fs.writeFileSync(path.join(outDir, "index.html"), withSiteChrome(fs.readFileSync(src, "utf8")));
+  fs.writeFileSync(path.join(outDir, "index.html"), withWebGuide(withSiteChrome(fs.readFileSync(src, "utf8")), folder));
   console.log(folder + "/" + page + " -> dist/" + folder + "/index.html (+ site bar and footer)");
 }
 
@@ -74,6 +74,43 @@ function withSiteChrome(html) {
     out = out.replace(/<head([^>]*)>/i, (m) => m + "\n" + site.ANALYTICS_HEAD);
   }
   return out;
+}
+
+// Search title, description, canonical, a long-form guide and an FAQ for each web tool,
+// from guides-web/<folder>.js. The web tools do not load the site stylesheet, so the
+// guide carries its own small scoped style, matched to the site chrome above.
+function withWebGuide(html, folder) {
+  const f = path.join(ROOT, "guides-web", folder + ".js");
+  if (!fs.existsSync(f)) return html;
+  const g = require(f);
+  const esc = site.esc;
+  const canonical = site.SITE + "/" + folder + "/";
+  if (g.seoTitle) html = /<title>[\s\S]*?<\/title>/i.test(html) ? html.replace(/<title>[\s\S]*?<\/title>/i, "<title>" + esc(g.seoTitle) + "</title>") : html.replace(/<head([^>]*)>/i, (m) => m + "\n<title>" + esc(g.seoTitle) + "</title>");
+  if (g.seoDescription) {
+    html = html.replace(/<meta\s+name="description"[^>]*>\s*/gi, "");
+    html = html.replace(/<\/title>/i, "</title>\n<meta name=\"description\" content=\"" + esc(g.seoDescription) + "\">");
+  }
+  if (!/rel="canonical"/i.test(html)) html = html.replace(/<\/title>/i, "</title>\n<link rel=\"canonical\" href=\"" + canonical + "\">");
+  const app = { "@context": "https://schema.org", "@type": "WebApplication", name: (g.seoTitle || folder).split(/[:|]/)[0].trim(), url: canonical, description: g.seoDescription || "", applicationCategory: "UtilitiesApplication", operatingSystem: "Any", offers: { "@type": "Offer", price: "0", priceCurrency: "USD" }, provider: { "@type": "Organization", name: site.BRAND, url: site.SITE } };
+  const ld = g.faq && g.faq.length ? [app, site.faqLd(g.faq)] : app;
+  html = html.replace(/<\/head>/i, "<script type=\"application/ld+json\">" + JSON.stringify(ld) + "</script>\n</head>");
+  const style = `<style id="pa-guide">
+.pa-guide{max-width:960px;margin:40px auto 0;padding:32px clamp(18px,4vw,40px);border:1px solid rgba(31,42,68,.12);border-radius:18px;background:#fff;color:#1F2A44;font-family:Poppins,system-ui,-apple-system,"Segoe UI",sans-serif;box-sizing:border-box}
+.pa-guide section{max-width:780px}.pa-guide section+section{margin-top:30px;padding-top:26px;border-top:1px solid rgba(31,42,68,.1)}
+.pa-guide h2{font-size:1.4rem;line-height:1.25;margin:0 0 12px;color:#1F2A44;letter-spacing:-.01em}
+.pa-guide p,.pa-guide li{color:#4A5468;line-height:1.7;font-size:.98rem}.pa-guide p{margin:0 0 12px}
+.pa-guide ul,.pa-guide ol{padding-left:22px;margin:0 0 12px}.pa-guide li{margin:4px 0}
+.pa-guide b{color:#1F2A44}.pa-guide a{color:#1F7F73}
+.pa-guide table{width:100%;border-collapse:collapse;font-size:.92rem;margin:6px 0 14px}.pa-guide th,.pa-guide td{text-align:left;padding:9px 10px;border-bottom:1px solid rgba(31,42,68,.1);vertical-align:top}
+.pa-guide .tw{overflow-x:auto}
+.pa-guide details{border-top:1px solid rgba(31,42,68,.1);padding:12px 0}.pa-guide details:last-child{border-bottom:1px solid rgba(31,42,68,.1)}
+.pa-guide summary{cursor:pointer;font-weight:600;color:#1F2A44}.pa-guide details p{margin-top:8px}
+.pa-guide .note{font-size:.82rem;color:#6B7280;margin-top:18px}
+</style>`;
+  const sec = (s) => `<section><h2>${esc(s.h)}</h2>${(s.p || []).map((p) => `<p>${p}</p>`).join("")}${s.list ? `<${s.ordered ? "ol" : "ul"}>${s.list.map((li) => `<li>${li}</li>`).join("")}</${s.ordered ? "ol" : "ul"}>` : ""}${s.table ? `<div class="tw"><table><thead><tr>${s.table.head.map((h) => `<th>${esc(h)}</th>`).join("")}</tr></thead><tbody>${s.table.rows.map((r) => `<tr>${r.map((c) => `<td>${c}</td>`).join("")}</tr>`).join("")}</tbody></table></div>` : ""}${(s.after || []).map((p) => `<p>${p}</p>`).join("")}</section>`;
+  const faq = g.faq && g.faq.length ? `<section><h2>Frequently asked questions</h2>${g.faq.map(([q, a]) => `<details><summary>${esc(q)}</summary><p>${a}</p></details>`).join("")}</section>` : "";
+  const block = `${style}<article class="pa-guide">${(g.guide || []).map(sec).join("")}${faq}${g.guideUpdated ? `<p class="note">Checked ${esc(g.guideUpdated)}.</p>` : ""}</article>`;
+  return html.replace(/<div class="pa-foot">/, block + "<div class=\"pa-foot\">");
 }
 
 // Passive Array pages: home, tools directory and one page per creator tool.
@@ -128,11 +165,36 @@ const urls = [
   ...pagePaths.indexable.map((p) => [p, p === "/about/" ? "0.5" : "0.3", "yearly"]),
 ];
 const today = new Date().toISOString().slice(0, 10);
+// lastmod only moves when a page's own text changes. Each page's main-content text is
+// hashed (header, footer, scripts and asset version stamps excluded) and compared with
+// sitemap-dates.json, which is committed so Vercel builds see the same dates.
+const DATES_FILE = path.join(ROOT, "sitemap-dates.json");
+const knownDates = fs.existsSync(DATES_FILE) ? JSON.parse(fs.readFileSync(DATES_FILE, "utf8")) : {};
+const nextDates = {};
+function contentHash(loc) {
+  const f = path.join(DIST, loc, "index.html");
+  if (!fs.existsSync(f)) return null;
+  let h = fs.readFileSync(f, "utf8");
+  h = h.replace(/<script[\s\S]*?<\/script>/gi, " ").replace(/<style[\s\S]*?<\/style>/gi, " ").replace(/<header[\s\S]*?<\/header>/gi, " ").replace(/<footer[\s\S]*?<\/footer>/gi, " ").replace(/<div class="pa-(bar|foot)"[\s\S]*?<\/div>/gi, " ");
+  const text = h.replace(/<[^>]+>/g, " ").replace(/\s+/g, " ").trim();
+  return require("crypto").createHash("sha1").update(text).digest("hex").slice(0, 16);
+}
+function lastmodFor(loc, mod) {
+  if (mod) return mod;
+  const hash = contentHash(loc);
+  const prev = knownDates[loc];
+  const date = prev && prev.hash === hash ? prev.date : today;
+  nextDates[loc] = { hash, date };
+  return date;
+}
 const sitemap = '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n' +
-  urls.map(([loc, pri, freq, mod]) => `  <url><loc>${site.SITE}${loc}</loc><lastmod>${mod || today}</lastmod><changefreq>${freq}</changefreq><priority>${pri}</priority></url>`).join("\n") +
+  urls.map(([loc, pri, freq, mod]) => `  <url><loc>${site.SITE}${loc}</loc><lastmod>${lastmodFor(loc, mod)}</lastmod><changefreq>${freq}</changefreq><priority>${pri}</priority></url>`).join("\n") +
   "\n</urlset>\n";
 fs.writeFileSync(path.join(DIST, "sitemap.xml"), sitemap);
-const disallow = ["/api/"].concat(pagePaths.noindex).map((p) => "Disallow: " + p).join("\n");
+try { fs.writeFileSync(DATES_FILE, JSON.stringify(nextDates, null, 1) + "\n"); } catch (_) { /* read-only build host */ }
+// Only the API is blocked. Login, sign-up, account and dashboard carry noindex tags,
+// which Google can only see if it may crawl them, so they are not disallowed here.
+const disallow = ["/api/"].map((p) => "Disallow: " + p).join("\n");
 fs.writeFileSync(path.join(DIST, "robots.txt"), "User-agent: *\nAllow: /\n" + disallow + "\n\nSitemap: " + site.SITE + "/sitemap.xml\n");
 console.log("sitemap.xml (" + urls.length + " urls) and robots.txt -> dist/");
 

@@ -13,6 +13,12 @@ const TABS = [
   ["shorts", "Shorts", "research/shorts/"],
 ];
 
+
+let RG = {};
+try { RG = require("./research-guides.js"); } catch (_) { /* optional */ }
+const rguide = (k) => (RG[k] ? site.guideHtml({ guide: RG[k].sections, faq: RG[k].faq }) : "");
+const rld = (base, k) => (RG[k] && RG[k].faq && RG[k].faq.length ? [base, site.faqLd(RG[k].faq)] : base);
+
 function tabs(active, root) {
   return `<nav class="rtabs" aria-label="Research sections">${TABS.map(([key, label, href]) => `<a href="${root}${href}"${key === active ? ' class="on"' : ""}>${esc(label)}</a>`).join("")}<a href="${root}research/outliers/?view=thumbs">Thumbnails</a><a href="${root}creator-tools/find-youtube-influencers-by-niche/">Channels <span class="soon">GROWTH SOON</span></a></nav>`;
 }
@@ -67,7 +73,8 @@ function keywordsPage() {
       <a href="${root}research/outliers/?view=thumbs">Study the thumbnails that broke out <b>Thumbnails</b></a>
       <a href="${root}youtube-extension/">The same keyword score inside YouTube search <b>Extension</b></a>
     </section>
-  </div>`;
+  </div>
+  ${rguide("keywords")}`;
 
   return site.shell({
     title: "YouTube Keyword Research",
@@ -77,7 +84,7 @@ function keywordsPage() {
     active: "research",
     body,
     scripts: `<script src="${root}creator-tools/research.js"></script>`,
-    jsonld: webApp("YouTube Keyword Research", "/research/", "Free YouTube keyword research with measured numbers."),
+    jsonld: rld(webApp("YouTube Keyword Research", "/research/", "Free YouTube keyword research with measured numbers."), "keywords"),
   });
 }
 
@@ -120,7 +127,8 @@ function outliersPage(kind) {
       <a href="${root}creator-tools/youtube-sponsorship-price-calculator/">What a sponsor should pay that channel now <b>Price</b></a>
       <a href="${root}creator-tools/youtube-lookalike-finder/">Find channels like it <b>Lookalikes</b></a>
     </section>
-  </div>`;
+  </div>
+  ${rguide(shorts ? "shorts" : "outliers")}`;
 
   return site.shell({
     title: shorts ? "YouTube Shorts Outliers" : "YouTube Outlier Videos",
@@ -130,7 +138,7 @@ function outliersPage(kind) {
     active: "research",
     body,
     scripts: `<script src="${root}creator-tools/research.js"></script>`,
-    jsonld: webApp(shorts ? "YouTube Shorts Outliers" : "YouTube Outlier Videos", shorts ? "/research/shorts/" : "/research/outliers/", "Videos that did far better than their channel normally does, updated daily."),
+    jsonld: rld(webApp(shorts ? "YouTube Shorts Outliers" : "YouTube Outlier Videos", shorts ? "/research/shorts/" : "/research/outliers/", "Videos that did far better than their channel normally does, updated daily."), shorts ? "shorts" : "outliers"),
   });
 }
 

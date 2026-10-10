@@ -8,7 +8,7 @@
 
 const SCHEMAS = {
   hashtags: {
-    task: "Write an Instagram hashtag set for the post topic and niche. Mix sizes: about 20% broad (millions of posts), 50% medium (100K to 1M posts), 30% niche (under 100K posts) where the account can rank. All lowercase, no spaces, real hashtags people use.",
+    task: "Write an Instagram hashtag set for the post topic and niche. Mix sizes: about 20% broad (millions of posts), 50% medium (100K to 1M posts), 30% niche (under 100K posts) where the account can rank. All lowercase, no spaces, real hashtags people use. Instagram allows only 5 hashtags per post, so make them specific to the topic, never generic filler.",
     shape: '{"tags":[{"tag":"#example","size":"broad|mid|niche"}]}',
   },
   bio: {

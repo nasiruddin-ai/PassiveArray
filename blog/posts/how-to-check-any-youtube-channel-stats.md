@@ -2,6 +2,7 @@
 title: How to check any YouTube channel's stats (and what the public data cannot show)
 description: Which numbers are genuinely available for any channel, which are rounded or hidden, and how to read a channel you do not own.
 date: 2026-09-20
+updated: 2026-10-10
 keyword: how to check youtube channel stats
 category: Growth
 tools: youtube-subscriber-count-checker, youtube-channel-quality-checker, youtube-channel-comparison
@@ -27,7 +28,7 @@ Everything our [subscriber count checker](../../creator-tools/youtube-subscriber
 
 ## Why the subscriber count never quite matches
 
-YouTube rounds subscriber counts in its public API to three significant figures. A channel with 1,234,567 subscribers reports as 1.23M to every third-party tool in existence, including ours. Below 1,000 it rounds to the nearest 10.
+YouTube rounds subscriber counts in its public API to three significant figures. A channel with 1,234,567 subscribers reports as 1.23M to every third-party tool in existence, including ours.
 
 So if a site shows you a live subscriber count ticking up digit by digit, it is animating between rounded values. The precision is decorative. Views and video counts, by contrast, are exact.
 

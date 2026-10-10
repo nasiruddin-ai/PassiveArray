@@ -482,7 +482,7 @@
   };
 
   COMPUTE["instagram-follower-to-following-ratio"] = COMPUTE["x-follower-to-following-ratio"] = function (v) {
-    var f = num(v.followers), g = num(v.following), r = safeDiv(f, g), lab = ratioLabel(r);
+    var f = num(v.followers), g = num(v.following), r = safeDiv(f, g), lab = g > 0 ? ratioLabel(r) : { label: "Follows no one", cls: "good" };
     return {
       hero: { label: "Follower to following ratio", value: (g > 0 ? fmt(r, 2) + " : 1" : "n/a") + " " + pill(lab) },
       rows: [
@@ -656,8 +656,7 @@
     if (firstLine.length > 125) tips.push("The first line is " + firstLine.length + " characters. Only about 125 show before \"more\", so put the hook in the first 125.");
     if (!cta) tips.push("No call to action found. Ask readers to comment, save or tap the link.");
     if (!question) tips.push("No question. Posts that ask something get more comments.");
-    if (tags.length > 30) tips.push('<span class="bad">' + tags.length + " hashtags. Instagram allows 30.</span>");
-    else if (tags.length > 10) tips.push(tags.length + " hashtags is more than most accounts need. 3 to 5 relevant tags usually perform better.");
+    if (tags.length > 5) tips.push('<span class="bad">' + tags.length + " hashtags. Since December 2025 Instagram allows 5 per post, counting caption and comments together. Keep your best 5.</span>");
     else if (tags.length === 0) tips.push("No hashtags. Add 3 to 5 specific ones so the post is discoverable.");
     if (lines < 3 && words > 40) tips.push("Add line breaks. Walls of text get skipped.");
     if (emoji > 10) tips.push(emoji + " emoji is a lot. Keep them to a few per paragraph.");
@@ -667,7 +666,7 @@
       rows: [
         { name: "Words", value: fmt(words) },
         { name: "First line", sub: "shown before \"more\"", value: firstLine.length + " / 125 characters", cls: firstLine.length > 125 ? "warn" : "" },
-        { name: "Hashtags", value: tags.length + " / 30", cls: tags.length > 30 ? "bad" : "" },
+        { name: "Hashtags", sub: "Instagram limit since Dec 2025", value: tags.length + " / 5", cls: tags.length > 5 ? "bad" : "" },
         { name: "Mentions", value: fmt(mentions.length) },
         { name: "Emoji", value: fmt(emoji) },
         { name: "Line breaks", value: fmt(lines - 1) },
@@ -847,7 +846,7 @@
     words.forEach(function (w) { mid.push(w + SUFFIX_MID[0]); });
     pool.mid.forEach(function (t) { mid.push(t); });
     words.forEach(function (w, i) { mid.push(w + SUFFIX_MID[(i + 1) % SUFFIX_MID.length]); });
-    if (joined) SUFFIX_NICHE.forEach(function (s) { niche.push(joined + s); });
+    if (joined) SUFFIX_NICHE.forEach(function (s) { if (!joined.endsWith(s)) niche.push(joined + s); });
     pool.niche.forEach(function (t) { niche.push(t); });
     if (words.length > 1) niche.push(words.slice(0, 2).join("") + "ideas", words[words.length - 1] + "forbeginners");
     broad.slice(0, nBroad).forEach(function (t) { push(t, "broad"); });
@@ -859,26 +858,32 @@
   }
   function hashtagsOut(res, fromAI) {
     var tags = res.tags || [];
+    // Instagram allows 5 hashtags per post (since December 2025). Lead with a balanced five:
+    // 1 broad, 2 medium, 2 niche, then the rest as alternatives to rotate across posts.
+    var take = function (size, n) { return tags.filter(function (t) { return t.size === size; }).slice(0, n); };
+    var best = take("broad", 1).concat(take("mid", 2), take("niche", 2));
+    tags.forEach(function (t) { if (best.length < 5 && best.indexOf(t) < 0) best.push(t); });
+    tags = best.concat(tags.filter(function (t) { return best.indexOf(t) < 0; }));
     return {
-      hero: { label: "Hashtag set", value: tags.length + " tags", note: tags.filter(function (t) { return t.size === "broad"; }).length + " broad for discovery, " + tags.filter(function (t) { return t.size === "mid"; }).length + " medium, " + tags.filter(function (t) { return t.size === "niche"; }).length + " niche where you can rank" },
+      hero: { label: "Your 5 for this post", value: best.map(function (t) { return t.tag; }).join(" "), note: tags.filter(function (t) { return t.size === "broad"; }).length + " broad for discovery, " + tags.filter(function (t) { return t.size === "mid"; }).length + " medium, " + tags.filter(function (t) { return t.size === "niche"; }).length + " niche where you can rank" },
       tags: tags,
-      copy: tags.map(function (t) { return t.tag; }).join(" "),
-      note: (fromAI ? "Written by AI for your topic. " : "Built from your topic and a curated pool for the niche. ") + "Orange tags are broad, blue medium, green niche. Rotate sets between posts.",
+      copy: best.map(function (t) { return t.tag; }).join(" "),
+      note: (fromAI ? "Written by AI for your topic. " : "Built from your topic and a curated pool for the niche. ") + "Instagram allows 5 hashtags per post since December 2025, so the copy button copies the five above: one broad, two medium, two niche. The rest are alternatives to rotate into later posts. Orange tags are broad, blue medium, green niche.",
     };
   }
 
   var BIO_TEMPLATES = {
     friendly: [
-      "{what} for {audience} 🙂\nHelping you look good online, minus the stress\n👇 {cta}",
+      "{what} for {audience} 🙂\nMade for you, minus the jargon\n👇 {cta}",
       "Hi, I'm {name}. I make {what}.\nBuilt for {audience} who want it done right.\n{cta} ⬇️",
-      "{what} | {audience}\nReal results, friendly process\n📩 {cta}",
+      "{what} | {audience}\nFriendly, clear, no jargon\n📩 {cta}",
       "Making {what} simple for {audience}\nTips every week, no jargon\n👉 {cta}",
       "{name} • {what}\nFor {audience} ready to grow\n{cta} 👇",
     ],
     professional: [
       "{what} for {audience}.\nStrategy first, design second.\n{cta}",
-      "{name} | {what}\nTrusted by {audience}.\n{cta}",
-      "Helping {audience} with {what}.\nClear process. Measurable results.\n{cta}",
+      "{name} | {what}\nFor {audience}.\n{cta}",
+      "Helping {audience} with {what}.\nClear process, plain answers.\n{cta}",
       "{what}\nSpecialists serving {audience}\n{cta}",
       "{name}\n{what}, built for {audience}.\n{cta}",
     ],
@@ -930,12 +935,12 @@
     ["What {a} ask me most about {x}", "The same question, every single week.", "post"],
     ["{x} in 60 seconds", "Everything you need, nothing you do not.", "reel"],
     ["{n} tools I use for {x} (all free)", "Number 2 saves me hours.", "carousel"],
-    ["The one {x} change that doubled results for a client", "It took 20 minutes.", "post"],
+    ["The one {x} change I would make first", "Small change, easy to try today.", "post"],
     ["Rate my {x}: send yours and I will review it", "First 10 get a reply.", "story"],
     ["This or that: {x} edition", "Vote in the poll.", "story"],
-    ["What I would do differently if I started {x} today", "Skip the year I wasted.", "reel"],
-    ["{n} signs your {x} is costing you clients", "If you nodded at two, read on.", "carousel"],
-    ["Client story: how {x} changed things for a {a}", "From invisible to booked out.", "post"],
+    ["What I would do differently if I started {x} today", "Skip the slow start.", "reel"],
+    ["{n} signs your {x} needs attention", "If you nodded at two, read on.", "carousel"],
+    ["A real {x} story from a {a} (share yours)", "Use a true story, with permission.", "post"],
     ["{x} trends for {a} this year", "One of these is already fading.", "carousel"],
     ["Answering a hater about {x}", "Someone said this does not work. Here is why they are wrong.", "reel"],
     ["The {x} glossary for {a}", "Words your provider uses that nobody explains.", "carousel"],
@@ -945,7 +950,7 @@
     ["Unpopular opinion about {x}", "Ready for the comments on this one.", "post"],
     ["How much does {x} cost? An honest breakdown", "Numbers most people hide.", "carousel"],
     ["{x} for {a} on a small budget", "Where to spend and where to save.", "post"],
-    ["Things I wish {a} knew about {x}", "Would have saved them thousands.", "reel"],
+    ["Things I wish {a} knew about {x}", "Learn these before you start.", "reel"],
     ["Screen record: fixing a real {x} problem live", "No script, no cuts.", "reel"],
     ["Poll: which {x} option would you pick?", "Results tomorrow.", "story"],
     ["The {x} red flags to look for before you hire anyone", "Number 4 is the expensive one.", "carousel"],
@@ -1262,7 +1267,7 @@
       rows: [
         { name: "Shown above your title", value: chosen.slice(0, 3).map(function (c) { return c.tag; }).join(" ") },
         { name: "Total characters", value: chosen.map(function (c) { return c.tag; }).join(" ").length },
-        { name: "YouTube's limit", sub: "more than this and all are ignored", value: "15 hashtags" },
+        { name: "YouTube's limit", sub: "more than this and all are ignored", value: "60 hashtags" },
       ],
       copy: chosen.map(function (c) { return c.tag; }).join(" "),
       note: "Paste these at the end of your description. Specific tags are first on purpose: only the first three are shown above the title, and a narrow tag brings the right viewer while a broad one competes with millions of videos.",

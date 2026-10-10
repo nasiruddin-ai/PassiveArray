@@ -293,6 +293,10 @@ function jsonLd(t, url) {
 
 /* Long-form guide and FAQ under a tool. Sections: { h, p: [html], list: [html], table: { head, rows } }.
    Written for people first; related phrases appear where they answer a real question, never as lists. */
+function faqLd(faq) {
+  return { "@context": "https://schema.org", "@type": "FAQPage", mainEntity: faq.map(([q, a]) => ({ "@type": "Question", name: q, acceptedAnswer: { "@type": "Answer", text: String(a).replace(/<[^>]+>/g, "") } })) };
+}
+
 function guideHtml(t) {
   if (!t.guide && !t.faq) return "";
   const sec = (s) => `<section class="guide-sec"><h2>${esc(s.h)}</h2>${(s.p || []).map((p) => `<p>${p}</p>`).join("")}${s.list ? `<${s.ordered ? "ol" : "ul"}>${s.list.map((li) => `<li>${li}</li>`).join("")}</${s.ordered ? "ol" : "ul"}>` : ""}${s.table ? `<div class="tablewrap"><table><thead><tr>${s.table.head.map((h) => `<th>${esc(h)}</th>`).join("")}</tr></thead><tbody>${s.table.rows.map((r) => `<tr>${r.map((c) => `<td>${c}</td>`).join("")}</tr>`).join("")}</tbody></table></div>` : ""}${(s.after || []).map((p) => `<p>${p}</p>`).join("")}</section>`;
@@ -709,7 +713,7 @@ ${scripts}
 </html>`;
 }
 
-module.exports = { ANALYTICS_HEAD, GTM_BODY, GTM_ID, GA4_ID, ANALYTICS, buildInto, homePage, tools, SITE, BRAND, TAGLINE, WEB_TOOLS, header, footer, shell, postCard, fmtDate, esc, ICON, VERIFY_TAG, intentOf, INTENTS };
+module.exports = { ANALYTICS_HEAD, GTM_BODY, GTM_ID, GA4_ID, ANALYTICS, buildInto, homePage, tools, SITE, BRAND, TAGLINE, WEB_TOOLS, header, footer, shell, postCard, fmtDate, esc, ICON, VERIFY_TAG, intentOf, INTENTS, guideHtml, faqLd };
 
 if (require.main === module) {
   const out = path.join(HERE, ".out");

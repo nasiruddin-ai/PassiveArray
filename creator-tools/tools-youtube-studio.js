@@ -78,7 +78,7 @@ module.exports = function (NICHES) {
       how: [
         "Ideas are built from patterns that reliably earn clicks in any niche, filled with your subject and audience.",
         "Each idea includes a hook, because retention in the first thirty seconds decides whether the video gets shown to more people.",
-        "Run it again for a different set. The patterns are shuffled from your inputs, so the same inputs give the same ideas.",
+        "The same inputs always give the same ideas. Change the niche or audience wording to get a different set.",
       ],
       next: ["youtube-title-generator", "youtube-keyword-generator", "youtube-niche-finder"],
     },
@@ -211,7 +211,7 @@ module.exports = function (NICHES) {
       ],
       how: [
         "Only the first three appear above your title, so specific tags go first where they attract the right viewer.",
-        "YouTube ignores everything past 15 hashtags on a video, and using more than that can get all of them ignored.",
+        "YouTube ignores every hashtag on a video that has more than 60, and only the first three show with the title, so a short, specific list works best.",
         "Hashtags are a small signal. They help people browsing a tag, they do not rescue a weak title.",
       ],
       next: ["youtube-tag-generator", "youtube-description-generator", "youtube-keyword-generator"],

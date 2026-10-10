@@ -304,7 +304,7 @@ const tools = [
     inputs: [{ id: "login", label: "Twitch username", type: "text", placeholder: "Paste a twitch.tv link or username" }],
     how: [
       "Data comes from the official Twitch Helix API.",
-      "Average VOD views use the 10 most recent archived broadcasts or uploads.",
+      "Average VOD views use the 10 most recent videos: past broadcasts, highlights or uploads.",
       "Partner and affiliate status is shown when Twitch exposes it.",
     ],
   },
@@ -358,7 +358,7 @@ const tools = [
     ],
     how: [
       "Benchmarks are typical 2025 to 2026 ranges by tier: nano, micro, mid, macro and mega.",
-      "Excellent is roughly 1.5x the tier average. Low is under half of it.",
+      "Excellent is 1.6x the tier average or more, good is 1.25x. Low is under half of it.",
       "Rates vary by niche. Pets and comedy run high, fashion and business run lower.",
     ],
   },
@@ -473,7 +473,7 @@ const tools = [
     ],
     how: [
       "Engagement 35 points, authenticity 25, growth 20, consistency 20.",
-      "Growth of 5 percent or more in 30 days earns full growth points. Negative growth earns none.",
+      "Growth of 5 percent or more in 30 days earns full growth points. Points taper to none at a 2 percent loss; a blank growth figure earns half.",
       "3 to 7 posts a week is treated as ideal consistency.",
     ],
   },
@@ -572,7 +572,7 @@ const tools = [
     how: [
       "Price = average views / 1,000 x $10 to $20, adjusted 0.7x to 1.4x by engagement.",
       "A series of 3 videos is priced at 2.5x a single video.",
-      "Spark Ads rights (the brand boosts the creator's post) typically add 30 to 50 percent.",
+      "Spark Ads rights (the brand boosts the creator's post) add 40 percent to the price here.",
     ],
   },
   {
@@ -631,8 +631,8 @@ const tools = [
       { id: "following", label: "Following", type: "number", placeholder: "e.g. 900", min: 0 },
     ],
     how: [
-      "Ratio = followers / following. Above 10 reads as an authority account, 1 to 10 as a normal active user, under 1 as a follow-back account.",
-      "X caps following at 5,000 until you have a comparable follower count, which keeps most ratios near 1 early on.",
+      "Ratio = followers / following. 10 or more reads as an established creator, 2 to 10 as a growing account, 1 to 2 as balanced, under 1 as a follow-back pattern.",
+      "X limits how many accounts a new account can follow, which keeps most ratios near 1 early on.",
       "Combine with reply and repost counts for a real engagement view.",
     ],
   },
@@ -668,16 +668,16 @@ const tools = [
     platform: "Instagram",
     api: "ai",
     action: "hashtags",
-    short: "30 hashtags for any topic, mixed across broad, medium and niche sizes, ready to copy.",
+    short: "The best 5 hashtags for your post, Instagram's limit, plus alternatives to rotate, mixed across broad, medium and niche sizes.",
     intro: "Type your topic and niche. You get a hashtag set built the way growth accounts do it: a few broad tags for discovery, most in the middle, and niche tags where you can actually rank.",
     inputs: [
       { id: "topic", label: "Post topic", type: "text", placeholder: "Type the post topic, e.g. morning skincare routine" },
       { id: "niche", label: "Niche", type: "select", options: NICHES.map((n) => [n, n[0].toUpperCase() + n.slice(1)]) },
-      { id: "count", label: "How many hashtags", type: "select", options: [["10", "10"], ["15", "15"], ["20", "20"], ["30", "30"]], value: "20" },
+      { id: "count", label: "Hashtags to choose from", type: "select", options: [["10", "5 to use + 5 spare"], ["15", "5 to use + 10 spare"], ["20", "5 to use + 15 spare"]], value: "15" },
     ],
     how: [
       "Tags are built from your topic words, common Instagram suffixes and a curated pool for each niche.",
-      "The mix is about 20 percent broad, 50 percent medium and 30 percent niche.",
+      "Since December 2025 Instagram allows 5 hashtags per post, caption and comments together. The first five are a balanced set: one broad, two medium, two niche. The rest are spares to rotate across posts.",
       "When the site owner adds a Claude API key, the generator upgrades to AI-written tags. It works without one.",
     ],
   },
@@ -716,7 +716,7 @@ const tools = [
       { id: "format", label: "Format", type: "select", options: [["mixed", "Mixed"], ["reel", "Reels"], ["carousel", "Carousels"], ["story", "Stories"], ["post", "Single posts"]] },
     ],
     how: [
-      "Ideas come from 40 proven content patterns (mistakes, before and after, myths, behind the scenes, checklists) filled with your niche and audience.",
+      "Ideas come from 30 content patterns (mistakes, before and after, myths, behind the scenes, checklists) filled with your niche and audience.",
       "Each idea includes a hook line you can use as the first caption line or reel text.",
       "With a Claude API key set on the server the ideas are AI-written for your exact niche.",
     ],
