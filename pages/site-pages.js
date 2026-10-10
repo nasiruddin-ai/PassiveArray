@@ -40,7 +40,7 @@ function aboutPage() {
       <h2>Who it is for</h2>
       <p>Creators checking their own growth, brands vetting a creator before a deal, agencies building a shortlist, and anyone curious what a channel is really doing. If that is you, <a href="../contact/">tell us what is missing</a>.</p>
       <h2>Who builds it</h2>
-      <p>Passive Array is built by <a href="../founder/">Nasir Uddin</a>, an SEO specialist in Dhaka who wanted creator tools that show their working. <a href="../founder/">Read why he built it</a>.</p>
+      <p>Passive Array is built by <a href="../founder/">Nasir Uddin</a>, an SEO and AI automation specialist in Dhaka who wanted creator tools that show their working. <a href="../founder/">Read why he built it</a>.</p>
       <h2>Compared with paid tools</h2>
       <p>See the honest <a href="../compare/vidiq-alternative/">vidIQ alternative</a> and <a href="../compare/tubebuddy-alternative/">TubeBuddy alternative</a> comparisons, including where those products win, or read the <a href="../faq/">answers to common questions</a>.</p>
     </div>
@@ -754,144 +754,245 @@ function faqPage() {
 }
 
 /* ---------------------------------------------------------------- founder
-   Everything about the person lives in FOUNDER. Only facts the founder has
-   confirmed belong here. Career entries stay empty until they are copied from
-   the LinkedIn profile; empty sections are simply not rendered. */
+   The founder page. Facts about the person come from the LinkedIn profile
+   (October 2026); every automation listed under "running on this site" is a
+   real system on passivearray.com that a visitor can check. */
 const FOUNDER = {
   name: "Nasir Uddin",
-  role: "Founder of Passive Array",
-  // From the LinkedIn profile, October 2026.
-  headline: "SEO specialist and digital marketing manager: e-commerce SEO, local SEO and performance marketing",
+  role: "SEO and AI Automation Specialist, Founder of Passive Array",
+  short: "SEO and AI automation specialist",
   photo: "/founder-nasir.jpg",
   linkedin: "https://www.linkedin.com/in/seoconsultantnasir/",
   github: "https://github.com/nasiruddin-ai",
   location: "Dhaka, Bangladesh",
-  about: [
-    "As an experienced SEO specialist, I help businesses reach their online goals by using current SEO techniques and staying ahead of Google's changing algorithms. I work across every part of SEO, optimising websites to improve visibility and bring in targeted traffic.",
-    "Alongside SEO I run paid campaigns for local businesses on Facebook and Google, and I build tools. Passive Array is where those two sides meet: the numbers I wanted when researching channels and campaigns, made free for everyone.",
-  ],
+  since: 2022, // first SEO role, ShopyLabs, March 2022
   experience: [
-    { title: "Digital Marketing Specialist", company: "Squareko", dates: "Jan 2026 to present · Dhaka, Bangladesh" },
-    { title: "Search Engine Optimization Specialist", company: "Olynex, UI/UX design agency", dates: "Feb 2025 to Jan 2026 · Bogra, Rajshahi, Bangladesh" },
-    { title: "Search Engine Optimization Manager", company: "ShopyLabs", dates: "Mar 2022 to Feb 2025 · Dhaka, Bangladesh" },
+    { title: "Digital Marketing Specialist", place: "Squareko", dates: "Jan 2026 to present", where: "Dhaka, Bangladesh", text: "SEO, paid campaigns and marketing automation for a Squarespace web design agency." },
+    { title: "Search Engine Optimization Specialist", place: "Olynex, UI/UX design agency", dates: "Feb 2025 to Jan 2026", where: "Bogra, Rajshahi, Bangladesh", text: "SEO and e-commerce SEO for agency clients." },
+    { title: "Search Engine Optimization Manager", place: "ShopyLabs", dates: "Mar 2022 to Feb 2025", where: "Dhaka, Bangladesh", text: "E-commerce and affiliate SEO, including the AffiHero affiliate site and a new store launch." },
   ],
-  projects: [
-    { title: "E-commerce SEO for a new store launch", dates: "Sep 2025 to present", text: "SEO for a newly launched e-commerce site, easygardenbd.com, tracking whether the strategy is working from the first weeks. With ShopyLabs." },
-    { title: "AffiHero: SEO for affiliate marketing", dates: "Dec 2024 to present", text: "A case study of the off-page and e-commerce SEO strategy behind an affiliate marketing site. With ShopyLabs." },
-  ],
-  education: [
-    { title: "Honours, Economics", place: "National University, Bangladesh", dates: "2019 to 2024" },
-  ],
+  education: [{ title: "Honours, Economics", place: "National University, Bangladesh", dates: "2019 to 2024" }],
   certifications: [
     { title: "E-commerce and off-page SEO", place: "Olynex", dates: "May 2025" },
     { title: "Graphic and UI Design", place: "Skills for Employment Investment Program (SEIP)", dates: "Apr 2023" },
   ],
-  services: ["Search engine optimisation", "Content marketing", "Digital marketing", "Email marketing"],
-  skills: ["Local SEO", "E-commerce SEO", "Off-page SEO", "Link building", "Answer engine optimisation (AEO)", "Google Analytics", "Ahrefs", "Google Ads", "Facebook Ads Manager", "Copywriting"],
+  skills: {
+    "Search engine optimisation": ["Technical SEO", "E-commerce SEO", "Local SEO", "Programmatic SEO", "Off-page SEO and link building", "Answer engine optimisation (AEO)", "Internal linking and site architecture"],
+    "AI and automation": ["n8n workflows", "AI agents for support and bookings", "Claude and LLM APIs", "Scheduled data pipelines", "Automated reporting and email digests", "Chrome extensions", "IndexNow and search pinging"],
+    "Growth and ads": ["Google Ads", "Facebook Ads Manager", "Performance marketing for local businesses", "Content marketing", "Email marketing", "Copywriting"],
+    "Data and tools": ["Google Search Console", "Google Analytics 4", "Ahrefs", "YouTube Data API", "Node.js", "Vercel", "Redis (Upstash)"],
+  },
 };
 
 function founderPage() {
   const f = FOUNDER;
   const n = site.tools.length;
   const live = site.tools.filter((t) => t.api === "youtube" || t.api === "twitch").length;
-  const first = f.name.split(" ")[0];
-  const exp = f.experience.length ? `<h2>Experience</h2><div class="fexp">${f.experience.map((e) => `<div class="fexp-row"><div><b>${esc(e.title)}</b><span>${esc(e.company)}</span></div><span class="muted">${esc(e.dates || "")}</span>${e.text ? `<p>${esc(e.text)}</p>` : ""}</div>`).join("")}</div>` : "";
-  const skills = f.skills.length ? `<h2>Skills</h2><div class="fskills">${f.skills.map((s) => `<span>${esc(s)}</span>`).join("")}</div>` : "";
-  const list = (title, items) => items && items.length ? `<h2>${title}</h2><div class="fexp">${items.map((e) => `<div class="fexp-row"><div><b>${esc(e.title)}</b>${e.place ? `<span>${esc(e.place)}</span>` : ""}</div><span class="muted">${esc(e.dates || "")}</span>${e.text ? `<p>${esc(e.text)}</p>` : ""}</div>`).join("")}</div>` : "";
-  const projects = list("Selected projects", f.projects);
-  const education = list("Education", f.education);
-  const certs = list("Certifications", f.certifications);
-  const services = f.services && f.services.length ? `<h2>Services</h2><div class="fskills">${f.services.map((s) => `<span>${esc(s)}</span>`).join("")}</div>` : "";
-  const aboutText = f.about.map((p) => `<p>${esc(p)}</p>`).join("");
+  const years = new Date().getFullYear() - f.since;
+  const ic = (d) => `<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${d}</svg>`;
+  const I = {
+    seo: ic('<circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5M8 11h6M11 8v6"/>'),
+    bolt: ic('<path d="M13 2 4 14h7l-1 8 9-12h-7z"/>'),
+    chart: ic('<path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/>'),
+    clock: ic('<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>'),
+    mail: ic('<rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/>'),
+    pages: ic('<rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 8h8M8 12h8M8 16h5"/>'),
+    ping: ic('<path d="M4 12a8 8 0 0 1 16 0M8 12a4 4 0 0 1 8 0"/><circle cx="12" cy="12" r="1"/>'),
+    bot: ic('<rect x="5" y="8" width="14" height="11" rx="3"/><path d="M12 4v4M9 13h.01M15 13h.01M9 17h6"/>'),
+    ext: ic('<circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="3.5"/><path d="M12 8.5h8.2M8.9 13.7 4.8 6.6M15.1 13.8l-4.2 7.1"/>'),
+  };
+  const automations = [
+    [I.clock, "Daily YouTube data pipeline", "A scheduled job scans a growing index of channels every morning, measures each new upload against the channel's own median and publishes the breakouts.", "../research/outliers/", "See the outlier feed"],
+    [I.chart, "Channel tracking with snapshots", "Watched channels are snapshotted daily, so the dashboard shows real 7-day and 30-day change instead of estimates.", "../app/", "Open the dashboard"],
+    [I.mail, "Automated weekly digests", "Every Monday the watchlist movers are compiled and emailed to members, without anyone pressing a button.", "../pricing/", "How Pro works"],
+    [I.pages, "Programmatic SEO at scale", `${n} tool pages, each with a long-form guide, FAQ markup and topic-cluster linking, generated from one data source and checked against the code.`, "../creator-tools/", "Browse the tools"],
+    [I.ping, "Instant indexing", "Changed pages are detected from content fingerprints and pushed to search engines through IndexNow, with sitemap dates that only move when content does.", "../blog/", "Read the guides"],
+    [I.ext, "AI inside the tools people already use", "A Chrome extension that reads YouTube pages and suggests tags inside YouTube Studio, ranked by what top videos actually use.", "../youtube-extension/", "See the extension"],
+  ];
+  const pillars = [
+    [I.seo, "SEO", "Technical, e-commerce and local SEO, programmatic page systems, internal linking and answer-engine optimisation, measured in Search Console rather than guessed."],
+    [I.bolt, "AI automation", "n8n workflows, AI agents that answer customers and take bookings, LLM-powered writers with guardrails, and scheduled pipelines that collect and report data on their own."],
+    [I.chart, "Performance marketing", "Google and Meta campaigns for local businesses, tied to the same measurement so ads and organic search are judged by one set of numbers."],
+  ];
+  const process = [
+    ["01", "Audit", "Find where time and traffic leak: thin pages, manual reporting, slow replies to customers, repeated copy-paste work."],
+    ["02", "Automate", "Build the smallest system that removes the repetition: a workflow, an agent, a page template or a scheduled job."],
+    ["03", "Measure", "Track the result with real numbers, keep what works, switch off what does not."],
+  ];
+  const timeline = [
+    ...f.experience.map((e) => ({ when: e.dates, title: e.title, place: e.place + " · " + e.where, text: e.text })),
+    { when: "2026", title: "Founded Passive Array", place: "passivearray.com", text: `${n} free creator tools, research feeds, a Chrome extension and a tracking dashboard, all built and automated in-house.`, top: true },
+    ...f.certifications.map((c) => ({ when: c.dates, title: c.title, place: c.place, text: "Certification" })),
+    ...f.education.map((e) => ({ when: e.dates, title: e.title, place: e.place, text: "" })),
+  ];
+  const tl = [timeline.find((x) => x.top)].concat(timeline.filter((x) => !x.top));
+
   const body = `
   <style>
-    .fhero{display:grid;grid-template-columns:280px minmax(0,1fr);gap:40px;align-items:center;padding:28px 0}
-    .fhero img{width:100%;height:auto;align-self:center;aspect-ratio:1/1;object-fit:cover;border-radius:28px;box-shadow:0 24px 60px -28px rgba(15,22,38,.6)}
-    .fhero .k{font-size:.78rem;font-weight:700;letter-spacing:.08em;color:var(--deep)}
-    :root[data-theme="dark"] .fhero .k{color:var(--mint)}
-    .fhero h1{font-size:clamp(2rem,4.2vw,3rem);letter-spacing:-.03em;line-height:1.08;margin:8px 0 10px}
-    .fhero .lead{font-size:1.1rem;color:var(--muted);max-width:56ch}
-    .fhero .links{display:flex;gap:10px;flex-wrap:wrap;margin-top:20px}
-    .fexp{display:grid;gap:14px}.fexp-row{border-top:1px solid var(--line);padding-top:12px}
-    .fexp-row>div{display:flex;flex-direction:column}
-    .fskills{display:flex;flex-wrap:wrap;gap:8px}.fskills span{padding:6px 12px;border-radius:999px;background:var(--soft);color:var(--deep);font-size:.88rem}
-    :root[data-theme="dark"] .fskills span{color:var(--mint)}
-    @media(max-width:760px){.fhero{grid-template-columns:1fr;gap:22px}.fhero img{max-width:220px}}
+    .fp{--r:22px}
+    .fp-hero{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,.75fr);gap:48px;align-items:center;padding:28px 0 8px}
+    .fp-k{display:inline-flex;align-items:center;gap:8px;padding:7px 14px;border-radius:999px;background:var(--soft);color:var(--deep);font-size:.76rem;font-weight:700;letter-spacing:.07em}
+    :root[data-theme="dark"] .fp-k{color:var(--mint)}
+    .fp-hero h1{font-size:clamp(2.3rem,5vw,3.8rem);letter-spacing:-.035em;line-height:1.04;margin:18px 0 12px}
+    .fp-hero h1 span{background:linear-gradient(135deg,var(--teal),var(--indigo));-webkit-background-clip:text;background-clip:text;color:transparent}
+    .fp-lead{font-size:1.15rem;color:var(--muted);max-width:58ch;line-height:1.6}
+    .fp-ctas{display:flex;gap:12px;flex-wrap:wrap;margin-top:24px}
+    .fp-ctas .btn{height:48px;padding:0 22px}
+    .fp-photo{position:relative}
+    .fp-photo img{width:100%;height:auto;aspect-ratio:1/1;object-fit:cover;border-radius:28px;display:block;box-shadow:0 30px 70px -30px rgba(15,22,38,.65)}
+    .fp-badge{position:absolute;left:-18px;bottom:22px;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:12px 16px;box-shadow:0 18px 40px -20px rgba(15,22,38,.5);font-size:.85rem}
+    .fp-badge b{display:block;font-size:1.05rem}
+    .fp-facts{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin:34px 0 8px}
+    .fp-facts div{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:18px}
+    .fp-facts b{display:block;font-size:1.7rem;letter-spacing:-.02em;color:var(--deep)}
+    :root[data-theme="dark"] .fp-facts b{color:var(--mint)}
+    .fp-facts span{font-size:.86rem;color:var(--muted)}
+    .fp-sec{padding:56px 0 0}
+    .fp-sec>h2{font-size:clamp(1.6rem,3vw,2.2rem);letter-spacing:-.03em}
+    .fp-sec>.sub{color:var(--muted);margin:8px 0 22px;max-width:62ch}
+    .fp-grid3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
+    .fp-card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:24px;display:flex;flex-direction:column;gap:10px}
+    .fp-card h3{font-size:1.1rem}
+    .fp-card p{color:var(--muted);font-size:.93rem;line-height:1.6}
+    .fp-ic{width:44px;height:44px;border-radius:13px;display:flex;align-items:center;justify-content:center;color:#fff;background:linear-gradient(135deg,var(--teal),var(--indigo))}
+    .fp-card a.more{margin-top:auto;font-weight:600;font-size:.88rem}
+    .fp-story{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,.7fr);gap:24px;align-items:start}
+    .fp-story .fp-card p{font-size:1rem;color:var(--text);opacity:.88}
+    .fp-quote{background:linear-gradient(135deg,var(--ink),#2B3A6B);color:#fff;border-radius:var(--r);padding:28px}
+    .fp-quote p{font-size:1.15rem;line-height:1.55}
+    .fp-quote span{display:block;margin-top:14px;font-size:.85rem;opacity:.75}
+    .fp-steps{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
+    .fp-steps .num{font-size:2.2rem;font-weight:700;letter-spacing:-.04em;color:var(--deep)}
+    :root[data-theme="dark"] .fp-steps .num{color:var(--mint)}
+    .fp-skills{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+    .fp-chips{display:flex;flex-wrap:wrap;gap:8px}
+    .fp-chips span{padding:7px 12px;border-radius:999px;background:var(--soft);color:var(--deep);font-size:.86rem;font-weight:500}
+    :root[data-theme="dark"] .fp-chips span{color:var(--mint)}
+    .fp-tl{position:relative;padding-left:26px}
+    .fp-tl::before{content:"";position:absolute;left:7px;top:6px;bottom:6px;width:2px;background:var(--line)}
+    .fp-tl .it{position:relative;padding:0 0 24px}
+    .fp-tl .it::before{content:"";position:absolute;left:-25px;top:6px;width:14px;height:14px;border-radius:50%;background:var(--card);border:3px solid var(--teal)}
+    .fp-tl .it.top::before{background:var(--teal)}
+    .fp-tl .when{font-size:.8rem;font-weight:600;color:var(--muted);letter-spacing:.02em}
+    .fp-tl h3{font-size:1.05rem;margin:2px 0}
+    .fp-tl .place{font-size:.9rem;color:var(--muted)}
+    .fp-tl p{font-size:.92rem;color:var(--muted);margin-top:4px}
+    .fp-cta{margin:56px 0 0;background:linear-gradient(135deg,var(--teal),var(--indigo));color:#fff;border-radius:26px;padding:40px;display:flex;align-items:center;justify-content:space-between;gap:24px;flex-wrap:wrap}
+    .fp-cta h2{font-size:clamp(1.5rem,3vw,2rem);letter-spacing:-.02em;color:#fff}
+    .fp-cta p{opacity:.9;margin-top:6px;max-width:52ch}
+    .fp .fp-cta a.btn{background:#fff;color:#1F2A44}
+    .fp .fp-cta a.btn:hover{color:#1F2A44}
+    .fp .fp-cta a.btn.ghost{background:transparent;color:#fff;border-color:rgba(255,255,255,.5)}
+    .fp .fp-cta a.btn.ghost:hover{color:#fff}
+    @media(max-width:960px){.fp-hero,.fp-story{grid-template-columns:1fr}.fp-photo{max-width:340px}.fp-grid3,.fp-steps{grid-template-columns:1fr 1fr}.fp-facts{grid-template-columns:1fr 1fr}.fp-skills{grid-template-columns:1fr}}
+    @media(max-width:600px){.fp-grid3,.fp-steps{grid-template-columns:1fr}.fp-badge{left:12px}.fp-cta{padding:28px}}
   </style>
+  <div class="fp">
   <div class="crumbs" style="padding-top:24px"><a href="../">Home</a> / <a href="../about/">About</a> / Founder</div>
-  <section class="fhero">
-    <img src="${f.photo}" alt="${esc(f.name)}, founder of Passive Array" width="560" height="560">
+
+  <section class="fp-hero">
     <div>
-      <span class="k">FOUNDER</span>
-      <h1>${esc(f.name)}</h1>
-      <p class="lead">${esc(f.headline)}.${f.location ? " Based in " + esc(f.location) + "." : ""}</p>
-      <div class="links">
-        <a class="btn" href="${f.linkedin}" rel="noopener me" target="_blank">Connect on LinkedIn</a>
-        <a class="btn ghost" href="../contact/">Contact</a>
+      <span class="fp-k">FOUNDER · ${esc(f.short.toUpperCase())}</span>
+      <h1>${esc(f.name)}. <span>SEO that compounds, automation that runs itself.</span></h1>
+      <p class="fp-lead">I help businesses grow organic traffic and replace repetitive marketing work with AI automations: n8n workflows, AI agents, programmatic SEO and scheduled data pipelines. Passive Array is the proof: ${n} free tools, built and run on the same systems I build for others.</p>
+      <div class="fp-ctas">
+        <a class="btn" href="../contact/">Work with me</a>
+        <a class="btn ghost" href="${f.linkedin}" rel="noopener me" target="_blank">LinkedIn</a>
       </div>
+    </div>
+    <div class="fp-photo">
+      <img src="${f.photo}" alt="${esc(f.name)}, ${esc(f.short)} and founder of Passive Array" width="560" height="560">
+      <div class="fp-badge"><b>${esc(f.location)}</b>Working with teams worldwide</div>
     </div>
   </section>
 
-  <div class="two-col">
-    <div class="card prose">
-      ${aboutText ? `<h2 style="margin-top:0">About ${esc(first)}</h2>${aboutText}` : ""}
-      <h2${aboutText ? "" : ' style="margin-top:0"'}>Why I built Passive Array</h2>
-      <p>Most creator-stats sites show a teaser, then ask for an email, a card or a login before the useful number appears. And the number itself is often a guess presented as a fact: earnings with no formula, a fake-follower score with no explanation, a search volume nobody outside Google can actually know.</p>
-      <p>I wanted the opposite. Passive Array loads the result first, shows the formula under every estimate, and never presents a model as a measurement. Live YouTube and Twitch numbers come from the official APIs. Where a platform has no free API, the tool says so and works from the numbers you type in.</p>
-      <h2>What I am building</h2>
-      <ul>
-        <li><b>${n} free creator tools</b>, ${live} of them on live API data, with a written guide and FAQ on every page.</li>
-        <li><b>Research feeds</b> built from measured data: keyword research without invented search volumes, and outlier videos that beat their own channel's median, refreshed daily.</li>
-        <li><b>A free Chrome extension</b> that brings the same numbers onto YouTube, including tag suggestions inside YouTube Studio.</li>
-        <li><b>A dashboard</b> that tracks your own channel and the channels you watch, with an optional Pro plan for the parts that cost money to run.</li>
-      </ul>
-      <h2>Principles the site follows</h2>
-      <ul>
-        <li><b>Ranges, not fake precision.</b> Earnings and prices show a low and a high, with the assumption behind each.</li>
-        <li><b>No invented facts.</b> The AI writers work only from what you type, and the templates never claim results you did not have.</li>
-        <li><b>Admit where others win.</b> The <a href="../compare/vidiq-alternative/">vidIQ comparison</a> and <a href="../compare/tubebuddy-alternative/">TubeBuddy comparison</a> say plainly what those tools do better.</li>
-        <li><b>No ads and no affiliate links.</b> Every tool stays free; the <a href="../pricing/">pricing page</a> explains the optional Pro plan.</li>
-      </ul>
-      <p>More on how the site works: <a href="../about/">about Passive Array</a> and <a href="../faq/">frequently asked questions</a>.</p>
-      ${exp}
-      ${projects}
-      ${education}
-      ${certs}
-      ${services}
-      ${skills}
+  <div class="fp-facts">
+    <div><b>${years}+ years</b><span>in SEO, since ${f.since}</span></div>
+    <div><b>${n}</b><span>free tools built and shipped</span></div>
+    <div><b>2</b><span>automated data jobs running daily</span></div>
+    <div><b>${live}</b><span>tools on live API data</span></div>
+  </div>
+
+  <section class="fp-sec">
+    <h2>What I do</h2>
+    <p class="sub">Three disciplines that work best together: get found, automate the busywork, and measure everything with real numbers.</p>
+    <div class="fp-grid3">${pillars.map(([i, h, p]) => `<div class="fp-card"><span class="fp-ic">${i}</span><h3>${esc(h)}</h3><p>${esc(p)}</p></div>`).join("")}</div>
+  </section>
+
+  <section class="fp-sec">
+    <h2>Automations running on this site</h2>
+    <p class="sub">Not a portfolio of screenshots. Each of these is live on passivearray.com right now, and you can open it.</p>
+    <div class="fp-grid3">${automations.map(([i, h, p, href, link]) => `<div class="fp-card"><span class="fp-ic">${i}</span><h3>${esc(h)}</h3><p>${p}</p><a class="more" href="${href}">${esc(link)}</a></div>`).join("")}</div>
+  </section>
+
+  <section class="fp-sec fp-story">
+    <div class="fp-card">
+      <h2 style="font-size:1.5rem">Why I built Passive Array</h2>
+      <p>I have worked in SEO since ${f.since}, first on e-commerce and affiliate sites, then for design agencies. The same problem kept coming up: creator-stats tools showed a teaser, asked for an email or a card, and then gave a number that was often a guess dressed up as a fact.</p>
+      <p>So I built the opposite. Passive Array loads the result first, shows the formula under every estimate, and never presents a model as a measurement. Live YouTube and Twitch numbers come from the official APIs; where a platform has no free API, the tool says so.</p>
+      <p>It is also where I test every automation I build: the daily data jobs, the digests, the programmatic pages and the indexing pipeline all run here first.</p>
     </div>
+    <div class="fp-quote">
+      <p>"Automate the repetitive work, keep the judgment human, and never publish a number you cannot show the working for."</p>
+      <span>${esc(f.name)}</span>
+    </div>
+  </section>
+
+  <section class="fp-sec">
+    <h2>How I work</h2>
+    <p class="sub">A short loop, repeated until the system pays for itself.</p>
+    <div class="fp-steps">${process.map(([n2, h, p]) => `<div class="fp-card"><span class="num">${n2}</span><h3>${esc(h)}</h3><p>${esc(p)}</p></div>`).join("")}</div>
+  </section>
+
+  <section class="fp-sec">
+    <h2>Skills</h2>
+    <p class="sub">From my LinkedIn profile and the systems behind this site.</p>
+    <div class="fp-skills">${Object.entries(f.skills).map(([g, list]) => `<div class="fp-card"><h3>${esc(g)}</h3><div class="fp-chips">${list.map((s) => `<span>${esc(s)}</span>`).join("")}</div></div>`).join("")}</div>
+  </section>
+
+  <section class="fp-sec">
+    <h2>Experience and education</h2>
+    <p class="sub">The short version. The full history is on <a href="${f.linkedin}" rel="noopener me" target="_blank">LinkedIn</a>.</p>
+    <div class="fp-card"><div class="fp-tl">${tl.map((x) => `<div class="it${x.top ? " top" : ""}"><div class="when">${esc(x.when)}</div><h3>${esc(x.title)}</h3><div class="place">${esc(x.place)}</div>${x.text ? `<p>${esc(x.text)}</p>` : ""}</div>`).join("")}</div></div>
+  </section>
+
+  <section class="fp-sec">
+    <h2>Principles</h2>
+    <div class="fp-grid3">
+      <div class="fp-card"><h3>Ranges, not fake precision</h3><p>Earnings and prices show a low and a high, with the assumption behind each. Nothing modelled is passed off as measured.</p></div>
+      <div class="fp-card"><h3>Admit where others win</h3><p>The <a href="../compare/vidiq-alternative/">vidIQ comparison</a> and <a href="../compare/tubebuddy-alternative/">TubeBuddy comparison</a> say plainly what those tools do better.</p></div>
+      <div class="fp-card"><h3>Free stays free</h3><p>No ads and no affiliate links. The <a href="../pricing/">pricing page</a> explains the optional Pro plan; see <a href="../about/">about Passive Array</a> and the <a href="../faq/">FAQ</a>.</p></div>
+    </div>
+  </section>
+
+  <section class="fp-cta">
     <div>
-      <div class="card">
-        <h3>Find ${esc(first)} online</h3>
-        <div style="display:grid;gap:8px;margin-top:14px">
-          <a class="btn ghost" href="${f.linkedin}" rel="noopener me" target="_blank">LinkedIn</a>
-          <a class="btn ghost" href="${f.github}" rel="noopener me" target="_blank">GitHub</a>
-        </div>
-      </div>
-      <div class="card" style="margin-top:16px">
-        <h3>Start with the tools</h3>
-        <div style="display:grid;gap:8px;margin-top:14px">
-          <a class="btn ghost" href="../creator-tools/youtube-monetization-checker/">YouTube monetization checker</a>
-          <a class="btn ghost" href="../creator-tools/youtube-money-calculator/">YouTube money calculator</a>
-          <a class="btn ghost" href="../research/">Keyword research</a>
-        </div>
-      </div>
+      <h2>Need SEO or an automation built?</h2>
+      <p>Tell me what eats your team's time or where traffic stalls. I will tell you honestly whether automation or SEO can fix it.</p>
     </div>
+    <div class="fp-ctas" style="margin:0">
+      <a class="btn" href="../contact/">Get in touch</a>
+      <a class="btn ghost" href="${f.linkedin}" rel="noopener me" target="_blank">Connect on LinkedIn</a>
+    </div>
+  </section>
   </div>`;
+
+  const allSkills = Object.values(f.skills).flat();
   const person = {
     "@context": "https://schema.org", "@type": "Person", name: f.name, jobTitle: f.role,
+    description: `${f.short} based in ${f.location} and founder of Passive Array.`,
     image: SITE + f.photo, url: SITE + "/founder/", sameAs: [f.linkedin, f.github],
     worksFor: { "@type": "Organization", name: BRAND, url: SITE },
-    ...(f.education && f.education.length ? { alumniOf: f.education.map((e) => ({ "@type": "CollegeOrUniversity", name: e.place })) } : {}),
-    ...(f.certifications && f.certifications.length ? { hasCredential: f.certifications.map((c) => ({ "@type": "EducationalOccupationalCredential", name: c.title, recognizedBy: { "@type": "Organization", name: c.place } })) } : {}),
-    ...(f.location ? { address: { "@type": "PostalAddress", addressLocality: f.location } } : {}),
-    ...(f.skills.length ? { knowsAbout: f.skills } : {}),
+    address: { "@type": "PostalAddress", addressLocality: "Dhaka", addressCountry: "BD" },
+    alumniOf: f.education.map((e) => ({ "@type": "CollegeOrUniversity", name: e.place })),
+    hasCredential: f.certifications.map((c) => ({ "@type": "EducationalOccupationalCredential", name: c.title, recognizedBy: { "@type": "Organization", name: c.place } })),
+    knowsAbout: allSkills,
   };
   const profile = { "@context": "https://schema.org", "@type": "ProfilePage", url: SITE + "/founder/", mainEntity: { "@type": "Person", name: f.name, url: SITE + "/founder/" } };
   return site.shell({
-    title: f.name + ", Founder",
-    ogTitle: f.name + ", founder of Passive Array",
-    description: f.name + " is an SEO specialist in " + (f.location || "Bangladesh") + " and the founder of Passive Array, " + n + " free tools for YouTube and social media creators built on live data and honest ranges.",
+    title: f.name + ": SEO and AI Automation Specialist",
+    ogTitle: f.name + ", SEO and AI automation specialist, founder of Passive Array",
+    description: `${f.name} is an SEO and AI automation specialist in ${f.location}: n8n workflows, AI agents, programmatic SEO and data pipelines. Founder of Passive Array.`,
     path: "/founder/",
     active: "about",
     body,
