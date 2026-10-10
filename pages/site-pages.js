@@ -40,7 +40,7 @@ function aboutPage() {
       <h2>Who it is for</h2>
       <p>Creators checking their own growth, brands vetting a creator before a deal, agencies building a shortlist, and anyone curious what a channel is really doing. If that is you, <a href="../contact/">tell us what is missing</a>.</p>
       <h2>Who builds it</h2>
-      <p>Passive Array is built by <a href="../founder/">Nasir Uddin</a>, an SEO consultant who wanted creator tools that show their working. <a href="../founder/">Read why he built it</a>.</p>
+      <p>Passive Array is built by <a href="../founder/">Nasir Uddin</a>, an SEO specialist in Dhaka who wanted creator tools that show their working. <a href="../founder/">Read why he built it</a>.</p>
     </div>
     <div>
       <div class="card">
@@ -758,14 +758,34 @@ function faqPage() {
 const FOUNDER = {
   name: "Nasir Uddin",
   role: "Founder of Passive Array",
-  headline: "SEO consultant and the builder behind Passive Array",
+  // From the LinkedIn profile, October 2026.
+  headline: "SEO specialist and digital marketing manager: e-commerce SEO, local SEO and performance marketing",
   photo: "/founder-nasir.jpg",
   linkedin: "https://www.linkedin.com/in/seoconsultantnasir/",
   github: "https://github.com/nasiruddin-ai",
-  location: "",          // e.g. "Dhaka, Bangladesh", from LinkedIn
-  about: [],              // the LinkedIn About text, one paragraph per entry
-  experience: [],         // [{ title, company, dates, text }]
-  skills: [],             // ["Technical SEO", ...]
+  location: "Dhaka, Bangladesh",
+  about: [
+    "As an experienced SEO specialist, I help businesses reach their online goals by using current SEO techniques and staying ahead of Google's changing algorithms. I work across every part of SEO, optimising websites to improve visibility and bring in targeted traffic.",
+    "Alongside SEO I run paid campaigns for local businesses on Facebook and Google, and I build tools. Passive Array is where those two sides meet: the numbers I wanted when researching channels and campaigns, made free for everyone.",
+  ],
+  experience: [
+    { title: "Digital Marketing Specialist", company: "Squareko", dates: "Jan 2026 to present · Dhaka, Bangladesh" },
+    { title: "Search Engine Optimization Specialist", company: "Olynex, UI/UX design agency", dates: "Feb 2025 to Jan 2026 · Bogra, Rajshahi, Bangladesh" },
+    { title: "Search Engine Optimization Manager", company: "ShopyLabs", dates: "Mar 2022 to Feb 2025 · Dhaka, Bangladesh" },
+  ],
+  projects: [
+    { title: "E-commerce SEO for a new store launch", dates: "Sep 2025 to present", text: "SEO for a newly launched e-commerce site, easygardenbd.com, tracking whether the strategy is working from the first weeks. With ShopyLabs." },
+    { title: "AffiHero: SEO for affiliate marketing", dates: "Dec 2024 to present", text: "A case study of the off-page and e-commerce SEO strategy behind an affiliate marketing site. With ShopyLabs." },
+  ],
+  education: [
+    { title: "Honours, Economics", place: "National University, Bangladesh", dates: "2019 to 2024" },
+  ],
+  certifications: [
+    { title: "E-commerce and off-page SEO", place: "Olynex", dates: "May 2025" },
+    { title: "Graphic and UI Design", place: "Skills for Employment Investment Program (SEIP)", dates: "Apr 2023" },
+  ],
+  services: ["Search engine optimisation", "Content marketing", "Digital marketing", "Email marketing"],
+  skills: ["Local SEO", "E-commerce SEO", "Off-page SEO", "Link building", "Answer engine optimisation (AEO)", "Google Analytics", "Ahrefs", "Google Ads", "Facebook Ads Manager", "Copywriting"],
 };
 
 function founderPage() {
@@ -775,6 +795,11 @@ function founderPage() {
   const first = f.name.split(" ")[0];
   const exp = f.experience.length ? `<h2>Experience</h2><div class="fexp">${f.experience.map((e) => `<div class="fexp-row"><div><b>${esc(e.title)}</b><span>${esc(e.company)}</span></div><span class="muted">${esc(e.dates || "")}</span>${e.text ? `<p>${esc(e.text)}</p>` : ""}</div>`).join("")}</div>` : "";
   const skills = f.skills.length ? `<h2>Skills</h2><div class="fskills">${f.skills.map((s) => `<span>${esc(s)}</span>`).join("")}</div>` : "";
+  const list = (title, items) => items && items.length ? `<h2>${title}</h2><div class="fexp">${items.map((e) => `<div class="fexp-row"><div><b>${esc(e.title)}</b>${e.place ? `<span>${esc(e.place)}</span>` : ""}</div><span class="muted">${esc(e.dates || "")}</span>${e.text ? `<p>${esc(e.text)}</p>` : ""}</div>`).join("")}</div>` : "";
+  const projects = list("Selected projects", f.projects);
+  const education = list("Education", f.education);
+  const certs = list("Certifications", f.certifications);
+  const services = f.services && f.services.length ? `<h2>Services</h2><div class="fskills">${f.services.map((s) => `<span>${esc(s)}</span>`).join("")}</div>` : "";
   const aboutText = f.about.map((p) => `<p>${esc(p)}</p>`).join("");
   const body = `
   <style>
@@ -788,6 +813,7 @@ function founderPage() {
     .fexp{display:grid;gap:14px}.fexp-row{border-top:1px solid var(--line);padding-top:12px}
     .fexp-row>div{display:flex;flex-direction:column}
     .fskills{display:flex;flex-wrap:wrap;gap:8px}.fskills span{padding:6px 12px;border-radius:999px;background:var(--soft);color:var(--deep);font-size:.88rem}
+    :root[data-theme="dark"] .fskills span{color:var(--mint)}
     @media(max-width:760px){.fhero{grid-template-columns:1fr;gap:22px}.fhero img{max-width:220px}}
   </style>
   <div class="crumbs" style="padding-top:24px"><a href="../">Home</a> / <a href="../about/">About</a> / Founder</div>
@@ -825,6 +851,10 @@ function founderPage() {
         <li><b>No ads and no affiliate links.</b> Every tool stays free.</li>
       </ul>
       ${exp}
+      ${projects}
+      ${education}
+      ${certs}
+      ${services}
       ${skills}
     </div>
     <div>
@@ -849,6 +879,8 @@ function founderPage() {
     "@context": "https://schema.org", "@type": "Person", name: f.name, jobTitle: f.role,
     image: SITE + f.photo, url: SITE + "/founder/", sameAs: [f.linkedin, f.github],
     worksFor: { "@type": "Organization", name: BRAND, url: SITE },
+    ...(f.education && f.education.length ? { alumniOf: f.education.map((e) => ({ "@type": "CollegeOrUniversity", name: e.place })) } : {}),
+    ...(f.certifications && f.certifications.length ? { hasCredential: f.certifications.map((c) => ({ "@type": "EducationalOccupationalCredential", name: c.title, recognizedBy: { "@type": "Organization", name: c.place } })) } : {}),
     ...(f.location ? { address: { "@type": "PostalAddress", addressLocality: f.location } } : {}),
     ...(f.skills.length ? { knowsAbout: f.skills } : {}),
   };
@@ -856,7 +888,7 @@ function founderPage() {
   return site.shell({
     title: f.name + ", Founder",
     ogTitle: f.name + ", founder of Passive Array",
-    description: f.name + " is the founder of Passive Array, a set of " + n + " free tools for YouTube and social media creators built on live data, honest ranges and no sign-up walls.",
+    description: f.name + " is an SEO specialist in " + (f.location || "Bangladesh") + " and the founder of Passive Array, " + n + " free tools for YouTube and social media creators built on live data and honest ranges.",
     path: "/founder/",
     active: "about",
     body,
