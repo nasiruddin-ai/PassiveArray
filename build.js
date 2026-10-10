@@ -208,6 +208,7 @@ const copies = {
   "favicon/icon-512.png": "icon-512.png",
   "favicon/site.webmanifest": "site.webmanifest",
   "social/og-image-1200x630.png": "og-image-1200x630.png",
+  "people/founder-nasir.jpg": "founder-nasir.jpg",
 };
 let copied = 0;
 for (const [from, to] of Object.entries(copies)) {

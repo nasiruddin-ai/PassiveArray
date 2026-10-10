@@ -192,7 +192,7 @@ function footer(root, note) {
     ${col("Web tools", WEB_TOOLS.map(([href, name]) => [href, name]))}
     ${col("Popular", popular)}
     ${col("Compare", [["compare/", "All comparisons"], ["compare/vidiq-alternative/", "vidIQ alternative"], ["compare/tubebuddy-alternative/", "TubeBuddy alternative"], ["pricing/", "Pricing"], ["faq/", "FAQ"]])}
-    ${col("Company", [["about/", "About"], ["blog/", "Blog"], ["youtube-extension/", "Chrome extension"], ["contact/", "Contact"], ["login/", "Sign in"], ["privacy/", "Privacy policy"], ["terms/", "Terms of use"]])}
+    ${col("Company", [["about/", "About"], ["founder/", "Founder"], ["blog/", "Blog"], ["youtube-extension/", "Chrome extension"], ["contact/", "Contact"], ["login/", "Sign in"], ["privacy/", "Privacy policy"], ["terms/", "Terms of use"]])}
   </div>
   <div class="fbottom">
     <span>&copy; ${new Date().getFullYear()} ${BRAND}. ${esc(note || "Estimates use public numbers and typical industry rates. A starting point, not a guarantee.")}</span>

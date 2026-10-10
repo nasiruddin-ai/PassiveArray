@@ -39,6 +39,8 @@ function aboutPage() {
       <p>The site runs on free hosting tiers and free API allowances, and it is deliberately light. There are no ads. The only thing sold is Pro, which pays for watching channels over time and the Monday email; every tool on this site stays free.</p>
       <h2>Who it is for</h2>
       <p>Creators checking their own growth, brands vetting a creator before a deal, agencies building a shortlist, and anyone curious what a channel is really doing. If that is you, <a href="../contact/">tell us what is missing</a>.</p>
+      <h2>Who builds it</h2>
+      <p>Passive Array is built by <a href="../founder/">Nasir Uddin</a>, an SEO consultant who wanted creator tools that show their working. <a href="../founder/">Read why he built it</a>.</p>
     </div>
     <div>
       <div class="card">
@@ -749,8 +751,122 @@ function faqPage() {
   });
 }
 
+/* ---------------------------------------------------------------- founder
+   Everything about the person lives in FOUNDER. Only facts the founder has
+   confirmed belong here. Career entries stay empty until they are copied from
+   the LinkedIn profile; empty sections are simply not rendered. */
+const FOUNDER = {
+  name: "Nasir Uddin",
+  role: "Founder of Passive Array",
+  headline: "SEO consultant and the builder behind Passive Array",
+  photo: "/founder-nasir.jpg",
+  linkedin: "https://www.linkedin.com/in/seoconsultantnasir/",
+  github: "https://github.com/nasiruddin-ai",
+  location: "",          // e.g. "Dhaka, Bangladesh", from LinkedIn
+  about: [],              // the LinkedIn About text, one paragraph per entry
+  experience: [],         // [{ title, company, dates, text }]
+  skills: [],             // ["Technical SEO", ...]
+};
+
+function founderPage() {
+  const f = FOUNDER;
+  const n = site.tools.length;
+  const live = site.tools.filter((t) => t.api === "youtube" || t.api === "twitch").length;
+  const first = f.name.split(" ")[0];
+  const exp = f.experience.length ? `<h2>Experience</h2><div class="fexp">${f.experience.map((e) => `<div class="fexp-row"><div><b>${esc(e.title)}</b><span>${esc(e.company)}</span></div><span class="muted">${esc(e.dates || "")}</span>${e.text ? `<p>${esc(e.text)}</p>` : ""}</div>`).join("")}</div>` : "";
+  const skills = f.skills.length ? `<h2>Skills</h2><div class="fskills">${f.skills.map((s) => `<span>${esc(s)}</span>`).join("")}</div>` : "";
+  const aboutText = f.about.map((p) => `<p>${esc(p)}</p>`).join("");
+  const body = `
+  <style>
+    .fhero{display:grid;grid-template-columns:280px minmax(0,1fr);gap:40px;align-items:center;padding:28px 0}
+    .fhero img{width:100%;height:auto;align-self:center;aspect-ratio:1/1;object-fit:cover;border-radius:28px;box-shadow:0 24px 60px -28px rgba(15,22,38,.6)}
+    .fhero .k{font-size:.78rem;font-weight:700;letter-spacing:.08em;color:var(--deep)}
+    :root[data-theme="dark"] .fhero .k{color:var(--mint)}
+    .fhero h1{font-size:clamp(2rem,4.2vw,3rem);letter-spacing:-.03em;line-height:1.08;margin:8px 0 10px}
+    .fhero .lead{font-size:1.1rem;color:var(--muted);max-width:56ch}
+    .fhero .links{display:flex;gap:10px;flex-wrap:wrap;margin-top:20px}
+    .fexp{display:grid;gap:14px}.fexp-row{border-top:1px solid var(--line);padding-top:12px}
+    .fexp-row>div{display:flex;flex-direction:column}
+    .fskills{display:flex;flex-wrap:wrap;gap:8px}.fskills span{padding:6px 12px;border-radius:999px;background:var(--soft);color:var(--deep);font-size:.88rem}
+    @media(max-width:760px){.fhero{grid-template-columns:1fr;gap:22px}.fhero img{max-width:220px}}
+  </style>
+  <div class="crumbs" style="padding-top:24px"><a href="../">Home</a> / <a href="../about/">About</a> / Founder</div>
+  <section class="fhero">
+    <img src="${f.photo}" alt="${esc(f.name)}, founder of Passive Array" width="560" height="560">
+    <div>
+      <span class="k">FOUNDER</span>
+      <h1>${esc(f.name)}</h1>
+      <p class="lead">${esc(f.headline)}.${f.location ? " Based in " + esc(f.location) + "." : ""}</p>
+      <div class="links">
+        <a class="btn" href="${f.linkedin}" rel="noopener me" target="_blank">Connect on LinkedIn</a>
+        <a class="btn ghost" href="../contact/">Contact</a>
+      </div>
+    </div>
+  </section>
+
+  <div class="two-col">
+    <div class="card prose">
+      ${aboutText ? `<h2 style="margin-top:0">About ${esc(first)}</h2>${aboutText}` : ""}
+      <h2${aboutText ? "" : ' style="margin-top:0"'}>Why I built Passive Array</h2>
+      <p>Most creator-stats sites show a teaser, then ask for an email, a card or a login before the useful number appears. And the number itself is often a guess presented as a fact: earnings with no formula, a fake-follower score with no explanation, a search volume nobody outside Google can actually know.</p>
+      <p>I wanted the opposite. Passive Array loads the result first, shows the formula under every estimate, and never presents a model as a measurement. Live YouTube and Twitch numbers come from the official APIs. Where a platform has no free API, the tool says so and works from the numbers you type in.</p>
+      <h2>What I am building</h2>
+      <ul>
+        <li><b>${n} free creator tools</b>, ${live} of them on live API data, with a written guide and FAQ on every page.</li>
+        <li><b>Research feeds</b> built from measured data: keyword research without invented search volumes, and outlier videos that beat their own channel's median, refreshed daily.</li>
+        <li><b>A free Chrome extension</b> that brings the same numbers onto YouTube, including tag suggestions inside YouTube Studio.</li>
+        <li><b>A dashboard</b> that tracks your own channel and the channels you watch, with an optional Pro plan for the parts that cost money to run.</li>
+      </ul>
+      <h2>Principles the site follows</h2>
+      <ul>
+        <li><b>Ranges, not fake precision.</b> Earnings and prices show a low and a high, with the assumption behind each.</li>
+        <li><b>No invented facts.</b> The AI writers work only from what you type, and the templates never claim results you did not have.</li>
+        <li><b>Admit where others win.</b> The comparison pages say plainly what vidIQ and TubeBuddy do better.</li>
+        <li><b>No ads and no affiliate links.</b> Every tool stays free.</li>
+      </ul>
+      ${exp}
+      ${skills}
+    </div>
+    <div>
+      <div class="card">
+        <h3>Find ${esc(first)} online</h3>
+        <div style="display:grid;gap:8px;margin-top:14px">
+          <a class="btn ghost" href="${f.linkedin}" rel="noopener me" target="_blank">LinkedIn</a>
+          <a class="btn ghost" href="${f.github}" rel="noopener me" target="_blank">GitHub</a>
+        </div>
+      </div>
+      <div class="card" style="margin-top:16px">
+        <h3>Start with the tools</h3>
+        <div style="display:grid;gap:8px;margin-top:14px">
+          <a class="btn ghost" href="../creator-tools/youtube-monetization-checker/">YouTube monetization checker</a>
+          <a class="btn ghost" href="../creator-tools/youtube-money-calculator/">YouTube money calculator</a>
+          <a class="btn ghost" href="../research/">Keyword research</a>
+        </div>
+      </div>
+    </div>
+  </div>`;
+  const person = {
+    "@context": "https://schema.org", "@type": "Person", name: f.name, jobTitle: f.role,
+    image: SITE + f.photo, url: SITE + "/founder/", sameAs: [f.linkedin, f.github],
+    worksFor: { "@type": "Organization", name: BRAND, url: SITE },
+    ...(f.location ? { address: { "@type": "PostalAddress", addressLocality: f.location } } : {}),
+    ...(f.skills.length ? { knowsAbout: f.skills } : {}),
+  };
+  const profile = { "@context": "https://schema.org", "@type": "ProfilePage", url: SITE + "/founder/", mainEntity: { "@type": "Person", name: f.name, url: SITE + "/founder/" } };
+  return site.shell({
+    title: f.name + ", Founder",
+    ogTitle: f.name + ", founder of Passive Array",
+    description: f.name + " is the founder of Passive Array, a set of " + n + " free tools for YouTube and social media creators built on live data, honest ranges and no sign-up walls.",
+    path: "/founder/",
+    active: "about",
+    body,
+    jsonld: [person, profile],
+  });
+}
+
 // Keys are site paths, so a key may contain slashes for a nested page.
 const PAGES = {
+  founder: founderPage,
   about: aboutPage,
   contact: contactPage,
   pricing: pricingPage,
