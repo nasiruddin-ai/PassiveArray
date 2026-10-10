@@ -11,7 +11,10 @@ const SITE = "https://" + HOST;
   const args = process.argv.slice(2);
   let urls;
   if (args.length && args[0] !== "changed") {
-    urls = args.map((p) => (p.startsWith("http") ? p : SITE + p));
+    // Git Bash on Windows rewrites "/path/" into "C:/Program Files/Git/path/"; undo that.
+    urls = args
+      .map((p) => p.replace(/\\/g, "/").replace(/^[A-Za-z]:\/.*?\/Git\//, "/"))
+      .map((p) => (p.startsWith("http") ? p : SITE + (p.startsWith("/") ? p : "/" + p)));
   } else {
     const xml = await (await fetch(SITE + "/sitemap.xml")).text();
     const entries = [...xml.matchAll(/<loc>([^<]+)<\/loc><lastmod>([^<]+)<\/lastmod>/g)].map((m) => ({ loc: m[1], mod: m[2] }));
