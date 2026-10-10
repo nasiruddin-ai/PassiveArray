@@ -222,6 +222,11 @@ for (const [from, to] of Object.entries(copies)) {
 }
 console.log("brand files -> dist/ (" + copied + "/" + Object.keys(copies).length + ")");
 
+// IndexNow (Bing, Yandex, Seznam, Naver): the key file must be served at the site root.
+// The key is public by design; scripts/indexnow.js submits URLs with it.
+const INDEXNOW_KEY = "e3928c4f16234a16a612080c80a35cd8";
+fs.writeFileSync(path.join(DIST, INDEXNOW_KEY + ".txt"), INDEXNOW_KEY);
+
 
 // Cache-busting: every page links shared.css, site.js and shared.js with a
 // version derived from their contents, so a new build can never be paired
