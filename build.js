@@ -222,6 +222,10 @@ for (const [from, to] of Object.entries(copies)) {
 }
 console.log("brand files -> dist/ (" + copied + "/" + Object.keys(copies).length + ")");
 
+// Self-hosted Poppins (assets/fonts) served from /fonts/.
+fs.mkdirSync(path.join(DIST, "fonts"), { recursive: true });
+for (const f of fs.readdirSync(path.join(ROOT, "assets", "fonts"))) if (f.endsWith(".woff2")) fs.copyFileSync(path.join(ROOT, "assets", "fonts", f), path.join(DIST, "fonts", f));
+
 // IndexNow (Bing, Yandex, Seznam, Naver): the key file must be served at the site root.
 // The key is public by design; scripts/indexnow.js submits URLs with it.
 const INDEXNOW_KEY = "e3928c4f16234a16a612080c80a35cd8";

@@ -76,8 +76,12 @@ try{if(localStorage.getItem('pa-consent')==='granted')gtag('consent','update',{a
 
 // GA4 itself. dataLayer and gtag already exist above, so this only loads the
 // library and configures the stream.
-const GA4_HEAD = GA4_ID ? `<script async src="https://www.googletagmanager.com/gtag/js?id=${GA4_ID}"></script>
-<script>gtag('js',new Date());gtag('config','${GA4_ID}');</script>` : "";
+// gtag.js (~180 KB) is the heaviest file on the page, so it loads after the first scroll, tap or
+// key press, or 6 seconds after load, whichever comes first. Consent defaults are set above it.
+const GA4_HEAD = GA4_ID ? `<script>gtag('js',new Date());gtag('config','${GA4_ID}');
+(function(){var done=false;function go(){if(done)return;done=true;var s=document.createElement('script');s.async=true;s.src='https://www.googletagmanager.com/gtag/js?id=${GA4_ID}';document.head.appendChild(s);}
+['scroll','pointerdown','keydown','touchstart'].forEach(function(e){addEventListener(e,go,{once:true,passive:true});});
+addEventListener('load',function(){setTimeout(go,6000);});})();</script>` : "";
 
 const GTM_SCRIPT = GTM_ID ? `<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer','${GTM_ID}');</script>` : "";
 
@@ -413,8 +417,8 @@ function directoryPage() {
 <meta property="og:title" content="All ${tools.length} Creator Tools | ${BRAND}">
 <meta property="og:description" content="${TAGLINE}: YouTube, Instagram, TikTok, Twitch and X.">
 ${HEAD}
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap">
+<link rel="preload" href="/fonts/poppins-600.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fonts/poppins-400.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="shared.css">
 <script>try{var t=localStorage.getItem("pa-theme");document.documentElement.setAttribute("data-theme",t||"dark");}catch(e){}</script>
 </head>
@@ -586,8 +590,8 @@ function homePage(posts = []) {
 <meta property="og:title" content="${tools.length} free YouTube and creator tools, no sign-up">
 <meta property="og:description" content="Keyword research, monetization checks, titles, tags, earnings and audience checks. Free, with the formula shown on every page.">
 ${HEAD}
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap">
+<link rel="preload" href="/fonts/poppins-600.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fonts/poppins-400.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="creator-tools/shared.css">
 <script>try{var t=localStorage.getItem("pa-theme");document.documentElement.setAttribute("data-theme",t||"dark");}catch(e){}</script>
 <script type="application/ld+json">${JSON.stringify(jsonld)}</script>
@@ -749,8 +753,8 @@ function shell({ title, description, path, body, active = "", head = "", scripts
 <meta property="og:url" content="${canonical}">
 ${HEAD}
 ${head}
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap">
+<link rel="preload" href="/fonts/poppins-600.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fonts/poppins-400.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="${root}creator-tools/shared.css">
 <script>try{var t=localStorage.getItem("pa-theme");document.documentElement.setAttribute("data-theme",t||"dark");}catch(e){}</script>
 ${jsonld ? `<script type="application/ld+json">${JSON.stringify(jsonld)}</script>` : ""}

@@ -505,7 +505,14 @@
 
   var slots = document.querySelectorAll("[data-google-slot]");
   var onAuthPage = !!document.querySelector("[data-auth]");
-  if (slots.length && !onAuthPage && !markedEmail()) {
+  // The header button and One Tap are not needed for the first paint. Wait for a scroll, tap or key
+  // press so the 100 KB Google client and its frames do not slow the page load.
+  function afterInteraction(fn) {
+    var done = false;
+    var go = function () { if (done) return; done = true; fn(); };
+    ["scroll", "pointerdown", "keydown", "touchstart"].forEach(function (e) { addEventListener(e, go, { once: true, passive: true }); });
+  }
+  if (slots.length && !onAuthPage && !markedEmail()) afterInteraction(function () {
     authHealth().then(function (res) {
       if (!res || !res.enabled || !res.methods || !res.methods.google || !res.googleClientId) return;
       loadGsi(function () {
@@ -543,7 +550,7 @@
         if (!document.querySelector("[data-account]")) g.prompt();
       });
     });
-  }
+  });
 
   /* ------------------------------------------------------------- account */
   var account = document.querySelector("[data-account]");
