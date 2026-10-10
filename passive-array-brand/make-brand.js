@@ -194,6 +194,17 @@ const cover = (w, h) => `<div style="width:${w}px;height:${h}px;background:${C.i
 </div>`;
 renders.push(["social/cover-x-1500x500.png", page(cover(1500, 500), 1500, 500, C.ink), 1500, 500]);
 renders.push(["social/cover-linkedin-1584x396.png", page(cover(1584, 396), 1584, 396, C.ink), 1584, 396]);
+// Facebook page cover 1640 x 624: mobile crops the sides, so the content stays in the middle.
+renders.push(["social/cover-facebook-1640x624.png", page(cover(1640, 624), 1640, 624, C.ink), 1640, 624]);
+// YouTube banner 2560 x 1440: only the centre 1546 x 423 shows on every device, so everything sits inside it.
+const ytBanner = `<div style="width:2560px;height:1440px;background:radial-gradient(ellipse at center,#26345A 0%,${C.ink} 60%);display:flex;align-items:center;justify-content:center;font-family:Poppins,'Segoe UI',sans-serif">
+  <div style="width:1546px;height:423px;display:flex;align-items:center;justify-content:center;gap:48px">
+    ${sized(hDark, hW * 2.2, hH * 2.2)}
+    <div style="width:2px;height:${hH * 1.8}px;background:${C.indigo};opacity:.6"></div>
+    <div style="font-size:38px;color:${C.mint};font-weight:500;white-space:nowrap">${TAGLINE}</div>
+  </div>
+</div>`;
+renders.push(["social/banner-youtube-2560x1440.png", page(ytBanner, 2560, 1440, C.ink), 2560, 1440]);
 
 let rendered = 0;
 for (const [name, html, w, h] of renders) if (renderPng(name, html, w, h)) rendered++;

@@ -43,4 +43,6 @@ active node in a passive array. Quiet, precise, trustworthy.
 - Profile picture everywhere: `social/profile-1080.png`
 - X header: `social/cover-x-1500x500.png`
 - LinkedIn page cover: `social/cover-linkedin-1584x396.png`
+- Facebook page cover: `social/cover-facebook-1640x624.png`
+- YouTube channel banner: `social/banner-youtube-2560x1440.png`
 - Link previews: upload `social/og-image-1200x630.png` or reference it from the site head.
