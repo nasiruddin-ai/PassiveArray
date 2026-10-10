@@ -293,6 +293,13 @@ function jsonLd(t, url) {
 
 /* Long-form guide and FAQ under a tool. Sections: { h, p: [html], list: [html], table: { head, rows } }.
    Written for people first; related phrases appear where they answer a real question, never as lists. */
+// Articles that list this tool in their front matter, linked back from the tool page.
+function relatedArticles(t) {
+  const list = POSTS.filter((p) => (p.tools || []).includes(t.slug)).slice(0, 3);
+  if (!list.length) return "";
+  return `<section class="card related-posts"><h2>Read the guides behind this tool</h2><div class="rp-list">${list.map((p) => `<a href="/blog/${p.slug}/">${esc(p.title)}</a>`).join("")}</div></section>`;
+}
+
 function faqLd(faq) {
   return { "@context": "https://schema.org", "@type": "FAQPage", mainEntity: faq.map(([q, a]) => ({ "@type": "Question", name: q, acceptedAnswer: { "@type": "Answer", text: String(a).replace(/<[^>]+>/g, "") } })) };
 }
@@ -301,21 +308,62 @@ function guideHtml(t) {
   if (!t.guide && !t.faq) return "";
   const sec = (s) => `<section class="guide-sec"><h2>${esc(s.h)}</h2>${(s.p || []).map((p) => `<p>${p}</p>`).join("")}${s.list ? `<${s.ordered ? "ol" : "ul"}>${s.list.map((li) => `<li>${li}</li>`).join("")}</${s.ordered ? "ol" : "ul"}>` : ""}${s.table ? `<div class="tablewrap"><table><thead><tr>${s.table.head.map((h) => `<th>${esc(h)}</th>`).join("")}</tr></thead><tbody>${s.table.rows.map((r) => `<tr>${r.map((c) => `<td>${c}</td>`).join("")}</tr>`).join("")}</tbody></table></div>` : ""}${(s.after || []).map((p) => `<p>${p}</p>`).join("")}</section>`;
   const faq = t.faq && t.faq.length ? `<section class="guide-sec guide-faq"><h2>${esc(t.faqTitle || "Frequently asked questions")}</h2><div class="faq">${t.faq.map(([q, a]) => `<details><summary>${esc(q)}</summary><p>${a}</p></details>`).join("")}</div></section>` : "";
-  return `<article class="card guide">${(t.guide || []).map(sec).join("")}${faq}${t.guideUpdated ? `<p class="note">Rules and figures checked ${esc(t.guideUpdated)}.</p>` : ""}</article>`;
+  return `<article class="card guide">${(t.guide || []).map(sec).join("")}${faq}${t.guideUpdated ? `<p class="note">Guide by <a href="/founder/">Nasir Uddin</a>, founder of Passive Array. Rules and figures checked ${esc(t.guideUpdated)}.</p>` : ""}</article>`;
 }
 
 /* ------------------------------------------------------------------ tool page */
+// Topic clusters. Each tool's "Next steps" links stay inside its cluster first, so authority
+// flows between related pages and up to the cluster's pillar (listed first).
+const CLUSTERS = [
+  ["youtube-money-calculator", "youtube-monetization-checker", "youtube-sponsorship-price-calculator", "youtube-channel-quality-checker"],
+  ["youtube-sponsorship-price-calculator", "youtube-engagement-rate-calculator", "instagram-pricing-calculator", "tiktok-pricing-calculator", "youtube-money-calculator"],
+  ["youtube-engagement-rate-calculator", "instagram-engagement-rate-calculator", "tiktok-engagement-rate-calculator", "youtube-channel-quality-checker", "instagram-engagement-rate-benchmark"],
+  ["youtube-keyword-generator", "youtube-tag-generator", "youtube-title-generator", "youtube-title-analyzer", "youtube-description-generator", "youtube-hashtag-generator", "youtube-niche-finder"],
+  ["youtube-subscriber-count-checker", "youtube-monetization-checker", "youtube-channel-quality-checker", "youtube-channel-comparison", "youtube-engagement-rate-calculator"],
+  ["instagram-fake-follower-checker", "tiktok-fake-follower-checker", "instagram-audit", "tiktok-audit", "find-youtube-influencers-by-niche", "youtube-lookalike-finder"],
+  ["youtube-video-ideas-generator", "youtube-script-outline-generator", "youtube-title-generator", "youtube-thumbnail-downloader", "youtube-channel-name-generator"],
+  ["instagram-engagement-rate-calculator", "instagram-engagement-rate-benchmark", "instagram-likes-to-followers-ratio", "instagram-follower-to-following-ratio", "instagram-money-calculator", "instagram-pricing-calculator"],
+  ["instagram-hashtag-generator", "instagram-caption-analyzer", "instagram-bio-generator", "instagram-content-ideas-generator", "instagram-growth-advisor"],
+  ["tiktok-engagement-rate-calculator", "tiktok-money-calculator", "tiktok-pricing-calculator", "tiktok-likes-to-followers-ratio", "tiktok-account-comparison"],
+  ["find-youtube-influencers-by-niche", "search-youtube-influencers-by-location", "youtube-lookalike-finder", "youtube-channel-comparison"],
+  ["twitch-follower-count-checker", "twitch-channel-comparison", "youtube-subscriber-count-checker"],
+  ["x-follower-to-following-ratio", "x-account-comparison", "instagram-follower-to-following-ratio"],
+];
+function clusterMates(slug) {
+  const out = [];
+  for (const c of CLUSTERS) if (c.includes(slug)) for (const s of c) if (s !== slug && !out.includes(s)) out.push(s);
+  return out.map((s) => tools.find((o) => o.slug === s)).filter(Boolean);
+}
+// Short keyword anchor: the tool's name, which is its main search phrase.
+const anchorName = (o) => o.name.replace(/ (Twitter)/, "");
+
+let POSTS = [];
+function setPosts(posts) { POSTS = posts || []; }
+
 function toolPage(template, t) {
   const root = "../../";
   const url = `${SITE}/creator-tools/${t.slug}/`;
   const same = tools.filter((o) => o.platform === t.platform && o.slug !== t.slug);
-  const siblings = same.slice(0, 3).map((o) => `<a href="../${o.slug}/">${esc(o.name.replace(/^(YouTube|Instagram|TikTok|Twitch|X \(Twitter\)) /, ""))}</a>`).join("");
+  const sibs = clusterMates(t.slug).filter((o) => o.platform === t.platform).concat(same).filter((o, i, a) => a.indexOf(o) === i).slice(0, 3);
+  const siblings = sibs.map((o) => `<a href="../${o.slug}/">${esc(anchorName(o))}</a>`).join("");
   // A tool can name its own follow-ups with "next"; otherwise pick nearby ones.
   const picked = (t.next || []).map((s) => tools.find((o) => o.slug === s)).filter(Boolean);
-  const nextList = (picked.length ? picked : [
+  // Three cluster links plus one rotating slot to a priority page, so money pages keep
+  // receiving links from across the site, not only from their own cluster.
+  const PRIORITY = ["youtube-monetization-checker", "youtube-subscriber-count-checker", "youtube-money-calculator", "youtube-engagement-rate-calculator", "youtube-tag-generator", "youtube-keyword-generator", "youtube-title-analyzer", "youtube-sponsorship-price-calculator"];
+  const idx = tools.indexOf(t);
+  const withPriority = (list) => {
+    const base = list.filter((o) => o.slug !== t.slug).slice(0, 3);
+    for (let k = 0; k < PRIORITY.length; k++) {
+      const s = PRIORITY[(idx + k) % PRIORITY.length];
+      if (s !== t.slug && !base.some((o) => o.slug === s)) { const o = tools.find((x) => x.slug === s); if (o) { base.push(o); break; } }
+    }
+    return base;
+  };
+  const nextList = withPriority(picked.length ? picked : clusterMates(t.slug).length >= 3 ? clusterMates(t.slug) : [
     ...same.filter((o) => intentOf(o) !== intentOf(t)).slice(0, 3),
     ...tools.filter((o) => o.platform !== t.platform && intentOf(o) === intentOf(t)).slice(0, 1),
-  ]).slice(0, 4).map((o) => `<a href="../${o.slug}/">${esc(o.short)} <b>${esc(INTENTS[intentOf(o)].label.split(" ")[0])}</b></a>`).join("");
+  ]).slice(0, 4).map((o) => `<a href="../${o.slug}/" data-k="${esc(INTENTS[intentOf(o)].label.split(" ")[0])}">${esc(anchorName(o))}</a><p class="next-d">${esc(o.short)}</p>`).join("");
   const clientTool = {
     slug: t.slug, name: t.name, platform: t.platform, api: t.api || null, action: t.action || null,
     compare: t.compare ? { labels: t.compare.labels, fields: t.compare.fields.map((f) => ({ id: f.id, label: f.label, type: f.type })) } : null,
@@ -341,7 +389,7 @@ function toolPage(template, t) {
     .replace("{{siblings}}", siblings)
     .replace("{{how}}", (t.how || []).map((h) => `<li>${esc(h)}</li>`).join(""))
     .replace("{{next}}", nextList)
-    .replace("{{guide}}", guideHtml(t))
+    .replace("{{guide}}", guideHtml(t) + relatedArticles(t))
     .replace("{{tooljson}}", JSON.stringify(clientTool).replace(/</g, "\\u003c"));
 }
 
@@ -489,7 +537,7 @@ function homePage(posts = []) {
 
   /* ---- 4. numbered capabilities ---- */
   const NUMBERED = [
-    ["01", "Keyword research that is measured", "What the top results actually do for a keyword: views per day, channel sizes, freshness. Never a modelled search volume.", "research/keywords/", ICON.search, "teal"],
+    ["01", "Keyword research that is measured", "What the top results actually do for a keyword: views per day, channel sizes, freshness. Never a modelled search volume.", "research/", ICON.search, "teal"],
     ["02", "Outlier videos, refreshed daily", "Videos and Shorts doing 3x to 100x what their channel normally does, from the last 90 days. The biggest surprises, not the biggest channels.", "research/outliers/", ICON.compare, "indigo"],
     ["03", "Channel checks on live data", "Monetization signals, engagement rate, views per subscriber and a quality score, straight from the YouTube and Twitch APIs.", "creator-tools/youtube-channel-quality-checker/", '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l7 3v5c0 5-3.5 8.5-7 10-3.5-1.5-7-5-7-10V6z"/><path d="m9 12 2 2 4-4"/></svg>', "mint"],
     ["04", "Watch channels over time", "Save channels to a watchlist and see 7-day and 30-day change. Pro adds a Monday email of who moved and CSV export.", "account/", ICON.money, "gold"],
@@ -622,7 +670,7 @@ ${header(root, "home", false)}
     <p class="center sub">What you can do without paying anyone. Checked ${new Date().toLocaleDateString("en-GB", { month: "long", year: "numeric" })} from their own public pages.</p>
     <div class="card compare-strip cmp2 lp-cmp">
       <div class="tablewrap"><table class="cmp">
-        <thead><tr><th></th><th class="us">Passive Array<small>Free, Pro optional</small></th><th>vidIQ<small>Free tier, then paid</small></th><th>TubeBuddy<small>Free tier, then paid</small></th></tr></thead>
+        <thead><tr><th></th><th class="us">Passive Array<small>Free, Pro optional</small></th><th><a href="${root}compare/vidiq-alternative/">vidIQ alternative</a><small>Free tier, then paid</small></th><th><a href="${root}compare/tubebuddy-alternative/">TubeBuddy alternative</a><small>Free tier, then paid</small></th></tr></thead>
         <tbody>${CMP.map((r) => `<tr><td>${esc(r[0])}</td>${cmpCell(r[1], true)}${cmpCell(r[2], false)}${cmpCell(r[3], false)}</tr>`).join("")}</tbody>
       </table></div>
       <p class="note">Both are capable products with real depth on their paid tiers, and both do things we cannot: read your private analytics, publish for you, and test thumbnails on live traffic. <a href="${root}compare/">The full comparison says where they win.</a></p>
@@ -637,8 +685,13 @@ ${posts.length ? `
     <div class="grid c3">${posts.slice(0, 3).map((p) => postCard(p, root)).join("")}</div>
   </section>` : ""}
 
+  <section class="section" id="web-tools">
+    <div class="section-head"><h2>Free web and SEO tools</h2><a href="${root}pricing/">Free tools, optional Pro</a></div>
+    <div class="grid c3">${WEB_TOOLS.map(([href, name, text]) => `<a class="card" href="${root}${href}"><h3>${esc(name)}</h3><p>${esc(text)}</p></a>`).join("")}</div>
+  </section>
+
   <section class="section" id="faq">
-    <div class="section-head"><h2>Questions people ask first</h2><a href="faq/">All questions</a></div>
+    <div class="section-head"><h2>Questions people ask first</h2><a href="faq/">All YouTube tool questions</a></div>
     <div class="card faq">${faqHtml}</div>
   </section>
 </main>
@@ -651,7 +704,8 @@ ${footer(root)}
 
 
 /* ------------------------------------------------------------------ build */
-function buildInto(outDir) {
+function buildInto(outDir, posts) {
+  if (posts) setPosts(posts);
   const template = fs.readFileSync(path.join(HERE, "template.html"), "utf8");
   fs.mkdirSync(outDir, { recursive: true });
   for (const asset of ["shared.css", "shared.js", "site.js", "research.js", "app.js"]) fs.copyFileSync(path.join(HERE, "public", asset), path.join(outDir, asset));

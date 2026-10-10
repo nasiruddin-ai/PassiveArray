@@ -11,19 +11,19 @@ Most creators price their first sponsorship by guessing, then find out a year la
 
 ## Brands buy views, not subscribers
 
-A subscriber count tells a brand how many people once clicked a button. Average views on recent uploads tells them how many people will actually see the sponsor read. That is why every serious media kit leads with average views, and why the Passive Array sponsorship calculator pulls the average views of a channel's last 10 uploads from the YouTube API before it prices anything.
+A subscriber count tells a brand how many people once clicked a button. Average views on recent uploads tells them how many people will actually see the sponsor read. That is why every serious media kit leads with average views, and why the Passive Array [YouTube sponsorship calculator](../../creator-tools/youtube-sponsorship-price-calculator/) pulls the average views of a channel's last 10 uploads from the YouTube API before it prices anything.
 
 ## The formula
 
 > Integration price = average views x CPM / 1,000
 
-CPM here means what a brand pays per thousand views of a sponsored placement. It is not the ad CPM YouTube reports, and it is much higher than a creator's ad RPM, because an integration is the creator personally recommending the product to a trusting audience.
+CPM here means what a brand pays per thousand views of a sponsored placement. It is not the ad CPM YouTube reports, and it is much higher than a creator's ad RPM, because an integration is the creator personally recommending the product to a trusting audience. The [YouTube money calculator](../../creator-tools/youtube-money-calculator/) shows what the same views earn from ads.
 
 The calculator's default range is **$20 to $50 per thousand views** for a 60-second integration. Where a channel sits in that range depends on:
 
 - **Niche.** Finance, software, business and high-ticket hobbies sit at the top or above it. Entertainment and general vlogs sit near the bottom.
 - **Audience.** A mostly US, UK, Canadian or Australian audience commands more than the same numbers with a mostly global audience.
-- **Engagement.** The calculator applies an engagement adjustment: a channel well above the typical engagement rate for its size gets a premium, a channel well below it gets a discount. Brands do this instinctively; the tool makes it explicit.
+- **Engagement.** The calculator applies an engagement adjustment: a channel well above the typical engagement rate for its size gets a premium, a channel well below it gets a discount. Brands do this instinctively; the tool makes it explicit. The [YouTube engagement rate benchmarks](../youtube-engagement-rate-benchmarks/) list the typical rate for each size.
 
 ## The multipliers
 
@@ -46,9 +46,9 @@ So a channel averaging 120,000 views prices a mid-range integration at 120 x $35
 
 1. **Pricing on subscribers.** A 500K-subscriber channel averaging 30K views is a 30K-view channel to a brand.
 2. **Quoting one number.** A range signals you understand the variables. A single number signals you looked up a rule of thumb.
-3. **Forgetting the engagement story.** If your engagement rate is above the typical rate for your size, say so in the pitch, with the number. It is the difference between $20 and $40 per thousand.
+3. **Forgetting the engagement story.** If your engagement rate is above the typical rate for your size, say so in the pitch and in your [creator media kit](../how-to-make-a-creator-media-kit/), with the number. It is the difference between $20 and $40 per thousand.
 4. **Undercharging to land the first deal.** Brands share rates with each other. Your first price becomes your price.
 
 ## Check your number
 
-Run your channel through the sponsorship price calculator to see the range with the live average-view count and the engagement adjustment applied. Then check the engagement rate calculator so you can quote the grade in your media kit.
+Run your channel through the sponsorship price calculator to see the range with the live average-view count and the engagement adjustment applied. Then check the [engagement rate calculator](../../creator-tools/youtube-engagement-rate-calculator/) so you can quote the grade in your media kit.

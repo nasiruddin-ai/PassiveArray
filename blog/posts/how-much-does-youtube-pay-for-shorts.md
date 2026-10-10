@@ -7,11 +7,11 @@ category: Earnings
 tools: youtube-money-calculator, youtube-engagement-rate-calculator, youtube-channel-quality-checker
 ---
 
-Creators who switch to Shorts often see views multiply and revenue fall. That is not a bug or a penalty. Shorts are paid through a completely different mechanism from long-form videos, and once you understand it the numbers stop being surprising.
+Creators who switch to Shorts often see views multiply and revenue fall. That is not a bug or a penalty. Shorts are paid through a completely different mechanism from long-form videos, and once you understand it the numbers stop being surprising, and so does the estimate from a [YouTube money calculator](../../creator-tools/youtube-money-calculator/).
 
 ## Long-form and Shorts are paid differently
 
-On a long-form video, ads run on your video. The revenue from those ads is attributed to that video and split with you.
+On a long-form video, ads run on your video. The revenue from those ads is attributed to that video and split with you. [How much YouTube pays per view](../how-much-does-youtube-pay-per-view/) covers that side in detail.
 
 On Shorts, ads run between Shorts in the feed, not attached to any one video. There is no way to say which ad belonged to which creator. So the money is pooled, music licensing costs are taken out of the pool first, and what remains is divided among creators according to their share of Shorts views.
 
@@ -29,7 +29,7 @@ The result is that a Short and a long-form video with identical view counts prod
 
 ## What this means for your channel
 
-**Views stop predicting revenue.** If you post both formats, your total views and your total earnings will drift apart. That is expected. Our [money calculator](../../creator-tools/youtube-money-calculator/) shows the Shorts share of recent uploads for exactly this reason, so you can discount the estimate when the share is high.
+**Views stop predicting revenue.** If you post both formats, your total views and your total earnings will drift apart. That is expected. Our money calculator shows the Shorts share of recent uploads for exactly this reason, so you can discount the estimate when the share is high.
 
 **A viral Short is not a payday.** It is an audience acquisition event. Millions of Shorts views may produce less direct revenue than one solid long-form video, while delivering far more new subscribers.
 
@@ -50,6 +50,6 @@ Every licensed track in a Short routes part of the pool to a rights holder befor
 
 ## Checking your own figures
 
-Open the [money calculator](../../creator-tools/youtube-money-calculator/) and look at two things together: the earnings range and the Shorts share of recent uploads. If the share is above half, read the bottom of the range and treat the rest as audience growth rather than income.
+Open the [money calculator](../../creator-tools/youtube-money-calculator/) and look at two things together: the earnings range and the Shorts share of recent uploads. If the share is above half, read the bottom of the range and treat the rest as audience growth rather than income. If you are not sure the channel earns from Shorts at all yet, run the [monetization checker](../../creator-tools/youtube-monetization-checker/) first.
 
 And as always, YouTube Studio is the only source that knows your real numbers. Everything on this site, and on every other site, is an estimate from public data.

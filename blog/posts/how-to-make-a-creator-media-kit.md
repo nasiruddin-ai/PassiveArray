@@ -7,7 +7,7 @@ category: Sponsorships
 tools: youtube-subscriber-count-checker, instagram-engagement-rate-calculator, youtube-sponsorship-price-calculator
 ---
 
-A media kit is a sales document, not a scrapbook. The brand manager reading it has forty of them in a folder and about thirty seconds for yours. Everything below is organised around that reality.
+A media kit is a sales document, not a scrapbook. The brand manager reading it has forty of them in a folder and about thirty seconds for yours. Everything below is organised around that reality, from the numbers up to a rate set with a [sponsorship price calculator](../../creator-tools/youtube-sponsorship-price-calculator/).
 
 ## Make it one page
 
@@ -25,7 +25,7 @@ A single page, a PDF, updated monthly, attached to the email. That is the whole 
 
 **4. Proof it works.** One or two past collaborations with an outcome. A link click count, a discount code redemption, a sold-out product, a comment from the brand. If you have never done a paid deal, use an organic post about a product you like and show the response.
 
-**5. What you offer and what it costs.** Formats and a starting price or a range. Some creators leave pricing off to force a conversation. In practice it filters out the brands whose budget was never going to reach you, and that is time saved on both sides.
+**5. What you offer and what it costs.** Formats and a starting price or a range. Our guide to [pricing a sponsored YouTube video](../how-much-to-charge-for-a-sponsored-youtube-video/) shows how to set it. Some creators leave pricing off to force a conversation. In practice it filters out the brands whose budget was never going to reach you, and that is time saved on both sides.
 
 **6. How to reach you.** An email address that you check, on the page, not only in the file metadata.
 
@@ -35,7 +35,7 @@ You do not need a subscription to fill in any of this.
 
 - **YouTube subscribers, views, average views per upload.** The [subscriber count checker](../../creator-tools/youtube-subscriber-count-checker/) pulls these from the official API for any channel, including your own. Average views on recent uploads is the number brands care about most, and it is the one creators most often leave out.
 - **Engagement rate, with context.** The [Instagram](../../creator-tools/instagram-engagement-rate-calculator/) and [YouTube](../../creator-tools/youtube-engagement-rate-calculator/) calculators give you the rate and the grade for your size. Put both on the page. "3.4% engagement, above the 2.0% typical for accounts of this size" is far stronger than "3.4% engagement".
-- **A defensible rate.** The [sponsorship price calculator](../../creator-tools/youtube-sponsorship-price-calculator/) prices an integration from your average views, so the number on your kit has a method behind it.
+- **A defensible rate.** The sponsorship price calculator prices an integration from your average views, so the number on your kit has a method behind it.
 - **Audience demographics.** These only exist in your own analytics. Instagram Insights, YouTube Studio and TikTok Analytics all show age, gender and country. Screenshot the country and age charts.
 
 ## What to leave off

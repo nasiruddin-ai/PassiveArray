@@ -7,7 +7,7 @@ category: Engagement
 tools: instagram-engagement-rate-calculator, instagram-engagement-rate-benchmark, instagram-audit
 ---
 
-Instagram engagement rate is the first number a brand looks at before a deal and the first number a creator checks after a post. It is also the number most often compared unfairly, because the typical rate falls steeply as an account grows. A 2% rate is excellent for one account and a warning for another.
+Instagram engagement rate is the first number a brand looks at before a deal and the first number a creator checks after a post. It is also the number most often compared unfairly, because the typical rate falls steeply as an account grows. A 2% rate is excellent for one account and a warning for another. The [Instagram engagement rate calculator](../../creator-tools/instagram-engagement-rate-calculator/) grades any account against the typical rate for its size.
 
 ## The formula
 
@@ -19,7 +19,7 @@ Instagram has no free public API, so the calculators on this site work from the 
 
 ## Typical rates by account size
 
-These are the benchmarks the Passive Array tools use. They describe what a healthy account of that size usually looks like, not a target you must hit.
+These are the benchmarks the Passive Array tools use, including the [Instagram engagement benchmark](../../creator-tools/instagram-engagement-rate-benchmark/) tool. They describe what a healthy account of that size usually looks like, not a target you must hit.
 
 | Tier | Followers | Typical engagement |
 |---|---|---|
@@ -47,7 +47,7 @@ So a micro account at 3.5% (1.75x the 2.0% typical) is graded Excellent, while a
 
 ## Likes and comments are not equal
 
-Likes are about 92% of total engagement on a typical account. That matters when you read a benchmark: an account with a normal like count and almost no comments is usually fine, but an account with a high like count and near-zero comments (under 0.3% of likes) is a pattern the fake-follower checker flags, because bought likes rarely come with real conversation.
+Likes are about 92% of total engagement on a typical account. That matters when you read a benchmark: an account with a normal like count and almost no comments is usually fine, but an account with a high like count and near-zero comments (under 0.3% of likes) is a pattern the [fake follower checker](../../creator-tools/instagram-fake-follower-checker/) flags, because bought likes rarely come with real conversation.
 
 ## What moves the rate
 
@@ -58,4 +58,4 @@ Likes are about 92% of total engagement on a typical account. That matters when 
 
 ## Using the number in a deal
 
-For a brand, engagement rate is a screening number, not a price. Screen out accounts far below their tier, then price on reach and on the audience fit. The pricing calculator on this site starts from followers and engagement and adjusts for the tier, which is the same order of operations.
+For a brand, engagement rate is a screening number, not a price. Screen out accounts far below their tier, then price on reach and on the audience fit. The [Instagram pricing calculator](../../creator-tools/instagram-pricing-calculator/) on this site starts from followers and engagement and adjusts for the tier, which is the same order of operations.

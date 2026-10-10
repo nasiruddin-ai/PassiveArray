@@ -53,7 +53,7 @@ Compare a channel with its own past, and with channels of similar size and forma
 
 ## Read it with engagement rate
 
-The two numbers answer different questions and are strongest together:
+The two numbers answer different questions and are strongest together, so run the [YouTube engagement rate calculator](../../creator-tools/youtube-engagement-rate-calculator/) alongside this one:
 
 - **Views per subscriber** asks whether people show up.
 - **[Engagement rate](../youtube-engagement-rate-benchmarks/)** asks whether the people who showed up reacted.

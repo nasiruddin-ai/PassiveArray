@@ -7,19 +7,19 @@ category: Earnings
 tools: youtube-money-calculator, youtube-sponsorship-price-calculator, youtube-channel-quality-checker
 ---
 
-This is the most searched question in creator economics, and almost every answer you will find is a single confident number. There is no single number. There is a formula, a range, and a handful of things that decide where you land inside it.
+This is the most searched question in creator economics, and almost every answer you will find is a single confident number. There is no single number. There is a formula, a range, and a handful of things that decide where you land inside it. The [YouTube money calculator](../../creator-tools/youtube-money-calculator/) runs that formula on any channel.
 
 ## Start with the right term
 
-The number you need is **RPM**, revenue per thousand views. It is what reaches your account per thousand views of your videos, after YouTube keeps its share and after all the views that never showed an ad are counted in.
+The number you need is **RPM**, revenue per thousand views. It is what reaches your account per thousand views of your videos, after YouTube keeps its share and after all the views that never showed an ad are counted in. It only applies once a channel is in the Partner Program, which the [monetization checker](../../creator-tools/youtube-monetization-checker/) estimates from public signals.
 
-It is not CPM. CPM is what an advertiser pays for a thousand ad impressions, and it is always higher. A channel can truthfully report a $12 CPM and a $3 RPM in the same month. When someone quotes you a big "YouTube pays X" figure, they are usually quoting CPM.
+It is not CPM. CPM is what an advertiser pays for a thousand ad impressions, and it is always higher. A channel can truthfully report a $12 CPM and a $3 RPM in the same month. When someone quotes you a big "YouTube pays X" figure, they are usually quoting CPM. Our guide to [how much YouTube pays per view](../how-much-does-youtube-pay-per-view/) breaks the two numbers down further.
 
 ## The formula
 
 > Earnings = (views / 1,000) x RPM
 
-That is the whole thing. Every YouTube money calculator, including [ours](../../creator-tools/youtube-money-calculator/), is this formula with a sensible RPM range attached.
+That is the whole thing. Every YouTube money calculator, including ours, is this formula with a sensible RPM range attached.
 
 ## What 1,000 views is worth
 

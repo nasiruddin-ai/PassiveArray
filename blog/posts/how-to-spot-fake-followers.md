@@ -9,7 +9,7 @@ tools: instagram-fake-follower-checker, tiktok-fake-follower-checker, instagram-
 
 Nobody sells "fake followers" as a labelled product any more. What you get today is a mix of bot accounts, inactive accounts bought in bulk, engagement pods and paid likes, and each leaves a slightly different fingerprint in the public numbers. You do not need access to the follower list to see most of them.
 
-The Passive Array fake-follower checkers work only from the numbers on a profile: followers, following, posts, average likes and average comments. Here is what they look for, in the order that matters most.
+The Passive Array checkers, the [Instagram fake follower checker](../../creator-tools/instagram-fake-follower-checker/) and the [TikTok fake follower checker](../../creator-tools/tiktok-fake-follower-checker/), work only from the numbers on a profile: followers, following, posts, average likes and average comments. Here is what they look for, in the order that matters most.
 
 ## 1. Engagement far below the tier
 
@@ -54,8 +54,8 @@ The checkers add the penalties above into a score from 0 to 100 and translate it
 | 45 to 69 | 25 to 45% | Suspicious |
 | 70 and up | 45% or more | Very suspicious |
 
-Every real account has a few percent of fake followers it never asked for; bots follow everyone. "Healthy" does not mean zero. And a suspicious score is a reason to look closer, not a verdict: a giveaway, a feature on a big page or a very old account can produce some of these patterns innocently.
+Every real account has a few percent of fake followers it never asked for; bots follow everyone. "Healthy" does not mean zero. And a suspicious score is a reason to look closer, not a verdict: a giveaway, a feature on a big page or a very old account can produce some of these patterns innocently. The [Instagram account audit](../../creator-tools/instagram-audit/) puts the score next to growth and consistency for a fuller picture.
 
 ## For brands: what to do with it
 
-Use the score to decide where to spend your attention. Below 20, move on to fit and pricing. Between 20 and 45, ask the creator for a screenshot of their Insights reach and audience countries; honest creators share these without fuss. Above 45, price on real reach if you continue at all, and put a performance clause in the contract.
+Use the score to decide where to spend your attention. Below 20, move on to fit and pricing. Between 20 and 45, ask the creator for a screenshot of their Insights reach and audience countries; honest creators share these without fuss. Above 45, price on real reach if you continue at all, and put a performance clause in the contract. Our checklist on [how to vet an influencer](../how-to-vet-an-influencer-before-you-pay/) covers the rest.

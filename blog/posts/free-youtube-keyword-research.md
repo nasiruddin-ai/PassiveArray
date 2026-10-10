@@ -7,7 +7,7 @@ category: YouTube SEO
 tools: youtube-channel-quality-checker, youtube-subscriber-count-checker, find-youtube-influencers-by-niche
 ---
 
-Every paid keyword tool sells you two things: a list of phrases, and a judgement about whether you can win them. You can get both free, and the free version of the second one is often more honest than the paid number.
+Every paid keyword tool sells you two things: a list of phrases, and a judgement about whether you can win them. You can get both free, and the free version of the second one is often more honest than the paid number. Our [YouTube keyword research tool](../../research/) does both from measured data, and the steps below show how to do it by hand.
 
 ## Step 1: get the phrases from autocomplete
 
@@ -53,9 +53,9 @@ The sweet spot is usually a specific long-tail phrase inside a popular subject. 
 
 ## Step 5: write the title for the phrase, not the tags
 
-Once you have the phrase, put it near the front of the title, in natural language. Put it again in the first two lines of the description, where it is visible before the fold. Say it out loud in the first thirty seconds of the video, because the transcript is indexed.
+Once you have the phrase, put it near the front of the title, in natural language. The [YouTube title analyzer](../../creator-tools/youtube-title-analyzer/) checks keyword position and length. Put it again in the first two lines of the description, where it is visible before the fold. Say it out loud in the first thirty seconds of the video, because the transcript is indexed.
 
-Tags come last and matter least. See [do YouTube tags still matter](../do-youtube-tags-still-matter/) for why.
+Tags come last and matter least. See [do YouTube tags still matter](../do-youtube-tags-still-matter/) for why. When you do write them, the [YouTube tag generator](../../creator-tools/youtube-tag-generator/) keeps the list under 500 characters.
 
 ## What this method cannot do
 

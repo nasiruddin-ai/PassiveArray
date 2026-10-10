@@ -7,7 +7,7 @@ category: YouTube SEO
 tools: youtube-channel-quality-checker, youtube-subscriber-count-checker
 ---
 
-YouTube stopped showing tags to viewers years ago, but it never stopped sending them to your browser. Every tag a creator set is still in the page you are already looking at. Here are three ways to read them, from fastest to most manual.
+YouTube stopped showing tags to viewers years ago, but it never stopped sending them to your browser. Every tag a creator set is still in the page you are already looking at. Here are three ways to read them, from fastest to most manual, and a [YouTube tag generator](../../creator-tools/youtube-tag-generator/) for writing your own.
 
 ## Method 1: view the page source
 
@@ -40,13 +40,13 @@ Less than you think.
 
 Copying a competitor's tag list wholesale is legal and almost useless. Their tags describe their video. YouTube's own documentation says tags play a minimal role in discovery, with one specific exception: they help when your subject is commonly misspelled. Everything else about ranking is driven by the title, the thumbnail, the description, what is actually said in the video, and above all how viewers behave after clicking.
 
-What a competitor's tags are genuinely good for is **vocabulary**. If several ranking videos on a topic all use a phrase you had not thought of, that phrase is what your audience calls the thing. Put it in your title and your first two lines of description, where it will actually do work. That is worth far more than pasting it into your tag box.
+What a competitor's tags are genuinely good for is **vocabulary**. If several ranking videos on a topic all use a phrase you had not thought of, that phrase is what your audience calls the thing. Put it in your title (the [YouTube title analyzer](../../creator-tools/youtube-title-analyzer/) checks where the keyword sits) and your first two lines of description, where it will actually do work. That is worth far more than pasting it into your tag box.
 
 For the full picture of what tags do and do not do, see [do YouTube tags still matter](../do-youtube-tags-still-matter/).
 
 ## Reading the tag count as a signal
 
-There is one useful signal in the numbers themselves. When you look at the top results for a keyword and several of them have no tags at all, you are looking at a topic where tags are clearly not the deciding factor, and where a competitor is winning on title and retention alone. That tells you where to compete.
+There is one useful signal in the numbers themselves. When you look at the top results for a keyword and several of them have no tags at all, you are looking at a topic where tags are clearly not the deciding factor, and where a competitor is winning on title and retention alone. That tells you where to compete. [Free YouTube keyword research](../free-youtube-keyword-research/) turns that into a full method.
 
 Our extension shows the tag count under every search result for exactly this reason, alongside views per day and channel size.
 

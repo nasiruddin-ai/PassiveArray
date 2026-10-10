@@ -16,7 +16,7 @@ Put an Instagram creator and a TikTok creator side by side and the TikTok engage
 >
 > Engagement rate by followers = (likes + comments + shares) / followers x 100
 
-Average it across the last 10 to 12 videos. TikTok has no free public API, so the Passive Array calculators use the numbers you type in.
+Average it across the last 10 to 12 videos. TikTok has no free public API, so the [TikTok engagement rate calculator](../../creator-tools/tiktok-engagement-rate-calculator/) uses the numbers you type in.
 
 On TikTok most views come from people who do not follow the creator, so the calculator on this site leads with the rate by views, which shows how well each video lands. It also shows the rate by followers, which is the figure the tier benchmarks below use and the one many brand briefs still ask for.
 
@@ -30,7 +30,7 @@ On TikTok most views come from people who do not follow the creator, so the calc
 | Macro | 500K to 1M | 5% |
 | Mega | over 1M | 4% |
 
-Compare that with Instagram's 4.0% for nano accounts sliding to 0.8% for mega accounts. A TikTok account at 3% is doing badly for its size; an Instagram account at 3% is probably doing well.
+Compare that with Instagram's 4.0% for nano accounts sliding to 0.8% for mega accounts, from our [Instagram engagement benchmarks](../instagram-engagement-rate-by-follower-count/). A TikTok account at 3% is doing badly for its size; an Instagram account at 3% is probably doing well.
 
 ## Grading against the tier
 
@@ -44,8 +44,8 @@ TikTok's For You feed gives every video a test audience regardless of follower c
 
 - **Likes to followers.** Total profile likes divided by followers. A long-running account with many videos accumulates a high ratio; a young or bought account does not.
 - **Comment share.** Comments under 0.5% of likes is the same paid-likes fingerprint the fake-follower checker uses on Instagram, and it applies here.
-- **Consistency.** Rate on the best video versus the median. A single viral video can double the average; the median tells you what a sponsor should expect.
+- **Consistency.** Rate on the best video versus the median. A single viral video can double the average; the median tells you what a sponsor should expect. The [TikTok account audit](../../creator-tools/tiktok-audit/) scores all three.
 
 ## For brands
 
-Screen with the rate and tier grade, then look at views per video, which on TikTok often bears little relation to followers. A 40K-follower account averaging 300K views is the account you want, and a 400K-follower account averaging 20K views is the one to price down. The pricing calculator on this site starts from average views per video, not followers, then adjusts for engagement, so feed it the real average views before you send an offer.
+Screen with the rate and tier grade, then look at views per video, which on TikTok often bears little relation to followers. A 40K-follower account averaging 300K views is the account you want, and a 400K-follower account averaging 20K views is the one to price down. The [TikTok pricing calculator](../../creator-tools/tiktok-pricing-calculator/) on this site starts from average views per video, not followers, then adjusts for engagement, so feed it the real average views before you send an offer.

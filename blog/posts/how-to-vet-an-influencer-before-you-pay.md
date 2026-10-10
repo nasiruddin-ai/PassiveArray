@@ -7,7 +7,7 @@ category: For brands
 tools: instagram-fake-follower-checker, youtube-channel-comparison, youtube-subscriber-count-checker
 ---
 
-Most influencer marketing money is wasted before the campaign starts, on creators whose audience was never going to buy anything. The checks that catch this take about ten minutes per creator and need no subscription.
+Most influencer marketing money is wasted before the campaign starts, on creators whose audience was never going to buy anything. The checks that catch this take about ten minutes per creator and need no subscription, starting with a free [fake follower checker](../../creator-tools/instagram-fake-follower-checker/).
 
 ## Ten minutes, in order
 
@@ -15,7 +15,7 @@ Most influencer marketing money is wasted before the campaign starts, on creator
 
 A 2% engagement rate means nothing on its own. It is strong for a 500,000-follower Instagram account and weak for a 5,000-follower one, because typical rates fall steeply as accounts grow.
 
-Run the account through the [fake follower checker](../../creator-tools/instagram-fake-follower-checker/) or the relevant [engagement calculator](../../creator-tools/instagram-engagement-rate-calculator/), which grade against the benchmark for that tier rather than a flat number. Our [benchmarks by follower count](../instagram-engagement-rate-by-follower-count/) lists the typical rates if you want to check by hand.
+Run the account through the fake follower checker or the relevant [engagement calculator](../../creator-tools/instagram-engagement-rate-calculator/), which grade against the benchmark for that tier rather than a flat number. Our [benchmarks by follower count](../instagram-engagement-rate-by-follower-count/) lists the typical rates if you want to check by hand.
 
 ### 2. The comment-to-like ratio
 

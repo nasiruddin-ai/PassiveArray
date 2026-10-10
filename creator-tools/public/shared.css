@@ -903,3 +903,13 @@ p.center.sub { text-align: center; color: var(--muted); margin: 8px auto 18px; m
 .guide-sec table { width: 100%; font-size: .92rem; margin: 6px 0 14px; }
 .guide-sec th { text-align: left; }
 .guide-faq .faq { border: 0; padding: 0; }
+
+/* internal links: next steps keep a keyword anchor, description sits outside the link */
+.next a[data-k]::after { content: attr(data-k); color: var(--deep); font-weight: 600; font-size: .82rem; white-space: nowrap; }
+:root[data-theme="dark"] .next a[data-k]::after { color: var(--mint); }
+.next .next-d { margin: -6px 4px 4px; font-size: .8rem; color: var(--muted); line-height: 1.45; }
+.related-posts { margin-top: 18px; }
+.related-posts h2 { font-size: 1.15rem; margin-bottom: 12px; }
+.related-posts .rp-list { display: grid; gap: 8px; }
+.related-posts .rp-list a { padding: 12px 16px; border-radius: 12px; border: 1px solid var(--line); color: var(--text); font-weight: 500; }
+.related-posts .rp-list a:hover { border-color: var(--teal); }

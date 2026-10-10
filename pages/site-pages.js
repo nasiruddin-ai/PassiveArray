@@ -41,6 +41,8 @@ function aboutPage() {
       <p>Creators checking their own growth, brands vetting a creator before a deal, agencies building a shortlist, and anyone curious what a channel is really doing. If that is you, <a href="../contact/">tell us what is missing</a>.</p>
       <h2>Who builds it</h2>
       <p>Passive Array is built by <a href="../founder/">Nasir Uddin</a>, an SEO specialist in Dhaka who wanted creator tools that show their working. <a href="../founder/">Read why he built it</a>.</p>
+      <h2>Compared with paid tools</h2>
+      <p>See the honest <a href="../compare/vidiq-alternative/">vidIQ alternative</a> and <a href="../compare/tubebuddy-alternative/">TubeBuddy alternative</a> comparisons, including where those products win, or read the <a href="../faq/">answers to common questions</a>.</p>
     </div>
     <div>
       <div class="card">
@@ -667,7 +669,7 @@ function pricingPage() {
   <div class="card compare-strip" style="margin-top:28px">
     <h2 style="padding:14px 14px 0;font-size:1.25rem">Compared with the paid options</h2>
     <div class="tablewrap"><table class="cmp">
-      <thead><tr><th></th><th class="us">Passive Array</th><th>vidIQ</th><th>TubeBuddy</th></tr></thead>
+      <thead><tr><th></th><th class="us">Passive Array</th><th><a href="../compare/vidiq-alternative/">vidIQ</a></th><th><a href="../compare/tubebuddy-alternative/">TubeBuddy</a></th></tr></thead>
       <tbody>
         <tr><td>Entry price</td><td class="us">Free</td><td>Free tier, then about $17/mo</td><td>Free tier, then paid plans</td></tr>
         <tr><td>Free tier limits</td><td class="us">None on the tools</td><td>Monthly AI credit allowance</td><td>Feature limits</td></tr>
@@ -847,9 +849,10 @@ function founderPage() {
       <ul>
         <li><b>Ranges, not fake precision.</b> Earnings and prices show a low and a high, with the assumption behind each.</li>
         <li><b>No invented facts.</b> The AI writers work only from what you type, and the templates never claim results you did not have.</li>
-        <li><b>Admit where others win.</b> The comparison pages say plainly what vidIQ and TubeBuddy do better.</li>
-        <li><b>No ads and no affiliate links.</b> Every tool stays free.</li>
+        <li><b>Admit where others win.</b> The <a href="../compare/vidiq-alternative/">vidIQ comparison</a> and <a href="../compare/tubebuddy-alternative/">TubeBuddy comparison</a> say plainly what those tools do better.</li>
+        <li><b>No ads and no affiliate links.</b> Every tool stays free; the <a href="../pricing/">pricing page</a> explains the optional Pro plan.</li>
       </ul>
+      <p>More on how the site works: <a href="../about/">about Passive Array</a> and <a href="../faq/">frequently asked questions</a>.</p>
       ${exp}
       ${projects}
       ${education}

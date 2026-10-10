@@ -7,7 +7,7 @@ category: Engagement
 tools: youtube-engagement-rate-calculator, youtube-channel-quality-checker, youtube-subscriber-count-checker
 ---
 
-Engagement rate is the one number that tells you whether people actually reacted to a video, not just whether it was served to them. On YouTube it is simple to calculate and easy to get wrong, because there are two ways to measure it and they give very different answers.
+Engagement rate is the one number that tells you whether people actually reacted to a video, not just whether it was served to them. On YouTube it is simple to calculate and easy to get wrong, because there are two ways to measure it and they give very different answers. The [YouTube engagement rate calculator](../../creator-tools/youtube-engagement-rate-calculator/) does the arithmetic for any channel.
 
 ## The formula
 
@@ -33,7 +33,7 @@ The same scale is used on every YouTube tool on this site and in the Passive Arr
 
 ## Why the numbers are small
 
-A 4% engagement rate sounds low if you are used to Instagram, where likes are one tap away and the typical rate for a small account is around 4% of followers. On YouTube a "like" requires the viewer to stop, find the button and click, and most viewers never do. Comments are rarer still. A video where one in twenty viewers likes it is doing well.
+A 4% engagement rate sounds low if you are used to Instagram, where likes are one tap away and the typical rate for a small account is around 4% of followers (see [Instagram engagement by follower count](../instagram-engagement-rate-by-follower-count/)). On YouTube a "like" requires the viewer to stop, find the button and click, and most viewers never do. Comments are rarer still. A video where one in twenty viewers likes it is doing well.
 
 ## What pulls the number down
 
@@ -49,6 +49,6 @@ A 4% engagement rate sounds low if you are used to Instagram, where likes are on
 
 ## How to use the grade
 
-Compare a channel with itself over time, and compare channels of similar size and format. A 1.5% rate on a 2M-subscriber tech channel with 800K views per video is normal. A 1.5% rate on a 5K-subscriber vlog is a warning sign. The quality checker on this site weights engagement alongside views per subscriber, upload frequency and channel age for exactly this reason.
+Compare a channel with itself over time, and compare channels of similar size and format. A 1.5% rate on a 2M-subscriber tech channel with 800K views per video is normal. A 1.5% rate on a 5K-subscriber vlog is a warning sign. The [channel quality checker](../../creator-tools/youtube-channel-quality-checker/) on this site weights engagement alongside [views per subscriber](../views-per-subscriber/), upload frequency and channel age for exactly this reason.
 
 If you want the number for a specific video rather than a channel, the Chrome extension shows it in the sidebar on every watch page, with the grade and the tags the creator used.

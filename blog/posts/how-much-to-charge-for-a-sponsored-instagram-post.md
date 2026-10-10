@@ -7,7 +7,7 @@ category: Sponsorships
 tools: instagram-pricing-calculator, instagram-engagement-rate-calculator, instagram-money-calculator
 ---
 
-Ask ten creators what they charge for a sponsored Instagram post and you will get ten numbers with no shared logic behind them. Brands, meanwhile, work from a formula. Here is the formula, so you can quote a price you can defend.
+Ask ten creators what they charge for a sponsored Instagram post and you will get ten numbers with no shared logic behind them. Brands, meanwhile, work from a formula. Here is the formula, and an [Instagram pricing calculator](../../creator-tools/instagram-pricing-calculator/) that runs it, so you can quote a price you can defend.
 
 ## The starting point
 
@@ -15,7 +15,7 @@ The industry default is a rate per thousand followers:
 
 > Base price = (followers / 1,000) x rate
 
-Our [Instagram pricing calculator](../../creator-tools/instagram-pricing-calculator/) starts at **$10 per 1,000 followers** for a feed post. A 50,000-follower account starts at $500, a 200,000-follower account at $2,000.
+Our calculator starts at **$10 per 1,000 followers** for a feed post. A 50,000-follower account starts at $500, a 200,000-follower account at $2,000.
 
 That is the starting point, not the answer. Two accounts of the same size are rarely worth the same, and the adjustments below are where the real number comes from.
 
@@ -39,7 +39,7 @@ Formats are not interchangeable. Relative to a standard feed post:
 | Story series | Between | Several frames with a narrative and a swipe-up sell harder |
 | Carousel | Around a feed post | More dwell time, similar reach |
 
-The pricing calculator quotes a feed post, a story and a reel separately so you are not converting in your head during a call.
+The pricing calculator quotes a feed post, a story and a reel separately so you are not converting in your head during a call. If the deal includes TikTok, the [TikTok pricing calculator](../../creator-tools/tiktok-pricing-calculator/) prices that side.
 
 ## What the formula does not include
 
@@ -55,7 +55,7 @@ These are separate line items. Quote them separately or you are giving them away
 
 Give a range rather than a single number. "A reel with one round of revisions runs $1,400 to $2,200 depending on usage rights" tells a brand you understand the variables. A single flat number suggests you looked up a rule of thumb, and invites a counter.
 
-Then anchor on your strongest number. If your engagement is above your tier, lead with that. If your saves and shares are strong, lead with those, because they signal the content travels. If your audience is concentrated in a market the brand cares about, lead with that.
+Then anchor on your strongest number. If your engagement is above your tier, lead with that, and put it on your [creator media kit](../how-to-make-a-creator-media-kit/). If your saves and shares are strong, lead with those, because they signal the content travels. If your audience is concentrated in a market the brand cares about, lead with that.
 
 ## Common mistakes
 

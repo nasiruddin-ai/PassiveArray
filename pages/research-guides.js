@@ -50,7 +50,7 @@ module.exports = {
         h: "What is an outlier video?",
         p: [
           "An outlier is a video that did far better than its own channel usually does. It is not the same as a big video. A million views is normal for a channel with ten million subscribers. Fifty thousand views is a breakout for a channel whose videos usually get five thousand.",
-          "That is why outliers are useful for ideas. Channel size, schedule and audience stay roughly constant from one upload to the next, so when one upload jumps, the topic, title or thumbnail is the likely reason.",
+          "That is why outliers are useful for ideas. Channel size, schedule and audience stay roughly constant from one upload to the next, so when one upload jumps, the topic, title or thumbnail is the likely reason. Short-form breakouts have their own feed of <a href=\"/research/shorts/\">Shorts outliers</a>.",
         ],
       },
       {

@@ -8,7 +8,7 @@ category: Growth
 tools: youtube-subscriber-count-checker, youtube-channel-quality-checker, youtube-channel-comparison
 ---
 
-You can learn a great deal about any YouTube channel without owning it. You can also be misled, because some of the most quoted numbers are rounded, estimated or simply invented by the site showing them. Here is the line between the two.
+You can learn a great deal about any YouTube channel without owning it. You can also be misled, because some of the most quoted numbers are rounded, estimated or simply invented by the site showing them. Here is the line between the two, and a [YouTube subscriber count checker](../../creator-tools/youtube-subscriber-count-checker/) that stays on the right side of it.
 
 ## What is genuinely public
 
@@ -24,7 +24,7 @@ YouTube's official Data API exposes these for every channel, and they are exact 
 | Per-video views, likes, comments | Yes | For each public video |
 | Video length, publish date, tags | Yes | |
 
-Everything our [subscriber count checker](../../creator-tools/youtube-subscriber-count-checker/) and [quality checker](../../creator-tools/youtube-channel-quality-checker/) show is built from this list, plus arithmetic on top of it.
+Everything our subscriber count checker and [quality checker](../../creator-tools/youtube-channel-quality-checker/) show is built from this list, plus arithmetic on top of it.
 
 ## Why the subscriber count never quite matches
 

@@ -109,7 +109,9 @@ function withWebGuide(html, folder) {
 </style>`;
   const sec = (s) => `<section><h2>${esc(s.h)}</h2>${(s.p || []).map((p) => `<p>${p}</p>`).join("")}${s.list ? `<${s.ordered ? "ol" : "ul"}>${s.list.map((li) => `<li>${li}</li>`).join("")}</${s.ordered ? "ol" : "ul"}>` : ""}${s.table ? `<div class="tw"><table><thead><tr>${s.table.head.map((h) => `<th>${esc(h)}</th>`).join("")}</tr></thead><tbody>${s.table.rows.map((r) => `<tr>${r.map((c) => `<td>${c}</td>`).join("")}</tr>`).join("")}</tbody></table></div>` : ""}${(s.after || []).map((p) => `<p>${p}</p>`).join("")}</section>`;
   const faq = g.faq && g.faq.length ? `<section><h2>Frequently asked questions</h2>${g.faq.map(([q, a]) => `<details><summary>${esc(q)}</summary><p>${a}</p></details>`).join("")}</section>` : "";
-  const block = `${style}<article class="pa-guide">${(g.guide || []).map(sec).join("")}${faq}${g.guideUpdated ? `<p class="note">Checked ${esc(g.guideUpdated)}.</p>` : ""}</article>`;
+  const others = site.WEB_TOOLS.filter(([href]) => href !== folder + "/").map(([href, name]) => `<a href="/${href}">${esc(name)}</a>`).join(" · ");
+  const more = `<section><h2>More free web tools</h2><p>${others}. For creators: <a href="/creator-tools/youtube-monetization-checker/">YouTube monetization checker</a> · <a href="/research/">YouTube keyword research</a>.</p></section>`;
+  const block = `${style}<article class="pa-guide">${(g.guide || []).map(sec).join("")}${faq}${more}${g.guideUpdated ? `<p class="note">Checked ${esc(g.guideUpdated)}.</p>` : ""}</article>`;
   return html.replace(/<div class="pa-foot">/, block + "<div class=\"pa-foot\">");
 }
 
@@ -118,7 +120,7 @@ const blog = require("./blog/build-blog.js");
 const posts = blog.loadPosts();
 fs.writeFileSync(path.join(DIST, "index.html"), site.homePage(posts));
 console.log("home page -> dist/index.html (" + site.SITE + ")");
-const creatorCount = site.buildInto(path.join(DIST, "creator-tools"));
+const creatorCount = site.buildInto(path.join(DIST, "creator-tools"), posts);
 console.log("creator-tools/tools.js -> dist/creator-tools/ (" + creatorCount + " tool pages + directory)");
 
 // Browser extension pages: landing page and the privacy policy the Chrome Web Store links to.

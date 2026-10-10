@@ -7,7 +7,7 @@ category: YouTube SEO
 tools: youtube-channel-quality-checker, youtube-subscriber-count-checker
 ---
 
-Tags used to be the first thing a YouTube SEO guide told you to fix. Then YouTube itself said tags play a "minimal" role in discovery, and half the internet decided they were dead. Both camps are a little right. Here is what tags actually do today and how much time they deserve.
+Tags used to be the first thing a YouTube SEO guide told you to fix. Then YouTube itself said tags play a "minimal" role in discovery, and half the internet decided they were dead. Both camps are a little right. Here is what tags actually do today, how much time they deserve, and how a [YouTube tag generator](../../creator-tools/youtube-tag-generator/) keeps that time short.
 
 ## What YouTube says
 
@@ -27,11 +27,11 @@ YouTube's own help page says tags can help if the content of the video is common
 
 ## The limit
 
-The tag field holds **500 characters** in total, including commas. That is about 20 to 30 short tags. The Passive Array for YouTube extension shows the tag count and how many of the 500 characters a video used, so you can see at a glance whether a competitor filled the field or left it empty.
+The tag field holds **500 characters** in total, including commas. That is about 20 to 30 short tags. The [Passive Array for YouTube extension](../../youtube-extension/) shows the tag count and how many of the 500 characters a video used, so you can see at a glance whether a competitor filled the field or left it empty.
 
 ## How to see any video's tags
 
-YouTube hides tags from viewers, but they are in the page's data. The extension reads them from the page itself, no API key, and lists them as clickable chips in the sidebar of every watch page. Click one to search it; click Copy all to reuse a competitor's set as a starting point. Reading tags is public data and allowed; copying a competitor's tags wholesale is legal but pointless, because their tags describe their video.
+YouTube hides tags from viewers, but they are in the page's data. The extension reads them from the page itself, no API key, and lists them as clickable chips in the sidebar of every watch page. Click one to search it; click Copy all to reuse a competitor's set as a starting point. Reading tags is public data and allowed; copying a competitor's tags wholesale is legal but pointless, because their tags describe their video. [How to find YouTube video tags](../how-to-find-youtube-video-tags/) covers two more ways that need no extension.
 
 ## A sensible tag routine, five minutes per video
 
@@ -45,4 +45,4 @@ Stop at 480 characters so an edit later does not push you over. The tag writer i
 
 ## Where to spend the time you save
 
-The keyword tool in the same popup scores a topic from the top 20 results: how much they are watched, how big the channels are, how fresh the videos are, and whether small channels are ranking. That last signal, a channel under 100K subscribers holding a spot with more views than subscribers, is worth more than any tag: it tells you the topic is open. Pick open topics, write titles for them, and let tags do the small job they are good at.
+The keyword tool in the same popup scores a topic from the top 20 results: how much they are watched, how big the channels are, how fresh the videos are, and whether small channels are ranking. That last signal, a channel under 100K subscribers holding a spot with more views than subscribers, is worth more than any tag: it tells you the topic is open. Our guide to [free YouTube keyword research](../free-youtube-keyword-research/) runs the same check by hand. Pick open topics, write titles for them, check each with the [YouTube title analyzer](../../creator-tools/youtube-title-analyzer/), and let tags do the small job they are good at.
