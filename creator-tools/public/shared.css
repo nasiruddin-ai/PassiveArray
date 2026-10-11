@@ -925,3 +925,21 @@ p.center.sub { text-align: center; color: var(--muted); margin: 8px auto 18px; m
 .related-posts .rp-list { display: grid; gap: 8px; }
 .related-posts .rp-list a { padding: 12px 16px; border-radius: 12px; border: 1px solid var(--line); color: var(--text); font-weight: 500; }
 .related-posts .rp-list a:hover { border-color: var(--teal); }
+
+/* guide layout: reading column plus a sticky sidebar */
+.guide { display: grid; grid-template-columns: minmax(0, 1fr) 270px; gap: 44px; align-items: start; }
+.guide-main { min-width: 0; }
+.guide-sec { scroll-margin-top: 90px; }
+.guide-aside { position: sticky; top: 88px; display: grid; gap: 14px; }
+.ga-box { border: 1px solid var(--line); border-radius: 16px; padding: 16px 18px; background: var(--bg); }
+.ga-box h3 { font-size: .78rem; font-weight: 700; letter-spacing: .07em; text-transform: uppercase; color: var(--muted); margin-bottom: 10px; }
+.ga-toc { display: grid; gap: 2px; }
+.ga-toc a, .ga-box > a { display: block; padding: 7px 10px; margin: 0 -10px; border-radius: 8px; color: var(--text); font-size: .88rem; line-height: 1.35; }
+.ga-toc a:hover, .ga-box > a:hover { background: var(--soft); color: var(--deep); }
+:root[data-theme="dark"] .ga-toc a:hover, :root[data-theme="dark"] .ga-box > a:hover { color: var(--mint); }
+.ga-cta { background: linear-gradient(135deg, var(--teal), var(--indigo)); border: 0; color: #fff; display: grid; gap: 6px; }
+.ga-cta b { font-size: 1rem; }
+.ga-cta span { font-size: .85rem; opacity: .9; line-height: 1.45; }
+.ga-cta .btn { margin-top: 8px; background: #fff; color: #1F2A44; height: 40px; display: flex; align-items: center; justify-content: center; text-align: center; width: 100%; }
+:root[data-theme="dark"] .ga-cta a.btn, .ga-cta a.btn:hover { color: #1F2A44; }
+@media (max-width: 1060px) { .guide { grid-template-columns: 1fr; } .guide-aside { display: none; } }

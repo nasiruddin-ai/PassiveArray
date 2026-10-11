@@ -310,9 +310,22 @@ function faqLd(faq) {
 
 function guideHtml(t) {
   if (!t.guide && !t.faq) return "";
-  const sec = (s) => `<section class="guide-sec"><h2>${esc(s.h)}</h2>${(s.p || []).map((p) => `<p>${p}</p>`).join("")}${s.list ? `<${s.ordered ? "ol" : "ul"}>${s.list.map((li) => `<li>${li}</li>`).join("")}</${s.ordered ? "ol" : "ul"}>` : ""}${s.table ? `<div class="tablewrap"><table><thead><tr>${s.table.head.map((h) => `<th>${esc(h)}</th>`).join("")}</tr></thead><tbody>${s.table.rows.map((r) => `<tr>${r.map((c) => `<td>${c}</td>`).join("")}</tr>`).join("")}</tbody></table></div>` : ""}${(s.after || []).map((p) => `<p>${p}</p>`).join("")}</section>`;
-  const faq = t.faq && t.faq.length ? `<section class="guide-sec guide-faq"><h2>${esc(t.faqTitle || "Frequently asked questions")}</h2><div class="faq">${t.faq.map(([q, a]) => `<details><summary>${esc(q)}</summary><p>${a}</p></details>`).join("")}</div></section>` : "";
-  return `<article class="card guide">${(t.guide || []).map(sec).join("")}${faq}${t.guideUpdated ? `<p class="note">Guide by <a href="/founder/">Nasir Uddin</a>, founder of Passive Array. Rules and figures checked ${esc(t.guideUpdated)}.</p>` : ""}</article>`;
+  const slug = (s) => String(s).toLowerCase().replace(/<[^>]+>/g, "").replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "").slice(0, 60);
+  const secs = (t.guide || []).map((s) => ({ ...s, id: slug(s.h) }));
+  const sec = (s) => `<section class="guide-sec" id="${s.id}"><h2>${esc(s.h)}</h2>${(s.p || []).map((p) => `<p>${p}</p>`).join("")}${s.list ? `<${s.ordered ? "ol" : "ul"}>${s.list.map((li) => `<li>${li}</li>`).join("")}</${s.ordered ? "ol" : "ul"}>` : ""}${s.table ? `<div class="tablewrap"><table><thead><tr>${s.table.head.map((h) => `<th>${esc(h)}</th>`).join("")}</tr></thead><tbody>${s.table.rows.map((r) => `<tr>${r.map((c) => `<td>${c}</td>`).join("")}</tr>`).join("")}</tbody></table></div>` : ""}${(s.after || []).map((p) => `<p>${p}</p>`).join("")}</section>`;
+  const faqTitle = t.faqTitle || "Frequently asked questions";
+  const faq = t.faq && t.faq.length ? `<section class="guide-sec guide-faq" id="faq"><h2>${esc(faqTitle)}</h2><div class="faq">${t.faq.map(([q, a]) => `<details><summary>${esc(q)}</summary><p>${a}</p></details>`).join("")}</div></section>` : "";
+  const toc = secs.map((s) => `<a href="#${s.id}">${esc(s.h)}</a>`).join("") + (faq ? `<a href="#faq">${esc(faqTitle)}</a>` : "");
+  // Related links in the sidebar: the cluster mates of a creator tool, if this is one.
+  const mates = t.slug && typeof clusterMates === "function" ? clusterMates(t.slug).slice(0, 4) : [];
+  const related = mates.length ? `<div class="ga-box"><h3>Related tools</h3>${mates.map((o) => `<a href="/creator-tools/${o.slug}/">${esc(anchorName(o))}</a>`).join("")}</div>` : "";
+  const aside = `<aside class="guide-aside" aria-label="On this page">
+    <div class="ga-box"><h3>On this page</h3><nav class="ga-toc">${toc}</nav></div>
+    <div class="ga-box ga-cta"><b>Free, no sign-up</b><span>Everything in this guide is built into the tool above.</span><a class="btn" href="#top">Use the tool</a></div>
+    ${related}
+  </aside>`;
+  const note = t.guideUpdated ? `<p class="note">Guide by <a href="/founder/">Nasir Uddin</a>, founder of Passive Array. Rules and figures checked ${esc(t.guideUpdated)}.</p>` : "";
+  return `<article class="card guide"><div class="guide-main">${secs.map(sec).join("")}${faq}${note}</div>${aside}</article>`;
 }
 
 /* ------------------------------------------------------------------ tool page */
