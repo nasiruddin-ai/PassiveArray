@@ -144,6 +144,10 @@ const researchPaths = research.buildInto(DIST);
 console.log("pages/research-pages.js -> dist/ (" + researchPaths.join(", ") + ")");
 console.log("pages/site-pages.js -> dist/ (" + pagePaths.all.join(", ") + ")");
 
+// SEO web tools built on the site design system (pages/seo-tools.js).
+const seoTools = require("./pages/seo-tools.js");
+console.log("pages/seo-tools.js -> dist/ (" + seoTools.buildInto(DIST).join(", ") + ")");
+
 // The signed-in dashboard (pages/app-page.js), noindex.
 const appPage = require("./pages/app-page.js");
 appPage.buildInto(DIST, posts);
@@ -237,7 +241,7 @@ fs.writeFileSync(path.join(DIST, INDEXNOW_KEY + ".txt"), INDEXNOW_KEY);
 // with a stylesheet a browser or the CDN cached from the previous one.
 const crypto = require("crypto");
 const assetVersion = crypto.createHash("md5").update(
-  ["shared.css", "site.js", "shared.js", "research.js", "app.js"].map((f) => fs.readFileSync(path.join(ROOT, "creator-tools", "public", f))).join("")
+  ["shared.css", "site.js", "shared.js", "research.js", "app.js", "seo-tools.js"].map((f) => fs.readFileSync(path.join(ROOT, "creator-tools", "public", f))).join("")
 ).digest("hex").slice(0, 10);
 let stamped = 0;
 (function walk(dir) {
@@ -246,7 +250,7 @@ let stamped = 0;
     if (entry.isDirectory()) { walk(p); continue; }
     if (!entry.name.endsWith(".html")) continue;
     const html = fs.readFileSync(p, "utf8");
-    const out = html.replace(/creator-tools\/(shared\.css|site\.js|shared\.js|research\.js|app\.js)"/g, (m, f) => "creator-tools/" + f + "?v=" + assetVersion + "\"");
+    const out = html.replace(/creator-tools\/(shared\.css|site\.js|shared\.js|research\.js|app\.js|seo-tools\.js)"/g, (m, f) => "creator-tools/" + f + "?v=" + assetVersion + "\"");
     if (out !== html) { fs.writeFileSync(p, out); stamped++; }
   }
 })(DIST);

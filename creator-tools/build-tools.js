@@ -448,6 +448,9 @@ ${footer(root)}
 
 /* ------------------------------------------------------------------ home (dist/index.html) */
 const WEB_TOOLS = [
+  ["meta-tag-checker/", "Meta Tag Checker", "Check any page's title, description, robots, canonical, headings, Open Graph and schema, with a fix for each."],
+  ["serp-snippet-preview/", "SERP Snippet Preview", "See how your title and meta description look in Google, measured in pixels on desktop and mobile."],
+  ["schema-markup-generator/", "Schema Markup Generator", "Build valid JSON-LD for FAQs, local businesses, articles, products, organisations and people."],
   ["domain-finder/", "Domain Finder", "Type a name idea and see which domains are free to buy right now."],
   ["domain-age-checker/", "Domain Age Checker", "Find out when a domain was first registered and how old it is."],
   ["plagiarism-checker/", "Plagiarism Checker", "Paste text, upload a file or enter a URL. Each sentence is marked plagiarised or unique."],
@@ -712,7 +715,7 @@ function buildInto(outDir, posts) {
   if (posts) setPosts(posts);
   const template = fs.readFileSync(path.join(HERE, "template.html"), "utf8");
   fs.mkdirSync(outDir, { recursive: true });
-  for (const asset of ["shared.css", "shared.js", "site.js", "research.js", "app.js"]) fs.copyFileSync(path.join(HERE, "public", asset), path.join(outDir, asset));
+  for (const asset of ["shared.css", "shared.js", "site.js", "research.js", "app.js", "seo-tools.js"]) fs.copyFileSync(path.join(HERE, "public", asset), path.join(outDir, asset));
   fs.writeFileSync(path.join(outDir, "index.html"), directoryPage());
   const seen = new Set();
   for (const t of tools) {

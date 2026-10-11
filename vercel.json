@@ -51,6 +51,10 @@
     {
       "source": "/api/channel",
       "destination": "/api/pro?fn=channel"
+    },
+    {
+      "source": "/api/meta",
+      "destination": "/api/pro?fn=meta"
     }
   ],
   "headers": [
