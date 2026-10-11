@@ -178,7 +178,7 @@ function header(root, active, withSearch) {
 const POPULAR_SLUGS = ["youtube-monetization-checker", "youtube-money-calculator", "youtube-tag-generator", "youtube-subscriber-count-checker", "youtube-engagement-rate-calculator", "youtube-keyword-generator", "youtube-title-generator", "youtube-sponsorship-price-calculator"];
 
 function footer(root, note) {
-  const col = (title, links) => `<div class="fcol"><h4>${esc(title)}</h4>${links.map(([href, label]) => `<a href="${/^https?:/.test(href) ? href : root + href}">${esc(label)}</a>`).join("")}</div>`;
+  const col = (title, links) => `<div class="fcol"><h2 class="fh">${esc(title)}</h2>${links.map(([href, label]) => `<a href="${/^https?:/.test(href) ? href : root + href}">${esc(label)}</a>`).join("")}</div>`;
   const popular = POPULAR_SLUGS.slice(0, 6).map((s) => tools.find((t) => t.slug === s)).filter(Boolean).map((t) => [`creator-tools/${t.slug}/`, t.name]);
   return `<footer class="site-footer"><div class="wrap">
   <div class="fgrid">

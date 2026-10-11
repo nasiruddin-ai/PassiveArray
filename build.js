@@ -250,7 +250,12 @@ let stamped = 0;
     if (entry.isDirectory()) { walk(p); continue; }
     if (!entry.name.endsWith(".html")) continue;
     const html = fs.readFileSync(p, "utf8");
-    const out = html.replace(/creator-tools\/(shared\.css|site\.js|shared\.js|research\.js|app\.js|seo-tools\.js)"/g, (m, f) => "creator-tools/" + f + "?v=" + assetVersion + "\"");
+    let out = html.replace(/creator-tools\/(shared\.css|site\.js|shared\.js|research\.js|app\.js|seo-tools\.js)"/g, (m, f) => "creator-tools/" + f + "?v=" + assetVersion + "\"");
+    // Accessibility: comparison tables get a labelled corner cell and row headers, so every
+    // data cell has a header (Lighthouse td-has-header).
+    out = out.replace(/<table class="cmp">[\s\S]*?<\/table>/g, (t) => t
+      .replace(/<th><\/th>/, '<th><span class="sr">Feature</span></th>')
+      .replace(/<tr><td>([\s\S]*?)<\/td>/g, '<tr><th scope="row">$1</th>'));
     if (out !== html) { fs.writeFileSync(p, out); stamped++; }
   }
 })(DIST);

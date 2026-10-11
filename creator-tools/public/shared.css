@@ -943,3 +943,13 @@ p.center.sub { text-align: center; color: var(--muted); margin: 8px auto 18px; m
 .ga-cta .btn { margin-top: 8px; background: #fff; color: #1F2A44; height: 40px; display: flex; align-items: center; justify-content: center; text-align: center; width: 100%; }
 :root[data-theme="dark"] .ga-cta a.btn, .ga-cta a.btn:hover { color: #1F2A44; }
 @media (max-width: 1060px) { .guide { grid-template-columns: 1fr; } .guide-aside { display: none; } }
+
+/* accessibility: links inside running text are underlined, not told apart by colour alone */
+p a:not(.btn), li a:not(.btn), td a:not(.btn), .note a, details p a { text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 3px; }
+p a:not(.btn):hover, li a:not(.btn):hover, td a:not(.btn):hover { text-decoration-thickness: 2px; }
+/* footer column titles are real headings now; keep their look */
+.fcol .fh { margin: 0 0 12px; font-size: .82rem; font-weight: 600; letter-spacing: .04em; text-transform: uppercase; color: var(--text); }
+/* small category labels: dark teal fails contrast on dark cards */
+:root[data-theme="dark"] .plat[style*="--deep"] { color: var(--mint) !important; }
+/* comparison row headers read like the old first column */
+table.cmp tbody th[scope="row"] { font-weight: 500; text-align: left; text-transform: none; letter-spacing: 0; font-size: inherit; color: var(--text); }
