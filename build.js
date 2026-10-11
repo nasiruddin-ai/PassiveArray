@@ -50,7 +50,7 @@ function withSiteChrome(html) {
   const style = `<style id="pa-chrome">
 .pa-bar{max-width:960px;margin:0 auto 20px;display:flex;align-items:center;gap:14px;padding:10px 14px;border:1px solid rgba(31,42,68,.12);border-radius:14px;background:#fff;font-family:Poppins,system-ui,-apple-system,"Segoe UI",sans-serif;font-size:.92rem}
 .pa-bar .pa-brand{display:flex;align-items:center;gap:8px;color:#1F2A44;font-weight:600;text-decoration:none;white-space:nowrap}
-.pa-bar .pa-brand b{color:#2A9D8F;font-weight:600}
+.pa-bar .pa-brand b{color:#1F7F73;font-weight:600}
 .pa-bar nav{margin-left:auto;display:flex;flex-wrap:wrap;gap:16px}
 .pa-bar nav a{color:#1F2A44;text-decoration:none;font-weight:500}
 .pa-bar nav a:hover{color:#1F7F73}
@@ -64,7 +64,8 @@ function withSiteChrome(html) {
   const bar = `${style}<div class="pa-bar"><a class="pa-brand" href="/">${mark}<span>Passive <b>Array</b></span></a><nav><a href="/creator-tools/">Creator tools</a><a href="/#web-tools">Web tools</a><a href="/youtube-extension/">Extension</a><a href="/blog/">Blog</a></nav><a class="pa-cta" href="/#web-tools">All free tools</a></div>`;
   const foot = `<div class="pa-foot"><span>&copy; ${new Date().getFullYear()} Passive Array. Free tools for creators and brands.</span><nav><a href="/about/">About</a><a href="/blog/">Blog</a><a href="/contact/">Contact</a><a href="/privacy/">Privacy</a><a href="/terms/">Terms</a></nav></div>`;
   if (!/<body[^>]*>/i.test(html) || !/<\/body>/i.test(html)) return html;
-  let out = html.replace(/<body([^>]*)>/i, (m) => m + "\n" + (site.GTM_BODY || "") + bar).replace(/<\/body>/i, foot + "\n</body>");
+  // The tool content sits in a <main> landmark between the site bar and the footer (accessibility).
+  let out = html.replace(/<body([^>]*)>/i, (m) => m + "\n" + (site.GTM_BODY || "") + bar + "<main>").replace(/<\/body>/i, "</main>" + foot + "\n</body>");
   // Search Console verification tag, same one the generated pages carry.
   if (site.VERIFY_TAG && !out.includes("google-site-verification")) {
     out = out.replace(/<head([^>]*)>/i, (m) => m + "\n" + site.VERIFY_TAG);

@@ -801,7 +801,7 @@ p.center.sub { text-align: center; color: var(--muted); margin: 8px auto 18px; m
 .plans .price small { font-size: 1rem; font-weight: 500; color: var(--muted); letter-spacing: 0; margin-left: 4px; }
 .herocard .hactions .btn.watch[disabled] { opacity: .7; cursor: default; }
 .ofilters .fbtn.export { margin-left: auto; }
-.pro-tag { display: inline-block; margin-left: 6px; padding: 1px 7px; border-radius: 999px; font-size: .68rem; font-weight: 700; letter-spacing: .04em; background: var(--teal); color: #fff; vertical-align: middle; }
+.pro-tag { display: inline-block; margin-left: 6px; padding: 1px 7px; border-radius: 999px; font-size: .68rem; font-weight: 700; letter-spacing: .04em; background: var(--deep); color: #fff; vertical-align: middle; }
 
 /* ======================================================= landing page (lp-) */
 :root { --band: #0F1626; --band-2: #141C30; --band-text: #E8ECF3; --band-muted: #9AA4B8; --dots: rgba(31,42,68,.14); }
