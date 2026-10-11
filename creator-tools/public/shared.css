@@ -953,3 +953,10 @@ p a:not(.btn):hover, li a:not(.btn):hover, td a:not(.btn):hover { text-decoratio
 :root[data-theme="dark"] .plat[style*="--deep"] { color: var(--mint) !important; }
 /* comparison row headers read like the old first column */
 table.cmp tbody th[scope="row"] { font-weight: 500; text-align: left; text-transform: none; letter-spacing: 0; font-size: inherit; color: var(--text); }
+/* accessibility, round 2: breadcrumbs underlined; dark-mode label colours lifted to 4.5:1 */
+.crumbs a { text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 3px; }
+:root[data-theme="dark"] [style*="color:var(--deep)"] { color: var(--mint) !important; }
+:root[data-theme="dark"] .plat.YouTube { color: #FF8A80; }
+:root[data-theme="dark"] .plat.Twitch { color: #C4B5FD; }
+:root[data-theme="dark"] .plat.Instagram { color: #F9A8D4; }
+:root[data-theme="dark"] .plat.TikTok, :root[data-theme="dark"] .plat.X { color: #E8ECF3; }
