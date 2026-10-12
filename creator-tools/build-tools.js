@@ -196,7 +196,7 @@ function footer(root, note) {
     ${col("Web tools", WEB_TOOLS.map(([href, name]) => [href, name]))}
     ${col("Popular", popular)}
     ${col("Compare", [["compare/", "All comparisons"], ["compare/vidiq-alternative/", "vidIQ alternative"], ["compare/tubebuddy-alternative/", "TubeBuddy alternative"], ["pricing/", "Pricing"], ["faq/", "FAQ"]])}
-    ${col("Company", [["about/", "About"], ["founder/", "Founder"], ["blog/", "Blog"], ["youtube-extension/", "Chrome extension"], ["contact/", "Contact"], ["login/", "Sign in"], ["privacy/", "Privacy policy"], ["terms/", "Terms of use"]])}
+    ${col("Company", [["about/", "About"], ["founder/", "Founder"], ["youtube-seo-service/", "YouTube SEO service"], ["blog/", "Blog"], ["youtube-extension/", "Chrome extension"], ["contact/", "Contact"], ["login/", "Sign in"], ["privacy/", "Privacy policy"], ["terms/", "Terms of use"]])}
   </div>
   <div class="fbottom">
     <span>&copy; ${new Date().getFullYear()} ${BRAND}. ${esc(note || "Estimates use public numbers and typical industry rates. A starting point, not a guarantee.")}</span>
@@ -323,6 +323,7 @@ function guideHtml(t) {
     <div class="ga-box"><h3>On this page</h3><nav class="ga-toc">${toc}</nav></div>
     <div class="ga-box ga-cta"><b>Free, no sign-up</b><span>Everything in this guide is built into the tool above.</span><a class="btn" href="#top">Use the tool</a></div>
     ${related}
+    ${t.platform === "YouTube" ? `<div class="ga-box ga-cta"><b>Want this done for you?</b><span>Keyword research, titles, tags and channel structure by the founder.</span><a class="btn ghost" href="/youtube-seo-service/">YouTube SEO service</a></div>` : ""}
   </aside>`;
   const note = t.guideUpdated ? `<p class="note">Guide by <a href="/founder/">Nasir Uddin</a>, founder of Passive Array. Rules and figures checked ${esc(t.guideUpdated)}.</p>` : "";
   return `<article class="card guide"><div class="guide-main">${secs.map(sec).join("")}${faq}${note}</div>${aside}</article>`;
