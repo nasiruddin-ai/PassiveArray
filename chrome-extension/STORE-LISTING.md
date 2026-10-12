@@ -14,17 +14,17 @@ first use. Review usually takes 1 to 3 days.
 
 ## Store listing tab
 
-**Name** (45 max)
-Passive Array for YouTube
+**Name** (from manifest.json, 75 max)
+Passive Array: YouTube SEO, Tags & Stats
 
-**Summary** (132 max)
-Engagement rate, monetization check, hidden tags, tag suggestions in Studio, views per day, channel insights and search scores, right on YouTube. Free.
+**Summary** (from manifest.json, 132 max)
+YouTube SEO tools: tag extractor, Studio tag suggestions, monetization checker, engagement rate and keyword scores. Free.
 
 **Description**
 
-See what a YouTube video is really doing, without leaving the page.
+A free YouTube SEO extension. See any video's tags, engagement rate and views per day, check whether a channel is monetized, research keywords, and get tag suggestions inside YouTube Studio, all without leaving YouTube.
 
-Passive Array adds a calm stats panel to YouTube and a keyword tool to the toolbar. It is free, has no account, no ads and no upsell.
+Passive Array adds a calm stats panel to YouTube and a keyword tool to the toolbar. It is a free alternative to paid YouTube SEO extensions: no account, no ads and no upsell.
 
 ON VIDEO PAGES
 • Engagement rate with a plain grade (low to excellent)
@@ -64,7 +64,7 @@ TITLE, DESCRIPTION AND TAG WRITER
 HONEST BY DESIGN
 Numbers come from the public data on the YouTube page and from the official YouTube Data API. The API key stays on our server, so nothing sensitive ships in the extension. Nothing is tracked, nothing is sold.
 
-Works in Chrome, Edge and Brave. More free creator tools at passivearray.com.
+Works in Chrome, Edge and Brave. Free YouTube tag extractor, monetization checker, engagement rate calculator and 40+ more creator tools at passivearray.com.
 
 **Category:** Productivity → Tools (or "Workflow & Planning" in the new taxonomy)
 **Language:** English
@@ -107,6 +107,7 @@ Shows public YouTube statistics (engagement rate, tags, views per day, channel i
 - Host permission `https://www.youtube.com/*`: the content script that draws the panels runs only on YouTube pages; the popup's keyword tool also reads YouTube's own results page to find the top videos.
 - Host permission `https://passivearray.com/*`: our server, which calls the YouTube Data API with a server-side key and returns public statistics.
 - Host permission `https://suggestqueries.google.com/*`: YouTube's autocomplete, for "people also search" keyword ideas.
+- Host permission `https://studio.youtube.com/*`: on the video details page in YouTube Studio, shows suggested tags under the Tags box and adds a tag to the box only when the user clicks it. It reads the title the user typed to find suggestions and changes nothing else.
 
 **Remote code:** No, I am not using remote code. (All code is in the package. The extension only fetches JSON data.)
 
