@@ -45,8 +45,8 @@
       "destination": "/api/pro?fn=billing"
     },
     {
-      "source": "/api/stripe-webhook",
-      "destination": "/api/pro?fn=stripe-webhook"
+      "source": "/api/billing-webhook",
+      "destination": "/api/pro?fn=billing-webhook"
     },
     {
       "source": "/api/channel",

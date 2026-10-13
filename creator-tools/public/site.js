@@ -601,7 +601,7 @@
       if (planPro) planPro.hidden = !res.pro;
       isPro = !!res.pro;
       if (location.search.indexOf("upgraded=1") >= 0 && !res.pro) {
-        // Stripe sends people back before the webhook has always landed; try again shortly.
+        // The checkout sends people back before the webhook has always landed; try again shortly.
         setTimeout(function () {
           authCall("me").then(function (r2) {
             if (r2 && r2.ok && r2.pro) location.replace(location.pathname);

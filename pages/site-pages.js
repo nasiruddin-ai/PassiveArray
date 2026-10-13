@@ -649,7 +649,7 @@ function pricingPage() {
         <li><b>You keep the site ad-free</b> for everyone else</li>
       </ul>
       <a class="btn wide" href="../account/" style="margin-top:auto" data-pro-cta>Go Pro from your account</a>
-      <p class="note" style="margin:10px 0 0" data-pro-note>Card payments by Stripe. We never see your card number.</p>
+      <p class="note" style="margin:10px 0 0" data-pro-note>Payments by Lemon Squeezy, our reseller, which also handles sales tax. We never see your card number.</p>
     </div>
   </div>
 

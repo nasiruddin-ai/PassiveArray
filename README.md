@@ -18,7 +18,7 @@ Free tools for creators and brands. One repository, one Netlify site.
 | `YOUTUBE_API_KEY` | The 9 live YouTube tools | Google Cloud, YouTube Data API v3, free. Steps in `creator-tools/README.md` |
 | `TWITCH_CLIENT_ID`, `TWITCH_CLIENT_SECRET` | The 2 live Twitch tools | dev.twitch.tv/console, free |
 | `GOOGLE_API_KEY`, `GOOGLE_CX` | Plagiarism checker web search | Google Programmable Search, see `plagiarism-checker/README.md` |
-| `STRIPE_SECRET_KEY`, `STRIPE_PRICE_ID`, `STRIPE_WEBHOOK_SECRET` | The Pro plan | Stripe, see the Pro plan section below |
+| `LEMONSQUEEZY_API_KEY`, `LEMONSQUEEZY_STORE_ID`, `LEMONSQUEEZY_VARIANT_ID`, `LEMONSQUEEZY_WEBHOOK_SECRET` | The Pro plan | Lemon Squeezy, see the Pro plan section below |
 | `ANTHROPIC_API_KEY` | Optional. AI-written hashtags, bios, ideas, growth plan | console.anthropic.com, paid. Without it the generators use built-in templates |
 
 5. Trigger a deploy after adding variables. Every later push to `main` redeploys automatically.
@@ -340,8 +340,8 @@ behind Pro later.
 | `lib/session.js` | Reads the `pa_session` cookie so other functions know who is calling |
 | `lib/api-watch.js` | `/api/watch?action=list|add|remove` (signed-in only) |
 | `lib/api-watch-cron.js` | Daily at 05:45 UTC: snapshots every watched channel; Mondays sends the digest via the Apps Script (`kind: "digest"`) |
-| `lib/api-billing.js` | Stripe Checkout and customer portal, plain REST, no SDK |
-| `lib/api-stripe-webhook.js` | Verifies Stripe's signature and sets `pro` on the user record |
+| `lib/api-billing.js` | Lemon Squeezy checkout and customer portal, plain REST, no SDK |
+| `lib/api-billing-webhook.js` | Verifies Lemon Squeezy's signature and sets `pro` on the user record |
 | `api/pro.js` | The one Vercel Function that serves all four, through rewrites in `vercel.json`. The Hobby plan allows 12 functions per deployment, so new endpoints should be added here rather than as new files under `api/` |
 
 Data lives in the same Upstash store as the research section: the user record
@@ -356,37 +356,44 @@ Until these are set, the account page shows "Pro is not open for purchase yet"
 and nothing else changes. Watchlists already work for free accounts as soon as
 `AUTH_SECRET` and the Upstash store are configured.
 
-1. Create a Stripe account at stripe.com and stay in **Test mode** first.
-2. **Product catalog, Add product**: name "Passive Array Pro", recurring,
-   $9 monthly. Copy the price id (`price_...`). Optionally add a second price,
-   $79 yearly, and copy that id too.
-3. **Developers, API keys**: copy the **Secret key** (`sk_test_...`).
-4. **Developers, Webhooks, Add endpoint**: URL
-   `https://passivearray.vercel.app/api/stripe-webhook`, events
-   `checkout.session.completed`, `customer.subscription.updated`,
-   `customer.subscription.deleted`, `invoice.payment_failed`. Copy the
-   **Signing secret** (`whsec_...`).
-5. **Settings, Billing, Customer portal**: turn it on and allow cancelling and
-   switching between the two prices.
+Payments go through **Lemon Squeezy**, which is the merchant of record: it
+charges the card, collects sales tax and VAT worldwide, and pays out to a bank
+account in Bangladesh (Stripe does not open accounts there).
+
+1. Create a store at app.lemonsqueezy.com and stay in **Test mode** first
+   (toggle at the bottom left).
+2. **Products, New product**: name "Passive Array Pro", pricing
+   **Subscription**, $9 every month. Add a second variant, $79 every year.
+   Publish. Open each variant and copy its **variant id** (the number in the
+   URL, or in the share menu).
+3. **Settings, Stores**: copy the numeric **store id**.
+4. **Settings, API**: create an API key and copy it. It is shown once.
+5. **Settings, Webhooks, add**: URL
+   `https://passivearray.com/api/billing-webhook`, make up a signing secret
+   (any long random string), tick `subscription_created`,
+   `subscription_updated`, `subscription_cancelled`, `subscription_resumed`,
+   `subscription_expired`, `subscription_payment_failed`.
 6. In Vercel, **Settings, Environment variables**, add and apply to Production:
 
 | Variable | Value |
 |---|---|
-| `STRIPE_SECRET_KEY` | `sk_test_...` (later `sk_live_...`) |
-| `STRIPE_PRICE_ID` | the monthly `price_...` |
-| `STRIPE_PRICE_ID_YEARLY` | the yearly `price_...` (optional) |
-| `STRIPE_WEBHOOK_SECRET` | `whsec_...` |
+| `LEMONSQUEEZY_API_KEY` | the API key |
+| `LEMONSQUEEZY_STORE_ID` | the store id |
+| `LEMONSQUEEZY_VARIANT_ID` | the monthly variant id |
+| `LEMONSQUEEZY_VARIANT_ID_YEARLY` | the yearly variant id (optional) |
+| `LEMONSQUEEZY_WEBHOOK_SECRET` | the signing secret from step 5 |
 
-7. **Redeploy**. Check `https://passivearray.vercel.app/api/billing?action=status`
+7. **Redeploy**. Check `https://passivearray.com/api/billing?action=status`
    answers `"configured": true`.
 8. Sign in on the site, open `/account/`, press **$9 a month**, and pay with
-   Stripe's test card `4242 4242 4242 4242`, any future date, any CVC. You
-   land back on the account page as Pro within a few seconds.
-9. Switch Stripe to **Live mode**, repeat steps 2 to 4 there (keys and webhook
-   secrets differ between modes), update the four variables, redeploy.
+   the test card `4242 4242 4242 4242`, any future date, any CVC. You land
+   back on the account page as Pro within a few seconds.
+9. Activate the store (identity check and payout bank details), switch off test
+   mode, create a live API key and webhook, recreate the product if needed,
+   update the variables, redeploy.
 
-Stripe takes 2.9% + 30 cents per payment; there is no monthly fee. Payouts
-reach your bank in about two days once the account is verified.
+Lemon Squeezy takes 5% + 50 cents per payment, tax included; there is no
+monthly fee. Payouts are in USD to your bank, twice a month.
 
 ### The Monday email
 
