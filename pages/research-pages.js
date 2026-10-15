@@ -79,7 +79,7 @@ function keywordsPage() {
   return site.shell({
     title: "YouTube Keyword Research",
     ogTitle: "Free YouTube keyword research with measured numbers | Passive Array",
-    description: "Free YouTube keyword research: real autocomplete suggestions, competing videos, the top 10 and how beatable they are. Measured from YouTube, never modelled. No account.",
+    description: "Free YouTube keyword research: real autocomplete suggestions, the top 10 videos and how beatable they are. Measured from YouTube, never modelled.",
     path: "/research/",
     active: "research",
     body,

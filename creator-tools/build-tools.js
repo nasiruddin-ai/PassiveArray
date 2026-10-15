@@ -426,7 +426,7 @@ function directoryPage() {
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>All ${tools.length} Creator Tools | ${BRAND}</title>
-<meta name="description" content="${tools.length} free tools for creators and brands: engagement rate calculators, money and pricing calculators, fake follower checks, audits, comparisons, influencer finders and content generators.">
+<meta name="description" content="${tools.length} free tools for creators and brands: engagement and money calculators, fake follower checks, audits, comparisons, influencer finders and generators.">
 <link rel="canonical" href="${SITE}/creator-tools/">
 <meta property="og:title" content="All ${tools.length} Creator Tools | ${BRAND}">
 <meta property="og:description" content="${TAGLINE}: YouTube, Instagram, TikTok, Twitch and X.">
@@ -602,7 +602,7 @@ function homePage(posts = []) {
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>${tools.length} Free YouTube &amp; Creator Tools, No Sign-Up | ${BRAND}</title>
-<meta name="description" content="Free YouTube tools: keyword research, monetization checker, title and tag generators, money calculator, engagement rate and channel checks. ${tools.length} tools, no account, no credit card, no trial.">
+<meta name="description" content="Free YouTube tools: keyword research, monetization checker, tag and title generators, engagement rate and channel checks. ${tools.length} tools, no account, no card.">
 <link rel="canonical" href="${SITE}/">
 <meta property="og:title" content="${tools.length} free YouTube and creator tools, no sign-up">
 <meta property="og:description" content="Keyword research, monetization checks, titles, tags, earnings and audience checks. Free, with the formula shown on every page.">
@@ -761,7 +761,7 @@ function shell({ title, description, path, body, active = "", head = "", scripts
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>${esc(title)} | ${BRAND}</title>
+<title>${esc((title + " | " + BRAND).length > 65 ? title : title + " | " + BRAND)}</title>
 <meta name="description" content="${esc(description)}">
 <link rel="canonical" href="${canonical}">
 <meta property="og:title" content="${esc(ogTitle || title)}">

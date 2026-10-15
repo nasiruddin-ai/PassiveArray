@@ -257,8 +257,58 @@ let stamped = 0;
     out = out.replace(/<table class="cmp">[\s\S]*?<\/table>/g, (t) => t
       .replace(/<th><\/th>/, '<th><span class="sr">Feature</span></th>')
       .replace(/<tr><td>([\s\S]*?)<\/td>/g, '<tr><th scope="row">$1</th>'));
+    out = seoTags(out, p);
     if (out !== html) { fs.writeFileSync(p, out); stamped++; }
   }
 })(DIST);
+
+// Structured data and share tags every page should carry, added from what the page already shows:
+// a BreadcrumbList built from its visible breadcrumb trail, a page-level schema type for pages
+// that have none, and Open Graph / Twitter tags where a page builder left them out.
+function seoTags(html, file) {
+  const rel = path.relative(DIST, file).split(path.sep).join("/");
+  if (!/(^|\/)index\.html$/.test(rel)) return html;
+  const url = site.SITE + "/" + rel.replace(/index\.html$/, "");
+  const strip = (s) => String(s || "").replace(/<[^>]+>/g, "").replace(/&amp;/g, "&").replace(/&#39;/g, "'").replace(/&quot;/g, '"').replace(/\s+/g, " ").trim();
+  const attr = (s) => String(s).replace(/&/g, "&amp;").replace(/"/g, "&quot;").replace(/</g, "&lt;");
+  const title = strip((html.match(/<title>([\s\S]*?)<\/title>/i) || [])[1]);
+  const desc = strip((html.match(/<meta\s+name="description"\s+content="([^"]*)"/i) || [])[1]);
+  const h1 = strip((html.match(/<h1[^>]*>([\s\S]*?)<\/h1>/i) || [])[1]);
+  const add = [];
+  const ldTypes = [...html.matchAll(/<script[^>]*application\/ld\+json[^>]*>([\s\S]*?)<\/script>/gi)].map((m) => m[1]).join(" ");
+
+  // Breadcrumbs: links in the trail (skipping in-page #anchors), then the current page.
+  const crumbs = html.match(/<div class="crumbs"[^>]*>([\s\S]*?)<\/div>/i);
+  if (crumbs && !/"BreadcrumbList"/.test(ldTypes)) {
+    const items = [];
+    for (const a of crumbs[1].matchAll(/<a\s+href="([^"]+)"[^>]*>([\s\S]*?)<\/a>/gi)) {
+      if (a[1].includes("#")) continue;
+      items.push({ name: strip(a[2]), item: new URL(a[1].replace(/&amp;/g, "&"), url).toString() });
+    }
+    const tail = strip(crumbs[1].replace(/<a[\s\S]*?<\/a>/gi, "")).split("/").map((s) => s.trim()).filter(Boolean).pop();
+    const here = tail || h1;
+    if (here && (!items.length || items[items.length - 1].item !== url)) items.push({ name: here, item: url });
+    if (items.length >= 2) add.push({ "@context": "https://schema.org", "@type": "BreadcrumbList", itemListElement: items.map((x, i) => ({ "@type": "ListItem", position: i + 1, name: x.name, item: x.item })) });
+  }
+
+  // A page-level type for pages with no structured data of their own.
+  if (!ldTypes.trim()) {
+    const p = "/" + rel.replace(/index\.html$/, "");
+    const name = h1 || title.split(" | ")[0];
+    const site_ = { "@type": "WebSite", name: site.BRAND, url: site.SITE + "/" };
+    if (p === "/youtube-extension/") {
+      add.push({ "@context": "https://schema.org", "@type": "SoftwareApplication", name: "Passive Array: YouTube SEO, Tags & Stats", url, description: desc, applicationCategory: "BrowserApplication", operatingSystem: "Chrome, Edge, Brave", offers: { "@type": "Offer", price: "0", priceCurrency: "USD" }, publisher: { "@type": "Organization", name: site.BRAND, url: site.SITE + "/" } });
+    } else {
+      const type = /^\/(creator-tools|blog|compare)\/$|^\/blog\/category\/[^/]+\/$/.test(p) ? "CollectionPage" : p === "/about/" ? "AboutPage" : p === "/contact/" ? "ContactPage" : "WebPage";
+      add.push({ "@context": "https://schema.org", "@type": type, name, description: desc, url, isPartOf: site_ });
+    }
+  }
+
+  let head = add.map((x) => `<script type="application/ld+json">${JSON.stringify(x).replace(/</g, "\\u003c")}</script>`).join("\n");
+  if (!/property="og:title"/i.test(html)) head += `\n<meta property="og:title" content="${attr(title.split(" | ")[0])}">\n<meta property="og:description" content="${attr(desc)}">\n<meta property="og:type" content="website">\n<meta property="og:url" content="${url}">`;
+  if (!/property="og:image"/i.test(html)) head += `\n<meta property="og:image" content="${site.SITE}/og-image-1200x630.png">`;
+  if (!/name="twitter:card"/i.test(html)) head += `\n<meta name="twitter:card" content="summary_large_image">`;
+  return head ? html.replace(/<\/head>/i, head + "\n</head>") : html;
+}
 console.log("asset version " + assetVersion + " stamped into " + stamped + " pages");
 console.log("Build done.");

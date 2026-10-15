@@ -223,8 +223,9 @@ ${p.html}
       datePublished: p.date,
       dateModified: p.updated,
       articleSection: p.category.label,
-      author: { "@type": "Organization", name: site.BRAND, url: site.SITE + "/" },
-      publisher: { "@type": "Organization", name: site.BRAND, url: site.SITE + "/" },
+      image: site.SITE + "/og-image-1200x630.png",
+      author: { "@type": "Person", name: "Nasir Uddin", url: site.SITE + "/founder/" },
+      publisher: { "@type": "Organization", name: site.BRAND, url: site.SITE + "/", logo: { "@type": "ImageObject", url: site.SITE + "/icon-512.png" } },
       mainEntityOfPage: site.SITE + `/blog/${p.slug}/`,
     },
   });

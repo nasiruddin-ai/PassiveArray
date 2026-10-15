@@ -682,7 +682,7 @@ function pricingPage() {
   return site.shell({
     title: "Pricing",
     ogTitle: "Passive Array pricing: every tool free, Pro for channel watching",
-    description: `All ${n} Passive Array tools are free with no account and no credit limit. Pro, $9 a month, adds a 100-channel watchlist with daily snapshots, the Monday email and CSV export.`,
+    description: `All ${n} Passive Array tools are free with no account. Pro, $9 a month, adds a 100-channel watchlist, daily snapshots, a Monday email and CSV export.`,
     path: "/pricing/",
     active: "pricing",
     body,
@@ -1187,7 +1187,7 @@ function youtubeSeoServicePage() {
     hasOfferCatalog: { "@type": "OfferCatalog", name: "YouTube SEO packages", itemListElement: packages.map((p) => ({ "@type": "Offer", itemOffered: { "@type": "Service", name: p.name, description: p.text } })) },
   };
   return site.shell({
-    title: "YouTube SEO Service: Keywords, Titles and Tags Done for You",
+    title: "YouTube SEO Service: Keywords, Titles & Tags Done for You",
     ogTitle: "YouTube SEO service by the founder of Passive Array",
     description: "Done-for-you YouTube SEO: keyword research, titles, descriptions, tags, thumbnail review and monthly reports, in Bengali or English. No bots, no bought views.",
     path: "/youtube-seo-service/",
