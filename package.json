@@ -2,6 +2,7 @@
   "name": "passive-array",
   "private": true,
   "description": "Passive Array: free creator tools, static pages built by build.js plus Vercel Functions.",
+  "license": "MIT",
   "scripts": {
     "build": "node build.js",
     "creator-tools": "node creator-tools/server.js"

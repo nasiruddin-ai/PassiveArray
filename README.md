@@ -451,3 +451,7 @@ If you later add a tag that sets cookies, make it wait for
 The privacy policy rewrites itself from `ANALYTICS_ON`: with analytics off it
 says there are no analytics trackers, and with it on it gains an Analytics
 section describing the cookie, the consent default and how to withdraw.
+
+## License
+
+This project is licensed under the [MIT License](LICENSE).
