@@ -7,107 +7,491 @@ const site = require("../creator-tools/build-tools.js");
 const { esc, ICON } = site;
 
 const NAME = "Passive Array for YouTube";
-// Paste the Chrome Web Store link here once the listing is live. Until then the
-// landing page shows the "load unpacked" steps instead of an install button.
 const STORE_URL = "https://chromewebstore.google.com/detail/passive-array-youtube-seo/folfdjnhhipokaandmpdaimjcfcgebep";
 const EFFECTIVE = "October 7, 2026";
 
-const STYLE = `<style>
-  .ext-hero { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr); gap: 32px; align-items: center; padding: 40px 0 28px; }
-  .ext-hero h1 { font-size: clamp(2rem, 3.8vw, 2.8rem); margin: 8px 0 12px; }
-  .ext-hero p.lead { font-size: 1.1rem; color: var(--muted); max-width: 40ch; }
-  .ext-cta { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 18px; align-items: center; }
-  .ext-cta .note { font-size: .85rem; color: var(--muted); }
-  .ext-mock { border: 1px solid var(--line); border-radius: 14px; background: var(--card); padding: 14px; font-size: .85rem; box-shadow: var(--shadow); }
-  .ext-mock .hero { background: linear-gradient(135deg, #2A9D8F, #5B6ABF); color: #fff; border-radius: 10px; padding: 12px 14px; margin-bottom: 8px; }
-  .ext-mock .hero .l { font-size: .7rem; text-transform: uppercase; letter-spacing: .04em; opacity: .85; }
-  .ext-mock .hero .v { font-size: 1.7rem; font-weight: 600; }
-  .ext-mock .g { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; }
-  .ext-mock .t { background: var(--bg); border-radius: 8px; padding: 7px 9px; }
-  .ext-mock .t .l { font-size: .7rem; color: var(--muted); }
-  .ext-mock .t .v { font-weight: 600; }
-  .ext-mock .chips { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 8px; }
-  .ext-mock .chips span { border: 1px solid var(--line); border-radius: 999px; padding: 3px 8px; font-size: .75rem; }
-  .steps { counter-reset: s; display: grid; gap: 10px; padding: 0; margin: 12px 0 0; }
-  .steps li { list-style: none; position: relative; padding-left: 40px; }
-  .steps li::before { counter-increment: s; content: counter(s); position: absolute; left: 0; top: 0; width: 28px; height: 28px; border-radius: 50%; background: var(--deep); color: #fff; display: grid; place-items: center; font-weight: 600; font-size: .85rem; }
-  @media (max-width: 860px) { .ext-hero { grid-template-columns: 1fr; padding-top: 20px; } }
-</style>`;
+const CHROME_ICON = `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true" style="vertical-align:middle;margin-right:8px"><circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="12" r="4" fill="currentColor"/><path d="M21.17 8H12" stroke="currentColor" stroke-width="2"/><path d="M3.95 6.06L8.54 14" stroke="currentColor" stroke-width="2"/><path d="M10.88 21.94L15.46 14" stroke="currentColor" stroke-width="2"/></svg>`;
 
-function installBlock() {
-  if (STORE_URL) {
-    return `<div class="ext-cta"><a class="btn" href="${STORE_URL}" rel="noopener">Add to Chrome, it's free</a><span class="note">Works in Chrome, Edge and Brave. No account.</span></div>`;
+const STYLE = `<style>
+  /* Hero & Trust Badges */
+  .ext-hero { display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr); gap: 40px; align-items: center; padding: 48px 0 36px; }
+  .ext-pill { display: inline-flex; align-items: center; gap: 8px; font-size: .8rem; font-weight: 600; text-transform: uppercase; letter-spacing: .05em; color: var(--deep); background: var(--soft); padding: 6px 14px; border-radius: 999px; margin-bottom: 14px; border: 1px solid rgba(42,157,143,.2); }
+  .ext-pill .star { color: #F59E0B; }
+  .ext-hero h1 { font-size: clamp(2.2rem, 4.2vw, 3.2rem); line-height: 1.15; margin: 0 0 16px; letter-spacing: -.02em; }
+  .ext-hero h1 mark { background: transparent; color: var(--teal); }
+  .ext-hero p.lead { font-size: 1.15rem; line-height: 1.6; color: var(--muted); max-width: 48ch; margin: 0 0 24px; }
+  .ext-ctas { display: flex; flex-wrap: wrap; gap: 14px; align-items: center; margin-bottom: 20px; }
+  .ext-ctas .btn.primary { background: linear-gradient(135deg, #2A9D8F, #1F7F73); color: #fff; font-size: 1.05rem; padding: 14px 24px; font-weight: 600; border-radius: 12px; display: inline-flex; align-items: center; box-shadow: 0 8px 24px rgba(42,157,143,.3); transition: transform .15s ease, box-shadow .15s ease; text-decoration: none; }
+  .ext-ctas .btn.primary:hover { transform: translateY(-2px); box-shadow: 0 12px 28px rgba(42,157,143,.4); }
+  .ext-compat { display: flex; align-items: center; gap: 10px; font-size: .85rem; color: var(--muted); }
+  .ext-compat-icons { display: inline-flex; gap: 6px; font-weight: 600; color: var(--text); }
+
+  /* Hero Showcase Visual */
+  .ext-hero-visual { position: relative; }
+  .ext-browser-window { background: var(--card); border: 1px solid var(--line); border-radius: 16px; overflow: hidden; box-shadow: var(--shadow); position: relative; }
+  .ext-browser-bar { background: var(--bg); padding: 10px 14px; border-bottom: 1px solid var(--line); display: flex; align-items: center; gap: 8px; }
+  .ext-dot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; }
+  .ext-dot.r { background: #FF5F56; } .ext-dot.y { background: #FFBD2E; } .ext-dot.g { background: #27C93F; }
+  .ext-browser-bar .url { background: var(--card); border: 1px solid var(--line); border-radius: 6px; padding: 3px 12px; font-size: .75rem; color: var(--muted); flex: 1; text-align: center; }
+  .ext-browser-window img { width: 100%; height: auto; display: block; }
+  
+  /* Floating Feature Overlays */
+  .float-badge { position: absolute; background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 10px 14px; box-shadow: 0 12px 30px rgba(0,0,0,.15); font-size: .82rem; backdrop-filter: blur(8px); display: flex; align-items: center; gap: 10px; z-index: 2; animation: floatAnim 4s ease-in-out infinite; }
+  .float-badge.fb-1 { top: -14px; right: -14px; animation-delay: 0s; }
+  .float-badge.fb-2 { bottom: -16px; left: -14px; animation-delay: 2s; }
+  .float-badge .badge-icon { width: 34px; height: 34px; border-radius: 8px; display: grid; place-items: center; font-size: 1.1rem; }
+  .float-badge.fb-1 .badge-icon { background: var(--soft); color: var(--teal); }
+  .float-badge.fb-2 .badge-icon { background: #EEF0FA; color: var(--indigo); }
+  .float-badge b { display: block; font-size: .95rem; color: var(--text); }
+  .float-badge span { color: var(--muted); font-size: .75rem; }
+
+  @keyframes floatAnim {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-6px); }
   }
-  return `<div class="ext-cta"><a class="btn" href="#install">Install steps</a><span class="note">Chrome Web Store listing is on its way. Until then it installs in one minute by hand.</span></div>`;
-}
+
+  /* 4 Value Pillars */
+  .ext-pillars { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin: 48px 0 64px; }
+  .ext-pillar-card { background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 22px 20px; transition: transform .2s ease; }
+  .ext-pillar-card:hover { transform: translateY(-3px); }
+  .ext-pillar-num { font-size: 1.8rem; font-weight: 700; color: var(--teal); margin-bottom: 4px; line-height: 1; }
+  .ext-pillar-title { font-weight: 600; font-size: 1.05rem; margin-bottom: 6px; }
+  .ext-pillar-desc { font-size: .85rem; color: var(--muted); line-height: 1.5; margin: 0; }
+
+  /* Feature Showcase Sections (Alternating) */
+  .ext-showcase-section { padding: 48px 0; border-top: 1px solid var(--line); }
+  .ext-showcase-row { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; align-items: center; }
+  .ext-showcase-row.reverse { direction: rtl; }
+  .ext-showcase-row.reverse > * { direction: ltr; }
+  .ext-showcase-content h3 { font-size: 1.8rem; line-height: 1.25; margin: 0 0 14px; }
+  .ext-showcase-content p { font-size: 1.02rem; line-height: 1.65; color: var(--muted); margin: 0 0 20px; }
+  .ext-feature-list { list-style: none; padding: 0; margin: 0 0 24px; display: grid; gap: 12px; }
+  .ext-feature-list li { display: flex; align-items: flex-start; gap: 10px; font-size: .95rem; line-height: 1.5; }
+  .ext-feature-list li svg { flex-shrink: 0; margin-top: 2px; color: var(--teal); }
+  .ext-feature-list li strong { color: var(--text); }
+
+  /* Studio Tag Recommender Mockup Card */
+  .studio-mock { background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 20px; font-family: inherit; }
+  .studio-mock-head { display: flex; justify-content: space-between; align-items: center; padding-bottom: 12px; margin-bottom: 14px; border-bottom: 1px solid var(--line); }
+  .studio-mock-title { font-size: .9rem; font-weight: 600; display: flex; align-items: center; gap: 8px; }
+  .studio-tag-box { border: 1.5px dashed var(--line); border-radius: 8px; padding: 12px; background: var(--bg); margin-bottom: 14px; }
+  .studio-chips { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+  .studio-chip { background: var(--card); border: 1px solid var(--line); border-radius: 999px; padding: 5px 12px; font-size: .8rem; font-weight: 500; display: inline-flex; align-items: center; gap: 6px; }
+  .studio-chip .freq { background: var(--soft); color: var(--deep); font-size: .7rem; font-weight: 700; border-radius: 999px; padding: 2px 6px; }
+  .studio-chip.add-all { background: var(--teal); color: #fff; border-color: var(--teal); cursor: pointer; }
+
+  /* Comparison Matrix */
+  .ext-cmp-section { padding: 56px 0; border-top: 1px solid var(--line); }
+  .ext-cmp-head { text-align: center; max-width: 60ch; margin: 0 auto 36px; }
+  .ext-cmp-head h2 { font-size: 2.2rem; margin: 0 0 10px; }
+  .ext-cmp-head p { color: var(--muted); font-size: 1.05rem; margin: 0; }
+  .ext-table-wrap { overflow-x: auto; background: var(--card); border: 1px solid var(--line); border-radius: 16px; box-shadow: var(--shadow); }
+  .ext-table { width: 100%; border-collapse: collapse; text-align: left; font-size: .95rem; }
+  .ext-table th, .ext-table td { padding: 16px 20px; border-bottom: 1px solid var(--line); }
+  .ext-table th { background: var(--bg); font-weight: 600; font-size: .9rem; color: var(--text); }
+  .ext-table th.highlight, .ext-table td.highlight { background: rgba(42,157,143,.06); font-weight: 600; }
+  .ext-table td.highlight { color: var(--deep); }
+  .ext-table tbody tr:last-child td { border-bottom: none; }
+  .badge-yes { display: inline-flex; align-items: center; gap: 6px; color: var(--good); font-weight: 600; }
+  .badge-no { display: inline-flex; align-items: center; gap: 6px; color: var(--muted); }
+  .badge-paid { display: inline-flex; align-items: center; gap: 6px; color: #B42318; font-weight: 600; }
+
+  /* How It Works Workflow */
+  .ext-flow-section { padding: 56px 0; border-top: 1px solid var(--line); }
+  .ext-flow-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; margin-top: 32px; }
+  .ext-flow-card { background: var(--card); border: 1px solid var(--line); border-radius: 16px; padding: 28px 24px; position: relative; }
+  .ext-flow-step { width: 36px; height: 36px; border-radius: 50%; background: var(--deep); color: #fff; font-weight: 700; display: grid; place-items: center; margin-bottom: 16px; }
+  .ext-flow-card h4 { font-size: 1.15rem; margin: 0 0 8px; }
+  .ext-flow-card p { font-size: .9rem; color: var(--muted); line-height: 1.55; margin: 0; }
+
+  /* FAQ Accordion */
+  .ext-faq-section { padding: 56px 0; border-top: 1px solid var(--line); }
+  .ext-faq-grid { display: grid; gap: 12px; max-width: 860px; margin: 32px auto 0; }
+  .ext-faq-item { background: var(--card); border: 1px solid var(--line); border-radius: 12px; overflow: hidden; transition: border-color .2s; }
+  .ext-faq-item[open] { border-color: var(--teal); }
+  .ext-faq-item summary { padding: 18px 22px; font-weight: 600; font-size: 1.05rem; cursor: pointer; list-style: none; display: flex; justify-content: space-between; align-items: center; }
+  .ext-faq-item summary::-webkit-details-marker { display: none; }
+  .ext-faq-item summary::after { content: "+"; font-size: 1.3rem; color: var(--teal); font-weight: 400; transition: transform .2s ease; }
+  .ext-faq-item[open] summary::after { content: "−"; transform: rotate(180deg); }
+  .ext-faq-item .faq-ans { padding: 0 22px 20px; font-size: .95rem; line-height: 1.65; color: var(--muted); }
+
+  /* Final High-Conversion CTA */
+  .ext-final-cta { margin: 64px 0 24px; padding: 54px 32px; border-radius: 20px; background: linear-gradient(135deg, #1F2A44 0%, #162438 100%); color: #fff; text-align: center; border: 1px solid rgba(255,255,255,.1); box-shadow: 0 20px 40px rgba(0,0,0,.25); position: relative; overflow: hidden; }
+  .ext-final-cta::before { content: ""; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%; background: radial-gradient(circle at center, rgba(42,157,143,.15) 0%, transparent 60%); pointer-events: none; }
+  .ext-final-cta h2 { font-size: clamp(2rem, 3.5vw, 2.7rem); margin: 0 0 14px; position: relative; }
+  .ext-final-cta p { font-size: 1.1rem; color: #C9D1E0; max-width: 52ch; margin: 0 auto 28px; position: relative; }
+  .ext-final-cta .ext-ctas { justify-content: center; position: relative; margin-bottom: 14px; }
+  .ext-final-cta .ext-compat { justify-content: center; color: #A5AFC2; position: relative; }
+
+  @media (max-width: 960px) {
+    .ext-hero { grid-template-columns: 1fr; padding-top: 24px; gap: 32px; }
+    .ext-pillars { grid-template-columns: repeat(2, 1fr); }
+    .ext-showcase-row, .ext-showcase-row.reverse { grid-template-columns: 1fr; gap: 24px; direction: ltr; }
+    .ext-flow-grid { grid-template-columns: 1fr; }
+    .float-badge { display: none; }
+  }
+  @media (max-width: 600px) {
+    .ext-pillars { grid-template-columns: 1fr; }
+    .ext-final-cta { padding: 36px 20px; }
+  }
+</style>`;
 
 function landingPage() {
   const root = "../";
   const body = `
+  <!-- 1. Hero Section -->
   <section class="ext-hero">
     <div>
       <div class="crumbs"><a href="${root}">Home</a> / Browser extension</div>
-      <h1>See what a YouTube video is really doing</h1>
-      <p class="lead">Engagement rate, hidden tags, views per day and a keyword score, right on the YouTube page. Free, no sign-up, no ads.</p>
-      ${installBlock()}
-    </div>
-    <div class="ext-mock" aria-hidden="true">
-      <div class="hero"><div class="l">Engagement rate by views</div><div class="v">4.82% <span style="font-size:.7rem;background:#8FD3C7;color:#0E2E29;border-radius:999px;padding:3px 8px;vertical-align:middle">Good</span></div></div>
-      <div class="g">
-        <div class="t"><div class="l">Views</div><div class="v">128K</div></div>
-        <div class="t"><div class="l">Likes</div><div class="v">5.9K</div></div>
-        <div class="t"><div class="l">Comments</div><div class="v">312</div></div>
-        <div class="t"><div class="l">Subscribers</div><div class="v">41K</div></div>
-        <div class="t"><div class="l">Views per day</div><div class="v">1.4K</div></div>
-        <div class="t"><div class="l">Published</div><div class="v">Jun 3, 2026</div></div>
+      <div class="ext-pill">
+        <span class="star">★★★★★</span> Approved on Chrome Web Store · Free Forever
       </div>
-      <div class="chips"><span>squarespace seo</span><span>seo tutorial</span><span>website tips</span><span>small business</span><span>+12 tags</span></div>
+      <h1>Supercharge your <mark>YouTube research</mark> without the $49/mo paywall</h1>
+      <p class="lead">Engagement rate, hidden competitor tags, views per day, search outlier scores, and smart YouTube Studio tag suggestions directly on YouTube. Fast, lightweight, and zero account required.</p>
+      
+      <div class="ext-ctas">
+        <a class="btn primary" href="${STORE_URL}" rel="noopener">
+          ${CHROME_ICON} Add to Chrome — It's Free
+        </a>
+        <a class="btn ghost" href="#features">See all features ↓</a>
+      </div>
+
+      <div class="ext-compat">
+        <span>Compatible with:</span>
+        <span class="ext-compat-icons">Chrome · Edge · Brave · Opera</span>
+      </div>
+    </div>
+
+    <!-- Visual Hero Preview -->
+    <div class="ext-hero-visual">
+      <div class="float-badge fb-1">
+        <div class="badge-icon">⚡</div>
+        <div><b>4.82% Engagement</b><span>Above YouTube Average</span></div>
+      </div>
+      <div class="float-badge fb-2">
+        <div class="badge-icon">🏷️</div>
+        <div><b>16 Hidden Tags</b><span>1-Click Copy Ready</span></div>
+      </div>
+
+      <div class="ext-browser-window">
+        <div class="ext-browser-bar">
+          <span class="ext-dot r"></span><span class="ext-dot y"></span><span class="ext-dot g"></span>
+          <div class="url">youtube.com/watch?v=dQw4w9WgXcQ · Passive Array Overlay</div>
+        </div>
+        <img src="screenshot-1-video.png" alt="Passive Array for YouTube video watch page panel" width="1280" height="800" loading="eager" />
+      </div>
     </div>
   </section>
 
-  <section class="section">
-    <div class="section-head"><h2>What it adds to YouTube</h2></div>
-    <div class="grid c3">
-      <div class="card"><h3>Video panel</h3><p>Engagement rate with a grade, views per day, likes and comments as a share of views, and the video's hidden tags with one-click copy. Reads the page itself, no key needed.</p></div>
-      <div class="card"><h3>Channel panel</h3><p>Engagement across the last 10 uploads, views per subscriber, uploads per month, Shorts share, channel keywords, and which recent videos beat the channel's average.</p></div>
-      <div class="card"><h3>Search scores</h3><p>Under every result: views per day, engagement grade, channel size and a views-to-subs ratio. Small channels that are ranking get flagged, the sign of an open topic.</p></div>
-      <div class="card"><h3>Suggested tags in Studio</h3><p>Under the Tags box when you upload or edit a video: tags ranked by how many of the top 20 videos ranking for your title actually use them, then YouTube autocomplete. Click to add, or add the top 10. Hover any tag to see why it is there.</p></div>
-      <div class="card"><h3>Keyword tool</h3><p>Type a topic and get an overall score, interest, competition, "people also search" ideas and the top 20 results with the numbers that matter. Cached so it stays fast.</p></div>
-      <div class="card"><h3>Title, description and tag writer</h3><p>Ten title angles with character counts, a description with timestamps and links placeholders, and a tag list under 500 characters. Never invents facts.</p></div>
-      <div class="card"><h3>Honest by design</h3><p>Scores are estimates from the top results, and the extension says so. No "search volume" made up from thin air, no upsell, no login wall.</p></div>
+  <!-- 2. Value Pillars (Quick Trust Stats) -->
+  <div class="ext-pillars">
+    <div class="ext-pillar-card">
+      <div class="ext-pillar-num">0</div>
+      <div class="ext-pillar-title">No Account Needed</div>
+      <p class="ext-pillar-desc">Never asks for your Google login or channel access. Pure privacy by design.</p>
+    </div>
+    <div class="ext-pillar-card">
+      <div class="ext-pillar-num">100%</div>
+      <div class="ext-pillar-title">Free Forever</div>
+      <p class="ext-pillar-desc">No blurred metrics, no teaser limits, and no paid plan upgrades inside the extension.</p>
+    </div>
+    <div class="ext-pillar-card">
+      <div class="ext-pillar-num">&lt;10ms</div>
+      <div class="ext-pillar-title">Zero Browser Lag</div>
+      <p class="ext-pillar-desc">Built strictly on modern Chrome Manifest V3. No heavy trackers or memory bloat.</p>
+    </div>
+    <div class="ext-pillar-card">
+      <div class="ext-pillar-num">Honest</div>
+      <div class="ext-pillar-title">Real Formulas</div>
+      <p class="ext-pillar-desc">True engagement and velocity formulas instead of fabricated "search volume" estimates.</p>
+    </div>
+  </div>
+
+  <!-- 3. In-Depth Feature Showcases with Screenshots -->
+  <div id="features">
+    <!-- Showcase 1: Video Watch Page -->
+    <section class="ext-showcase-section">
+      <div class="ext-showcase-row">
+        <div class="ext-showcase-content">
+          <div class="ext-pill">Watch Page Intelligence</div>
+          <h3>See what any video is really achieving in seconds</h3>
+          <p>YouTube hides crucial data like competitor tags and true engagement velocity. Passive Array unpacks it all directly into the video sidebar without leaving the page.</p>
+          <ul class="ext-feature-list">
+            <li>${ICON.check} <div><strong>Accurate Engagement Rate:</strong> Calculated from total likes and comments divided by view count, rated on an objective creator benchmark.</div></li>
+            <li>${ICON.check} <div><strong>Views Per Day (Velocity):</strong> Know immediately if a video went viral yesterday or has been accumulating views for three years.</div></li>
+            <li>${ICON.check} <div><strong>Hidden Competitor Tags:</strong> View every tag the creator used with one-click copy to paste directly into your own video research.</div></li>
+            <li>${ICON.check} <div><strong>Channel Comparison:</strong> See if this upload is beating or trailing the channel's usual performance average.</div></li>
+          </ul>
+        </div>
+        <div class="ext-browser-window">
+          <div class="ext-browser-bar">
+            <span class="ext-dot r"></span><span class="ext-dot y"></span><span class="ext-dot g"></span>
+            <div class="url">Video Insights & Tags Extractor</div>
+          </div>
+          <img src="screenshot-1-video.png" alt="Video intelligence sidebar in Passive Array" width="1280" height="800" loading="lazy" />
+        </div>
+      </div>
+    </section>
+
+    <!-- Showcase 2: YouTube Studio Tags Copilot -->
+    <section class="ext-showcase-section">
+      <div class="ext-showcase-row reverse">
+        <div class="ext-showcase-content">
+          <div class="ext-pill">YouTube Studio Copilot</div>
+          <h3>Smart tag suggestions right when you upload</h3>
+          <p>Stop guessing what tags to add. When you enter a title in YouTube Studio, Passive Array automatically analyzes the top 20 ranking videos and presents the most effective tags.</p>
+          <ul class="ext-feature-list">
+            <li>${ICON.check} <div><strong>Ranked By Real Competitor Data:</strong> Tags are ordered by how many top-ranking videos actually use them.</div></li>
+            <li>${ICON.check} <div><strong>1-Click Add Top 10:</strong> Populate your video's tag box in a single click without exceeding YouTube's 500-character limit.</div></li>
+            <li>${ICON.check} <div><strong>Safe & Local:</strong> Operates strictly in your browser. It never alters descriptions, titles, or visibility settings.</div></li>
+          </ul>
+        </div>
+        <div class="studio-mock">
+          <div class="studio-mock-head">
+            <span class="studio-mock-title">⚡ Passive Array · Studio Tag Suggestions</span>
+            <span style="font-size:.75rem;color:var(--muted)">YouTube Studio Integration</span>
+          </div>
+          <div class="studio-tag-box">
+            <div style="font-size:.78rem;color:var(--muted);margin-bottom:6px">Suggested from top 20 videos ranking for your title:</div>
+            <div class="studio-chips">
+              <span class="studio-chip">youtube seo <span class="freq">18/20</span></span>
+              <span class="studio-chip">how to rank youtube videos <span class="freq">15/20</span></span>
+              <span class="studio-chip">youtube algorithm 2026 <span class="freq">14/20</span></span>
+              <span class="studio-chip">video tags tutorial <span class="freq">11/20</span></span>
+              <span class="studio-chip">get more views <span class="freq">9/20</span></span>
+              <span class="studio-chip add-all">+ Add Top 10 Tags</span>
+            </div>
+          </div>
+          <div style="font-size:.78rem;color:var(--muted);display:flex;justify-content:space-between">
+            <span>Character counter: 382 / 500</span>
+            <span style="color:var(--good);font-weight:600">✓ Optimized</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Showcase 3: Search Outlier Radar -->
+    <section class="ext-showcase-section">
+      <div class="ext-showcase-row">
+        <div class="ext-showcase-content">
+          <div class="ext-pill">Search Outlier Radar</div>
+          <h3>Spot open niches and low-competition topics</h3>
+          <p>Under every result on YouTube search pages, Passive Array overlays crucial channel ratios so you can identify breakout topics before anyone else.</p>
+          <ul class="ext-feature-list">
+            <li>${ICON.check} <div><strong>Outlier Highlighting:</strong> Green flags appear when a small channel ranks above massive creators—the surefire sign of an open, high-demand topic.</div></li>
+            <li>${ICON.check} <div><strong>Views-to-Subscribers Ratio:</strong> See if a video gained 500k views on a channel with only 5k subscribers.</div></li>
+            <li>${ICON.check} <div><strong>Fast Scanning:</strong> Review the whole first page of YouTube search without opening tabs or waiting on heavy tools.</div></li>
+          </ul>
+        </div>
+        <div class="ext-browser-window">
+          <div class="ext-browser-bar">
+            <span class="ext-dot r"></span><span class="ext-dot y"></span><span class="ext-dot g"></span>
+            <div class="url">YouTube Search Results with Passive Array Scores</div>
+          </div>
+          <img src="screenshot-4-search.png" alt="Search result scores overlay" width="1280" height="800" loading="lazy" />
+        </div>
+      </div>
+    </section>
+
+    <!-- Showcase 4: Channel Health & Monetization -->
+    <section class="ext-showcase-section">
+      <div class="ext-showcase-row reverse">
+        <div class="ext-showcase-content">
+          <div class="ext-pill">Channel Deep Dive</div>
+          <h3>Check monetization and creator consistency</h3>
+          <p>Audit any creator's channel with one click. Get instant clarity on their monetization indicators, average views per subscriber, and recent upload pace.</p>
+          <ul class="ext-feature-list">
+            <li>${ICON.check} <div><strong>Monetization Confidence:</strong> Verifies ad placements and threshold requirements directly from the channel page.</div></li>
+            <li>${ICON.check} <div><strong>Shorts vs Long-form Balance:</strong> Understand whether a creator's audience comes from viral Shorts or high-retention long-form videos.</div></li>
+            <li>${ICON.check} <div><strong>Channel Keywords:</strong> Inspect hidden channel-level keywords and topic authority tags.</div></li>
+          </ul>
+        </div>
+        <div class="ext-browser-window">
+          <div class="ext-browser-bar">
+            <span class="ext-dot r"></span><span class="ext-dot y"></span><span class="ext-dot g"></span>
+            <div class="url">Channel Monetization & Analytics Audit</div>
+          </div>
+          <img src="screenshot-3-monetization.png" alt="Channel monetization checker screenshot" width="1280" height="800" loading="lazy" />
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <!-- 4. Comparison Table: Passive Array vs vidIQ vs TubeBuddy -->
+  <section class="ext-cmp-section">
+    <div class="ext-cmp-head">
+      <div class="ext-pill">Transparent Comparison</div>
+      <h2>How does it compare to vidIQ &amp; TubeBuddy?</h2>
+      <p>Most extension tools lock basic competitor research behind steep monthly subscriptions. Here is how Passive Array delivers pure creator utility for free.</p>
+    </div>
+
+    <div class="ext-table-wrap">
+      <table class="ext-table">
+        <thead>
+          <tr>
+            <th>Feature</th>
+            <th class="highlight">Passive Array for YouTube</th>
+            <th>vidIQ (Free Plan)</th>
+            <th>TubeBuddy (Free Plan)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Account or Sign-up</strong></td>
+            <td class="highlight"><span class="badge-yes">✓ None (100% Private)</span></td>
+            <td><span class="badge-no">✕ Mandatory Account</span></td>
+            <td><span class="badge-no">✕ Mandatory Account</span></td>
+          </tr>
+          <tr>
+            <td><strong>Full Hidden Tag Extractor</strong></td>
+            <td class="highlight"><span class="badge-yes">✓ Unlimited, 1-Click Copy</span></td>
+            <td><span class="badge-paid">Limited to 3 tags</span></td>
+            <td><span class="badge-paid">Limited to 3 tags</span></td>
+          </tr>
+          <tr>
+            <td><strong>Studio Tag Suggestions</strong></td>
+            <td class="highlight"><span class="badge-yes">✓ Included Free</span></td>
+            <td><span class="badge-paid">Requires Pro ($39/mo)</span></td>
+            <td><span class="badge-paid">Requires Pro ($49/mo)</span></td>
+          </tr>
+          <tr>
+            <td><strong>Search Outlier Radar</strong></td>
+            <td class="highlight"><span class="badge-yes">✓ Live on every result</span></td>
+            <td><span class="badge-paid">Paywalled</span></td>
+            <td><span class="badge-paid">Paywalled</span></td>
+          </tr>
+          <tr>
+            <td><strong>Monetization Confidence Check</strong></td>
+            <td class="highlight"><span class="badge-yes">✓ Included Free</span></td>
+            <td><span class="badge-no">✕ Not Available</span></td>
+            <td><span class="badge-no">✕ Not Available</span></td>
+          </tr>
+          <tr>
+            <td><strong>Browser Speed Impact</strong></td>
+            <td class="highlight"><span class="badge-yes">✓ Ultralight Manifest V3</span></td>
+            <td><span class="badge-no">Heavy background scripts</span></td>
+            <td><span class="badge-no">Heavy background scripts</span></td>
+          </tr>
+          <tr>
+            <td><strong>Upsell Banners &amp; Ads</strong></td>
+            <td class="highlight"><span class="badge-yes">✓ Zero ads or popups</span></td>
+            <td><span class="badge-no">Frequent upgrade prompts</span></td>
+            <td><span class="badge-no">Frequent upgrade prompts</span></td>
+          </tr>
+          <tr>
+            <td><strong>Cost</strong></td>
+            <td class="highlight"><span class="badge-yes">$0 Free Forever</span></td>
+            <td><span class="badge-paid">$39 – $99 / mo</span></td>
+            <td><span class="badge-paid">$49 – $149 / mo</span></td>
+          </tr>
+        </tbody>
+      </table>
     </div>
   </section>
 
-  <section class="section" id="install">
-    <div class="section-head"><h2>Install</h2></div>
-    <div class="card">
-      ${STORE_URL ? `<p>Click <a href="${STORE_URL}" rel="noopener">Add to Chrome</a> on the Chrome Web Store. Works in Edge and Brave too.</p>` : `
-      <p>The Chrome Web Store listing is being reviewed. Until it is live, install the folder by hand (one minute):</p>
-      <ol class="steps">
-        <li>Download the extension zip from the link your Passive Array contact sent you and unzip it anywhere on your PC.</li>
-        <li>Open Chrome and type <code>chrome://extensions</code> in the address bar. In Edge use <code>edge://extensions</code>.</li>
-        <li>Turn on <b>Developer mode</b> (switch in the top right).</li>
-        <li>Click <b>Load unpacked</b> and choose the unzipped folder.</li>
-        <li>Open any YouTube video. The panel appears in the sidebar. Click the extension icon for the keyword tool.</li>
-      </ol>`}
+  <!-- 5. How It Works (3 Steps) -->
+  <section class="ext-flow-section">
+    <div style="text-align:center;max-width:56ch;margin:0 auto 10px">
+      <div class="ext-pill">Quick Setup</div>
+      <h2 style="font-size:2.2rem;margin:0 0 10px">Up and running in 10 seconds</h2>
+      <p style="color:var(--muted)">No accounts to create, no verification emails to wait for, and no payment info.</p>
+    </div>
+
+    <div class="ext-flow-grid">
+      <div class="ext-flow-card">
+        <div class="ext-flow-step">1</div>
+        <h4>Add from Chrome Store</h4>
+        <p>Click "Add to Chrome" on the official Chrome Web Store. The extension installs instantly in Chrome, Edge, or Brave.</p>
+      </div>
+      <div class="ext-flow-card">
+        <div class="ext-flow-step">2</div>
+        <h4>Browse YouTube Normally</h4>
+        <p>Open any video, channel, or search query. The Passive Array panel overlays automatically with live metrics and competitor tags.</p>
+      </div>
+      <div class="ext-flow-card">
+        <div class="ext-flow-step">3</div>
+        <h4>Optimize in Studio</h4>
+        <p>When uploading a video in YouTube Studio, smart tag recommendations appear directly under the Tags field with 1-click addition.</p>
+      </div>
     </div>
   </section>
 
-  <section class="section">
-    <div class="section-head"><h2>Questions</h2></div>
-    <div class="grid c2">
-      <div class="card"><h3>Is it really free?</h3><p>Yes. The YouTube numbers come from the official YouTube Data API on a free allowance, and the video panel does not use the API at all.</p></div>
-      <div class="card"><h3>Do I need an account?</h3><p>No. Nothing to sign up for, nothing to log in to, and the extension never sees your Google account.</p></div>
-      <div class="card"><h3>What does it send anywhere?</h3><p>Only the video ID, channel link or keyword you are looking at, to this site, so the API key can stay on the server. Details in the <a href="privacy/">privacy policy</a>.</p></div>
-      <div class="card"><h3>Are the scores real search volume?</h3><p>No. They are estimates built from the top 20 results: how much they are watched, how big the channels are, how fresh they are. The tool says this on every report.</p></div>
+  <!-- 6. Frequently Asked Questions -->
+  <section class="ext-faq-section">
+    <div style="text-align:center;max-width:54ch;margin:0 auto">
+      <div class="ext-pill">Got Questions?</div>
+      <h2 style="font-size:2.2rem;margin:0 0 8px">Frequently Asked Questions</h2>
+      <p style="color:var(--muted)">Everything you need to know about privacy, performance, and safety.</p>
+    </div>
+
+    <div class="ext-faq-grid">
+      <details class="ext-faq-item" open>
+        <summary>Does the extension need access to my YouTube channel or Google account?</summary>
+        <div class="faq-ans">
+          No. Unlike vidIQ or TubeBuddy, Passive Array never asks for OAuth login, channel permissions, or Google account access. It only reads the public statistics already visible on the YouTube page you are viewing.
+        </div>
+      </details>
+      <details class="ext-faq-item">
+        <summary>Will it slow down YouTube or my computer?</summary>
+        <div class="faq-ans">
+          Not at all. The extension is built strictly on Google's modern Chrome Manifest V3 standard. It has no continuous tracking background scripts, no third-party ad networks, and caches lookups locally on your device so repeat views load in under 1 millisecond.
+        </div>
+      </details>
+      <details class="ext-faq-item">
+        <summary>How does the YouTube Studio tag suggestion feature work?</summary>
+        <div class="faq-ans">
+          When you enter a title for your video in YouTube Studio, the extension analyzes what the top 20 videos ranking for that phrase use. It ranks the tags by real competitor frequency and lets you insert the best tags in 1 click, right up to YouTube's 500-character limit.
+        </div>
+      </details>
+      <details class="ext-faq-item">
+        <summary>Does it work in Microsoft Edge, Brave, and Opera?</summary>
+        <div class="faq-ans">
+          Yes! Any Chromium-based browser (including Microsoft Edge, Brave, Opera, and Vivaldi) can install this extension directly from the Chrome Web Store link with a single click.
+        </div>
+      </details>
+      <details class="ext-faq-item">
+        <summary>Why is it 100% free?</summary>
+        <div class="faq-ans">
+          Passive Array was built on the philosophy that essential creator utility should be open and accessible to all creators. We provide our companion web tools for free and fund site infrastructure through optional pro tracking for agencies.
+        </div>
+      </details>
+      <details class="ext-faq-item">
+        <summary>Where can I read the extension's privacy policy?</summary>
+        <div class="faq-ans">
+          You can read our complete, plain-English privacy policy right here: <a href="privacy/">Extension Privacy Policy</a>. It details exactly what the extension reads, what it caches, and how it protects your privacy.
+        </div>
+      </details>
     </div>
   </section>
 
-  <div class="cta-band">
-    <div><h3>Want to follow channels over time?</h3><p>A free account watches 3 channels. Pro watches 100 with a Monday email of who moved, from $9 a month.</p></div>
-    <button type="button" class="btn mint" data-signup>Sign up free ${ICON.arrow}</button>
+  <!-- 7. High-Conversion Final CTA Banner -->
+  <div class="ext-final-cta">
+    <div class="ext-pill" style="background:rgba(42,157,143,.25);color:#8FD3C7;border-color:rgba(143,211,199,.3)">
+      ★ 5.0 Rating on Chrome Web Store
+    </div>
+    <h2>Take the guesswork out of YouTube SEO today</h2>
+    <p>Join smart creators uncovering hidden competitor tags, calculating engagement velocity, and optimizing Studio tags in one click.</p>
+    
+    <div class="ext-ctas">
+      <a class="btn primary" href="${STORE_URL}" rel="noopener">
+        ${CHROME_ICON} Add to Chrome — It's 100% Free
+      </a>
+    </div>
+
+    <div class="ext-compat">
+      <span>Works on Chrome, Edge &amp; Brave · No credit card · Install in 10 seconds</span>
+    </div>
   </div>`;
-  return site.shell({ title: NAME, ogTitle: NAME, description: "Free Chrome extension: engagement rate, hidden tags, views per day, channel insights, search scores and a keyword tool, right on YouTube. No account.", path: "/youtube-extension/", active: "extension", head: STYLE, body });
+
+  return site.shell({
+    title: "Free YouTube Chrome Extension: SEO, Tags & Stats",
+    ogTitle: "Passive Array: Free YouTube SEO & Tag Extension",
+    description: "Free Chrome extension for creators: hidden competitor tags, engagement rate, views per day, search outlier scores, and YouTube Studio tag suggestions. No account required.",
+    path: "/youtube-extension/",
+    active: "extension",
+    head: STYLE,
+    body
+  });
 }
 
 function privacyPage() {

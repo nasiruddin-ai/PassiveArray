@@ -129,7 +129,15 @@ const ext = require("./youtube-extension/pages.js");
 fs.mkdirSync(path.join(DIST, "youtube-extension", "privacy"), { recursive: true });
 fs.writeFileSync(path.join(DIST, "youtube-extension", "index.html"), ext.landingPage());
 fs.writeFileSync(path.join(DIST, "youtube-extension", "privacy", "index.html"), ext.privacyPage());
-console.log("youtube-extension/pages.js -> dist/youtube-extension/ (landing + privacy)");
+const extStore = path.join(ROOT, "chrome-extension", "store");
+if (fs.existsSync(extStore)) {
+  for (const f of fs.readdirSync(extStore)) {
+    if (/\.(png|jpg|webp)$/i.test(f)) {
+      fs.copyFileSync(path.join(extStore, f), path.join(DIST, "youtube-extension", f));
+    }
+  }
+}
+console.log("youtube-extension/pages.js -> dist/youtube-extension/ (landing + privacy + screenshots)");
 
 // Blog: blog/posts/*.md -> dist/blog/ plus one page per category
 const built = blog.buildInto(path.join(DIST, "blog"), posts);
