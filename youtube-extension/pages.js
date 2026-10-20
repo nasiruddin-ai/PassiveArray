@@ -9,7 +9,7 @@ const { esc, ICON } = site;
 const NAME = "Passive Array for YouTube";
 // Paste the Chrome Web Store link here once the listing is live. Until then the
 // landing page shows the "load unpacked" steps instead of an install button.
-const STORE_URL = "";
+const STORE_URL = "https://chromewebstore.google.com/detail/passive-array-youtube-seo/folfdjnhhipokaandmpdaimjcfcgebep";
 const EFFECTIVE = "October 7, 2026";
 
 const STYLE = `<style>
