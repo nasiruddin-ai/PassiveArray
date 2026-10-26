@@ -115,7 +115,8 @@ function markdown(src) {
       const cells = (r) => r.replace(/^\||\|$/g, "").split("|").map((c) => c.trim());
       const head = cells(rows[0]);
       const body = rows.slice(rows[1] && /^\|?\s*:?-+/.test(rows[1]) ? 2 : 1);
-      out.push(`<table><thead><tr>${head.map((c) => `<th>${inline(c)}</th>`).join("")}</tr></thead><tbody>${body.map((r) => `<tr>${cells(r).map((c) => `<td>${inline(c)}</td>`).join("")}</tr>`).join("")}</tbody></table>`);
+      // Wrapped so a wide table scrolls sideways inside the article instead of widening the page on phones.
+      out.push(`<div class="tablewrap"><table><thead><tr>${head.map((c) => `<th>${inline(c)}</th>`).join("")}</tr></thead><tbody>${body.map((r) => `<tr>${cells(r).map((c) => `<td>${inline(c)}</td>`).join("")}</tr>`).join("")}</tbody></table></div>`);
       continue;
     }
     if (/^([-*]|\d+\.)\s+/.test(t)) {
