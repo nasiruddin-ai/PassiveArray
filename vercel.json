@@ -121,8 +121,8 @@
       "statusCode": 301
     },
     {
-      "source": "/(blog|compare|research)/:slug/(privacy|terms){/}?",
-      "destination": "/$2/",
+      "source": "/(blog|compare|research)/:slug/:page(privacy|terms){/}?",
+      "destination": "/:page/",
       "statusCode": 301
     }
   ]
