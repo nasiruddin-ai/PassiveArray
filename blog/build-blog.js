@@ -147,7 +147,18 @@ function parse(file) {
   for (const k of ["title", "description", "date", "category"]) if (!meta[k]) throw new Error(file + " is missing " + k);
   const cat = CAT_BY_LABEL.get(meta.category.toLowerCase());
   if (!cat) throw new Error(file + ' has unknown category "' + meta.category + '". Use one of: ' + CATEGORIES.map((c) => c.label).join(", "));
-  const body = m[2].trim();
+  let body = m[2].trim();
+  // A closing "## Frequently asked questions" section, with each question as a ### heading and its
+  // answer as plain paragraphs, becomes an accordion plus FAQPage structured data.
+  const faq = [];
+  const fm = /\n## Frequently asked questions\s*\n([\s\S]*)$/.exec("\n" + body);
+  if (fm) {
+    body = body.slice(0, body.length - fm[0].length + 1).trim();
+    for (const block of fm[1].split(/\n(?=### )/)) {
+      const q = /^### (.+)\n([\s\S]*)$/.exec(block.trim());
+      if (q) faq.push([q[1].trim(), q[2].trim()]);
+    }
+  }
   const words = body.split(/\s+/).length;
   return {
     slug: file.replace(/\.md$/, ""),
@@ -160,6 +171,7 @@ function parse(file) {
     tools: (meta.tools || "").split(",").map((s) => s.trim()).filter(Boolean),
     minutes: Math.max(1, Math.round(words / 220)),
     html: markdown(body),
+    faq,
   };
 }
 
@@ -200,6 +212,8 @@ function postPage(p, prev, next, related) {
   </div>
   <article class="prose">
 ${p.html}
+${p.faq.length ? `<section class="guide-faq" id="faq"><h2>Frequently asked questions</h2><div class="faq">${p.faq.map(([q, a]) => `<details><summary>${esc(q)}</summary>${markdown(a)}</details>`).join("")}</div></section>` : ""}
+  <p class="note">By <a href="${root}founder/">Nasir Uddin</a>, founder of Passive Array. Rules and figures checked ${site.fmtDate(p.updated)}.</p>
   </article>
   ${toolCards(p.tools, root)}
   ${related.length ? `<section class="tools-used"><h2>More in ${esc(p.category.label)}</h2><div class="grid c3">${related.map((r) => card(r, root)).join("")}</div></section>` : ""}
@@ -208,6 +222,7 @@ ${p.html}
     ${prev ? `<a href="../${prev.slug}/"><span>Newer</span>${esc(prev.title)}</a>` : "<span></span>"}
     ${next ? `<a href="../${next.slug}/" style="text-align:right"><span>Older</span>${esc(next.title)}</a>` : ""}
   </nav>`;
+  const posting = postingLd(p);
   return site.shell({
     title: p.title,
     description: p.description,
@@ -215,7 +230,11 @@ ${p.html}
     active: "blog",
     narrow: true,
     body,
-    jsonld: {
+    jsonld: p.faq.length ? [posting, site.faqLd(p.faq.map(([q, a]) => [q, markdown(a)]))] : posting,
+  });
+}
+function postingLd(p) {
+  return {
       "@context": "https://schema.org",
       "@type": "BlogPosting",
       headline: p.title,
@@ -227,8 +246,7 @@ ${p.html}
       author: { "@type": "Person", name: "Nasir Uddin", url: site.SITE + "/founder/" },
       publisher: { "@type": "Organization", name: site.BRAND, url: site.SITE + "/", logo: { "@type": "ImageObject", url: site.SITE + "/icon-512.png" } },
       mainEntityOfPage: site.SITE + `/blog/${p.slug}/`,
-    },
-  });
+  };
 }
 
 let CAT_INTROS = {};

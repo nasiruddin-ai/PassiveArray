@@ -4,7 +4,7 @@ description: What tags do and do not do for ranking, the 500-character limit, ho
 date: 2026-08-14
 keyword: are youtube tags important
 category: YouTube SEO
-tools: youtube-channel-quality-checker, youtube-subscriber-count-checker
+tools: youtube-tag-generator, youtube-keyword-generator, youtube-channel-quality-checker
 ---
 
 Tags used to be the first thing a YouTube SEO guide told you to fix. Then YouTube itself said tags play a "minimal" role in discovery, and half the internet decided they were dead. Both camps are a little right. Here is what tags actually do today, how much time they deserve, and how a [YouTube tag generator](../../creator-tools/youtube-tag-generator/) keeps that time short.

@@ -4,7 +4,7 @@ description: How to find topics people search for and judge whether you can rank
 date: 2026-09-21
 keyword: youtube keyword research tool free
 category: YouTube SEO
-tools: youtube-channel-quality-checker, youtube-subscriber-count-checker, find-youtube-influencers-by-niche
+tools: youtube-keyword-generator, youtube-tag-generator, youtube-title-analyzer
 ---
 
 Every paid keyword tool sells you two things: a list of phrases, and a judgement about whether you can win them. You can get both free, and the free version of the second one is often more honest than the paid number. Our [YouTube keyword research tool](../../research/) does both from measured data, and the steps below show how to do it by hand.

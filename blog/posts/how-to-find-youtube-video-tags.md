@@ -4,7 +4,7 @@ description: Tags are hidden from viewers but still sit in the page. Three ways 
 date: 2026-09-16
 keyword: how to find youtube tags on a video
 category: YouTube SEO
-tools: youtube-channel-quality-checker, youtube-subscriber-count-checker
+tools: youtube-tag-generator, youtube-keyword-generator, youtube-title-analyzer
 ---
 
 YouTube stopped showing tags to viewers years ago, but it never stopped sending them to your browser. Every tag a creator set is still in the page you are already looking at. Here are three ways to read them, from fastest to most manual, and a [YouTube tag generator](../../creator-tools/youtube-tag-generator/) for writing your own.
