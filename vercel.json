@@ -109,6 +109,21 @@
       ],
       "destination": "https://passivearray.com/:path",
       "statusCode": 301
+    },
+    {
+      "source": "/creator-tools/:tool/privacy{/}?",
+      "destination": "/privacy/",
+      "statusCode": 301
+    },
+    {
+      "source": "/creator-tools/:tool/terms{/}?",
+      "destination": "/terms/",
+      "statusCode": 301
+    },
+    {
+      "source": "/(blog|compare|research)/:slug/(privacy|terms){/}?",
+      "destination": "/$2/",
+      "statusCode": 301
     }
   ]
 }
