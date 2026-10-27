@@ -744,6 +744,6 @@ const tools = [
       "With a Claude API key set on the server the plan is written by AI using the same inputs.",
     ],
   },
-].concat(require("./tools-youtube-studio.js")(NICHES));
+].concat(require("./tools-youtube-studio.js")(NICHES), require("./tools-growth.js"));
 
 module.exports = { tools, COUNTRIES, NICHES };

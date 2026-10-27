@@ -1,0 +1,115 @@
+// Growth history, comment and channel value tools (added October 2026).
+// Merged into the tool list by tools.js. Live data comes from:
+//   youtube history   -> lib/growth.js youtubeHistory (stored daily points, lib/history.js)
+//   twitch history    -> lib/growth.js twitchHistory
+//   youtube comments  -> creator-tools/lib/youtube.js getComments (commentThreads.list)
+//   youtube channel   -> creator-tools/lib/youtube.js getChannel (same as the money calculator)
+
+module.exports = [
+  {
+    slug: "youtube-channel-growth-tracker",
+    howTitle: "How the history is recorded",
+    name: "YouTube Channel Growth Tracker",
+    platform: "YouTube",
+    api: "youtube",
+    action: "history",
+    intent: "check",
+    buttonLabel: "Track",
+    short: "Daily subscriber and view history for any channel, charted, with 7 and 30-day change.",
+    intro: "Enter any channel. The first lookup puts it on a daily tracking list, and every day after that adds a point, so you get a growth chart, gains per day and a CSV of the full history.",
+    inputs: [{ id: "channel", label: "Channel link, @handle or name", type: "text", placeholder: "Paste a link or @handle" }],
+    how: [
+      "Each day around 05:45 UTC the channel's public subscribers, total views and video count are read from the YouTube Data API and stored.",
+      "Changes compare today's point with the closest recorded point 7 or 30 days earlier, and say which date they start from.",
+      "History starts the day the channel is first tracked. Nothing earlier is backfilled or estimated.",
+    ],
+  },
+  {
+    slug: "twitch-follower-tracker",
+    howTitle: "How the history is recorded",
+    name: "Twitch Follower Tracker",
+    platform: "Twitch",
+    api: "twitch",
+    action: "history",
+    intent: "check",
+    buttonLabel: "Track",
+    short: "Daily follower history for any streamer, charted, with 7, 30 and 90-day change.",
+    intro: "Enter a Twitch username. The first lookup starts daily tracking, and every day after adds a point to the follower chart. Twitch publishes exact totals, so every change is real.",
+    inputs: [{ id: "login", label: "Twitch username", type: "text", placeholder: "Paste a twitch.tv link or username" }],
+    how: [
+      "Each day the channel's follower total is read from the official Twitch Helix API and stored.",
+      "Changes compare today with the closest recorded day 7, 30 or 90 days earlier.",
+      "History starts the day the channel is first tracked. Nothing earlier is backfilled.",
+    ],
+  },
+  {
+    slug: "youtube-comment-exporter",
+    howTitle: "How the export works",
+    name: "YouTube Comment Exporter",
+    platform: "YouTube",
+    api: "youtube",
+    action: "comments",
+    intent: "check",
+    buttonLabel: "Export comments",
+    short: "Download a video's comments to CSV for Excel or Google Sheets: author, text, likes, replies, date.",
+    intro: "Paste a video or Shorts link. You get the comments in a table and a CSV file with the author, comment text, likes, reply count, date and a direct link to each comment.",
+    inputs: [
+      { id: "video", label: "Video or Shorts link", type: "text", placeholder: "https://www.youtube.com/watch?v=..." },
+      { id: "order", label: "Order", type: "select", value: "relevance", options: [["relevance", "Top comments"], ["time", "Newest first"]] },
+      { id: "max", label: "Comments to read", type: "select", value: "1000", options: [["500", "Up to 500"], ["1000", "Up to 1,000"], ["2000", "Up to 2,000"]] },
+    ],
+    how: [
+      "Comments come from the official YouTube Data API, 100 per request, with up to 5 replies each.",
+      "Comments held for review, flagged as spam or deleted are never returned by the API.",
+      "The CSV is built in your browser and starts with a byte-order mark so Excel reads emoji and accents correctly.",
+    ],
+  },
+  {
+    slug: "youtube-comment-picker",
+    howTitle: "How the draw works",
+    name: "YouTube Comment Picker",
+    platform: "YouTube",
+    api: "youtube",
+    action: "comments",
+    intent: "check",
+    buttonLabel: "Draw winner",
+    short: "Pick a random giveaway winner from a video's comments, with one entry per person and keyword rules.",
+    intro: "Paste the giveaway video, set the rules and draw. Each person counts once, the channel owner is left out, and the draw uses your browser's cryptographic random generator.",
+    inputs: [
+      { id: "video", label: "Giveaway video link", type: "text", placeholder: "https://www.youtube.com/watch?v=..." },
+      { id: "winners", label: "Number of winners", type: "number", value: 1, min: 1, max: 20, step: 1 },
+      { id: "keyword", label: "Comment must contain", type: "text", placeholder: "Optional, e.g. a hashtag", optional: true },
+      { id: "unique", label: "One entry per person", type: "select", value: "yes", options: [["yes", "Yes"], ["no", "No, every comment"]] },
+      { id: "replies", label: "Replies", type: "select", value: "no", options: [["no", "Leave out"], ["yes", "Include"]] },
+      { id: "owner", label: "Channel owner can win", type: "select", value: "no", options: [["no", "No"], ["yes", "Yes"]] },
+      { id: "max", label: "Comments to read", type: "select", value: "2000", options: [["500", "Up to 500"], ["1000", "Up to 1,000"], ["2000", "Up to 2,000"]] },
+    ],
+    how: [
+      "Comments are read from the official YouTube Data API, then filtered by your rules in the browser.",
+      "With one entry per person, each author's earliest matching comment is kept, so commenting many times does not raise the odds.",
+      "Winners are drawn with crypto.getRandomValues, every eligible entry with equal odds. Draw again as often as you like.",
+    ],
+  },
+  {
+    slug: "youtube-channel-value-calculator",
+    name: "YouTube Channel Value Calculator",
+    platform: "YouTube",
+    api: "youtube",
+    action: "channel",
+    intent: "estimate",
+    short: "What a channel could be worth: estimated yearly ad earnings times the years you choose.",
+    intro: "Enter a channel. The calculator estimates yearly ad earnings from recent views and an RPM range, then multiplies by a number of years of earnings you set. Every input is on the page.",
+    inputs: [
+      { id: "channel", label: "Channel link, @handle or name", type: "text", placeholder: "Paste a link or @handle" },
+      { id: "rpmLow", label: "Low RPM ($ per 1,000 views)", type: "number", value: 0.5, step: 0.05, min: 0, hint: "What the creator keeps per 1,000 views" },
+      { id: "rpmHigh", label: "High RPM ($ per 1,000 views)", type: "number", value: 4, step: 0.05, min: 0 },
+      { id: "multLow", label: "Years of earnings, low", type: "number", value: 2, step: 0.5, min: 0 },
+      { id: "multHigh", label: "Years of earnings, high", type: "number", value: 3, step: 0.5, min: 0 },
+    ],
+    how: [
+      "Monthly views = views on videos uploaded in the last 30 days, or average views times uploads a month when fewer than 2 went up.",
+      "Yearly ad earnings = monthly views / 1,000 x RPM x 12. Value = yearly earnings x the years you set.",
+      "Sponsorships, memberships and products are not included. This is a planning estimate, not an appraisal.",
+    ],
+  },
+];

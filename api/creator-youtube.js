@@ -7,9 +7,14 @@
 const { configure, handleRequest } = require("../creator-tools/lib/youtube.js");
 
 module.exports = async (req, res) => {
-  configure({ apiKey: process.env.YOUTUBE_API_KEY || process.env.GOOGLE_API_KEY || "", timeoutMs: 8000 });
+  const apiKey = process.env.YOUTUBE_API_KEY || process.env.GOOGLE_API_KEY || "";
+  configure({ apiKey, timeoutMs: 8000 });
   const params = req.query || {};
-  const { code, body } = await handleRequest(params.action, params);
+  // Growth history needs the store, so it is handled outside the store-free tools library.
+  // Without a key the tools library answers with its usual "no_key" message.
+  const { code, body } = params.action === "history" && apiKey
+    ? await require("../lib/growth.js").youtubeHistory(params)
+    : await handleRequest(params.action, params);
   res.setHeader("Content-Type", "application/json; charset=utf-8");
   res.setHeader("Cache-Control", code === 200 ? "public, max-age=600" : "no-store");
   // Public read-only data; lets the Passive Array browser extension call this from youtube.com.

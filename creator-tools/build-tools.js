@@ -273,6 +273,7 @@ function formHtml(t) {
 }
 
 function buttonLabel(t) {
+  if (t.buttonLabel) return t.buttonLabel;
   if (t.compare || t.action === "compare") return "Compare";
   if (t.action === "search" || t.action === "lookalike") return "Find channels";
   if (t.api === "ai") return "Generate";
@@ -333,18 +334,21 @@ function guideHtml(t) {
 // Topic clusters. Each tool's "Next steps" links stay inside its cluster first, so authority
 // flows between related pages and up to the cluster's pillar (listed first).
 const CLUSTERS = [
-  ["youtube-money-calculator", "youtube-monetization-checker", "youtube-sponsorship-price-calculator", "youtube-channel-quality-checker"],
+  ["youtube-money-calculator", "youtube-monetization-checker", "youtube-sponsorship-price-calculator", "youtube-channel-value-calculator", "youtube-channel-quality-checker"],
   ["youtube-sponsorship-price-calculator", "youtube-engagement-rate-calculator", "instagram-pricing-calculator", "tiktok-pricing-calculator", "youtube-money-calculator"],
   ["youtube-engagement-rate-calculator", "instagram-engagement-rate-calculator", "tiktok-engagement-rate-calculator", "youtube-channel-quality-checker", "instagram-engagement-rate-benchmark"],
   ["youtube-keyword-generator", "youtube-tag-generator", "youtube-title-generator", "youtube-title-analyzer", "youtube-description-generator", "youtube-hashtag-generator", "youtube-niche-finder"],
-  ["youtube-subscriber-count-checker", "youtube-monetization-checker", "youtube-channel-quality-checker", "youtube-channel-comparison", "youtube-engagement-rate-calculator"],
+  ["youtube-subscriber-count-checker", "youtube-channel-growth-tracker", "youtube-monetization-checker", "youtube-channel-quality-checker", "youtube-channel-comparison", "youtube-engagement-rate-calculator"],
   ["instagram-fake-follower-checker", "tiktok-fake-follower-checker", "instagram-audit", "tiktok-audit", "find-youtube-influencers-by-niche", "youtube-lookalike-finder"],
   ["youtube-video-ideas-generator", "youtube-script-outline-generator", "youtube-title-generator", "youtube-thumbnail-downloader", "youtube-channel-name-generator"],
   ["instagram-engagement-rate-calculator", "instagram-engagement-rate-benchmark", "instagram-likes-to-followers-ratio", "instagram-follower-to-following-ratio", "instagram-money-calculator", "instagram-pricing-calculator"],
   ["instagram-hashtag-generator", "instagram-caption-analyzer", "instagram-bio-generator", "instagram-content-ideas-generator", "instagram-growth-advisor"],
   ["tiktok-engagement-rate-calculator", "tiktok-money-calculator", "tiktok-pricing-calculator", "tiktok-likes-to-followers-ratio", "tiktok-account-comparison"],
   ["find-youtube-influencers-by-niche", "search-youtube-influencers-by-location", "youtube-lookalike-finder", "youtube-channel-comparison"],
-  ["twitch-follower-count-checker", "twitch-channel-comparison", "youtube-subscriber-count-checker"],
+  ["twitch-follower-count-checker", "twitch-follower-tracker", "twitch-channel-comparison", "youtube-subscriber-count-checker"],
+  ["youtube-channel-growth-tracker", "youtube-subscriber-count-checker", "youtube-channel-comparison", "youtube-channel-quality-checker", "twitch-follower-tracker"],
+  ["youtube-comment-exporter", "youtube-comment-picker", "youtube-engagement-rate-calculator", "youtube-thumbnail-downloader"],
+  ["youtube-channel-value-calculator", "youtube-money-calculator", "youtube-monetization-checker", "youtube-sponsorship-price-calculator"],
   ["x-follower-to-following-ratio", "x-account-comparison", "instagram-follower-to-following-ratio"],
 ];
 function clusterMates(slug) {
@@ -405,6 +409,7 @@ function toolPage(template, t) {
     .replace("{{form}}", formHtml(t))
     .replace("{{button}}", buttonLabel(t))
     .replace("{{siblings}}", siblings)
+    .replace("{{howTitle}}", esc(t.howTitle || "How this number is made"))
     .replace("{{how}}", (t.how || []).map((h) => `<li>${esc(h)}</li>`).join(""))
     .replace("{{next}}", nextList)
     .replace("{{guide}}", guideHtml(t) + relatedArticles(t))

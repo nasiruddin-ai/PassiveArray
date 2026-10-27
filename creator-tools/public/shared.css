@@ -961,3 +961,40 @@ table.cmp tbody th[scope="row"] { font-weight: 500; text-align: left; text-trans
 :root[data-theme="dark"] .plat.Instagram { color: #F9A8D4; }
 :root[data-theme="dark"] .plat.TikTok, :root[data-theme="dark"] .plat.X { color: #E8ECF3; }
 :root[data-theme="dark"] .rtabs .soon { color: #C7CEF5; }
+
+/* Growth charts (channel growth tracker, Twitch follower tracker) */
+.chartcard { padding: 18px 18px 12px; }
+.charthead { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 6px 14px; margin-bottom: 10px; }
+.charthead span { font-size: .85rem; color: var(--muted); }
+.chartsvg { display: block; max-width: 100%; height: auto; overflow: visible; margin: 0 auto; }
+.chartsvg .grid { stroke: var(--line); stroke-width: 1; }
+.chartsvg .axis { fill: var(--muted); font-size: 11px; font-family: inherit; }
+.chartsvg .line { fill: none; stroke: var(--teal); stroke-width: 2.4; stroke-linejoin: round; stroke-linecap: round; }
+.chartsvg .area { fill: var(--teal); opacity: .12; }
+.chartsvg .dot { fill: var(--card); stroke: var(--teal); stroke-width: 2; }
+.chartsvg .gbar { fill: var(--teal); opacity: .8; }
+.chartsvg .gbar.neg { fill: var(--bad); }
+.chartempty { padding: 26px 10px; text-align: center; color: var(--muted); font-size: .92rem; border: 1px dashed var(--line); border-radius: 12px; }
+.dlrow { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; margin: 14px 0; }
+.dlrow .note { margin: 0; }
+.winners { display: grid; gap: 12px; }
+.winner { display: flex; gap: 14px; align-items: flex-start; padding: 14px 16px; border: 1px solid var(--line); border-radius: 14px; background: var(--soft); }
+.winner .n { flex: none; width: 34px; height: 34px; border-radius: 50%; display: grid; place-items: center; background: var(--teal); color: #fff; font-weight: 700; }
+.winner .who { font-weight: 600; }
+.winner .who a { color: inherit; }
+.winner .txt { margin-top: 4px; white-space: pre-wrap; word-break: break-word; font-size: .93rem; }
+.winner .meta { margin-top: 4px; font-size: .8rem; color: var(--muted); }
+.pickbar { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin-top: 14px; }
+
+/* Tool pages carry the header search box; below 480px tighten the header so the actions fit without sideways scroll. */
+@media (max-width: 480px) {
+  .site-header > .wrap { gap: 8px; }
+  .site-header .iconbtn { width: 40px; height: 40px; }
+  .site-header .hactions { gap: 6px; }
+  .hsearch { padding: 0 4px 0 10px; gap: 6px; }
+  .hsearch button { padding: 0 8px; }
+  .hsignup { padding: 0 10px; }
+}
+@media (max-width: 400px) {
+  .hsearch button { display: none; } /* Enter still submits the search */
+}

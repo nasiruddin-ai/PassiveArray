@@ -122,6 +122,10 @@
       h += "<div class=\"hactions\"><button type=\"button\" class=\"btn\" id=\"copylink\">Copy link to this result</button>" +
         (out.profile && out.profile.watch ? "<button type=\"button\" class=\"btn watch\" id=\"watchbtn\" data-channel=\"" + esc(out.profile.watch) + "\">Watch this channel</button>" : "") + "</div></div>";
     }
+    if (out.charts) {
+      h += out.charts.map(function (c) { return "<div class=\"card chartcard\"><div class=\"charthead\"><b>" + esc(c.title) + "</b>" + (c.sub ? "<span>" + esc(c.sub) + "</span>" : "") + "</div>" + c.svg + "</div>"; }).join("");
+    }
+    if (out.blocks) h += out.blocks.join("");
     if (out.bars) {
       h += "<div class=\"card bars\">" + out.bars.map(function (b) {
         return "<div class=\"barrow\"><div class=\"top\"><span class=\"name\">" + esc(b.label) + "</span><span class=\"val\">" + esc(b.text) + "</span></div><div class=\"bar\"><i style=\"width:" + clamp(b.value, 0, 100) + "%\"></i></div></div>";
@@ -159,8 +163,22 @@
     if (out.copy) {
       h += "<div class=\"card\"><div class=\"copybox\" id=\"copybox\">" + esc(out.copy) + "</div><div class=\"actions\"><button type=\"button\" class=\"btn ghost\" id=\"copybtn\">Copy</button></div></div>";
     }
+    if (out.download) {
+      h += "<div class=\"actions dlrow\"><button type=\"button\" class=\"btn\" id=\"dlbtn\">" + esc(out.download.label || "Download CSV") + "</button>" + (out.download.hint ? "<span class=\"note\">" + esc(out.download.hint) + "</span>" : "") + "</div>";
+    }
     if (out.note) h += "<p class=\"note\">" + out.note + "</p>";
     results.innerHTML = h;
+    var dl = document.getElementById("dlbtn");
+    if (dl) dl.addEventListener("click", function () {
+      var blob = new Blob(["﻿" + out.download.text], { type: out.download.mime || "text/csv;charset=utf-8" });
+      var a = document.createElement("a");
+      a.href = URL.createObjectURL(blob);
+      a.download = out.download.filename || "export.csv";
+      document.body.appendChild(a);
+      a.click();
+      setTimeout(function () { URL.revokeObjectURL(a.href); a.remove(); }, 500);
+    });
+    if (typeof out.after === "function") out.after(results);
     var cb = document.getElementById("copybtn");
     if (cb) cb.addEventListener("click", function () {
       navigator.clipboard.writeText(out.copy).then(function () { cb.textContent = "Copied"; setTimeout(function () { cb.textContent = "Copy"; }, 1500); });
@@ -1583,6 +1601,287 @@
       return YT_OUT[T.action](res, fromAI, v);
     };
   });
+
+  /* ================================================ growth trackers, comments, channel value */
+  function signed(n) { return n == null || !isFinite(n) ? "n/a" : (n > 0 ? "+" : n < 0 ? "−" : "") + fmt(Math.abs(n)); }
+  function deltaCls(n) { return n == null ? "" : n > 0 ? "good" : n < 0 ? "bad" : ""; }
+  function shortDate(d) { return new Date(d + "T00:00:00Z").toLocaleDateString("en-US", { month: "short", day: "numeric", timeZone: "UTC" }); }
+  function daysBetween(a, b) { return Math.round((new Date(b) - new Date(a)) / 86400000); }
+
+  // Charts are drawn at the width they will be shown at, so text stays at its real size on every screen.
+  function chartWidth() { var w = Math.max(results.clientWidth || 0, (form && form.clientWidth) || 0) || 640; return clamp(Math.round(w - 40), 280, 1100); }
+  // Axis labels with just enough decimals to tell neighbouring ticks apart.
+  function tickFmt(v, span) {
+    var a = Math.abs(v), div = a >= 1e9 ? 1e9 : a >= 1e6 ? 1e6 : a >= 1e4 ? 1e3 : 1, suf = div === 1e9 ? "B" : div === 1e6 ? "M" : div === 1e3 ? "K" : "";
+    if (div === 1) return fmt(v);
+    var dec = clamp(Math.ceil(-Math.log10(Math.max(span, 1e-9) / div / 4)), 0, 3);
+    return (v / div).toFixed(dec) + suf;
+  }
+
+  // Line chart of one metric over the stored daily points. Pure SVG.
+  function lineChart(series, key, label) {
+    var pts = series.filter(function (p) { return isFinite(p[key]); });
+    if (pts.length < 2) return "<div class=\"chartempty\">The first point was recorded " + (pts.length ? shortDate(pts[0].d) : "today") + ". A line appears once a second day is recorded.</div>";
+    var W = chartWidth(), H = W < 520 ? 190 : 240, L = 62, R = 12, Tp = 12, B = 28;
+    var t0 = new Date(pts[0].d).getTime(), t1 = new Date(pts[pts.length - 1].d).getTime();
+    var vals = pts.map(function (p) { return p[key]; });
+    var lo = Math.min.apply(null, vals), hi = Math.max.apply(null, vals);
+    if (hi === lo) { hi += Math.max(1, Math.abs(hi) * 0.01); lo -= Math.max(1, Math.abs(lo) * 0.01); }
+    var pad = (hi - lo) * 0.08; lo -= pad; hi += pad;
+    var x = function (d) { return L + ((new Date(d).getTime() - t0) / Math.max(1, t1 - t0)) * (W - L - R); };
+    var y = function (v) { return Tp + (1 - (v - lo) / (hi - lo)) * (H - Tp - B); };
+    var path = pts.map(function (p, i) { return (i ? "L" : "M") + x(p.d).toFixed(1) + " " + y(p[key]).toFixed(1); }).join(" ");
+    var area = path + " L" + x(pts[pts.length - 1].d).toFixed(1) + " " + (H - B) + " L" + x(pts[0].d).toFixed(1) + " " + (H - B) + " Z";
+    var grid = "", ticks = 4;
+    for (var i = 0; i <= ticks; i++) {
+      var v = lo + ((hi - lo) * i) / ticks, yy = y(v).toFixed(1);
+      grid += "<line class=\"grid\" x1=\"" + L + "\" x2=\"" + (W - R) + "\" y1=\"" + yy + "\" y2=\"" + yy + "\"/><text class=\"axis\" x=\"" + (L - 8) + "\" y=\"" + yy + "\" text-anchor=\"end\" dominant-baseline=\"middle\">" + esc(tickFmt(v, (hi - lo) / ticks)) + "</text>";
+    }
+    var dots = pts.length <= Math.floor((W - L - R) / 14) ? pts.map(function (p) { return "<circle class=\"dot\" r=\"3\" cx=\"" + x(p.d).toFixed(1) + "\" cy=\"" + y(p[key]).toFixed(1) + "\"><title>" + esc(shortDate(p.d) + ": " + fmt(p[key]) + " " + label) + "</title></circle>"; }).join("") : "";
+    var xl = "<text class=\"axis\" x=\"" + L + "\" y=\"" + (H - 8) + "\">" + esc(shortDate(pts[0].d)) + "</text><text class=\"axis\" x=\"" + (W - R) + "\" y=\"" + (H - 8) + "\" text-anchor=\"end\">" + esc(shortDate(pts[pts.length - 1].d)) + "</text>";
+    return "<svg class=\"chartsvg\" width=\"" + W + "\" height=\"" + H + "\" viewBox=\"0 0 " + W + " " + H + "\" role=\"img\" aria-label=\"" + esc(label) + " from " + esc(shortDate(pts[0].d)) + " to " + esc(shortDate(pts[pts.length - 1].d)) + "\">" + grid + "<path class=\"area\" d=\"" + area + "\"/><path class=\"line\" d=\"" + path + "\"/>" + dots + xl + "</svg>";
+  }
+
+  // Gain per day between consecutive points (spread evenly when a day was missed).
+  function dailyGains(series, key) {
+    var out = [];
+    for (var i = 1; i < series.length; i++) {
+      var a = series[i - 1], b = series[i], days = Math.max(1, daysBetween(a.d, b.d));
+      if (isFinite(a[key]) && isFinite(b[key])) out.push({ d: b.d, g: (b[key] - a[key]) / days, days: days });
+    }
+    return out;
+  }
+  function barChart(gains, label) {
+    if (!gains.length) return "<div class=\"chartempty\">Daily gains show from the second recorded day.</div>";
+    var W = chartWidth(), H = W < 520 ? 160 : 190, L = 62, R = 12, Tp = 10, B = 26;
+    var list = gains.slice(-Math.max(14, Math.floor((W - L - R) / 8)));
+    var vals = list.map(function (g) { return g.g; });
+    var hi = Math.max(0, Math.max.apply(null, vals)), lo = Math.min(0, Math.min.apply(null, vals));
+    if (hi === lo) hi = 1;
+    var y = function (v) { return Tp + (1 - (v - lo) / (hi - lo)) * (H - Tp - B); };
+    var bw = (W - L - R) / list.length;
+    var bars = list.map(function (g, i) {
+      var y0 = y(0), y1 = y(g.g), top = Math.min(y0, y1), h = Math.max(1, Math.abs(y1 - y0));
+      return "<rect class=\"gbar" + (g.g < 0 ? " neg" : "") + "\" x=\"" + (L + i * bw + bw * 0.15).toFixed(1) + "\" y=\"" + top.toFixed(1) + "\" width=\"" + Math.max(1, bw * 0.7).toFixed(1) + "\" height=\"" + h.toFixed(1) + "\"><title>" + esc(shortDate(g.d) + ": " + signed(Math.round(g.g)) + " " + label + (g.days > 1 ? " a day (average over " + g.days + " days)" : "")) + "</title></rect>";
+    }).join("");
+    var axis = "<line class=\"grid\" x1=\"" + L + "\" x2=\"" + (W - R) + "\" y1=\"" + y(0).toFixed(1) + "\" y2=\"" + y(0).toFixed(1) + "\"/><text class=\"axis\" x=\"" + (L - 8) + "\" y=\"" + y(hi).toFixed(1) + "\" text-anchor=\"end\" dominant-baseline=\"middle\">" + esc(compact(Math.round(hi))) + "</text><text class=\"axis\" x=\"" + (L - 8) + "\" y=\"" + y(0).toFixed(1) + "\" text-anchor=\"end\" dominant-baseline=\"middle\">0</text>";
+    var xl = "<text class=\"axis\" x=\"" + L + "\" y=\"" + (H - 6) + "\">" + esc(shortDate(list[0].d)) + "</text><text class=\"axis\" x=\"" + (W - R) + "\" y=\"" + (H - 6) + "\" text-anchor=\"end\">" + esc(shortDate(list[list.length - 1].d)) + "</text>";
+    return "<svg class=\"chartsvg\" width=\"" + W + "\" height=\"" + H + "\" viewBox=\"0 0 " + W + " " + H + "\" role=\"img\" aria-label=\"Daily " + esc(label) + " gained\">" + axis + bars + xl + "</svg>";
+  }
+
+  function csvCell(v) {
+    var s = String(v == null ? "" : v);
+    if (/^[=+\-@\t\r]/.test(s)) s = "'" + s; // keep spreadsheets from running a cell as a formula
+    return "\"" + s.replace(/"/g, "\"\"") + "\"";
+  }
+  function csv(head, rows) { return [head].concat(rows).map(function (r) { return r.map(csvCell).join(","); }).join("\r\n"); }
+  function fileSafe(s) { return String(s || "export").toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "").slice(0, 50) || "export"; }
+
+  function changeRow(name, c, unit) {
+    if (!c) return { name: name, sub: "builds up as days are recorded", value: "Not enough days yet" };
+    return { name: name, sub: "since " + shortDate(c.from) + " (" + c.days + " day" + (c.days === 1 ? "" : "s") + ")", value: signed(c.delta) + (unit ? " " + unit : ""), cls: deltaCls(c.delta) };
+  }
+  function trackingNote(d, what) {
+    var t = d.tracking, bits = [];
+    if (!t.storeOn) bits.push("<span class=\"warn\">History storage is switched off on this deployment, so only today's numbers are shown.</span>");
+    else if (!t.tracked) bits.push("<span class=\"warn\">The daily tracking list is full right now, so this " + what + " gets a point only when someone looks it up.</span>");
+    else bits.push("This " + what + " is on the daily tracking list. A new point is recorded once a day, around 05:45 UTC.");
+    return bits;
+  }
+
+  COMPUTE["youtube-channel-growth-tracker"] = function (v, d) {
+    var ch = d.channel, s = d.series, c = d.changes, t = d.tracking;
+    var gains = dailyGains(s, "v");
+    var span = s.length > 1 ? daysBetween(s[0].d, s[s.length - 1].d) : 0;
+    var avgViewsDay = span ? (s[s.length - 1].v - s[0].v) / span : null;
+    var rows = [
+      changeRow("Subscribers, last 7 days", c.subs.d7),
+      changeRow("Subscribers, last 30 days", c.subs.d30),
+      changeRow("Views, last 7 days", c.views.d7),
+      changeRow("Views, last 30 days", c.views.d30),
+      { name: "Average views gained per day", sub: span ? "over " + span + " tracked days" : "needs two recorded days", value: avgViewsDay == null ? "Not enough days yet" : fmt(avgViewsDay), cls: avgViewsDay > 0 ? "good" : "" },
+      changeRow("New uploads, last 30 days", c.videos.d30),
+      { name: "Total views", value: fmt(ch.views) },
+      { name: "Videos", value: fmt(ch.videos) },
+    ];
+    var recentRows = s.slice().reverse().slice(0, 30).map(function (p, i, arr) {
+      var prev = arr[i + 1];
+      return [esc(shortDate(p.d) + ", " + p.d.slice(0, 4)), fmt(p.s), prev ? signed(p.s - prev.s) : "", fmt(p.v), prev ? signed(p.v - prev.v) : "", fmt(p.n)];
+    });
+    return {
+      profile: ytProfile(ch),
+      hero: { label: "Subscribers", value: ch.hiddenSubscribers ? "Hidden by channel" : fmt(ch.subscribers), note: "Tracked since " + esc(shortDate(t.since) + ", " + t.since.slice(0, 4)) + " · " + t.points + " daily point" + (t.points === 1 ? "" : "s") + " stored" },
+      charts: [
+        { title: "Subscribers", sub: "public count, rounded by YouTube", svg: ch.hiddenSubscribers ? "<div class=\"chartempty\">This channel hides its subscriber count, so there is nothing to chart.</div>" : lineChart(s, "s", "subscribers") },
+        { title: "Total views", sub: "exact lifetime views", svg: lineChart(s, "v", "views") },
+        { title: "Views gained per day", sub: "difference between recorded days", svg: barChart(gains, "views") },
+      ],
+      rows: rows,
+      table: s.length > 1 ? { head: ["Date", "Subscribers", "Change", "Total views", "Change", "Videos"], numeric: true, rows: recentRows } : null,
+      download: s.length ? { label: "Download history (CSV)", hint: s.length + " daily point" + (s.length === 1 ? "" : "s"), filename: fileSafe(ch.handle || ch.title) + "-growth-history.csv", text: csv(["date", "subscribers", "total_views", "videos"], s.map(function (p) { return [p.d, p.s, p.v, p.n]; })) } : null,
+      note: trackingNote(d, "channel").concat([
+        "History starts on the day Passive Array first recorded the channel. Nothing before that is backfilled or estimated.",
+        "YouTube rounds public subscriber counts to three significant figures, so the subscriber line moves in steps on bigger channels. Total views are exact, which makes views gained per day the most precise growth signal here.",
+      ]).join(" "),
+    };
+  };
+
+  COMPUTE["twitch-follower-tracker"] = function (v, d) {
+    var ch = d.channel, s = d.series, c = d.changes.followers, t = d.tracking;
+    var gains = dailyGains(s, "f");
+    var span = s.length > 1 ? daysBetween(s[0].d, s[s.length - 1].d) : 0;
+    var avg = span ? (s[s.length - 1].f - s[0].f) / span : null;
+    return {
+      profile: { img: ch.profileImage, title: ch.displayName, url: ch.url, meta: [ch.broadcasterType !== "none" ? ch.broadcasterType : "", ch.game, ch.live ? "live now" : ""].filter(Boolean).join(" · ") },
+      hero: { label: "Followers", value: fmt(ch.followers), note: "Tracked since " + esc(shortDate(t.since) + ", " + t.since.slice(0, 4)) + " · " + t.points + " daily point" + (t.points === 1 ? "" : "s") + " stored" },
+      charts: [
+        { title: "Followers", sub: "exact total from the Twitch API", svg: lineChart(s, "f", "followers") },
+        { title: "Followers gained per day", sub: "difference between recorded days", svg: barChart(gains, "followers") },
+      ],
+      rows: [
+        changeRow("Followers, last 7 days", c.d7),
+        changeRow("Followers, last 30 days", c.d30),
+        changeRow("Followers, last 90 days", c.d90),
+        { name: "Average followers gained per day", sub: span ? "over " + span + " tracked days" : "needs two recorded days", value: avg == null ? "Not enough days yet" : signed(Math.round(avg)), cls: deltaCls(avg) },
+        { name: "Followers per year since the account was created", sub: "lifetime average", value: fmt(ch.followersPerYear) },
+        { name: "Account created", value: dateStr(ch.createdAt) },
+      ],
+      table: s.length > 1 ? { head: ["Date", "Followers", "Change"], numeric: true, rows: s.slice().reverse().slice(0, 30).map(function (p, i, arr) { var prev = arr[i + 1]; return [esc(shortDate(p.d) + ", " + p.d.slice(0, 4)), fmt(p.f), prev ? signed(p.f - prev.f) : ""]; }) } : null,
+      download: s.length ? { label: "Download history (CSV)", hint: s.length + " daily point" + (s.length === 1 ? "" : "s"), filename: fileSafe(ch.login) + "-twitch-followers.csv", text: csv(["date", "followers"], s.map(function (p) { return [p.d, p.f]; })) } : null,
+      note: trackingNote(d, "channel").concat(["History starts on the day Passive Array first recorded the channel. Nothing before that is backfilled or estimated. Twitch publishes exact follower totals, so every change shown is real."]).join(" "),
+    };
+  };
+
+  function commentLink(d, c) { return d.video.url + "&lc=" + encodeURIComponent(c.id); }
+  function commentsCsv(d) {
+    return csv(["comment_id", "parent_id", "type", "author", "author_channel_url", "text", "likes", "reply_count", "published_at", "updated_at", "comment_url"],
+      d.comments.map(function (c) { return [c.id, c.parent, c.parent ? "reply" : "comment", c.author, c.authorChannelId ? "https://www.youtube.com/channel/" + c.authorChannelId : "", c.text, c.likes, c.replies, c.publishedAt, c.updatedAt, commentLink(d, c)]; }));
+  }
+  function videoHeroNote(d) {
+    return "<a href=\"" + esc(d.video.url) + "\" target=\"_blank\" rel=\"noopener\">" + esc(d.video.title) + "</a> · " + esc(d.video.channelTitle || "");
+  }
+
+  COMPUTE["youtube-comment-exporter"] = function (v, d) {
+    var top = d.comments.filter(function (c) { return !c.parent; }), reps = d.comments.length - top.length;
+    var authors = {}; d.comments.forEach(function (c) { authors[c.authorChannelId || c.author] = 1; });
+    var most = top.slice().sort(function (a, b) { return b.likes - a.likes; })[0];
+    var notes = [];
+    if (d.truncated) notes.push("<span class=\"warn\">Stopped at the first " + fmt(d.topLevel) + " comments.</span> Raise the limit (up to 2,000) to read more.");
+    notes.push("YouTube's API never returns comments that are held for review, flagged as likely spam or deleted, so the export can be smaller than the count under the video. Up to 5 replies per comment are included.");
+    return {
+      hero: { label: "Comments exported", value: fmt(d.comments.length), note: videoHeroNote(d) },
+      rows: [
+        { name: "Top-level comments", value: fmt(top.length) },
+        { name: "Replies included", sub: "up to 5 per comment", value: fmt(reps) },
+        { name: "Comment count YouTube reports", sub: "includes all replies", value: d.video.commentCount == null ? "Hidden" : fmt(d.video.commentCount) },
+        { name: "Unique commenters", value: fmt(Object.keys(authors).length) },
+        { name: "Most liked comment", sub: most ? most.author : "", value: most ? fmt(most.likes) + " likes" : "n/a" },
+        { name: "Sorted by", value: d.order === "time" ? "Newest first" : "Top comments" },
+      ],
+      download: { label: "Download all " + fmt(d.comments.length) + " as CSV", hint: "Opens in Excel, Google Sheets or Numbers", filename: d.video.id + "-comments.csv", text: commentsCsv(d) },
+      table: {
+        head: ["Author", "Comment", "Likes", "Replies", "Posted"],
+        rows: top.slice(0, 50).map(function (c) {
+          var txt = c.text.length > 240 ? c.text.slice(0, 240) + "…" : c.text;
+          return [{ html: "<b>" + esc(c.author) + "</b>" }, { html: "<a href=\"" + esc(commentLink(d, c)) + "\" target=\"_blank\" rel=\"noopener\" style=\"color:inherit\">" + esc(txt) + "</a>" }, fmt(c.likes), fmt(c.replies), dateStr(c.publishedAt)];
+        }),
+      },
+      note: (top.length > 50 ? "The table shows the first 50 comments; the CSV has all of them. " : "") + notes.join(" "),
+    };
+  };
+
+  // Unbiased random integer in [0, n) from the browser's cryptographic generator.
+  function randInt(n) {
+    var c = window.crypto || window.msCrypto, buf = new Uint32Array(1), lim = Math.floor(4294967296 / n) * n, x;
+    if (!c || !c.getRandomValues) return Math.floor(Math.random() * n);
+    do { c.getRandomValues(buf); x = buf[0]; } while (x >= lim);
+    return x % n;
+  }
+  function draw(pool, k) {
+    var a = pool.slice(), out = [];
+    for (var i = 0; i < k && a.length; i++) out.push(a.splice(randInt(a.length), 1)[0]);
+    return out;
+  }
+
+  COMPUTE["youtube-comment-picker"] = function (v, d) {
+    var kw = String(v.keyword || "").trim().toLowerCase();
+    var pool = d.comments.filter(function (c) { return v.replies === "yes" || !c.parent; });
+    var all = pool.length;
+    if (v.owner !== "yes") pool = pool.filter(function (c) { return !c.authorChannelId || c.authorChannelId !== d.video.channelId; });
+    if (kw) pool = pool.filter(function (c) { return c.text.toLowerCase().indexOf(kw) !== -1; });
+    if (v.unique !== "no") {
+      // One entry per person: keep each author's earliest comment so posting many times does not raise the odds.
+      var seen = {}, sorted = pool.slice().sort(function (a, b) { return new Date(a.publishedAt) - new Date(b.publishedAt); });
+      pool = sorted.filter(function (c) { var k = c.authorChannelId || c.author; if (seen[k]) return false; seen[k] = 1; return true; });
+    }
+    var k = Math.max(1, Math.min(20, Math.round(num(v.winners)) || 1));
+    if (!pool.length) return { error: "No comment matches those rules" + (kw ? " (nobody wrote “" + v.keyword + "”)" : "") + ". Loosen a filter and draw again." };
+    function winnersHtml(list) {
+      return "<div class=\"card\"><div class=\"winners\">" + list.map(function (c, i) {
+        return "<div class=\"winner\"><span class=\"n\">" + (i + 1) + "</span><div><div class=\"who\">" + (c.authorChannelId ? "<a href=\"https://www.youtube.com/channel/" + esc(c.authorChannelId) + "\" target=\"_blank\" rel=\"noopener\">" + esc(c.author) + "</a>" : esc(c.author)) + "</div><div class=\"txt\">" + esc(c.text.length > 400 ? c.text.slice(0, 400) + "…" : c.text) + "</div><div class=\"meta\">" + esc(dateStr(c.publishedAt)) + " · <a href=\"" + esc(commentLink(d, c)) + "\" target=\"_blank\" rel=\"noopener\">Open the comment on YouTube</a></div></div></div>";
+      }).join("") + "</div><div class=\"pickbar\"><button type=\"button\" class=\"btn\" id=\"redraw\">Draw again</button><span class=\"note\">Drawn " + esc(new Date().toLocaleString("en-US")) + "</span></div></div>";
+    }
+    var first = draw(pool, k);
+    var notes = ["Winners are drawn in your browser with its cryptographic random generator, every eligible entry with equal odds."];
+    if (d.truncated) notes.push("<span class=\"warn\">Only the first " + fmt(d.topLevel) + " comments were read.</span> For a fair draw on a busy video, set the limit to 2,000 or close entries before that many come in.");
+    notes.push("YouTube's API does not return comments held for review or flagged as spam, so those people cannot win. Check the winner's comment is still public before you announce it.");
+    return {
+      hero: { label: k === 1 ? "Winner" : k + " winners", value: esc(first.map(function (c) { return c.author; }).join(", ")), note: videoHeroNote(d) },
+      blocks: ["<div id=\"winnerbox\">" + winnersHtml(first) + "</div>"],
+      rows: [
+        { name: "Eligible entries", sub: "after your rules", value: fmt(pool.length) },
+        { name: "Comments read", sub: v.replies === "yes" ? "comments and replies" : "top-level comments", value: fmt(all) },
+        { name: "One entry per person", value: v.unique === "no" ? "No" : "Yes" },
+        { name: "Must contain", value: kw ? esc(v.keyword) : "Anything" },
+        { name: "Channel owner can win", value: v.owner === "yes" ? "Yes" : "No" },
+      ],
+      download: { label: "Download the eligible entries (CSV)", hint: "Keep it as a record of the draw", filename: d.video.id + "-giveaway-entries.csv", text: csv(["author", "author_channel_url", "comment", "published_at", "comment_url"], pool.map(function (c) { return [c.author, c.authorChannelId ? "https://www.youtube.com/channel/" + c.authorChannelId : "", c.text, c.publishedAt, commentLink(d, c)]; })) },
+      note: notes.join(" "),
+      after: function (root) {
+        var box = root.querySelector("#winnerbox");
+        var btn = root.querySelector("#redraw");
+        function bind(b) {
+          if (!b) return;
+          b.addEventListener("click", function () {
+            var again = draw(pool, k);
+            box.innerHTML = winnersHtml(again);
+            var hv = root.querySelector(".herocard .v");
+            if (hv) hv.textContent = again.map(function (c) { return c.author; }).join(", ");
+            bind(box.querySelector("#redraw"));
+          });
+        }
+        bind(btn);
+      },
+    };
+  };
+
+  COMPUTE["youtube-channel-value-calculator"] = function (v, d) {
+    var ch = d.channel, r = ch.recent, mv = ytMonthlyViews(ch);
+    var lo = num(v.rpmLow), hi = num(v.rpmHigh), mLo = num(v.multLow), mHi = num(v.multHigh);
+    if (hi < lo) { var t = lo; lo = hi; hi = t; }
+    if (mHi < mLo) { var t2 = mLo; mLo = mHi; mHi = t2; }
+    var yLo = (mv.views / 1000) * lo * 12, yHi = (mv.views / 1000) * hi * 12;
+    var out = {
+      profile: ytProfile(ch),
+      hero: { label: "Estimated channel value", value: range(yLo * mLo, yHi * mHi), note: "Yearly ad earnings of " + range(yLo, yHi) + " × " + fmt(mLo, 1) + " to " + fmt(mHi, 1) + " years" },
+      rows: [
+        { name: "Estimated yearly ad earnings", sub: "at $" + fmt(lo, 2) + " to $" + fmt(hi, 2) + " RPM", value: range(yLo, yHi) },
+        { name: "Estimated monthly views", sub: mv.basis, value: fmt(mv.views) },
+        { name: "Subscribers", value: ch.hiddenSubscribers ? "Hidden" : fmt(ch.subscribers) },
+        { name: "Average views on recent uploads", value: fmt(r.avgViews) },
+        { name: "Uploads per month", value: fmt(r.uploadsPerMonth, 1) },
+        { name: "Channel age", value: fmt(years(ch.publishedAt), 1) + " years" },
+      ],
+      list: [
+        "<b>Steady uploads</b> matter: income that depends on the owner keeping a schedule is worth less if the owner leaves.",
+        "<b>Sponsorships, memberships and products</b> are not counted here. Add them to yearly earnings yourself if you have the figures.",
+        "<b>Audience country and niche</b> move RPM more than anything else. Set the RPM range to what the channel's own analytics show.",
+      ],
+      note: "There is no public price list for YouTube channels. This is a planning estimate from public numbers: ad earnings from recent views, times the number of years of earnings you choose. The default of 2 to 3 years is a starting assumption, not a market rate. It is not an appraisal.",
+    };
+    if (r.shortsShare >= 0.5) out.note = "<span class=\"warn\">Over half of recent uploads are Shorts,</span> which pay far less per view, so the real figure is likely lower. " + out.note;
+    return out;
+  };
 
   /* ----------------------------------------------------------- form plumbing */
   function values() {

@@ -122,4 +122,4 @@ async function handleRequest(action, params = {}) {
   }
 }
 
-module.exports = { configure, handleRequest, cleanLogin };
+module.exports = { configure, handleRequest, cleanLogin, getChannel, helix, errorBody, configured: () => !!(settings.clientId && settings.clientSecret) };

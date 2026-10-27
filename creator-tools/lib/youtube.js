@@ -38,6 +38,7 @@ async function yt(path, params) {
       const err = new Error(data?.error?.message || "YouTube API error " + res.status);
       err.code = reason === "quotaExceeded" ? "quota" : reason === "keyInvalid" || res.status === 400 ? "bad_key" : "api";
       err.status = res.status;
+      err.reason = String(reason);
       throw err;
     }
     return data;
@@ -366,10 +367,79 @@ async function monetizationCheck(input) {
   return { channel: { ...ch, recent }, sampled, signalRate: rate, checkedCount: checked.length, adsVisible, signals, verdict, estimate, checkedAt: new Date().toISOString() };
 }
 
+/* ------------------------------------------------------------------ comments
+   commentThreads.list returns top-level comments, 100 per page, 1 quota unit per page.
+   Comments held for review, likely spam and deleted comments are never returned by the
+   API, and up to 5 replies come inline with each thread (full reply lists need another call). */
+function parseVideoId(raw) {
+  const s = String(raw || "").trim();
+  if (/^[\w-]{11}$/.test(s)) return s;
+  try {
+    const u = new URL(s.includes("://") ? s : "https://" + s);
+    const host = u.hostname.replace(/^www\.|^m\.|^music\./, "");
+    if (host === "youtu.be") return (u.pathname.split("/")[1] || "").slice(0, 11) || null;
+    if (/youtube\.com$/.test(host)) {
+      if (u.searchParams.get("v")) return u.searchParams.get("v").slice(0, 11);
+      const parts = u.pathname.split("/").filter(Boolean);
+      if (["shorts", "live", "embed", "v"].includes(parts[0]) && parts[1]) return parts[1].slice(0, 11);
+    }
+  } catch (_) {
+    /* not a url */
+  }
+  return null;
+}
+
+async function getComments(videoInput, opts = {}) {
+  const id = parseVideoId(videoInput);
+  if (!id) throw Object.assign(new Error("Paste a YouTube video link, a Shorts link or the 11-character video ID."), { code: "input", status: 400 });
+  const max = Math.max(100, Math.min(2000, Math.round(n(opts.max) || 1000)));
+  const order = opts.order === "time" ? "time" : "relevance";
+  return cached("comments:" + id + ":" + order + ":" + max, async () => {
+    const vd = await yt("videos", { part: "snippet,statistics", id });
+    const v = vd.items && vd.items[0];
+    if (!v) throw Object.assign(new Error("No public video with that ID."), { code: "not_found", status: 404 });
+    const video = {
+      id, title: v.snippet && v.snippet.title, channelId: v.snippet && v.snippet.channelId, channelTitle: v.snippet && v.snippet.channelTitle,
+      publishedAt: v.snippet && v.snippet.publishedAt, views: n(v.statistics && v.statistics.viewCount),
+      commentCount: v.statistics && v.statistics.commentCount != null ? n(v.statistics.commentCount) : null,
+      url: "https://www.youtube.com/watch?v=" + id,
+    };
+    const comments = [];
+    let pageToken = "", pages = 0, truncated = false;
+    do {
+      let page;
+      try {
+        page = await yt("commentThreads", { part: "snippet,replies", videoId: id, maxResults: 100, order, textFormat: "plainText", pageToken });
+      } catch (e) {
+        if (e.reason === "commentsDisabled" && pages === 0) throw Object.assign(new Error("Comments are turned off on this video, so there is nothing to read."), { code: "comments_off", status: 403 });
+        if (pages === 0) throw e;
+        truncated = true;
+        break;
+      }
+      pages++;
+      for (const th of page.items || []) {
+        const top = th.snippet && th.snippet.topLevelComment && th.snippet.topLevelComment.snippet;
+        if (!top) continue;
+        const row = (c, parent) => ({
+          id: c.id, parent: parent || "", author: c.snippet.authorDisplayName || "", authorChannelId: (c.snippet.authorChannelId && c.snippet.authorChannelId.value) || "",
+          text: c.snippet.textOriginal != null ? c.snippet.textOriginal : c.snippet.textDisplay || "", likes: n(c.snippet.likeCount),
+          publishedAt: c.snippet.publishedAt, updatedAt: c.snippet.updatedAt, replies: parent ? 0 : n(th.snippet.totalReplyCount),
+        });
+        comments.push(row(th.snippet.topLevelComment));
+        for (const rep of (th.replies && th.replies.comments) || []) comments.push(row(rep, th.snippet.topLevelComment.id));
+      }
+      pageToken = page.nextPageToken || "";
+      if (pageToken && comments.filter((c) => !c.parent).length >= max) { truncated = true; break; }
+    } while (pageToken);
+    return { video, comments, topLevel: comments.filter((c) => !c.parent).length, pages, truncated, order, max, fetchedAt: new Date().toISOString() };
+  });
+}
+
 function errorBody(e) {
   const code = e.code || "api";
   const messages = {
     no_key: "The YouTube API key is not set up on this site yet.",
+    comments_off: "Comments are turned off on this video, so there is nothing to read.",
     quota: "Today's free YouTube API quota is used up. Try again after midnight Pacific time.",
     bad_key: "The YouTube API key was rejected. Check that the YouTube Data API v3 is enabled for it.",
   };
@@ -393,6 +463,7 @@ async function handleRequest(action, params = {}) {
     }
     if (action === "lookalike") return { code: 200, body: { ok: true, ...(await lookalike(params.channel)) } };
     if (action === "videos") return { code: 200, body: { ok: true, videos: await getVideos(params.ids) } };
+    if (action === "comments") return { code: 200, body: { ok: true, ...(await getComments(params.video, { max: params.max, order: params.order })) } };
     if (action === "monetization") return { code: 200, body: { ok: true, ...(await monetizationCheck(params.channel)) } };
     return { code: 404, body: { ok: false, code: "action", error: "Unknown action." } };
   } catch (e) {
@@ -400,4 +471,4 @@ async function handleRequest(action, params = {}) {
   }
 }
 
-module.exports = { configure, handleRequest, parseChannelInput, yt, statsForIds, n, isoDurationToSeconds, cached, monetizationCheck, probeAds };
+module.exports = { configure, handleRequest, parseChannelInput, parseVideoId, getChannel, getComments, errorBody, yt, statsForIds, n, isoDurationToSeconds, cached, monetizationCheck, probeAds };
