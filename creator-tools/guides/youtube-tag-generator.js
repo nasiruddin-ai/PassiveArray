@@ -67,7 +67,6 @@ module.exports = {
     },
   ],
   faq: [
-    ["Is this YouTube tag generator free?", "Yes. There is no sign-up and no account, and every list can be copied straight into YouTube Studio."],
     ["What is the character limit for YouTube tags?", "500 characters for the whole tag field, including the commas between tags. This tool stops before 480, so you always have room to add one or two of your own."],
     ["Do YouTube tags help with SEO?", "Only a little. YouTube says tags play a minimal role in discovery and mainly help when your subject is commonly misspelled. Your title, thumbnail, description and how long viewers watch matter far more."],
     ["How many tags should I use on a YouTube video?", "Use as many accurate tags as fit, which is usually 20 to 30 short ones inside the 500-character limit. Accuracy matters more than count; delete anything that does not describe this exact video."],

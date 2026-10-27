@@ -71,7 +71,6 @@ module.exports = {
     },
   ],
   faq: [
-    ["Is this YouTube keyword generator free?", "Yes. No sign-up, no account and no daily limit on generating phrases. The list is built in your browser."],
     ["Does this tool show YouTube search volume?", "No, on purpose. Nobody outside Google has YouTube's search volume, so any figure you see elsewhere is an estimate. We show what can be measured instead: on the research page, how the videos ranking for a phrase are actually performing."],
     ["Are these keywords real YouTube searches?", "They are built from the modifiers that appear most often in real YouTube searches, combined with your seed keyword. Most will be searched, but not all. Confirm a phrase by typing it into YouTube's search box and seeing whether autocomplete offers it, or run it through the research page, which uses YouTube's own autocomplete."],
     ["How do I know if I can rank for a keyword?", "Search it on YouTube and look at the top ten. If channels smaller than yours are ranking, especially with more views than they have subscribers, the topic is open. If every result is from a channel with millions of subscribers, pick a narrower phrase."],

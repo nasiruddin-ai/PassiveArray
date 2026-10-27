@@ -69,7 +69,6 @@ module.exports = {
     },
   ],
   faq: [
-    ["Is this YouTube description generator free?", "Yes. No sign-up and no account. Generate as many descriptions as you like and copy them straight into YouTube Studio."],
     ["What is the character limit for a YouTube description?", "5,000 characters. The tool shows how many you have used. Only the first two lines or so show before viewers tap \"more\", so put the important part there."],
     ["Will the AI invent facts about me or my video?", "No. It is told to use only what your notes say and to write anything unknown as a [placeholder]. The built-in template does the same. Replace every bracket before you publish."],
     ["Should I put keywords in my YouTube description?", "Yes, naturally. Use your main phrase in the first line and related phrases where they describe the video. Repeating a keyword over and over does not help and can count as misleading metadata."],

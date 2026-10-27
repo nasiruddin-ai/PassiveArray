@@ -91,6 +91,5 @@ module.exports = {
     ["Does this generator know which hashtags are popular?", "No. It builds hashtags from your words using a fixed pattern and has no live data. Check a hashtag by clicking it on YouTube and seeing what videos it leads to."],
     ["Should I use #shorts on a long video?", "No. Use #shorts only on Shorts. The generator adds it only to its longer lists, so delete it if it does not apply."],
     ["Are hashtags the same as YouTube tags?", "No. Hashtags are visible and clickable; tags are hidden in YouTube Studio and mostly help with misspellings. Use the <a href=\"../youtube-tag-generator/\">tag generator</a> for those."],
-    ["Is the YouTube hashtag generator free?", "Yes. It runs in your browser, with no sign-up and no limit."],
   ],
 };

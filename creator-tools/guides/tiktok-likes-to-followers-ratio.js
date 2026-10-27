@@ -41,6 +41,5 @@ module.exports = {
     ["Where do I find total likes on TikTok?", "On the profile page, next to Following and Followers. It is the total of likes across every video the account has posted."],
     ["Why does my account have more likes than followers?", "That is normal. TikTok shows videos to people who do not follow you, and many of them like without following. Most active accounts have far more likes than followers."],
     ["Does a low ratio mean fake followers?", "Not on its own. It can also mean a new account, an account that posts rarely, or followers who arrived from one video. Treat it as a reason to look closer."],
-    ["Is this calculator free?", "Yes. It is free with no sign-up, and the maths runs in your browser."],
   ],
 };

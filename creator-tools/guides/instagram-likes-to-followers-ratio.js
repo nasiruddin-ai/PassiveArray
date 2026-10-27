@@ -46,6 +46,5 @@ module.exports = {
     ["Why is my like rate lower now that I have more followers?", "That is normal. As an account grows, a smaller share of the audience sees and likes each post. That is why the tool grades you against your own tier, not one fixed number."],
     ["What if the account hides its like counts?", "Then you cannot see the likes, and the ratio cannot be worked out from outside. If it is a creator you want to work with, ask for a screenshot of their post insights."],
     ["Does this include reels?", "It uses whatever average you type in. If an account mixes reels and photos, average the last 12 posts of any kind, or work out each type on its own to compare them."],
-    ["Is the likes to followers ratio calculator free?", "Yes. No sign-up, no limits, and the numbers you type stay in your browser."],
   ],
 };

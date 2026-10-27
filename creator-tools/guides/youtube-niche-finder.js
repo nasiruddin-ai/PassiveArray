@@ -90,6 +90,5 @@ module.exports = {
     ["How many niches does the tool compare?", "26, across six areas. The results table shows the top 14 for your settings."],
     ["Is the niche score measured data?", "No. It combines our editorial ratings for RPM, competition and effort using the weights shown above. Check demand with real numbers in our <a href=\"../../research/\">keyword research</a> before you commit."],
     ["Can I pick a niche that is not on the list?", "Yes. Find the closest match to see its likely trade-offs, then test your exact topic with the keyword generator and our research pages."],
-    ["Is the YouTube niche finder free?", "Yes. It runs in your browser, with no sign-up and no limit."],
   ],
 };

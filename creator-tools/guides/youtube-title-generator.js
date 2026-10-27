@@ -69,7 +69,6 @@ module.exports = {
     },
   ],
   faq: [
-    ["Is this YouTube title generator free?", "Yes. No sign-up and no account. Generate as many sets as you like and copy them straight into YouTube Studio."],
     ["How many characters can a YouTube title have?", "Up to 100 characters. Aim for about 60 or fewer, because longer titles are often cut off in search results and on phones."],
     ["Should my keyword be at the start of the title?", "Usually, yes. Words near the front carry more weight for search, and they are what a viewer reads first. If a natural sentence needs the keyword in the middle, keep it inside the first 60 characters."],
     ["Can I change a YouTube title after publishing?", "Yes, at any time in YouTube Studio. Many creators retitle a video that is getting impressions but few clicks. Give each version a week or two before judging it, and change one thing at a time."],

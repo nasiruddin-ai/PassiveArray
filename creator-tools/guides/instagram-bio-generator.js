@@ -45,6 +45,5 @@ module.exports = {
     ["Will the generator make up facts about me?", "It should not. The AI is told to use only what you type and to write around anything you leave empty. The templates only fill in your own words. Still, read every bio and remove any line that is not true for you."],
     ["Can I get different bios if I do not like these?", "Try another tone, or change how you describe what you do and who it is for. The templates give the same five results for the same inputs; the AI version varies more."],
     ["Is my information stored?", "Your inputs are sent to the site's server only to write the bios, and to the AI model when it is switched on. Passive Array does not ask for an account."],
-    ["Is the Instagram bio generator free?", "Yes. There is no sign-up."],
   ],
 };

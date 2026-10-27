@@ -79,7 +79,6 @@ module.exports = {
     },
   ],
   faq: [
-    ["Is this Twitch channel comparison tool free?", "Yes. No sign-up and no Twitch account needed. Compare as many sets of channels as you like, within Twitch's rate limits."],
     ["How many Twitch channels can I compare at once?", "Two or three. At least two must load for the table to appear."],
     ["Why does a channel show as offline?", "Live viewers only exist while a channel is streaming. If it is not live when you check, or went live in the last few minutes, it shows offline. Results are kept for up to 30 minutes."],
     ["What does the green highlight mean?", "It marks the highest value on that row. Account age and status are never marked, and when two channels tie for the top, neither is marked."],

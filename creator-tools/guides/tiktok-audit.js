@@ -52,6 +52,5 @@ module.exports = {
     ["What is a good TikTok audit score?", "70 or more (grade B) means the account is strong on most parts. 85 or more is an A. Under 40 means several parts are weak. The bars show which."],
     ["Why does growth count for only 10 points?", "Growth can be bought or come from one lucky video. Engagement, reach and authenticity say more about what a brand gets, so they carry 80 of the 100 points."],
     ["Where do I find the follower count from 30 days ago?", "For your own account, check the follower figures in your TikTok analytics. For someone else's, note the count today and check again later. If you leave it blank, the audit gives a neutral 5 of 10 for growth."],
-    ["Is this TikTok audit free?", "Yes. It is free with no sign-up. The maths runs in your browser and nothing is stored."],
   ],
 };

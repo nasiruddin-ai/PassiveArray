@@ -67,7 +67,6 @@ module.exports = {
     },
   ],
   faq: [
-    ["Is this YouTube channel name generator free?", "Yes. No sign-up and no account. It runs in your browser."],
     ["Can this tool tell me if a channel name is available?", "No. It cannot see YouTube's handle list. Open youtube.com/@thename to check the handle, and search the name to make sure nobody uses it as a brand."],
     ["How long should a YouTube channel name be?", "Short enough to show in full on a phone. This tool flags anything over 20 characters as likely to be cut off."],
     ["Should my channel name include keywords?", "It can help people see what you cover, which is why the descriptive style is built around your subject. But your titles and descriptions matter far more for search than your name does. A memorable name is worth more than one stuffed with keywords."],

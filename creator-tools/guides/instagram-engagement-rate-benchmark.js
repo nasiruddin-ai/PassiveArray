@@ -73,6 +73,5 @@ module.exports = {
     ["Where do I find my engagement rate in the Instagram app?", "Insights count interactions, but they do not give you this followers-based rate. Take the likes and comments on your recent posts, which you can see under each post or in its insights, and use the <a href=\"../instagram-engagement-rate-calculator/\">engagement rate calculator</a>. Menus change, so as of October 2026 check the Professional dashboard if you have a creator or business account."],
     ["Do these benchmarks apply to TikTok?", "No. TikTok rates are calculated differently and run much higher. Use the <a href=\"../tiktok-engagement-rate-calculator/\">TikTok engagement rate calculator</a>, which has its own tiers."],
     ["How often are the benchmarks updated?", "They are typical ranges for 2025 to 2026 and are set in the tool's code. If they change, this page and the result will change together."],
-    ["Is the Instagram engagement benchmark tool free?", "Yes. No sign-up and no limit. Nothing you enter is stored."],
   ],
 };

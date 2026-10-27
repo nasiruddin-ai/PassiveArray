@@ -78,7 +78,6 @@ module.exports = {
     },
   ],
   faq: [
-    ["Is this Twitch follower count checker free?", "Yes. No sign-up and no Twitch account needed. Use it on any public channel."],
     ["Where does the follower count come from?", "From Twitch's official Helix API, the same data Twitch shares with approved apps. Results are kept for up to 30 minutes, so very recent changes can take a little while to appear."],
     ["Can I see a streamer's subscriber count?", "No. Twitch keeps paid subscriber numbers private, so no outside tool can show them. This checker shows followers, which is a different, free action."],
     ["Can I see how many viewers a streamer usually gets?", "Only partly. The tool shows live viewers if the channel is streaming when you check, plus average views on recent videos. It does not keep a history of past streams."],

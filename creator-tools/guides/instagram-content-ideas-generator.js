@@ -41,6 +41,5 @@ module.exports = {
     ["Are these ideas based on what is trending right now?", "No. The tool does not read Instagram data or trends. It turns proven content patterns, or the AI's suggestions, into ideas for your niche."],
     ["Why do I get the same ideas every time?", "Without the AI, the picks are fixed for the same niche, audience and format. Change any of the three for a new set."],
     ["Can I ask for reels only?", "Yes. Choose Reels as the format. Without the AI, the built-in patterns run short for a single format, so some ideas in the 12 come from patterns written for other formats and may need adapting."],
-    ["Is the Instagram content ideas generator free?", "Yes. There is no sign-up."],
   ],
 };

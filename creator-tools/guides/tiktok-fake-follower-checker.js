@@ -89,6 +89,5 @@ module.exports = {
     ["Can an account with real followers get a high score?", "Yes. An account that has stopped growing, changed topic or had one viral hit can show low views for its size. The score flags the pattern, not the cause."],
     ["Does the checker see the follower list?", "No. TikTok has no free public API for follower lists, so the tool works only from the numbers you type in. Nothing is stored."],
     ["Do I need the creator's login or permission?", "No. Every number the checker uses is shown on the public profile and on each video."],
-    ["Is the TikTok fake follower checker free?", "Yes. It is free with no sign-up and no limit."],
   ],
 };

@@ -75,6 +75,5 @@ module.exports = {
     ["Does the calculator include TikTok Live gifts or TikTok Shop?", "No. It covers Creator Rewards and one sponsored video only. Gifts, Shop commissions, subscriptions and affiliate links are left out because they depend on things the public numbers cannot show."],
     ["Why are my qualified views lower than my total views?", "Only videos over one minute count. The form's qualified share tells the tool what part of your views came from those longer videos. Shorter videos still help you grow, but they add nothing to this estimate."],
     ["Can I see how much any TikToker makes?", "You can estimate it from public views. No outside tool can see real payouts, and this one cannot confirm the account is in Creator Rewards. Treat the result as a bracket."],
-    ["Is the TikTok money calculator free?", "Yes. It is free with no sign-up and no limit. The maths runs in your browser."],
   ],
 };

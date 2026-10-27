@@ -30,7 +30,6 @@ module.exports = {
     },
   ],
   faq: [
-    ["Is the Twitch follower tracker free?", "Yes. Lookups, charts and the CSV download are free and need no account."],
     ["Can I see follower history from before I tracked a streamer?", "Only from the day Passive Array first recorded the channel. No public source publishes earlier daily follower totals, so we do not invent them."],
     ["How often is it updated?", "Once a day. Looking a channel up also records that day's point if it is not stored yet."],
     ["Are the follower counts exact?", "Yes. The Twitch API returns the exact follower total, so daily changes are exact as well."],

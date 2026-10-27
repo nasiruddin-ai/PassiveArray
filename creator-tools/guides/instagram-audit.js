@@ -79,6 +79,5 @@ module.exports = {
     ["What if I do not know the follower count from 30 days ago?", "Leave it blank. Growth then scores a neutral 10 of 20 so the total is not skewed. Note today's count and run the audit again in a month for a real figure."],
     ["Does losing followers score zero for growth?", "Not quite. Points fall to zero at a 2% loss over 30 days. A small dip, under 2%, still earns a few points, and flat growth earns about 6."],
     ["Can a brand use this to vet an influencer?", "Yes, as a first pass. Pair it with the checklist in <a href=\"../../blog/how-to-vet-an-influencer-before-you-pay/\">how to vet a creator before you pay</a>, and ask the creator for reach and audience screenshots."],
-    ["Is the Instagram audit tool free?", "Yes. No sign-up, no login and no limit. Nothing you enter is stored."],
   ],
 };

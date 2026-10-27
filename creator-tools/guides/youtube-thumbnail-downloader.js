@@ -63,7 +63,6 @@ module.exports = {
     },
   ],
   faq: [
-    ["Is this YouTube thumbnail downloader free?", "Yes. No sign-up, no account and no limit. It runs in your browser and calls no API."],
     ["How do I get the HD version of a YouTube thumbnail?", "Use the Maximum size (1280 x 720). If it shows as not available, the video was never given a thumbnail that large, and Standard (640 x 480) is the biggest version that exists."],
     ["Does it work with YouTube Shorts?", "Yes. Paste the Shorts link and the tool reads the video ID from it like any other link."],
     ["Why do some thumbnails have black bars?", "The Standard, High and Small sizes use the older 4:3 shape. A widescreen thumbnail is fitted inside that shape, which leaves bars above and below. The Maximum and Medium sizes are widescreen."],

@@ -74,7 +74,6 @@ module.exports = {
     },
   ],
   faq: [
-    ["Is this YouTube script outline generator free?", "Yes. No sign-up and no account. Generate as many outlines as you like."],
     ["Is this a full YouTube script?", "No. It is an outline: the hook is written out, and the other sections say what to cover. You fill in the words, which keeps the video sounding like you rather than like a template."],
     ["How long should a YouTube script be?", "As long as the content needs. Pick the target length that fits your topic. If a section runs much longer than the others, consider making it a separate video rather than padding the rest."],
     ["Should I start my video with an intro?", "Not a greeting or a branded intro. Both the AI writer and the built-in outline open on the problem or result, because viewers decide in the first seconds whether to stay."],

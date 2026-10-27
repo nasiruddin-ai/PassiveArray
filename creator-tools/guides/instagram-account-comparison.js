@@ -50,6 +50,5 @@ module.exports = {
     ["Why doesn't the tool fetch the numbers for me?", "Instagram does not offer a free public API for follower counts and post stats. Rather than scrape profiles, the tool works from numbers you copy in."],
     ["Which row matters most when choosing an influencer?", "Usually engagement rate, checked against the account's size. Followers alone tell you little. For pricing, the <a href=\"../instagram-pricing-calculator/\">Instagram pricing calculator</a> turns followers and engagement into a rate."],
     ["Is comments per 100 likes the same as comment rate?", "Yes. It is the number of comments for every 100 likes. A higher figure means more of the people who liked a post also wrote something."],
-    ["Is the Instagram account comparison tool free?", "Yes. No sign-up and no limits."],
   ],
 };

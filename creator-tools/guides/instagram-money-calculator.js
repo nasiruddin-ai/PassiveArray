@@ -84,6 +84,5 @@ module.exports = {
     ["What if I leave the engagement rate blank?", "The calculator then uses no adjustment, 1x, so you see the plain $10 per 1,000 followers base with the 30% range around it."],
     ["Can I use this to check what another creator earns?", "You can estimate it from their public numbers, but nobody outside the deal knows the real fee. Treat the result as a bracket, not a payslip."],
     ["Is this the same as the Instagram pricing calculator?", "They share the same per-post formula. This tool turns it into monthly and yearly income. The <a href=\"../instagram-pricing-calculator/\">pricing calculator</a> breaks the price out by feed post, reel and stories."],
-    ["Is the Instagram money calculator free?", "Yes. No sign-up, no login and no limit."],
   ],
 };

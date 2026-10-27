@@ -43,7 +43,6 @@ module.exports = {
     },
   ],
   faq: [
-    ["Is this tracker free?", "Yes. Looking up a channel, the charts and the CSV download are free and need no account."],
     ["Can I see a channel's subscriber history from before I tracked it?", "Only if Passive Array already recorded it, for example because someone else looked it up or it is in our research index. We do not backfill or estimate past numbers, because no public source publishes them."],
     ["How often is the data updated?", "Once a day, around 05:45 UTC. Looking a channel up also records that day's point if it is not stored yet."],
     ["Why does the subscriber count not change every day?", "YouTube rounds public subscriber counts to three significant figures, so the number only moves when a channel crosses the next rounding step. Total views are exact, so use views gained per day for day-to-day growth."],

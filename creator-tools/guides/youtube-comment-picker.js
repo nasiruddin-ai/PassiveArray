@@ -44,7 +44,6 @@ module.exports = {
     },
   ],
   faq: [
-    ["Is the YouTube comment picker free?", "Yes. It is free with no sign-up and no limit on how many times you draw."],
     ["How many comments can it read?", "Up to 2,000 top-level comments per draw, plus replies if you include them. On a bigger giveaway, close entries before that many come in so everyone gets a fair chance."],
     ["Is the winner really random?", "Yes. Each eligible entry has equal odds, using the browser's cryptographic random generator rather than Math.random."],
     ["Why can't a certain commenter win?", "Comments held for review or flagged as spam by YouTube are not returned by its API, so they cannot be drawn. A commenter can also be filtered out by your keyword rule or by the one-entry-per-person rule."],

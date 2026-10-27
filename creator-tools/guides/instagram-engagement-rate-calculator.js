@@ -78,6 +78,5 @@ module.exports = {
     ["How many posts should I average?", "The last 12 is a good default. Leave out ads, giveaways and anything older than about 60 days, so one unusual post does not move the average."],
     ["Why is my engagement rate dropping as I grow?", "That is normal. Newer followers see fewer of your posts over time, so the share who engage falls. The grade already allows for this by comparing you with accounts of your size."],
     ["Does this include saves, shares and views?", "No. Only the account owner can see those numbers. To value them for a campaign report, use the <a href=\"../instagram-emv-calculator/\">earned media value calculator</a>."],
-    ["Is the Instagram engagement rate calculator free?", "Yes. No sign-up, no login and no limit. The maths runs in your browser."],
   ],
 };

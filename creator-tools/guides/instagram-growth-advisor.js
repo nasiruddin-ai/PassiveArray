@@ -51,6 +51,5 @@ module.exports = {
     ["Do reels really help you get more followers?", "The advisor treats reels as the main way to reach people who do not follow you yet, so it pushes accounts under 40% reels toward at least half when the goal is followers or brand deals. Check the share of non-followers reached in your own Insights to see if that holds for you."],
     ["What engagement rate should I aim for?", "It depends on your size. The advisor compares you with the typical rate for your follower tier and flags you when you fall below 85% of it. The <a href=\"../instagram-engagement-rate-benchmark/\">engagement rate benchmark</a> shows every tier."],
     ["Does the growth advisor connect to my Instagram account?", "No. It never logs in or reads your account. It only uses the numbers you type."],
-    ["Is the Instagram growth advisor free?", "Yes. There is no sign-up."],
   ],
 };

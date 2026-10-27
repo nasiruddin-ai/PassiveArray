@@ -696,7 +696,7 @@ function landingPage() {
         <div class="pa-ext-pill">
           <span class="stars">★★★★★</span> Official Chrome Web Store · 100% Free
         </div>
-        <h1>Supercharge your <mark>YouTube research</mark> without the $49/mo paywall</h1>
+        <h1>Do your <mark>YouTube research</mark> without the $49/mo paywall</h1>
         <p class="lead">Engagement rate, hidden competitor tags, views per day velocity, search outlier scores, and smart Studio tag suggestions. Fast, lightweight, and zero account required.</p>
         
         <div class="pa-ext-ctas">
@@ -709,7 +709,7 @@ function landingPage() {
         </div>
 
         <div class="pa-ext-compat">
-          <span>Works seamlessly on:</span>
+          <span>Works on:</span>
           <strong>Chrome · Edge · Brave · Opera</strong>
         </div>
       </div>
@@ -849,9 +849,9 @@ function landingPage() {
       <section class="pa-ext-showcase">
         <div class="pa-ext-showcase-row flip">
           <div class="pa-ext-showcase-info">
-            <div class="pa-ext-pill">Channel Deep Dive</div>
+            <div class="pa-ext-pill">Channel check</div>
             <h3>Check monetization and creator consistency</h3>
-            <p>Audit any creator's channel with one click. Get instant clarity on their monetization indicators, average views per subscriber, and recent upload pace.</p>
+            <p>Audit any creator's channel with one click. See their monetization indicators, average views per subscriber, and recent upload pace.</p>
             <ul class="pa-ext-checklist">
               <li>${ICON.check} <div><strong>Monetization Confidence:</strong> Verifies ad placements and threshold requirements directly from public channel data.</div></li>
               <li>${ICON.check} <div><strong>Shorts vs Long-form Balance:</strong> Understand whether a creator's audience comes from viral Shorts or high-retention long-form videos.</div></li>

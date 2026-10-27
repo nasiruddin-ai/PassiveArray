@@ -46,6 +46,5 @@ module.exports = {
     ["Which number matters most when comparing TikTok creators?", "For sponsorships, average views and engagement by views. They show what a typical video reaches and how people react. Followers matter less on TikTok than on Instagram."],
     ["Why is the share rate shown with three decimals?", "Shares are usually a small fraction of views, so small differences matter. Three decimals keep two close accounts from looking identical."],
     ["Does the tool save the accounts I compare?", "No. The maths runs in your browser and nothing is stored. Note your numbers if you want to compare again later."],
-    ["Is comparing TikTok accounts free?", "Yes. It is free with no sign-up and no limit."],
   ],
 };

@@ -82,6 +82,5 @@ module.exports = {
     ["Why does the result show a range?", "Impressions are valued at a typical ad CPM, which varies. The range recalculates impressions at $4 and $10 per 1,000 while keeping the other values the same."],
     ["Can I calculate EMV for a creator's post if I am not the creator?", "Only partly. Likes and comments are public, but impressions, shares and saves are in the creator's insights. Ask for a screenshot of the post's insights."],
     ["Does EMV work for TikTok or YouTube?", "The idea works anywhere, but these weights are set for Instagram. Use the same tool and weights across every campaign you compare so the numbers stay consistent."],
-    ["Is the earned media value calculator free?", "Yes. No sign-up, no login and no limit. Nothing you enter is stored."],
   ],
 };

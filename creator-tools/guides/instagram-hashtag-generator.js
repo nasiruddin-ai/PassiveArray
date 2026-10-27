@@ -80,6 +80,5 @@ module.exports = {
     ["Do hashtags still work on Instagram?", "They help Instagram understand what a post is about and let people browse a topic, but content and engagement matter more for reach. With only five slots, choose tags that describe the post exactly."],
     ["Are these hashtags banned or restricted?", "The generator does not check. Instagram restricts some tags from time to time. Tap a tag in the app before using it; if recent posts do not show, use a spare instead."],
     ["Is the generator AI?", "It can be. When the site has an AI key set up, the tags are written by AI. Otherwise it builds them from your topic and a curated list for your niche. The note under the result tells you which."],
-    ["Is the Instagram hashtag generator free?", "Yes. No sign-up, no login and no limit."],
   ],
 };

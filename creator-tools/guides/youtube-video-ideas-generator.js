@@ -67,7 +67,6 @@ module.exports = {
     },
   ],
   faq: [
-    ["Is this YouTube video ideas generator free?", "Yes. No sign-up and no account. Generate as many sets as you like."],
     ["Why do I get the same ideas every time?", "In built-in mode, the twelve ideas are picked from your niche and audience, so the same words give the same set. Change the wording of either box to get a different twelve. When the AI writer is on, each run is written fresh."],
     ["Can I use these as Shorts ideas?", "Yes. Set the format to Shorts only. With the AI writer on, all twelve are written as Shorts. In built-in mode, the format sets the label, so check that each idea really fits under a minute."],
     ["Will the AI make up results or stories for me?", "No. It is told never to invent facts. Some ideas suggest a story or a before and after. Only make those if you have the real thing to show."],

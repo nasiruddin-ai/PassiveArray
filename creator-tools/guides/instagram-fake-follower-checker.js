@@ -85,6 +85,5 @@ module.exports = {
     ["Can you see who bought Instagram followers?", "Not directly. No outside tool can see purchases. You can only see the patterns in the numbers and the follower list that purchases tend to leave."],
     ["Does Instagram remove fake followers?", "Instagram does remove accounts it identifies as fake, which is why some accounts see sudden drops. When and how it does this is not public."],
     ["Does it work for TikTok?", "Use the <a href=\"../tiktok-fake-follower-checker/\">TikTok fake follower checker</a>, which uses TikTok's own engagement tiers."],
-    ["Is the Instagram fake follower checker free?", "Yes. No sign-up and no login. You never need to share a password, and nothing you enter is stored."],
   ],
 };

@@ -45,6 +45,5 @@ module.exports = {
     ["Does following a lot of people hurt my Instagram account?", "The ratio itself is not something Instagram publishes as a ranking signal, so we do not claim it is. It matters more to people: brands and visitors read a low ratio as a sign the audience was traded rather than earned."],
     ["Can I check someone else's ratio?", "Yes. Both numbers are public on any profile you can view. Type them in and the tool does the rest. It does not log in to Instagram or contact the account."],
     ["Does this tool work for X (Twitter) too?", "The same formula and bands are used on the <a href=\"../x-follower-to-following-ratio/\">X follower to following ratio</a> tool."],
-    ["Is the follower to following ratio calculator free?", "Yes. No sign-up and no limits. The calculation runs in your browser."],
   ],
 };

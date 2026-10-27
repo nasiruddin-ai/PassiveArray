@@ -87,6 +87,5 @@ module.exports = {
     ["Can I check someone else's TikTok engagement rate?", "Yes. Every number the tool needs is public on the profile and on each video. You type them in, so it works for any public account."],
     ["Why do the two rates give different grades?", "They answer different questions. By views asks how people react to what they see. By followers asks how the reaction compares with the audience size. An account whose videos reach fewer people than it has followers will grade lower by followers."],
     ["How do I increase my TikTok engagement rate?", "Give viewers a reason to act: ask a specific question for comments, and make videos people want to send to a friend for shares. Then measure again on your next 12 videos and compare."],
-    ["Is this TikTok engagement rate calculator free?", "Yes. It is free with no sign-up and no limit. The maths runs in your browser."],
   ],
 };

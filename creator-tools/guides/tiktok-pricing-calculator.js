@@ -80,6 +80,5 @@ module.exports = {
     ["Why is a series of 3 videos not 3 times the price?", "A bundle saves the creator time on briefing and approvals, so a discount is normal. The calculator prices 3 videos at 2.5 times one video, which is about 17% off per video."],
     ["Does a higher engagement rate always raise the price?", "Up to a point. The adjustment tops out at 1.4x, which you reach at 9.8% engagement by views. Above that, the price is set by views alone."],
     ["Should brands pay by followers or by views on TikTok?", "By views. Followers do not decide who sees a video on TikTok. Ask the creator for recent video views from their analytics if the public averages look uneven."],
-    ["Is this TikTok pricing calculator free?", "Yes. It is free with no sign-up and no limit. The maths runs in your browser and nothing is stored."],
   ],
 };

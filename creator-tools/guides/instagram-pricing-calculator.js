@@ -78,6 +78,5 @@ module.exports = {
     ["What about usage rights and exclusivity?", "They are not in the calculated price. Add 20% to 50% for exclusivity, whitelisting or usage beyond 30 days, and put the terms in writing."],
     ["Should I offer a bundle discount?", "The calculator shows one option: a feed post, a reel and three stories at a 15% discount, 2.38 times a feed post in total. A bundle gives the brand a reason to book more than one format."],
     ["Does this work for TikTok?", "No. TikTok engagement runs on a different scale. Use the <a href=\"../tiktok-pricing-calculator/\">TikTok pricing calculator</a>."],
-    ["Is the Instagram pricing calculator free?", "Yes. No sign-up, no login and no limit."],
   ],
 };
