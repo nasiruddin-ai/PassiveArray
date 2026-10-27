@@ -190,11 +190,9 @@ function footer(root, note) {
         <span class="fmsg" data-msg>One email a week: benchmarks, rate changes, new tools. Unsubscribe any time.</span>
       </form>
     </div>
-    ${col("Creator tools", [["creator-tools/#rank", "YouTube SEO tools"], ["creator-tools/#create", "Generators"], ["creator-tools/#check", "Channel checkers"], ["creator-tools/#estimate", "Money calculators"], ["creator-tools/#Instagram", "Instagram tools"], ["creator-tools/#TikTok", "TikTok tools"], ["creator-tools/", `All ${tools.length} tools`]])}
-    ${col("Trackers & research", [["creator-tools/youtube-channel-growth-tracker/", "YouTube growth tracker"], ["creator-tools/twitch-follower-tracker/", "Twitch follower tracker"], ["creator-tools/youtube-comment-exporter/", "Comment exporter"], ["creator-tools/youtube-comment-picker/", "Comment picker"], ["creator-tools/youtube-channel-value-calculator/", "Channel value calculator"], ["research/", "Keyword research"], ["research/outliers/", "Outlier videos"]])}
-    ${col("Popular", popular)}
-    ${col("Compare", [["compare/", "All comparisons"], ["compare/vidiq-alternative/", "vidIQ alternative"], ["compare/tubebuddy-alternative/", "TubeBuddy alternative"], ["pricing/", "Pricing"], ["faq/", "FAQ"]])}
-    ${col("Company", [["about/", "About"], ["founder/", "Founder"], ["youtube-seo-service/", "YouTube SEO service"], ["blog/", "Blog"], ["youtube-extension/", "Chrome extension"], ["contact/", "Contact"], ["login/", "Sign in"], ["privacy/", "Privacy policy"], ["terms/", "Terms of use"]])}
+    ${col("Tools", [["creator-tools/#rank", "YouTube SEO tools"], ["creator-tools/#create", "Generators"], ["creator-tools/youtube-channel-growth-tracker/", "Growth tracker"], ["research/", "Keyword research"], ["creator-tools/", `All ${tools.length} tools`]])}
+    ${col("Resources", [["blog/", "Blog"], ["youtube-extension/", "Chrome extension"], ["account/#mcp", "MCP for AI assistants"], ["compare/", "Compare"], ["faq/", "FAQ"]])}
+    ${col("Company", [["about/", "About"], ["pricing/", "Pricing"], ["youtube-seo-service/", "YouTube SEO service"], ["contact/", "Contact"], ["login/", "Sign in"]])}
   </div>
   <div class="fbottom">
     <span>&copy; ${new Date().getFullYear()} ${BRAND}. ${esc(note || "Estimates use public numbers and typical industry rates. A starting point, not a guarantee.")}</span>
