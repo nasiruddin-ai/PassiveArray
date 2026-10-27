@@ -47,8 +47,7 @@ const ICON = {
 };
 
 // <head> lines for favicons and the link preview image. Files are copied to the site root by build.js.
-// Google Search Console verification. The same tag goes on every page, including
-// the standalone web tools (build.js injects it there). Replace the token if the
+// Google Search Console verification. The same tag goes on every page. Replace the token if the
 // property is ever re-verified; an empty string leaves the tag out.
 const GOOGLE_VERIFICATION = "iEH5a0QzRXb2Kg7UB2k-xXTEPeNOa-NQFCKFZ8pfG8Q";
 const VERIFY_TAG = GOOGLE_VERIFICATION ? `<meta name="google-site-verification" content="${GOOGLE_VERIFICATION}">` : "";
@@ -121,7 +120,6 @@ function megaMenu(root) {
         <a href="${root}creator-tools/#TikTok">TikTok tools</a>
         <a href="${root}creator-tools/#Twitch">Twitch tools</a>
         <a href="${root}creator-tools/#X">X tools</a>
-        <a href="${root}#web-tools">Web and domain tools</a>
         <a class="mmore" href="${root}creator-tools/">View all ${tools.length} tools</a>
       </div>
     </div>
@@ -193,7 +191,7 @@ function footer(root, note) {
       </form>
     </div>
     ${col("Creator tools", [["creator-tools/#rank", "YouTube SEO tools"], ["creator-tools/#create", "Generators"], ["creator-tools/#check", "Channel checkers"], ["creator-tools/#estimate", "Money calculators"], ["creator-tools/#Instagram", "Instagram tools"], ["creator-tools/#TikTok", "TikTok tools"], ["creator-tools/", `All ${tools.length} tools`]])}
-    ${col("Web tools", WEB_TOOLS.map(([href, name]) => [href, name]))}
+    ${col("Trackers & research", [["creator-tools/youtube-channel-growth-tracker/", "YouTube growth tracker"], ["creator-tools/twitch-follower-tracker/", "Twitch follower tracker"], ["creator-tools/youtube-comment-exporter/", "Comment exporter"], ["creator-tools/youtube-comment-picker/", "Comment picker"], ["creator-tools/youtube-channel-value-calculator/", "Channel value calculator"], ["research/", "Keyword research"], ["research/outliers/", "Outlier videos"]])}
     ${col("Popular", popular)}
     ${col("Compare", [["compare/", "All comparisons"], ["compare/vidiq-alternative/", "vidIQ alternative"], ["compare/tubebuddy-alternative/", "TubeBuddy alternative"], ["pricing/", "Pricing"], ["faq/", "FAQ"]])}
     ${col("Company", [["about/", "About"], ["founder/", "Founder"], ["youtube-seo-service/", "YouTube SEO service"], ["blog/", "Blog"], ["youtube-extension/", "Chrome extension"], ["contact/", "Contact"], ["login/", "Sign in"], ["privacy/", "Privacy policy"], ["terms/", "Terms of use"]])}
@@ -466,16 +464,7 @@ ${footer(root)}
 }
 
 /* ------------------------------------------------------------------ home (dist/index.html) */
-const WEB_TOOLS = [
-  ["meta-tag-checker/", "Meta Tag Checker", "Check any page's title, description, robots, canonical, headings, Open Graph and schema, with a fix for each."],
-  ["serp-snippet-preview/", "SERP Snippet Preview", "See how your title and meta description look in Google, measured in pixels on desktop and mobile."],
-  ["schema-markup-generator/", "Schema Markup Generator", "Build valid JSON-LD for FAQs, local businesses, articles, products, organisations and people."],
-  ["domain-finder/", "Domain Finder", "Type a name idea and see which domains are free to buy right now."],
-  ["domain-age-checker/", "Domain Age Checker", "Find out when a domain was first registered and how old it is."],
-  ["plagiarism-checker/", "Plagiarism Checker", "Paste text, upload a file or enter a URL. Each sentence is marked plagiarised or unique."],
-  ["jpg-to-pdf/", "JPG to PDF Converter", "Turn images into a PDF. Everything happens in your browser."],
-  ["seo-roi-calculator/", "SEO ROI Calculator", "Estimate the traffic, conversions and revenue first-page rankings could bring."],
-];
+
 
 // Small abstract mock-ups for the capability blocks. Deliberately not
 // screenshots: they show the shape of each answer without pretending to be
@@ -633,7 +622,7 @@ ${header(root, "home", false)}
     </div>
     <div class="lp-proof" aria-label="Platforms covered">
       <span class="lp-stack">${PLAT_ICON.YouTube}${PLAT_ICON.Twitch}${PLAT_ICON.Instagram}${PLAT_ICON.TikTok}${PLAT_ICON.X}<span class="pbadge more">+5</span></span>
-      <span class="lp-proof-text">YouTube and Twitch on live API data. Instagram, TikTok and X from the numbers you type. Plus 5 web tools.</span>
+      <span class="lp-proof-text">YouTube and Twitch on live API data. Instagram, TikTok and X from the numbers you type.</span>
     </div>
   </div>
   <div class="wrap lp-statwrap">
@@ -711,11 +700,6 @@ ${posts.length ? `
     <div class="grid c3">${posts.slice(0, 3).map((p) => postCard(p, root)).join("")}</div>
   </section>` : ""}
 
-  <section class="section" id="web-tools">
-    <div class="section-head"><h2>Free web and SEO tools</h2><a href="${root}pricing/">Free tools, optional Pro</a></div>
-    <div class="grid c3">${WEB_TOOLS.map(([href, name, text]) => `<a class="card" href="${root}${href}"><h3>${esc(name)}</h3><p>${esc(text)}</p></a>`).join("")}</div>
-  </section>
-
   <section class="section" id="faq">
     <div class="section-head"><h2>Questions people ask first</h2><a href="faq/">All YouTube tool questions</a></div>
     <div class="card faq">${faqHtml}</div>
@@ -734,7 +718,7 @@ function buildInto(outDir, posts) {
   if (posts) setPosts(posts);
   const template = fs.readFileSync(path.join(HERE, "template.html"), "utf8");
   fs.mkdirSync(outDir, { recursive: true });
-  for (const asset of ["shared.css", "shared.js", "site.js", "research.js", "app.js", "seo-tools.js"]) fs.copyFileSync(path.join(HERE, "public", asset), path.join(outDir, asset));
+  for (const asset of ["shared.css", "shared.js", "site.js", "research.js", "app.js"]) fs.copyFileSync(path.join(HERE, "public", asset), path.join(outDir, asset));
   fs.writeFileSync(path.join(outDir, "index.html"), directoryPage());
   const seen = new Set();
   for (const t of tools) {
@@ -793,7 +777,7 @@ ${scripts}
 </html>`;
 }
 
-module.exports = { ANALYTICS_HEAD, GTM_BODY, GTM_ID, GA4_ID, ANALYTICS, buildInto, homePage, tools, SITE, BRAND, TAGLINE, WEB_TOOLS, header, footer, shell, postCard, fmtDate, esc, ICON, VERIFY_TAG, intentOf, INTENTS, guideHtml, faqLd };
+module.exports = { ANALYTICS_HEAD, GTM_BODY, GTM_ID, GA4_ID, ANALYTICS, buildInto, homePage, tools, SITE, BRAND, TAGLINE, header, footer, shell, postCard, fmtDate, esc, ICON, VERIFY_TAG, intentOf, INTENTS, guideHtml, faqLd };
 
 if (require.main === module) {
   const out = path.join(HERE, ".out");

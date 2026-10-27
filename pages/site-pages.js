@@ -20,7 +20,7 @@ function aboutPage() {
   <div class="stats-row">
     <div><b>${site.tools.length}</b><span>creator tools</span></div>
     <div><b>${live}</b><span>with live API data</span></div>
-    <div><b>${site.WEB_TOOLS.length}</b><span>web tools</span></div>
+    <div><b>${site.tools.filter((t) => t.platform === "YouTube").length}</b><span>YouTube tools</span></div>
     <div><b>1</b><span>Chrome extension</span></div>
   </div>
   <div class="two-col">
@@ -120,7 +120,6 @@ function privacyPage() {
     <p><strong>Live YouTube and Twitch tools.</strong> The channel link or handle you enter is sent to our server, which asks the official YouTube Data API or Twitch API for that channel's public statistics and returns them to you. Results are cached on the server for up to six hours so repeated lookups are fast and the free API allowance lasts. The cache is keyed by channel, not by you.</p>
     <p><strong>Calculators.</strong> Instagram, TikTok and X calculators run entirely in your browser. The numbers you type never leave your device.</p>
     <p><strong>AI generators.</strong> Hashtag, bio, idea and growth-plan generators work from built-in templates in your browser. When AI writing is switched on server-side, the text you typed is sent to Anthropic's Claude API to write the result, under <a href="https://www.anthropic.com/legal/privacy" rel="noopener">Anthropic's privacy policy</a>. Anthropic does not train on API inputs. Nothing about you other than that text is included.</p>
-    <p><strong>Web tools.</strong> The domain finder and domain age checker send the domain names you enter to our server for lookup. The plagiarism checker sends sentences from your text to a web search API to find matches. The JPG to PDF converter and the SEO ROI calculator run entirely in your browser.</p>
 
     <h2>Sign-up, newsletter and contact forms</h2>
     <p>When you sign up, subscribe or send a message, we receive your email address, the platform or topic you picked, your message if any, and the page you sent it from. It is forwarded to the mailing and inbox tool we use to send the newsletter and reply to you. You can unsubscribe from any email with one click, or <a href="../contact/">ask us</a> to delete your address.</p>

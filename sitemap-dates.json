@@ -1,6 +1,6 @@
 {
  "/": {
-  "hash": "4f14857c4255f79e",
+  "hash": "a82e88a60a513d5a",
   "date": "2026-10-27"
  },
  "/creator-tools/": {
@@ -215,38 +215,6 @@
   "hash": "f26108f839155fe9",
   "date": "2026-10-27"
  },
- "/meta-tag-checker/": {
-  "hash": "1af6b38c49a7071e",
-  "date": "2026-10-11"
- },
- "/serp-snippet-preview/": {
-  "hash": "2772ad130627599b",
-  "date": "2026-10-11"
- },
- "/schema-markup-generator/": {
-  "hash": "b369ac24a700ef35",
-  "date": "2026-10-11"
- },
- "/domain-finder/": {
-  "hash": "be367966092afdb2",
-  "date": "2026-10-11"
- },
- "/domain-age-checker/": {
-  "hash": "7f95bffed70cfa49",
-  "date": "2026-10-11"
- },
- "/plagiarism-checker/": {
-  "hash": "04b17ad69d31e1ee",
-  "date": "2026-10-11"
- },
- "/jpg-to-pdf/": {
-  "hash": "9966757d20527ef6",
-  "date": "2026-10-11"
- },
- "/seo-roi-calculator/": {
-  "hash": "d2da801fb4034328",
-  "date": "2026-10-11"
- },
  "/research/": {
   "hash": "6d6fc0aff0b6aa84",
   "date": "2026-10-11"
@@ -304,7 +272,7 @@
   "date": "2026-10-27"
  },
  "/about/": {
-  "hash": "78b15400bbbbdb4f",
+  "hash": "5837768322343f1f",
   "date": "2026-10-27"
  },
  "/contact/": {
@@ -332,8 +300,8 @@
   "date": "2026-10-27"
  },
  "/privacy/": {
-  "hash": "e10c842db8ebba68",
-  "date": "2026-10-10"
+  "hash": "e29b0e3fadea5822",
+  "date": "2026-10-27"
  },
  "/terms/": {
   "hash": "e72924ce4562c72b",

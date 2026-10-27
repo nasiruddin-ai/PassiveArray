@@ -1,7 +1,0 @@
-{
-  "googleApiKey": "",
-  "googleCx": "",
-  "maxQueriesPerCheck": 40,
-  "wordLimit": 1000,
-  "port": 3100
-}

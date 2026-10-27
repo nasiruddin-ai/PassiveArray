@@ -69,8 +69,8 @@ https://nodejs.org (the LTS button) and try again.
 
 The free quota is 10,000 units a day. A channel lookup costs 3 units, a niche
 or location search costs about 102. Results are cached for 6 hours, so the
-quota goes a long way. If you already use `GOOGLE_API_KEY` for the plagiarism
-checker, enabling YouTube Data API v3 on that project lets this reuse it.
+quota goes a long way. If you already use `GOOGLE_API_KEY` for another Google API,
+enabling YouTube Data API v3 on that project lets this reuse it.
 
 ### Twitch, 5 minutes
 

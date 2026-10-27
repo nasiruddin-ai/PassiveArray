@@ -6,7 +6,6 @@
 //   /api/billing        -> /api/pro?fn=billing          lib/api-billing.js
 //   /api/billing-webhook -> /api/pro?fn=billing-webhook lib/api-billing-webhook.js (Lemon Squeezy)
 //   /api/channel        -> /api/pro?fn=channel          lib/api-channel.js      (your own channel)
-//   /api/meta           -> /api/pro?fn=meta             lib/api-meta.js         (meta tag checker)
 //
 // Body parsing is off so the billing webhook signature can be checked over the exact bytes
 // it sent; the raw body is read once here and parsed as JSON for the others.
@@ -19,7 +18,6 @@ const HANDLERS = {
   "billing": () => require("../lib/api-billing.js"),
   "billing-webhook": () => require("../lib/api-billing-webhook.js"),
   "channel": () => require("../lib/api-channel.js"),
-  "meta": () => require("../lib/api-meta.js"),
 };
 
 function readRaw(req) {

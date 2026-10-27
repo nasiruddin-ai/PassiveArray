@@ -3,7 +3,6 @@
 Free tools for creators and brands. One repository, one Netlify site.
 
 - **35 creator tools** at `/creator-tools/`: live YouTube and Twitch checks, Instagram, TikTok and X calculators, fake-follower estimators, comparisons and content generators.
-- **5 web tools**: domain finder, domain age checker, plagiarism checker, JPG to PDF, SEO ROI calculator.
 - **Brand kit** in `passive-array-brand/`: logo, favicons, social images, brand guide.
 
 ## Deploy on Netlify
@@ -17,7 +16,6 @@ Free tools for creators and brands. One repository, one Netlify site.
 |---|---|---|
 | `YOUTUBE_API_KEY` | The 9 live YouTube tools | Google Cloud, YouTube Data API v3, free. Steps in `creator-tools/README.md` |
 | `TWITCH_CLIENT_ID`, `TWITCH_CLIENT_SECRET` | The 2 live Twitch tools | dev.twitch.tv/console, free |
-| `GOOGLE_API_KEY`, `GOOGLE_CX` | Plagiarism checker web search | Google Programmable Search, see `plagiarism-checker/README.md` |
 | `LEMONSQUEEZY_API_KEY`, `LEMONSQUEEZY_STORE_ID`, `LEMONSQUEEZY_VARIANT_ID`, `LEMONSQUEEZY_WEBHOOK_SECRET` | The Pro plan | Lemon Squeezy, see the Pro plan section below |
 | `ANTHROPIC_API_KEY` | Optional. AI-written hashtags, bios, ideas, growth plan | console.anthropic.com, paid. Without it the generators use built-in templates |
 
@@ -86,13 +84,12 @@ Optional: set `CRON_SECRET` so only Vercel's scheduler (and you, with
 ## How it is built
 
 ```
-build.js                 Builds dist/: home page, web tool pages, creator tools, brand files
+build.js                 Builds dist/: home page, creator tools, blog, company pages, brand files
 netlify.toml             Netlify settings and function packaging
-netlify/functions/       API routes on Netlify (YouTube, Twitch, AI, domain and plagiarism lookups)
+netlify/functions/       API routes on Netlify (YouTube, Twitch, AI)
 api/                     The same routes for Vercel; vercel.json rewrites the tool URLs to them
 creator-tools/           tools.js (the list of tools), build-tools.js (page generator), public/ (CSS and JS), lib/ (API helpers)
 passive-array-brand/     Logo SVGs, favicons, social images, brand-guide.html, make-brand.js
-domain-finder/ ...       The web tools, each with its own README and a Start.bat for local use
 ```
 
 Run locally without Netlify:
@@ -443,7 +440,6 @@ If you later add a tag that sets cookies, make it wait for
 | Piece | File |
 |---|---|
 | Measurement id, consent defaults, GA4 and GTM snippets | `creator-tools/build-tools.js` (`GA4_ID`, `CONSENT_HEAD`, `ANALYTICS_HEAD`) |
-| Injection into the five standalone web tools | `build.js` (`withSiteChrome`) |
 | Placeholder on tool pages | `creator-tools/template.html` (`{{gtmbody}}`) |
 | Banner and consent updates | `creator-tools/public/site.js` |
 | Wording that changes with the setting | `pages/site-pages.js` (`ANALYTICS_ON`) |

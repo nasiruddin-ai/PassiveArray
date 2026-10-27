@@ -17,18 +17,6 @@
       "destination": "/api/creator-ai"
     },
     {
-      "source": "/domain-age-checker/api/age",
-      "destination": "/api/domain-age"
-    },
-    {
-      "source": "/domain-finder/api/check",
-      "destination": "/api/domain-finder-check"
-    },
-    {
-      "source": "/plagiarism-checker/api/:action",
-      "destination": "/api/plagiarism?action=:action"
-    },
-    {
       "source": "/research/api/:action",
       "destination": "/api/research?action=:action"
     },
@@ -51,10 +39,6 @@
     {
       "source": "/api/channel",
       "destination": "/api/pro?fn=channel"
-    },
-    {
-      "source": "/api/meta",
-      "destination": "/api/pro?fn=meta"
     }
   ],
   "headers": [
@@ -100,7 +84,7 @@
   },
   "redirects": [
     {
-      "source": "/:path((?!api/|creator-tools/api/|research/api/|plagiarism-checker/api/|domain-age-checker/api/|domain-finder/api/).*)",
+      "source": "/:path((?!api/|creator-tools/api/|research/api/).*)",
       "has": [
         {
           "type": "host",
@@ -123,6 +107,16 @@
     {
       "source": "/(blog|compare|research)/:slug/:page(privacy|terms){/}?",
       "destination": "/:page/",
+      "statusCode": 301
+    },
+    {
+      "source": "/:tool(meta-tag-checker|serp-snippet-preview|schema-markup-generator|domain-finder|domain-age-checker|plagiarism-checker|jpg-to-pdf|seo-roi-calculator)/:rest*",
+      "destination": "/",
+      "statusCode": 301
+    },
+    {
+      "source": "/:tool(meta-tag-checker|serp-snippet-preview|schema-markup-generator|domain-finder|domain-age-checker|plagiarism-checker|jpg-to-pdf|seo-roi-calculator)",
+      "destination": "/",
       "statusCode": 301
     }
   ]
