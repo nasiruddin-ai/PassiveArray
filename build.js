@@ -111,6 +111,11 @@ const disallow = ["/api/"].map((p) => "Disallow: " + p).join("\n");
 fs.writeFileSync(path.join(DIST, "robots.txt"), "User-agent: *\nAllow: /\n" + disallow + "\n\nSitemap: " + site.SITE + "/sitemap.xml\n");
 console.log("sitemap.xml (" + urls.length + " urls) and robots.txt -> dist/");
 
+// llms.txt: a plain-text site map for AI assistants, built from the same lists as the sitemap.
+const llms = require("./pages/llms-txt.js");
+fs.writeFileSync(path.join(DIST, "llms.txt"), llms.llmsTxt({ site, tools: site.tools, posts, categories: blog.CATEGORIES }));
+console.log("llms.txt -> dist/");
+
 // Brand files at the site root: favicons, manifest, link preview image.
 const brand = path.join(ROOT, "passive-array-brand");
 const copies = {
