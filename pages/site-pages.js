@@ -1260,7 +1260,7 @@ function youtubeSeoServicePage() {
     url: SITE + "/youtube-seo-service/",
     description: "Done-for-you YouTube SEO: keyword research, titles, descriptions, tags, thumbnail review, channel structure and monthly reporting, in Bengali or English.",
     provider: { "@type": "Person", name: FOUNDER.name, url: SITE + "/founder/", worksFor: { "@type": "Organization", name: BRAND, url: SITE } },
-    areaServed: "Worldwide", availableLanguage: ["en", "bn"],
+    areaServed: "Worldwide", availableChannel: { "@type": "ServiceChannel", availableLanguage: ["en", "bn"], serviceUrl: "https://passivearray.com/contact/" },
     hasOfferCatalog: { "@type": "OfferCatalog", name: "YouTube SEO packages", itemListElement: packages.map((p) => ({ "@type": "Offer", itemOffered: { "@type": "Service", name: p.name, description: p.text } })) },
   };
   return site.shell({
