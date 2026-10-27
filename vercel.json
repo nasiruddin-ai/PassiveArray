@@ -110,7 +110,7 @@
       "statusCode": 301
     },
     {
-      "source": "/:tool(meta-tag-checker|serp-snippet-preview|schema-markup-generator|domain-finder|domain-age-checker|plagiarism-checker|jpg-to-pdf|seo-roi-calculator)/:rest*",
+      "source": "/:tool(meta-tag-checker|serp-snippet-preview|schema-markup-generator|domain-finder|domain-age-checker|plagiarism-checker|jpg-to-pdf|seo-roi-calculator)/:rest(.*)",
       "destination": "/",
       "statusCode": 301
     },
