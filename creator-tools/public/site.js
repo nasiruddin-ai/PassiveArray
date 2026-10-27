@@ -690,6 +690,160 @@
       });
     }
 
+    /* ---- account tabs ---- */
+    var accTabs = account.querySelectorAll("[data-acc-tab]");
+    function showTab(name) {
+      accTabs.forEach(function (b) { var on = b.getAttribute("data-acc-tab") === name; b.classList.toggle("on", on); b.setAttribute("aria-selected", on ? "true" : "false"); });
+      account.querySelectorAll("[data-acc-panel]").forEach(function (p) { p.hidden = p.getAttribute("data-acc-panel") !== name; });
+      if (name === "mcp") loadMcp();
+    }
+    accTabs.forEach(function (b) {
+      b.addEventListener("click", function () {
+        var name = b.getAttribute("data-acc-tab");
+        try { history.replaceState(null, "", name === "main" ? location.pathname + location.search : "#" + name); } catch (e) { /* ignore */ }
+        showTab(name);
+      });
+    });
+
+    /* ---- MCP ---- */
+    var mcpWrap = account.querySelector("[data-mcp]");
+    var mcpData = null, mcpLoaded = false, mcpNewKey = "", mcpClient = "claude";
+    var MCP_URL = "https://passivearray.com/mcp";
+    function mcpCall(action, body) {
+      var opts = { method: body ? "POST" : "GET", credentials: "same-origin", cache: "no-store" };
+      if (body) { opts.headers = { "Content-Type": "application/json" }; opts.body = JSON.stringify(body); }
+      return fetch("/api/mcp-account" + (action ? "?action=" + action : ""), opts)
+        .then(function (r) { return r.json(); })
+        .catch(function () { return { ok: false, error: "Could not reach the server." }; });
+    }
+    function mEsc(t) { return String(t == null ? "" : t).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;"); }
+    function mWhen(iso) {
+      if (!iso) return "Never";
+      var d = new Date(iso), s = (Date.now() - d.getTime()) / 1000;
+      if (s < 60) return "Just now";
+      if (s < 3600) return Math.round(s / 60) + " min ago";
+      if (s < 86400) return Math.round(s / 3600) + " h ago";
+      return d.toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
+    }
+    function snippet(text, label) {
+      return "<div class=\"mcp-snip\"><pre><code>" + mEsc(text) + "</code></pre><button type=\"button\" class=\"btn ghost\" data-mcp-copy=\"" + mEsc(text) + "\">" + (label || "Copy") + "</button></div>";
+    }
+    var CLIENTS = [
+      ["claude", "Claude"], ["chatgpt", "ChatGPT"], ["claude-code", "Claude Code"], ["cursor", "Cursor"],
+      ["vscode", "VS Code"], ["gemini", "Gemini CLI"], ["other", "Other clients"],
+    ];
+    function guideHtml(client) {
+      var key = mcpNewKey || "YOUR_KEY";
+      var urlKey = MCP_URL + "?key=" + key;
+      var keyHint = mcpNewKey ? "<p class=\"mcp-ok\">Your new key is already filled in below.</p>" : "<p class=\"muted\">Replace <code>YOUR_KEY</code> with a key from the API keys section below.</p>";
+      var urlWarn = "<p class=\"muted mcp-small\">The key is part of this URL, so treat the URL like a password. Revoke the key below if it ever leaks.</p>";
+      if (client === "claude") return keyHint +
+        "<ol><li>In Claude on the web or the desktop app, open <b>Settings → Connectors</b>.</li><li>Choose <b>Add custom connector</b> and name it <b>Passive Array</b>.</li><li>Paste this as the remote MCP server URL and press <b>Add</b>:</li></ol>" +
+        snippet(urlKey, "Copy URL") + "<ol start=\"4\"><li>In a chat, open the tools menu and switch Passive Array on. Then ask, for example: <i>How fast is @mkbhd growing this month?</i></li></ol>" + urlWarn;
+      if (client === "chatgpt") return keyHint +
+        "<ol><li>In ChatGPT, open <b>Settings → Apps &amp; Connectors → Advanced settings</b> and turn on <b>Developer mode</b>. It is only offered on some ChatGPT plans.</li><li>Back in Apps &amp; Connectors, choose <b>Create</b>, name it <b>Passive Array</b> and paste this as the MCP server URL:</li></ol>" +
+        snippet(urlKey, "Copy URL") + "<ol start=\"3\"><li>Set authentication to <b>No authentication</b> (the key is already in the URL), accept the prompt and save.</li><li>Pick Passive Array from the tools menu in a new chat.</li></ol>" + urlWarn;
+      if (client === "claude-code") return keyHint + "<p>Run this in a terminal, then start Claude Code and type <code>/mcp</code> to check it is connected:</p>" +
+        snippet("claude mcp add --transport http passive-array " + MCP_URL + " --header \"Authorization: Bearer " + key + "\"");
+      if (client === "cursor") return keyHint + "<p>Open <b>Cursor Settings → MCP → Add new MCP server</b>, or put this in <code>~/.cursor/mcp.json</code> (all projects) or <code>.cursor/mcp.json</code> (one project):</p>" +
+        snippet(JSON.stringify({ mcpServers: { "passive-array": { url: MCP_URL, headers: { Authorization: "Bearer " + key } } } }, null, 2));
+      if (client === "vscode") return keyHint + "<p>Put this in <code>.vscode/mcp.json</code> in your project, or run <b>MCP: Add Server</b> from the Command Palette and choose HTTP. Then use it from Copilot Chat in agent mode:</p>" +
+        snippet(JSON.stringify({ servers: { "passive-array": { type: "http", url: MCP_URL, headers: { Authorization: "Bearer " + key } } } }, null, 2));
+      if (client === "gemini") return keyHint + "<p>Add this to <code>~/.gemini/settings.json</code>, restart Gemini CLI and run <code>/mcp</code> to check it:</p>" +
+        snippet(JSON.stringify({ mcpServers: { "passive-array": { httpUrl: MCP_URL, headers: { Authorization: "Bearer " + key } } } }, null, 2));
+      return keyHint + "<p>Any client that supports remote MCP servers over HTTP (streamable HTTP transport) works. Use this server URL:</p>" + snippet(MCP_URL, "Copy URL") +
+        "<p>and send your key in a header:</p>" + snippet("Authorization: Bearer " + key) +
+        "<p>If the client only takes a URL, put the key in it instead:</p>" + snippet(urlKey, "Copy URL") + urlWarn;
+    }
+    function paintGuide() {
+      if (!mcpWrap) return;
+      var bar = mcpWrap.querySelector("[data-mcp-clients]");
+      bar.innerHTML = CLIENTS.map(function (c) { return "<button type=\"button\" role=\"tab\" class=\"mcp-client" + (c[0] === mcpClient ? " on" : "") + "\" aria-selected=\"" + (c[0] === mcpClient) + "\" data-mcp-client=\"" + c[0] + "\">" + mEsc(c[1]) + "</button>"; }).join("");
+      mcpWrap.querySelector("[data-mcp-guide]").innerHTML = guideHtml(mcpClient);
+    }
+    function paintMcp(d) {
+      if (!mcpWrap || !d) return;
+      mcpData = d;
+      var keysEl = mcpWrap.querySelector("[data-mcp-keys]");
+      keysEl.innerHTML = d.keys.length
+        ? "<div class=\"tablewrap\"><table class=\"mcp-table\"><thead><tr><th>Name</th><th>Key</th><th>Created</th><th>Last used</th><th></th></tr></thead><tbody>" +
+          d.keys.map(function (k) { return "<tr><td><b>" + mEsc(k.name) + "</b></td><td><code class=\"mcp-code\">" + mEsc(k.prefix) + "…</code></td><td>" + mEsc(mWhen(k.created)) + "</td><td>" + mEsc(mWhen(k.lastUsed)) + "</td><td class=\"num\"><button type=\"button\" class=\"btn ghost danger mcp-revoke\" data-mcp-revoke=\"" + mEsc(k.id) + "\">Revoke</button></td></tr>"; }).join("") +
+          "</tbody></table></div><p class=\"muted mcp-small\">" + d.keys.length + " of " + d.maxKeys + " keys.</p>"
+        : "<div class=\"mcp-empty\">No API keys yet. Generate one to get started.</div>";
+      var u = d.usage, pct = u.limit ? Math.max(0, Math.min(100, (u.remaining / u.limit) * 100)) : 0;
+      var reset = new Date(u.resetsAt);
+      mcpWrap.querySelector("[data-mcp-usage]").innerHTML =
+        "<div class=\"mcp-meter\"><div class=\"mcp-meter-top\"><span>Credits remaining today</span><b>" + u.remaining.toLocaleString("en-US") + " / " + u.limit.toLocaleString("en-US") + "</b></div><div class=\"mcp-bar\"><i style=\"width:" + pct.toFixed(1) + "%\"></i></div></div>" +
+        "<p class=\"muted mcp-small\">" + mEsc(u.plan) + " plan: " + u.limit.toLocaleString("en-US") + " credits a day, reset at 00:00 UTC (" + mEsc(reset.toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit" })) + " your time). Failed calls cost nothing." +
+        (u.plan === "Pro" ? "" : " <a href=\"#\" data-mcp-pro>Pro raises it to " + d.credits.pro.toLocaleString("en-US") + " a day.</a>") + "</p>";
+      var rows = mcpWrap.querySelector("[data-mcp-activity]");
+      rows.innerHTML = d.activity.length
+        ? d.activity.map(function (a) { return "<tr><td><code class=\"mcp-code\">" + mEsc(a.tool) + "</code></td><td>" + mEsc(a.arg || "") + "</td><td>" + mEsc(mWhen(a.at)) + "</td><td>" + (a.ok ? "<span class=\"pill good\">OK</span>" : "<span class=\"pill bad\" title=\"" + mEsc(a.error || "") + "\">Failed</span>") + "</td><td class=\"num\">" + a.credits + "</td></tr>"; }).join("")
+        : "<tr><td colspan=\"5\" class=\"muted\">No activity yet. Calls from your assistants show up here.</td></tr>";
+      mcpWrap.querySelector("[data-mcp-tools]").innerHTML = d.tools.map(function (t) {
+        return "<div class=\"mcp-tool\"><div class=\"mcp-tool-top\"><b>" + mEsc(t.title) + "</b><span class=\"pill\">" + t.credits + " credit" + (t.credits === 1 ? "" : "s") + "</span></div><code class=\"mcp-code\">" + mEsc(t.name) + "</code><p>" + mEsc(t.description) + "</p></div>";
+      }).join("");
+    }
+    function loadMcp() {
+      if (!mcpWrap) return;
+      paintGuide();
+      if (mcpLoaded) return;
+      mcpLoaded = true;
+      mcpCall("").then(function (d) {
+        if (d && d.ok) paintMcp(d);
+        else mcpWrap.querySelector("[data-mcp-usage]").innerHTML = "<p class=\"fmsg bad\">" + mEsc((d && d.error) || "Could not load MCP details.") + "</p>";
+      });
+    }
+    if (mcpWrap) {
+      mcpWrap.addEventListener("click", function (e) {
+        var t = e.target;
+        if (!t || !t.closest) return;
+        var cl = t.closest("[data-mcp-client]");
+        if (cl) { mcpClient = cl.getAttribute("data-mcp-client"); paintGuide(); return; }
+        var cp = t.closest("[data-mcp-copy]");
+        if (cp) {
+          navigator.clipboard.writeText(cp.getAttribute("data-mcp-copy")).then(function () { var was = cp.textContent; cp.textContent = "Copied"; setTimeout(function () { cp.textContent = was; }, 1500); });
+          return;
+        }
+        if (t.closest("[data-mcp-copykey]")) {
+          var b = t.closest("[data-mcp-copykey]");
+          navigator.clipboard.writeText(mcpNewKey).then(function () { b.textContent = "Copied"; setTimeout(function () { b.textContent = "Copy"; }, 1500); });
+          return;
+        }
+        if (t.closest("[data-mcp-pro]")) { e.preventDefault(); showTab("main"); var up = account.querySelector("[data-upgrade]"); if (up) up.scrollIntoView({ behavior: "smooth", block: "center" }); return; }
+        var rv = t.closest("[data-mcp-revoke]");
+        if (rv) {
+          if (!confirm("Revoke this key? Any assistant using it stops working at once.")) return;
+          rv.disabled = true;
+          mcpCall("revoke", { id: rv.getAttribute("data-mcp-revoke") }).then(function (d) {
+            if (d && d.ok) paintMcp(d); else { rv.disabled = false; alert((d && d.error) || "Could not revoke the key."); }
+          });
+        }
+      });
+      var mcpForm = mcpWrap.querySelector("[data-mcp-form]");
+      var mcpMsg = mcpWrap.querySelector("[data-mcp-msg]");
+      mcpForm.addEventListener("submit", function (e) {
+        e.preventDefault();
+        var btn = mcpForm.querySelector("button");
+        btn.disabled = true;
+        mcpMsg.textContent = "";
+        mcpCall("create", { name: mcpForm.elements.name.value }).then(function (d) {
+          btn.disabled = false;
+          if (!d || !d.ok) { mcpMsg.className = "fmsg bad"; mcpMsg.textContent = (d && d.error) || "Could not create a key."; return; }
+          mcpNewKey = d.created.key;
+          mcpForm.reset();
+          var rev = mcpWrap.querySelector("[data-mcp-reveal]");
+          rev.hidden = false;
+          rev.querySelector("[data-mcp-newkey]").textContent = mcpNewKey;
+          mcpMsg.className = "fmsg good";
+          mcpMsg.textContent = "Key created. The setup guide above now uses it.";
+          paintMcp(d);
+          paintGuide();
+        });
+      });
+    }
+    if (location.hash === "#mcp") showTab("mcp");
+
     /* ---- watchlist ---- */
     var watchWrap = account.querySelector("[data-watch]");
     var watchData = null;

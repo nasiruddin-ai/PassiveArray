@@ -120,6 +120,7 @@ function privacyPage() {
     <p><strong>Live YouTube and Twitch tools.</strong> The channel link or handle you enter is sent to our server, which asks the official YouTube Data API or Twitch API for that channel's public statistics and returns them to you. Results are cached on the server for up to six hours so repeated lookups are fast and the free API allowance lasts. The cache is keyed by channel, not by you.</p>
     <p><strong>Calculators.</strong> Instagram, TikTok and X calculators run entirely in your browser. The numbers you type never leave your device.</p>
     <p><strong>AI generators.</strong> Hashtag, bio, idea and growth-plan generators work from built-in templates in your browser. When AI writing is switched on server-side, the text you typed is sent to Anthropic's Claude API to write the result, under <a href="https://www.anthropic.com/legal/privacy" rel="noopener">Anthropic's privacy policy</a>. Anthropic does not train on API inputs. Nothing about you other than that text is included.</p>
+    <p><strong>MCP for AI assistants.</strong> If you create an MCP API key on your account page, we store a fingerprint (a one-way hash) of the key, never the key itself, plus its name and when it was last used. For each call an assistant makes we keep, for 30 days, the tool name, the channel, video or keyword it asked about, the time, whether it worked and the credits used, so you can see your activity. Your assistant's conversation is never sent to us; only the tool request is. Revoking a key or deleting your data removes the key at once.</p>
 
     <h2>Sign-up, newsletter and contact forms</h2>
     <p>When you sign up, subscribe or send a message, we receive your email address, the platform or topic you picked, your message if any, and the page you sent it from. It is forwarded to the mailing and inbox tool we use to send the newsletter and reply to you. You can unsubscribe from any email with one click, or <a href="../contact/">ask us</a> to delete your address.</p>
@@ -292,10 +293,70 @@ function authPage(mode) {
 const loginPage = () => authPage("signin");
 const signupPage = () => authPage("signup");
 
+// The MCP tab: connect AI assistants to Passive Array data (lib/api-mcp.js). Filled by site.js.
+function mcpPanel() {
+  return `<div data-acc-panel="mcp" data-mcp hidden>
+    <div class="mcp-head">
+      <h2>YouTube data in your AI assistant</h2>
+      <p class="muted">Connect Claude, ChatGPT, Cursor, VS Code and other assistants to Passive Array. Ask about any channel's stats and growth, comments, keywords that rank and videos that are breaking out, and get measured numbers back with their source.</p>
+    </div>
+
+    <div class="card mcp-card">
+      <h3>Setup guide</h3>
+      <p class="muted mcp-sub">Pick your assistant and follow its steps. Generate a key below first; it fills into every snippet here.</p>
+      <div class="mcp-clients" role="tablist" aria-label="AI assistant" data-mcp-clients></div>
+      <div class="mcp-guide" data-mcp-guide></div>
+    </div>
+
+    <div class="card mcp-card">
+      <div class="mcp-row">
+        <div>
+          <h3>API keys</h3>
+          <p class="muted mcp-sub">Keys connect assistants to your account at <code class="mcp-code">https://passivearray.com/mcp</code>. Each key is shown once; we only keep a fingerprint of it.</p>
+        </div>
+        <form class="mcp-new" data-mcp-form novalidate>
+          <input type="text" name="name" maxlength="40" placeholder="Key name, e.g. Claude" aria-label="Key name" autocomplete="off">
+          <button type="submit" class="btn">Generate new key</button>
+        </form>
+      </div>
+      <span class="fmsg" data-mcp-msg></span>
+      <div class="mcp-reveal" data-mcp-reveal hidden>
+        <b>Your new key. Copy it now; it will not be shown again.</b>
+        <div class="mcp-keyline"><code data-mcp-newkey></code><button type="button" class="btn ghost" data-mcp-copykey>Copy</button></div>
+      </div>
+      <div data-mcp-keys></div>
+    </div>
+
+    <div class="card mcp-card">
+      <h3>Usage</h3>
+      <div class="mcp-usage" data-mcp-usage><p class="muted">Loading…</p></div>
+    </div>
+
+    <div class="card mcp-card">
+      <h3>Recent activity</h3>
+      <div class="tablewrap"><table class="mcp-table">
+        <thead><tr><th>Tool</th><th>Asked about</th><th>Time</th><th>Status</th><th class="num">Credits</th></tr></thead>
+        <tbody data-mcp-activity><tr><td colspan="5" class="muted">No activity yet.</td></tr></tbody>
+      </table></div>
+    </div>
+
+    <div class="card mcp-card">
+      <h3>What your assistant can do</h3>
+      <p class="muted mcp-sub">Every tool reads the official YouTube or Twitch API, or data Passive Array has measured itself. Nothing is modelled, and there is no made-up search volume.</p>
+      <div class="mcp-tools" data-mcp-tools></div>
+    </div>
+  </div>`;
+}
+
 function accountPage() {
   const body = `
   ${head("Account", "Your account", "Your watchlist, your plan, your email preferences and your data.")}
   <div data-account hidden>
+    <nav class="acc-tabs" role="tablist" aria-label="Account sections">
+      <button type="button" role="tab" class="on" aria-selected="true" data-acc-tab="main">Account</button>
+      <button type="button" role="tab" aria-selected="false" data-acc-tab="mcp">MCP <span class="newpill">New</span></button>
+    </nav>
+    <div data-acc-panel="main">
     <div class="card wl" data-watch style="margin-bottom:24px">
       <div class="wl-head">
         <div>
@@ -352,7 +413,7 @@ function accountPage() {
       <div class="card">
         <div data-plan-free>
           <h3 style="margin-bottom:6px">Passive Array Pro</h3>
-          <p class="muted" style="font-size:.92rem;margin-bottom:14px">Watch up to 100 channels, get the Monday email with every mover on your list, and export anything to CSV. Every tool stays free either way.</p>
+          <p class="muted" style="font-size:.92rem;margin-bottom:14px">Watch up to 100 channels, get the Monday email with every mover on your list, export anything to CSV and get 1,000 MCP credits a day for your AI assistants. Every tool stays free either way.</p>
           <div class="plan-prices">
             <button type="button" class="btn" data-upgrade="monthly">$9 a month</button>
             <button type="button" class="btn ghost" data-upgrade="yearly">$79 a year</button>
@@ -376,6 +437,8 @@ function accountPage() {
         <span class="fmsg" data-delete-msg></span>
       </div>
     </div>
+    </div>
+    ${mcpPanel()}
   </div>
   <div class="card" data-account-out hidden>
     <h3 style="margin-bottom:8px">You are not signed in</h3>
@@ -632,6 +695,7 @@ function pricingPage() {
         <li><b>Research feeds:</b> keywords, outlier videos and Shorts</li>
         <li><b>No account required.</b> No email, no card, no Google sign-in</li>
         <li><b>Watch 3 channels</b> with a free account, no alerts</li>
+        <li><b>MCP for AI assistants:</b> 50 credits a day to use Passive Array data in Claude, ChatGPT or Cursor (free account)</li>
         <li><b>No ads</b> between you and the answer</li>
       </ul>
       <a class="btn ghost wide" href="../creator-tools/" style="margin-top:auto">Start using them</a>
@@ -645,6 +709,7 @@ function pricingPage() {
         <li><b>Watch up to 100 channels.</b> Daily snapshots, 7-day and 30-day change on your account page</li>
         <li><b>The Monday email:</b> every channel on your list, sorted by who moved most</li>
         <li><b>CSV export</b> of your watchlist and the outlier and Shorts feeds</li>
+        <li><b>1,000 MCP credits a day</b> for your AI assistants, instead of 50</li>
         <li><b>You keep the site ad-free</b> for everyone else</li>
       </ul>
       <a class="btn wide" href="../account/" style="margin-top:auto" data-pro-cta>Go Pro from your account</a>

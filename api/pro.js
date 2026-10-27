@@ -6,6 +6,8 @@
 //   /api/billing        -> /api/pro?fn=billing          lib/api-billing.js
 //   /api/billing-webhook -> /api/pro?fn=billing-webhook lib/api-billing-webhook.js (Lemon Squeezy)
 //   /api/channel        -> /api/pro?fn=channel          lib/api-channel.js      (your own channel)
+//   /mcp                -> /api/pro?fn=mcp              lib/api-mcp.js          (MCP server for AI assistants)
+//   /api/mcp-account    -> /api/pro?fn=mcp-account      lib/api-mcp-account.js  (MCP keys, credits, activity)
 //
 // Body parsing is off so the billing webhook signature can be checked over the exact bytes
 // it sent; the raw body is read once here and parsed as JSON for the others.
@@ -18,6 +20,8 @@ const HANDLERS = {
   "billing": () => require("../lib/api-billing.js"),
   "billing-webhook": () => require("../lib/api-billing-webhook.js"),
   "channel": () => require("../lib/api-channel.js"),
+  "mcp": () => require("../lib/api-mcp.js"),
+  "mcp-account": () => require("../lib/api-mcp-account.js"),
 };
 
 function readRaw(req) {

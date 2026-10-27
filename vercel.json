@@ -39,6 +39,18 @@
     {
       "source": "/api/channel",
       "destination": "/api/pro?fn=channel"
+    },
+    {
+      "source": "/mcp",
+      "destination": "/api/pro?fn=mcp"
+    },
+    {
+      "source": "/mcp/",
+      "destination": "/api/pro?fn=mcp"
+    },
+    {
+      "source": "/api/mcp-account",
+      "destination": "/api/pro?fn=mcp-account"
     }
   ],
   "headers": [
@@ -84,7 +96,7 @@
   },
   "redirects": [
     {
-      "source": "/:path((?!api/|creator-tools/api/|research/api/).*)",
+      "source": "/:path((?!api/|creator-tools/api/|research/api/|mcp).*)",
       "has": [
         {
           "type": "host",

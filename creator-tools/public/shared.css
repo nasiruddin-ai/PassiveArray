@@ -998,3 +998,53 @@ table.cmp tbody th[scope="row"] { font-weight: 500; text-align: left; text-trans
 @media (max-width: 400px) {
   .hsearch button { display: none; } /* Enter still submits the search */
 }
+
+/* ---------------------------------------------------------------- account tabs and MCP */
+.acc-tabs { display: flex; gap: 6px; border-bottom: 1px solid var(--line); margin-bottom: 24px; overflow-x: auto; }
+.acc-tabs button { background: none; border: 0; border-bottom: 2px solid transparent; padding: 10px 14px; font: inherit; font-weight: 600; font-size: .95rem; color: var(--muted); cursor: pointer; white-space: nowrap; margin-bottom: -1px; display: inline-flex; align-items: center; gap: 8px; }
+.acc-tabs button:hover { color: var(--text); }
+.acc-tabs button.on { color: var(--text); border-bottom-color: var(--teal); }
+.newpill { font-size: .66rem; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; background: var(--teal); color: #fff; border-radius: 999px; padding: 2px 7px; }
+.mcp-head { margin-bottom: 18px; }
+.mcp-head h2 { margin: 0 0 6px; font-size: 1.5rem; }
+.mcp-head p { max-width: 760px; }
+.mcp-card { margin-bottom: 18px; }
+.mcp-card h3 { margin: 0 0 4px; }
+.mcp-sub { font-size: .9rem; margin: 0 0 14px; }
+.mcp-small { font-size: .82rem; margin: 10px 0 0; }
+.mcp-code { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: .82rem; background: var(--bg); border: 1px solid var(--line); border-radius: 6px; padding: 1px 6px; word-break: break-all; }
+.mcp-clients { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 16px; }
+.mcp-client { height: 38px; padding: 0 14px; border-radius: 10px; border: 1px solid var(--line); background: var(--bg); color: var(--text); font: inherit; font-weight: 600; font-size: .88rem; cursor: pointer; }
+.mcp-client:hover { border-color: var(--teal); }
+.mcp-client.on { background: var(--teal); border-color: var(--teal); color: #fff; }
+.mcp-guide { background: var(--bg); border: 1px solid var(--line); border-radius: 14px; padding: 16px 18px; font-size: .93rem; }
+.mcp-guide ol { margin: 8px 0; padding-left: 22px; }
+.mcp-guide li { margin: 6px 0; line-height: 1.55; }
+.mcp-guide p { margin: 8px 0; }
+.mcp-guide code { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: .85em; }
+.mcp-ok { color: var(--good); font-weight: 600; }
+.mcp-snip { display: flex; gap: 10px; align-items: flex-start; margin: 10px 0; }
+.mcp-snip pre { flex: 1; min-width: 0; margin: 0; padding: 12px 14px; background: var(--card); border: 1px solid var(--line); border-radius: 10px; overflow-x: auto; font-size: .82rem; line-height: 1.5; }
+.mcp-snip .btn { height: 38px; flex: none; }
+.mcp-row { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 14px; align-items: flex-start; }
+.mcp-row > div { flex: 1 1 320px; }
+.mcp-new { display: flex; gap: 8px; flex-wrap: wrap; }
+.mcp-new input { height: 44px; min-width: 200px; padding: 0 12px; border-radius: 12px; border: 1px solid var(--line); background: var(--bg); color: var(--text); font: inherit; }
+.mcp-reveal { margin: 14px 0; padding: 14px 16px; border-radius: 12px; background: var(--good-bg); border: 1px solid var(--good); font-size: .9rem; }
+.mcp-keyline { display: flex; gap: 10px; align-items: center; margin-top: 8px; flex-wrap: wrap; }
+.mcp-keyline code { flex: 1; min-width: 0; word-break: break-all; font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: .85rem; background: var(--card); padding: 8px 10px; border-radius: 8px; }
+.mcp-empty { padding: 18px; border: 1px dashed var(--line); border-radius: 12px; color: var(--muted); font-size: .92rem; margin-top: 12px; }
+.mcp-table { width: 100%; border-collapse: collapse; font-size: .9rem; margin-top: 10px; }
+.mcp-table th, .mcp-table td { text-align: left; padding: 10px; border-bottom: 1px solid var(--line); vertical-align: middle; }
+.mcp-table th { color: var(--muted); font-weight: 600; font-size: .82rem; }
+.mcp-table .num { text-align: right; }
+.mcp-revoke { height: 34px; padding: 0 12px; font-size: .82rem; }
+.mcp-meter { padding: 14px 16px; border: 1px solid var(--line); border-radius: 12px; background: var(--bg); margin-top: 8px; }
+.mcp-meter-top { display: flex; justify-content: space-between; gap: 10px; font-size: .92rem; margin-bottom: 10px; }
+.mcp-bar { height: 8px; border-radius: 99px; background: var(--line); overflow: hidden; }
+.mcp-bar i { display: block; height: 100%; background: var(--teal); border-radius: 99px; }
+.mcp-tools { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 12px; }
+.mcp-tool { border: 1px solid var(--line); border-radius: 12px; padding: 14px; background: var(--bg); }
+.mcp-tool-top { display: flex; justify-content: space-between; gap: 8px; align-items: center; margin-bottom: 6px; }
+.mcp-tool p { margin: 8px 0 0; font-size: .85rem; color: var(--muted); line-height: 1.5; }
+@media (max-width: 640px) { .mcp-snip { flex-direction: column; } .mcp-snip .btn { align-self: flex-end; } .mcp-new input { min-width: 0; flex: 1; } }

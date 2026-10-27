@@ -387,6 +387,7 @@ module.exports = async (req, res) => {
 
   if (action === "delete") {
     if (store.enabled()) {
+      try { await require("../lib/mcp.js").revokeAll(session.e); } catch (e) { console.error("auth delete mcp: " + e.message); }
       try { await users.remove(session.e); } catch (e) { console.error("auth delete store: " + e.message); }
     }
     await tell({ kind: "delete", email: session.e, message: "Account deletion requested from the account page.", receivedAt: new Date().toISOString() });
