@@ -441,9 +441,22 @@ function accountPage() {
     ${mcpPanel()}
   </div>
   <div class="card" data-account-out hidden>
-    <h3 style="margin-bottom:8px">You are not signed in</h3>
-    <p class="muted" style="margin-bottom:16px">Sign in by email to keep a watchlist and manage your preferences. The tools do not need it.</p>
-    <a class="btn" href="../login/">Go to sign in</a>
+    <div data-account-out-default>
+      <h3 style="margin-bottom:8px">You are not signed in</h3>
+      <p class="muted" style="margin-bottom:16px">Sign in by email to keep a watchlist and manage your preferences. The tools do not need it.</p>
+      <a class="btn" href="../login/">Go to sign in</a>
+    </div>
+    <div data-account-out-mcp hidden>
+      <h3 style="margin-bottom:8px">Connect Passive Array to your AI assistant</h3>
+      <p class="muted" style="margin-bottom:12px">Use live YouTube and Twitch data in Claude, ChatGPT, Cursor, VS Code and other MCP clients. You need a free account to get an API key, so we can give you your own daily credits.</p>
+      <ul class="muted" style="margin:0 0 16px 18px;line-height:1.7">
+        <li>Free: 50 credits a day, no card</li>
+        <li>11 tools: channel stats, growth history, monetization check, keyword research, outlier videos and more</li>
+        <li>Takes about a minute: sign up, create a key, paste it into your assistant</li>
+      </ul>
+      <a class="btn" href="../signup/?next=%2Faccount%2F%23mcp">Create a free account</a>
+      <a class="btn ghost" style="margin-left:8px" href="../login/?next=%2Faccount%2F%23mcp">I have an account</a>
+    </div>
   </div>
   <div class="card" data-account-loading>
     <p class="muted">Checking your session…</p>

@@ -291,6 +291,10 @@
     var againBtn = authCard.querySelector("[data-login-again]");
 
     var usePassword = false;   // false means "email me a link"
+    // Keep ?next= when switching between sign-in and sign-up.
+    if (/[?&]next=/.test(location.search)) {
+      authCard.querySelectorAll('a[href="../signup/"], a[href="../login/"]').forEach(function (a) { a.setAttribute("href", a.getAttribute("href") + location.search.replace(/[?&]token=[^&]*/, "")); });
+    }
     var methods = { link: false, google: false, password: false };
 
     function panel(which) {
@@ -337,6 +341,8 @@
 
       var action = usePassword ? (signupMode ? "register" : "password") : "request";
       var payload = { email: email, source: location.pathname, website: form.elements.website.value };
+      var nextPath = new URLSearchParams(location.search).get("next");
+      if (nextPath) payload.next = nextPath;
       if (usePassword) payload.password = pwInput.value;
 
       authCall(action, payload).then(function (res) {
@@ -530,6 +536,7 @@
               document.querySelectorAll("[data-google-slot]").forEach(function (s) { s.hidden = true; });
               document.documentElement.classList.remove("has-google");
               toast(r.isNew ? "Welcome. You are signed up as " + r.email + "." : "Signed in as " + r.email + ".");
+              if (document.querySelector("[data-account]")) location.reload();
             });
           },
         });
@@ -576,6 +583,10 @@
         marker(null);
         paintHeader();
         showAccount("out");
+        if (location.hash === "#mcp") {
+          var mcpOut = document.querySelector("[data-account-out-mcp]");
+          if (mcpOut) { mcpOut.hidden = false; signedOut.querySelector("[data-account-out-default]").hidden = true; }
+        }
         return;
       }
       marker(res.email);

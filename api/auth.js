@@ -302,6 +302,8 @@ module.exports = async (req, res) => {
   }
 
   /* --- ask for a sign-in link ------------------------------------------- */
+  // Same-site path to return to after the link is used, e.g. "/account/#mcp".
+  function safeNext(n) { return typeof n === "string" && n.length < 200 && /^\/(?!\/)[\w\-./#%?=&]*$/.test(n); }
   if (action === "request") {
     if (body.website) return send(res, 200, { ok: true }); // honeypot
     const email = String(body.email || "").trim().toLowerCase();
@@ -320,7 +322,7 @@ module.exports = async (req, res) => {
     await tell({
       kind: "login",
       email,
-      link: siteUrl(req) + "/login/?token=" + encodeURIComponent(token),
+      link: siteUrl(req) + "/login/?token=" + encodeURIComponent(token) + (safeNext(body.next) ? "&next=" + encodeURIComponent(body.next) : ""),
       minutes: LINK_MINUTES,
       source: String(body.source || "").slice(0, 300),
       receivedAt: new Date().toISOString(),
