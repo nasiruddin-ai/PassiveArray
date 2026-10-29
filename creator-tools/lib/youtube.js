@@ -502,6 +502,38 @@ function errorBody(e) {
   return { ok: false, code, error: messages[code] || e.message || "Something went wrong." };
 }
 
+/* The largest YouTube channels, read live. YouTube publishes no ranking, so this is a fixed
+   list of channel IDs known to sit at the top, re-sorted by their current public counts.
+   One channels.list call (1 quota unit) covers all of them, cached for six hours. */
+const TOP_CHANNEL_IDS = [
+  "UCX6OQ3DkcsbYNE6H8uQQuVA", "UCq-Fj5jknLsUf-MWSy4_brA", "UCbCmjCuTUZos6Inko4u57UQ", "UCpEhnqL0y41EpW2TvWAHD7Q",
+  "UCvlE5gTbOvjiolFlEm-c_Ow", "UCk8GzjMOrta8yxDcKfylJYw", "UCJplp5SjeGSdVdwsfb9Q7lQ", "UCFFbwnve3yF62-tVXkTyHqg",
+  "UC-lHJZR3Gqxm24_Vd_AJ5Yw", "UCJ5v_MCY6GNUBTO8-D3XoAg", "UCyoXW-Dse7fURq30EWl_CUA", "UC6-F5tO8uklgE9Zy8IvbdFw",
+  "UCOmHUn--16B90oW2L6FRR3A", "UCppHT7SZKKvar4Oc9J4oljQ", "UC295-Dw_tDNtZXFeAPAW6Aw", "UCIwFjwMjI0y7PDBVEO9-bkQ",
+  "UC3IZKseVpdzPSBaWxBxundA", "UCffDXn7ycAzwL2LDlbyWOTw", "UCcdwLMPsaU2ezNSJU1nFoBQ", "UC2tsySbe9TNrI-xh2lximHA",
+  "UCEdvpU2pFRCVqU6yIPyTpMQ", "UC0C-w0YjGpqDXGB8IHb662A", "UCqECaJ8Gagnn7YCbPEzWH6g", "UCmBA_wu8xGg1OfOkfW13Q0Q",
+  "UCfM3zsQsOnfWNUppiycmBuw", "UC9CoOnJkIBMdeijd9qYoT_g", "UCRijo3ddMTht_IHyNSNXpNQ", "UCBnZ16ahKA2DZ_T5W0FPUXg",
+  "UCiGm_E4ZwYSHV3bcW1pnSeQ", "UC3gNmTGu-TTbFPpfSs5kNkg",
+];
+function topChannels() {
+  return cached("top-channels", async () => {
+    const data = await yt("channels", { part: "snippet,statistics", id: TOP_CHANNEL_IDS.join(","), maxResults: 50 });
+    return (data.items || [])
+      .filter((c) => c.statistics && !c.statistics.hiddenSubscriberCount)
+      .map((c) => ({
+        id: c.id,
+        title: c.snippet.title,
+        handle: c.snippet.customUrl || "",
+        country: c.snippet.country || "",
+        thumb: c.snippet.thumbnails && (c.snippet.thumbnails.default || {}).url,
+        subscribers: n(c.statistics.subscriberCount),
+        views: n(c.statistics.viewCount),
+        videos: n(c.statistics.videoCount),
+      }))
+      .sort((a, b) => b.subscribers - a.subscribers);
+  }).then((channels) => ({ channels, checkedAt: new Date().toISOString() }));
+}
+
 // Same shape as the other tools' libs: returns { code, body } for the HTTP layer.
 async function handleRequest(action, params = {}) {
   if (!settings.apiKey) return { code: 503, body: errorBody({ code: "no_key" }) };
@@ -520,6 +552,7 @@ async function handleRequest(action, params = {}) {
     if (action === "lookalike") return { code: 200, body: { ok: true, ...(await lookalike(params.channel)) } };
     if (action === "videos") return { code: 200, body: { ok: true, videos: await getVideos(params.ids) } };
     if (action === "comments") return { code: 200, body: { ok: true, ...(await getComments(params.video, { max: params.max, order: params.order })) } };
+    if (action === "top") return { code: 200, body: { ok: true, ...(await topChannels()) } };
     if (action === "monetization") return { code: 200, body: { ok: true, ...(await monetizationCheck(params.channel)) } };
     return { code: 404, body: { ok: false, code: "action", error: "Unknown action." } };
   } catch (e) {

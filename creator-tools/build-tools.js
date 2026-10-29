@@ -237,6 +237,8 @@ function fieldHtml(f, prefix = "", wide = false) {
   if (f.type === "select") {
     const opts = (f.options || []).map(([v, l]) => `<option value="${esc(v)}"${String(f.value ?? "") === String(v) ? " selected" : ""}>${esc(l)}</option>`).join("");
     control = `<select id="${id}" name="${id}">${opts}</select>`;
+  } else if (f.type === "file") {
+    control = `<input type="file" id="${id}" name="${id}" accept="${esc(f.accept || "image/*")}"${req}>`;
   } else if (f.type === "textarea") {
     control = `<textarea id="${id}" name="${id}" rows="${f.rows || 6}" placeholder="${esc(f.placeholder || "")}"${req}></textarea>`;
   } else {
@@ -383,7 +385,7 @@ function toolPage(template, t) {
     ...tools.filter((o) => o.platform !== t.platform && intentOf(o) === intentOf(t)).slice(0, 1),
   ]).slice(0, 4).map((o) => `<a href="../${o.slug}/" data-k="${esc(INTENTS[intentOf(o)].label.split(" ")[0])}">${esc(anchorName(o))}</a><p class="next-d">${esc(o.short)}</p>`).join("");
   const clientTool = {
-    slug: t.slug, name: t.name, platform: t.platform, api: t.api || null, action: t.action || null,
+    slug: t.slug, name: t.name, platform: t.platform, api: t.api || null, action: t.action || null, autorun: !!t.autorun,
     compare: t.compare ? { labels: t.compare.labels, fields: t.compare.fields.map((f) => ({ id: f.id, label: f.label, type: f.type })) } : null,
     inputs: (t.inputs || []).map((f) => ({ id: f.id, label: f.label, type: f.type, optional: !!f.optional })),
   };

@@ -1946,6 +1946,150 @@
     });
   }
 
+
+  /* ---------------------------------------------- timestamp link generator */
+  function secondsFrom(raw) {
+    var s = String(raw || "").trim().toLowerCase();
+    if (!s) return null;
+    if (/^\d+$/.test(s)) return parseInt(s, 10);
+    var hms = s.match(/^(?:(\d+)h)?\s*(?:(\d+)m)?\s*(?:(\d+)s)?$/);
+    if (hms && (hms[1] || hms[2] || hms[3])) return (+hms[1] || 0) * 3600 + (+hms[2] || 0) * 60 + (+hms[3] || 0);
+    var parts = s.split(":");
+    if (parts.length < 2 || parts.length > 3 || parts.some(function (p) { return !/^\d+$/.test(p); })) return null;
+    var nums = parts.map(Number);
+    if (nums[nums.length - 1] > 59 || (nums.length === 3 && nums[1] > 59)) return null;
+    return nums.length === 3 ? nums[0] * 3600 + nums[1] * 60 + nums[2] : nums[0] * 60 + nums[1];
+  }
+  function clock(sec) {
+    var h = Math.floor(sec / 3600), m = Math.floor((sec % 3600) / 60), x = sec % 60;
+    var two = function (k) { return (k < 10 ? "0" : "") + k; };
+    return h ? h + ":" + two(m) + ":" + two(x) : m + ":" + two(x);
+  }
+
+  COMPUTE["youtube-timestamp-link-generator"] = function (v) {
+    if (/\/shorts\//.test(String(v.video))) return { error: "Shorts do not support start times. Use a regular video link." };
+    var id = videoIdFrom(v.video);
+    if (!id) return { error: "That does not look like a YouTube link or video ID. Paste a watch link, a youtu.be link, or the 11-character ID." };
+    var sec = secondsFrom(v.time);
+    if (sec == null) return { error: "Write the time as 90, 1:30, 1:02:15 or 1m30s." };
+    var watch = "https://www.youtube.com/watch?v=" + id + "&t=" + sec + "s";
+    var short = "https://youtu.be/" + id + "?t=" + sec;
+    var embed = "<iframe width=\"560\" height=\"315\" src=\"https://www.youtube.com/embed/" + id + "?start=" + sec + "\" title=\"YouTube video player\" frameborder=\"0\" allow=\"accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture\" allowfullscreen></iframe>";
+    var rows = [["Watch link", watch], ["Short link", short], ["Embed code", embed], ["In a comment or description", clock(sec)]];
+    return {
+      hero: { label: "Starts at", value: esc(clock(sec)), note: "<a href=\"" + esc(watch) + "\" target=\"_blank\" rel=\"noopener\">Test the link</a> (" + fmt(sec) + " seconds in)" },
+      table: {
+        head: ["Format", "Copy this", ""],
+        rows: rows.map(function (r, i) {
+          return [{ html: "<b>" + esc(r[0]) + "</b>" }, { html: "<code style=\"word-break:break-all\">" + esc(r[1]) + "</code>" }, { html: "<button type=\"button\" class=\"btn ghost\" data-copy=\"" + i + "\">Copy</button>" }];
+        }),
+      },
+      note: "Typed into a comment, a time like " + esc(clock(sec)) + " becomes a link to that moment in the same video. In a description, a list of times starting at 0:00 becomes chapters.",
+      after: function (root) {
+        Array.prototype.forEach.call(root.querySelectorAll("[data-copy]"), function (b) {
+          b.addEventListener("click", function () {
+            navigator.clipboard.writeText(rows[+b.getAttribute("data-copy")][1]).then(function () { b.textContent = "Copied"; setTimeout(function () { b.textContent = "Copy"; }, 1500); });
+          });
+        });
+      },
+    };
+  };
+
+  /* ---------------------------------------------- most subscribed channels */
+  COMPUTE["youtube-most-subscribed-channels"] = function (v, d) {
+    var list = (d.channels || []).slice();
+    var key = v.sort || "subscribers";
+    list.sort(function (a, b) { return b[key] - a[key]; });
+    if (!list.length) return { error: "No channel data came back. Try again in a minute." };
+    return {
+      hero: { label: key === "subscribers" ? "Most subscribed" : key === "views" ? "Most viewed" : "Most videos", value: esc(list[0].title), note: compact(list[0][key]) + " " + key + ", read live from the YouTube Data API on " + esc(dateStr(d.checkedAt)) },
+      table: {
+        head: ["#", "Channel", "Subscribers", "Total views", "Videos"],
+        rows: list.map(function (c, i) {
+          var url = "https://www.youtube.com/channel/" + c.id;
+          return [
+            String(i + 1),
+            { html: "<span style=\"display:flex;align-items:center;gap:10px\">" + (c.thumb ? "<img src=\"" + esc(c.thumb) + "\" alt=\"\" width=\"32\" height=\"32\" loading=\"lazy\" style=\"border-radius:50%\">" : "") + "<span><a href=\"" + esc(url) + "\" target=\"_blank\" rel=\"noopener\">" + esc(c.title) + "</a>" + (c.country ? " <small style=\"color:var(--muted)\">" + esc(c.country) + "</small>" : "") + "<br><small><a href=\"../youtube-subscriber-count-checker/?channel=" + encodeURIComponent(c.id) + "\">Full stats</a></small></span></span>" },
+            compact(c.subscribers), compact(c.views), fmt(c.videos),
+          ];
+        }),
+      },
+      note: "YouTube publishes no official ranking. This is the list of channels known to sit at the top, sorted by their current public counts. YouTube rounds the subscriber counts it makes public, so small gaps are not exact. Topic channels YouTube generates automatically, such as Music or Gaming, are left out.",
+    };
+  };
+
+  /* ---------------------------------------------- thumbnail tester */
+  COMPUTE["youtube-thumbnail-tester"] = function (v) {
+    var input = form.elements.image;
+    var file = input && input.files && input.files[0];
+    if (!file) return { error: "Choose an image file first." };
+    if (!/^image\/(jpeg|png|gif|webp)$/.test(file.type)) return { error: "That file is not a JPG, PNG, GIF or WebP image." };
+    var title = String(v.title || "").trim() || "Your video title goes here, written the way viewers will see it";
+    var channel = String(v.channel || "").trim() || "Your channel";
+    var url = URL.createObjectURL(file);
+    return {
+      blocks: ["<div id=\"tt-out\" class=\"card\"><p class=\"note\">Reading the image…</p></div>"],
+      after: function (root) {
+        var img = new Image();
+        img.onerror = function () { root.querySelector("#tt-out").innerHTML = "<div class=\"error\">The browser could not open that image.</div>"; };
+        img.onload = function () { root.querySelector("#tt-out").outerHTML = thumbReport(img, file, url, title, channel); };
+        img.src = url;
+      },
+    };
+  };
+
+  function edgeAt(lum, k, sw) { return Math.abs(lum[k] - lum[k + 1]) > 40 || Math.abs(lum[k] - lum[k + sw]) > 40; }
+
+  function thumbReport(img, file, url, title, channel) {
+    var w = img.naturalWidth, h = img.naturalHeight, ratio = w / h, mb = file.size / 1048576;
+    // Contrast and clutter are measured on a 168px-wide copy: the size of a suggested-video thumbnail.
+    var sw = 168, sh = Math.max(2, Math.round(168 / ratio));
+    var cv = document.createElement("canvas"); cv.width = sw; cv.height = sh;
+    var cx = cv.getContext("2d"); cx.drawImage(img, 0, 0, sw, sh);
+    var px = cx.getImageData(0, 0, sw, sh).data, lum = [], sum = 0;
+    for (var i = 0; i < px.length; i += 4) { var L = 0.2126 * px[i] + 0.7152 * px[i + 1] + 0.0722 * px[i + 2]; lum.push(L); sum += L; }
+    var mean = sum / lum.length, varc = 0;
+    lum.forEach(function (x) { varc += (x - mean) * (x - mean); });
+    var sd = Math.sqrt(varc / lum.length);
+    var edges = 0, cornerEdges = 0, cTotal = 0, y, x, k;
+    for (y = 0; y < sh - 1; y++) for (x = 0; x < sw - 1; x++) {
+      k = y * sw + x;
+      var e = edgeAt(lum, k, sw);
+      if (e) edges++;
+      if (y >= Math.floor(sh * 0.8) && x >= Math.floor(sw * 0.75)) { cTotal++; if (e) cornerEdges++; } // where YouTube draws the duration badge
+    }
+    var busy = edges / (sw * sh), cornerBusy = cTotal ? cornerEdges / cTotal : 0;
+    var is169 = Math.abs(ratio - 16 / 9) < 0.02;
+
+    var checks = [
+      ["Dimensions", fmt(w) + " x " + fmt(h), w >= 1280 && h >= 720 ? "good" : w >= 640 ? "warn" : "bad", w >= 1280 && h >= 720 ? "Full quality." : w >= 640 ? "Accepted, but under 1280 x 720 looks soft on large screens." : "Under 640 pixels wide, which YouTube refuses."],
+      ["Aspect ratio", ratio.toFixed(2) + " : 1", is169 ? "good" : "bad", is169 ? "16:9, so no bars or cropping." : "Not 16:9. YouTube will add bars or crop it. Resize to 1280 x 720."],
+      ["File size", mb < 0.1 ? fmt(file.size / 1024) + " KB" : fmt(mb, 2) + " MB", mb <= 2 ? "good" : "bad", mb <= 2 ? "Under the 2 MB limit." : "Over the 2 MB limit, so the upload will be refused. Save as a JPG at high quality."],
+      ["Format", (file.type.split("/")[1] || "").toUpperCase(), /jpeg|png|gif/.test(file.type) ? "good" : "warn", /jpeg|png|gif/.test(file.type) ? "YouTube accepts this format." : "YouTube asks for JPG, PNG or GIF. Export as JPG."],
+      ["Contrast at small size", fmt(sd, 0), sd >= 55 ? "good" : sd >= 38 ? "warn" : "bad", sd >= 55 ? "Strong light and dark areas, so it should stand out." : sd >= 38 ? "Moderate. It may blend into a busy feed." : "Low. Mostly mid-tones, which disappear when small."],
+      ["Clutter at small size", fmt(busy * 100, 0) + "% edges", busy <= 0.22 ? "good" : busy <= 0.32 ? "warn" : "bad", busy <= 0.22 ? "Clean enough to read at 168 pixels." : busy <= 0.32 ? "Busy. Fewer elements or less text would read better small." : "Very busy. At feed size this will look like noise."],
+      ["Bottom-right corner", cornerBusy > 0.25 ? "Detail found" : "Clear", cornerBusy > 0.25 ? "warn" : "good", cornerBusy > 0.25 ? "YouTube draws the video length over this corner. Move anything important away from it." : "Nothing important where the duration badge sits."],
+    ];
+    var pass = checks.filter(function (c) { return c[2] === "good"; }).length;
+
+    function card(width, dark) {
+      var bg = dark ? "#0f0f0f" : "#ffffff", fg = dark ? "#f1f1f1" : "#0f0f0f", mu = dark ? "#aaaaaa" : "#606060";
+      return "<div style=\"background:" + bg + ";padding:12px;border-radius:12px;border:1px solid var(--line);max-width:100%\">" +
+        "<div style=\"position:relative;width:" + width + "px;max-width:100%;aspect-ratio:16/9;border-radius:" + (width > 200 ? 12 : 8) + "px;overflow:hidden;background:#222\">" +
+        "<img src=\"" + url + "\" alt=\"\" style=\"width:100%;height:100%;object-fit:cover;display:block\">" +
+        "<span style=\"position:absolute;right:6px;bottom:6px;background:rgba(0,0,0,.8);color:#fff;font:600 12px/1 system-ui;padding:3px 4px;border-radius:4px\">12:34</span></div>" +
+        "<div style=\"width:" + width + "px;max-width:100%;margin-top:8px;font:500 " + (width > 200 ? 15 : 13) + "px/1.35 system-ui;color:" + fg + ";display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden\">" + esc(title) + "</div>" +
+        "<div style=\"font:400 12px/1.4 system-ui;color:" + mu + ";margin-top:2px\">" + esc(channel) + " · 10K views · 2 days ago</div></div>";
+    }
+    return "<div class=\"herocard\"><div><div class=\"k\">CHECKS PASSED</div><div class=\"v\">" + pass + " of " + checks.length + "</div><div class=\"n\">Measured in your browser. The image is not uploaded anywhere.</div></div></div>" +
+      "<div class=\"card\"><div class=\"tablewrap\"><table><thead><tr><th>Check</th><th>Result</th><th></th><th>What it means</th></tr></thead><tbody>" +
+      checks.map(function (c) { return "<tr><td><b>" + esc(c[0]) + "</b></td><td>" + esc(c[1]) + "</td><td>" + pill({ label: c[2] === "good" ? "Good" : c[2] === "warn" ? "Check" : "Fix", cls: c[2] }) + "</td><td>" + esc(c[3]) + "</td></tr>"; }).join("") +
+      "</tbody></table></div></div>" +
+      "<div class=\"card\"><h3 style=\"margin-top:0\">How it looks in the feed</h3><p class=\"note\">Home feed on a phone (about 360 pixels wide) and suggested videos on desktop (168 pixels wide), in light and dark mode. The 12:34 badge shows where YouTube puts the video length.</p>" +
+      "<div style=\"display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:14px;margin-top:10px\">" + card(360, false) + card(360, true) + "</div>" +
+      "<div style=\"display:flex;flex-wrap:wrap;gap:14px;margin-top:14px\">" + card(168, false) + card(168, true) + "</div></div>";
+  }
+
   window.__COMPUTE = COMPUTE; // exposed for tests
   form.addEventListener("submit", run);
   document.getElementById("reset").addEventListener("click", function () {
@@ -1960,4 +2104,5 @@
   var prefilled = false;
   qs.forEach(function (val, key) { var el = form.elements[key]; if (el) { el.value = val; prefilled = true; } });
   if (prefilled && qs.get("run") !== "0") run();
+  else if (T.autorun) run();
 })();

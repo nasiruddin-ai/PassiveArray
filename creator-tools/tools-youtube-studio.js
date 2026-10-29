@@ -19,6 +19,47 @@ module.exports = function (NICHES) {
   const nicheOptions = NICHES.map((n) => [n, n[0].toUpperCase() + n.slice(1)]);
 
   return [
+    /* ---------------------------------------------------- added Oct 2026 */
+    {
+      slug: "youtube-thumbnail-tester",
+      name: "YouTube Thumbnail Tester",
+      platform: "YouTube",
+      intent: "create",
+      buttonLabel: "Test thumbnail",
+      short: "Preview a thumbnail at real feed sizes in light and dark mode, and check size, ratio and clutter.",
+      intro: "Choose your thumbnail image. You see it the way viewers will, in the phone home feed and in suggested videos, next to your title, and you get checks for dimensions, 16:9 ratio, the 2 MB limit, contrast and clutter at small size. The image never leaves your browser.",
+      inputs: [
+        { id: "image", label: "Thumbnail image", type: "file", accept: "image/jpeg,image/png,image/gif,image/webp", hint: "JPG, PNG or GIF, ideally 1280 x 720" },
+        { id: "title", label: "Video title", type: "text", placeholder: "Optional, to preview beside the thumbnail", optional: true },
+        { id: "channel", label: "Channel name", type: "text", placeholder: "Optional", optional: true },
+      ],
+      how: [
+        "Dimensions, aspect ratio, file size and format are compared with YouTube's published thumbnail rules: 1280 x 720, at least 640 wide, 16:9, under 2 MB, JPG, PNG or GIF.",
+        "Contrast and clutter are measured on a copy shrunk to 168 pixels wide, the size of a suggested-video thumbnail on desktop, because that is the size a thumbnail has to survive.",
+        "Everything runs in your browser. The image is not uploaded or stored.",
+      ],
+      next: ["youtube-thumbnail-downloader", "youtube-title-analyzer", "youtube-title-generator"],
+    },
+    {
+      slug: "youtube-timestamp-link-generator",
+      name: "YouTube Timestamp Link Generator",
+      platform: "YouTube",
+      intent: "create",
+      buttonLabel: "Make link",
+      short: "Make a YouTube link that starts at any moment: watch link, short link and embed code.",
+      intro: "Paste a video link and the time you want it to start, like 1:30 or 1:02:15. You get the watch link, the youtu.be short link and the embed code, all set to start there, each ready to copy.",
+      inputs: [
+        VIDEO_INPUT,
+        { id: "time", label: "Start time", type: "text", placeholder: "e.g. 1:30, 1:02:15, 90 or 1m30s" },
+      ],
+      how: [
+        "Watch and short links use YouTube's t parameter in seconds; embed code uses start. Both are the standard way YouTube reads a start time.",
+        "Shorts loop and do not support start times, so Shorts links are refused rather than given a link that ignores the time.",
+        "Nothing is sent anywhere. The link is built in your browser from the video ID.",
+      ],
+      next: ["youtube-description-generator", "youtube-thumbnail-downloader", "youtube-comment-picker"],
+    },
+
     /* ------------------------------------------------------------ create */
     {
       slug: "youtube-title-generator",
