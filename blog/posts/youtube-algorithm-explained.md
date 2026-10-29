@@ -27,7 +27,7 @@ So a video is not "good" or "bad" to the algorithm. It is good for some viewers.
 
 Two consequences follow:
 
-1. **A small channel can get recommended.** YouTube says the system judges each video on fresh data, not on the channel's history. In our own [outliers feed](../../research/outliers/), which tracks long-form videos getting many times their channel's usual views, 26 of the 60 breakout videos listed on 29 October 2026 came from channels with fewer than 100,000 subscribers.
+1. **A small channel can get recommended.** YouTube says the system judges each video on fresh data, not on the channel's history. In our own [outliers feed](../../research/outliers/), which tracks long-form videos getting many times their channel's usual views, 39 of the 93 breakout videos listed on 29 October 2026 came from channels with fewer than 100,000 subscribers.
 2. **A big channel can stall.** YouTube also says that "frequently sharing content that doesn't resonate, can, over time, affect your channel's overall performance." That is not a penalty. It means the channel's regular viewers stop watching, so there are fewer satisfied viewers for the system to learn from.
 
 ## How each surface works
