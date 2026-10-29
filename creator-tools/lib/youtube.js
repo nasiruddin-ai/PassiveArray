@@ -373,7 +373,7 @@ async function monetizationCheck(input) {
   const watchStatus = !watch ? "unknown" : watch.shortsRouteLikely ? "unknown" : watch.highHours < 4000 ? "fail" : watch.lowHours >= 4000 ? "pass" : "mixed";
   const watchDetail = !watch
     ? "Not public. No recent long-form videos to estimate from."
-    : (watch.basis === "measured" ? "Measured" : "Estimated") + " " + fmtH(watch.lowHours) + " to " + fmtH(watch.highHours) + " public watch hours a year, from " +
+    : (watch.basis === "measured" ? "Measured views put it at" : "Estimated at") + " " + (watch.lowHours >= 40000 ? "well above 4,000" : fmtH(watch.lowHours) + " to " + fmtH(watch.highHours)) + " public watch hours a year, from " +
       (watch.basis === "measured" ? "the channel's total views over the last " + watch.days + " days" : "views on recent uploads plus an allowance for older videos") +
       " and " + watch.medianMinutes + "-minute videos watched 30 to 50 percent through. An estimate, not the real figure, which only the owner sees." +
       (watch.shortsRouteLikely ? " Recent Shorts views are high enough that the Shorts route may apply instead." : "");
@@ -400,6 +400,9 @@ async function monetizationCheck(input) {
     else verdict = { label: "Partly monetized or changing", cls: "warn", confidence: 50, why: "Ads appear on some sampled uploads but not others. This happens when monetization was switched on recently, when some videos are limited, or when some uploads are reused content." };
   } else if (rate != null) {
     verdict = { label: rate > 0 ? "Ads detected on a small sample" : "No ads on a small sample", cls: "warn", confidence: 45, why: "Only " + checked.length + " video could be checked, so this is a weak reading." };
+  } else if (eligible && watchStatus === "pass") {
+    // No ad reading, but every public threshold is clearly met.
+    verdict = { label: "Meets every threshold, likely monetized", cls: "warn", confidence: watch.lowHours >= 40000 ? 65 : 55, why: "Subscribers, recent uploads and the watch-hour estimate all clear the bar, and most channels past it have joined the Partner Program. The ad check is unavailable from this server, so membership itself cannot be confirmed from here." };
   } else if (eligible && watchStatus === "fail") {
     // No ad reading, but the views are far too low for the watch-hour route.
     verdict = { label: "Probably not monetized", cls: "bad", confidence: watch.basis === "measured" ? 70 : 60, why: "Subscribers pass, but the channel's views point to about " + fmtH(watch.lowHours) + " to " + fmtH(watch.highHours) + " watch hours a year, short of the 4,000 needed, and recent Shorts are far from 10 million views. The ad check is unavailable from this server, so this rests on the watch-hour estimate." };
