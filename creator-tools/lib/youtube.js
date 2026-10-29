@@ -305,6 +305,43 @@ async function probeAds(videoId) {
   });
 }
 
+/* Watch hours are private, but they can be bracketed from public numbers:
+   yearly long-form views x a typical share of each video watched. Yearly views come from
+   the store's daily snapshots of the channel's total views when there are 14+ days of them
+   (measured), otherwise from views on recent uploads plus an allowance for older videos
+   (estimated, wider range). Watch share is 30 to 50 percent of the median video length,
+   capped at 8 and 15 minutes. The result is a range and is labelled as an estimate. */
+const DAY_MS = 86400000;
+function watchEstimate(ch, measured) {
+  const vids = (ch.recent && ch.recent.videos) || [];
+  const longs = vids.filter((v) => v.seconds > 60);
+  const shorts = vids.filter((v) => v.seconds > 0 && v.seconds <= 60);
+  if (!longs.length) return null;
+  const lens = longs.map((v) => v.seconds).sort((a, b) => a - b);
+  const medianLen = lens[Math.floor(lens.length / 2)];
+  const longViews = longs.reduce((a, v) => a + v.views, 0);
+  const sampleViews = vids.reduce((a, v) => a + v.views, 0);
+  const longShare = sampleViews > 0 ? longViews / sampleViews : 1;
+  let yearLow, yearHigh, basis;
+  if (measured && measured.days >= 14 && measured.perDay >= 0) {
+    const perDay = measured.perDay * longShare;
+    yearLow = perDay * 365 * 0.85; yearHigh = perDay * 365 * 1.15;
+    basis = "measured";
+  } else {
+    const oldest = Math.min(...longs.map((v) => new Date(v.publishedAt).getTime()));
+    const days = Math.max(14, (Date.now() - oldest) / DAY_MS);
+    const perDay = longViews / days; // views on new uploads only
+    yearLow = perDay * 365 * 1.5; yearHigh = perDay * 365 * 3; // older videos keep earning views
+    basis = "estimated";
+  }
+  const lowHours = Math.round((yearLow * Math.min(medianLen * 0.3, 480)) / 3600);
+  const highHours = Math.round((yearHigh * Math.min(medianLen * 0.5, 900)) / 3600);
+  const shorts90 = shorts.filter((v) => Date.now() - new Date(v.publishedAt).getTime() <= 90 * DAY_MS).reduce((a, v) => a + v.views, 0);
+  // Generous ceiling for the Shorts route: three times the views on recent Shorts.
+  const shortsRouteLikely = shorts90 * 3 >= 10000000;
+  return { lowHours, highHours, basis, medianMinutes: Math.round(medianLen / 60), shortsRouteLikely, days: measured ? measured.days : null };
+}
+
 async function monetizationCheck(input) {
   const ch = await getChannel(input);
   const vids = ch.recent.videos || [];
@@ -327,12 +364,25 @@ async function monetizationCheck(input) {
   const rate = checked.length ? withAds.length / checked.length : null;
   const kids = vids.filter((v) => v.madeForKids).length;
   const subsKnown = !ch.hiddenSubscribers;
+  let measured = null;
+  if (typeof settings.measuredViews === "function") {
+    try { measured = await settings.measuredViews(ch.id); } catch (_) { measured = null; }
+  }
+  const watch = watchEstimate(ch, measured);
+  const fmtH = (h) => h.toLocaleString("en-US");
+  const watchStatus = !watch ? "unknown" : watch.shortsRouteLikely ? "unknown" : watch.highHours < 4000 ? "fail" : watch.lowHours >= 4000 ? "pass" : "mixed";
+  const watchDetail = !watch
+    ? "Not public. No recent long-form videos to estimate from."
+    : (watch.basis === "measured" ? "Measured" : "Estimated") + " " + fmtH(watch.lowHours) + " to " + fmtH(watch.highHours) + " public watch hours a year, from " +
+      (watch.basis === "measured" ? "the channel's total views over the last " + watch.days + " days" : "views on recent uploads plus an allowance for older videos") +
+      " and " + watch.medianMinutes + "-minute videos watched 30 to 50 percent through. An estimate, not the real figure, which only the owner sees." +
+      (watch.shortsRouteLikely ? " Recent Shorts views are high enough that the Shorts route may apply instead." : "");
 
   const signals = [
     { key: "subs1000", label: "1,000 subscribers (ads and revenue sharing)", status: !subsKnown ? "unknown" : ch.subscribers >= 1000 ? "pass" : "fail", detail: subsKnown ? ch.subscribers.toLocaleString("en-US") + " subscribers" : "Subscriber count hidden by the channel" },
     { key: "subs500", label: "500 subscribers (fan funding, memberships)", status: !subsKnown ? "unknown" : ch.subscribers >= 500 ? "pass" : "fail", detail: subsKnown ? (ch.subscribers >= 500 ? "Meets the lower tier" : "Below the lower tier") : "Hidden" },
     { key: "uploads", label: "3 public uploads in the last 90 days", status: last90.length >= 3 ? "pass" : "fail", detail: last90.length + " of the last " + vids.length + " uploads are from the last 90 days" },
-    { key: "watch", label: "4,000 public watch hours or 10M Shorts views in 90 days", status: "unknown", detail: "Not public. Only the channel owner sees watch hours." },
+    { key: "watch", label: "4,000 public watch hours or 10M Shorts views in 90 days", status: watchStatus, detail: watchDetail },
     { key: "ads", label: "Ad placements on recent videos", status: rate == null ? "unknown" : rate >= 0.6 ? "pass" : rate > 0 ? "mixed" : "fail", detail: rate == null ? (adsVisible ? "The public watch pages could not be read from this server right now" : "YouTube is serving this server ad-free pages, so ad placements cannot be read right now. The verdict below rests on the public eligibility signals.") : withAds.length + " of " + checked.length + " sampled videos carry ad placements" },
     { key: "kids", label: "Not made for kids", status: vids.length && kids === vids.length ? "fail" : kids > 0 ? "mixed" : "pass", detail: kids ? kids + " of " + vids.length + " recent uploads are marked made for kids, which limits ads" : "No recent upload is marked made for kids" },
   ];
@@ -350,6 +400,9 @@ async function monetizationCheck(input) {
     else verdict = { label: "Partly monetized or changing", cls: "warn", confidence: 50, why: "Ads appear on some sampled uploads but not others. This happens when monetization was switched on recently, when some videos are limited, or when some uploads are reused content." };
   } else if (rate != null) {
     verdict = { label: rate > 0 ? "Ads detected on a small sample" : "No ads on a small sample", cls: "warn", confidence: 45, why: "Only " + checked.length + " video could be checked, so this is a weak reading." };
+  } else if (eligible && watchStatus === "fail") {
+    // No ad reading, but the views are far too low for the watch-hour route.
+    verdict = { label: "Probably not monetized", cls: "bad", confidence: watch.basis === "measured" ? 70 : 60, why: "Subscribers pass, but the channel's views point to about " + fmtH(watch.lowHours) + " to " + fmtH(watch.highHours) + " watch hours a year, short of the 4,000 needed, and recent Shorts are far from 10 million views. The ad check is unavailable from this server, so this rests on the watch-hour estimate." };
   } else {
     verdict = eligible
       ? { label: "Eligible, ads unconfirmed", cls: "warn", confidence: 40, why: adsVisible ? "The channel clears the public thresholds, but the ad check could not run from this server right now. Try again in a few minutes." : "The channel clears every public threshold. The ad check is unavailable from this server right now, so partner status cannot be confirmed from here." }
@@ -364,7 +417,7 @@ async function monetizationCheck(input) {
   }
 
   const { videos, ...recent } = ch.recent;
-  return { channel: { ...ch, recent }, sampled, signalRate: rate, checkedCount: checked.length, adsVisible, signals, verdict, estimate, checkedAt: new Date().toISOString() };
+  return { channel: { ...ch, recent }, sampled, signalRate: rate, checkedCount: checked.length, adsVisible, signals, watch, verdict, estimate, checkedAt: new Date().toISOString() };
 }
 
 /* ------------------------------------------------------------------ comments
@@ -471,4 +524,4 @@ async function handleRequest(action, params = {}) {
   }
 }
 
-module.exports = { configure, handleRequest, parseChannelInput, parseVideoId, getChannel, getComments, errorBody, yt, statsForIds, n, isoDurationToSeconds, cached, monetizationCheck, probeAds };
+module.exports = { configure, handleRequest, parseChannelInput, parseVideoId, getChannel, getComments, errorBody, yt, statsForIds, n, isoDurationToSeconds, cached, monetizationCheck, probeAds, watchEstimate };

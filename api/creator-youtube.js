@@ -8,7 +8,7 @@ const { configure, handleRequest } = require("../creator-tools/lib/youtube.js");
 
 module.exports = async (req, res) => {
   const apiKey = process.env.YOUTUBE_API_KEY || process.env.GOOGLE_API_KEY || "";
-  configure({ apiKey, timeoutMs: 8000 });
+  configure({ apiKey, timeoutMs: 8000, measuredViews: require("../lib/measured-views.js") });
   const params = req.query || {};
   // Growth history needs the store, so it is handled outside the store-free tools library.
   // Without a key the tools library answers with its usual "no_key" message.
