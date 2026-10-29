@@ -1,6 +1,6 @@
 ---
 title: How YouTube counts views, and which ones it throws away
-description: What YouTube treats as a view, why your own views and replays may not count, how Shorts views differ from engaged views, and why view counts sometimes stall or drop.
+description: What YouTube treats as a view since the August 2026 change, why your own views and replays may not count, how views differ from engaged views, and why view counts sometimes stall or drop.
 date: 2026-10-29
 keyword: how does youtube count views
 category: Growth
@@ -11,9 +11,9 @@ YouTube does not publish an exact formula for a view, and it is deliberately vag
 
 ## What counts as a view
 
-YouTube's help pages describe a view as a viewer intentionally starting a video on their device and watching it. The key word is intentionally. Views are meant to measure real people choosing to watch, so YouTube filters out playback it judges to be automated, forced or repeated in a way no real viewer would.
+Since 24 August 2026, YouTube counts a view the moment a video starts to play, across all formats: long-form, Shorts and live. Before that date, long-form views needed some watching before they counted. The key word in YouTube's description is still intentionally. Views are meant to measure real people choosing to watch, so YouTube filters out playback it judges to be automated, forced or repeated in a way no real viewer would.
 
-There is no published minimum watch time for long-form videos. The often-repeated "30 seconds" rule comes from how certain ad views were once counted, and YouTube has never confirmed it as the rule for ordinary views.
+So there is no minimum watch time for a public view any more. The often-repeated "30 seconds" rule came from how certain ad views were once counted, and it was never the rule for ordinary views.
 
 ## Views YouTube removes
 
@@ -28,11 +28,11 @@ This is why view counts sometimes fall. YouTube counts first, then reviews, and 
 
 Yes, if you watch it like any viewer would. Watching your own video once from your account can add a view. Replaying it repeatedly to inflate the number will be filtered, and watching it inside YouTube Studio's preview is not a view.
 
-## Shorts are counted differently
+## Views versus engaged views
 
-Since March 2025, a Shorts view counts each time a Short starts or replays, with no minimum watch time. That makes Shorts view counts higher and easier to earn than long-form ones.
+Shorts moved to counting a view on every start or replay in March 2025, and YouTube extended the same start-to-play rule to every format on 24 August 2026. That makes public view counts higher and easier to earn than they used to be.
 
-YouTube kept the stricter older measure as **engaged views**, which is what Shorts eligibility for the Partner Program is based on. In YouTube Studio you can see both. If you are tracking progress toward [monetization requirements](../youtube-monetization-requirements/), engaged views are the number that matters.
+YouTube kept a stricter measure for money. Partner Program earnings are still based on **engaged views** and **engaged watch hours**, and eligibility on qualified views, so the change did not alter what anyone is paid. In YouTube Studio you can see both. If you are tracking progress toward [monetization requirements](../youtube-monetization-requirements/), engaged views are the number that matters.
 
 ## Why the count looks stuck or lags
 
