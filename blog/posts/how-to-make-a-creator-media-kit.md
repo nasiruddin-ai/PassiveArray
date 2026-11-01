@@ -17,13 +17,13 @@ A single page, a PDF, updated monthly, attached to the email. That is the whole 
 
 ## What goes on it, in order
 
-**1. Who you are, in one line.** Not "content creator and storyteller". Something like "I test budget camera gear for people who film weddings." A brand needs to know in one sentence whether their product fits.
+**1. Who you are, in one line.** Not "content creator and storyteller". Something like "I test budget camera gear for people who film weddings." A brand needs to know in one sentence [whether their product fits](../how-influencer-marketing-works/).
 
 **2. Your audience, in three facts.** Not everything you know. The three things a brand needs: roughly how many people see a post, who they are, and where they are. Age band, main countries, and the split between the platforms you are pitching.
 
 **3. The numbers.** Average views or reach per post, engagement rate with the benchmark for your size next to it, and follower count last. In that order. Followers last is deliberate, and it signals you understand what is being bought.
 
-**4. Proof it works.** One or two past collaborations with an outcome. A link click count, a discount code redemption, a sold-out product, a comment from the brand. If you have never done a paid deal, use an organic post about a product you like and show the response.
+**4. Proof it works.** One or two [past collaborations with an outcome](../does-influencer-marketing-work/). A link click count, a discount code redemption, a sold-out product, a comment from the brand. If you have never done a paid deal, use an organic post about a product you like and show the response.
 
 **5. What you offer and what it costs.** Formats and a starting price or a range. Our guide to [pricing a sponsored YouTube video](../how-much-to-charge-for-a-sponsored-youtube-video/) shows how to set it. Some creators leave pricing off to force a conversation. In practice it filters out the brands whose budget was never going to reach you, and that is time saved on both sides.
 
@@ -36,7 +36,7 @@ You do not need a subscription to fill in any of this.
 - **YouTube subscribers, views, average views per upload.** The [subscriber count checker](../../creator-tools/youtube-subscriber-count-checker/) pulls these from the official API for any channel, including your own. Average views on recent uploads is the number brands care about most, and it is the one creators most often leave out.
 - **Engagement rate, with context.** The [Instagram](../../creator-tools/instagram-engagement-rate-calculator/) and [YouTube](../../creator-tools/youtube-engagement-rate-calculator/) calculators give you the rate and the grade for your size. Put both on the page. "3.4% engagement, above the 2.0% typical for accounts of this size" is far stronger than "3.4% engagement".
 - **A defensible rate.** The sponsorship price calculator prices an integration from your average views, so the number on your kit has a method behind it.
-- **Audience demographics.** These only exist in your own analytics. Instagram Insights, YouTube Studio and TikTok Analytics all show age, gender and country. Screenshot the country and age charts.
+- **Audience demographics.** These only exist in your own analytics. Instagram Insights, YouTube Studio and [TikTok Analytics](../how-to-track-tiktok-followers/) all show age, gender and country. Screenshot the country and age charts.
 
 ## What to leave off
 
@@ -48,7 +48,7 @@ You do not need a subscription to fill in any of this.
 
 ## Keep it honest
 
-Round numbers, never inflate them. Brands increasingly check with the same public tools you used, and some have access to more. A creator whose kit claims 80,000 average views on a channel that publicly averages 30,000 does not get a follow-up email, and often does not get a second chance with that agency.
+Round numbers, never inflate them. [Brands increasingly check](../influencer-marketing-trends-2026/) with the same public tools you used, and some have access to more. A creator whose kit claims 80,000 average views on a channel that publicly averages 30,000 does not get a follow-up email, and often does not get a second chance with that agency.
 
 Our tools deliberately show ranges and grades rather than single flattering numbers for this reason. A kit that says "engagement 4.1%, good for this size, average views 22,000 over the last 10 uploads" is more convincing than one claiming a rounder, bigger figure, because it is checkable.
 
@@ -58,7 +58,7 @@ Put it in your calendar. A media kit with numbers from eight months ago is worse
 
 ## A quick checklist
 
-1. One page, PDF, named clearly with your handle and the month.
+1. One page, PDF, named clearly with [your handle](../youtube-channel-name-ideas/) and the month.
 2. One-line description of who you reach.
 3. Average views or reach, engagement rate with benchmark, followers.
 4. Two or three audience facts.

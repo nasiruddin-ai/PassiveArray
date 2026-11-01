@@ -28,11 +28,11 @@ Everything our subscriber count checker and [quality checker](../../creator-tool
 
 ## Why the subscriber count never quite matches
 
-YouTube rounds subscriber counts in its public API to three significant figures. A channel with 1,234,567 subscribers reports as 1.23M to every third-party tool in existence, including ours.
+YouTube rounds subscriber counts in its public API to three significant figures. A channel with 1,234,567 subscribers reports as 1.23M to [every third-party tool](../social-blade-alternatives/) in existence, including ours.
 
-So if a site shows you a live subscriber count ticking up digit by digit, it is animating between rounded values. The precision is decorative. Views and video counts, by contrast, are exact.
+So if a site shows you a [live subscriber count ticking up digit by digit](../youtube-live-subscriber-count/), it is animating between rounded values. The precision is decorative. Views and video counts, by contrast, are exact.
 
-Some channels hide their subscriber count entirely. Our tools say "hidden" rather than guessing.
+YouTube removed the option to [hide a subscriber count](../how-to-hide-youtube-subscriber-count/) in July 2022. If the API ever reports a count as hidden, our tools say "hidden" rather than guessing.
 
 ## What the public data cannot show
 
@@ -49,7 +49,7 @@ Any site claiming to show a channel's real earnings, watch time or demographics 
 
 ## How to read a channel from the outside
 
-With the public numbers you can still answer the questions that matter:
+With the public numbers you can still [answer the questions that matter](../how-to-audit-a-youtube-channel/):
 
 **Is it growing or coasting?** Compare average views on the last ten uploads with the lifetime average views per video. Recent well above lifetime means momentum. Recent well below means the catalogue is carrying the channel.
 
@@ -59,7 +59,7 @@ With the public numbers you can still answer the questions that matter:
 
 **Is the audience awake?** Engagement rate on recent uploads, graded against [the benchmarks](../youtube-engagement-rate-benchmarks/).
 
-**What is it actually about?** Channel keywords and topic categories are public, and they often reveal positioning the channel name does not.
+**What is it actually about?** Channel keywords and topic categories are public, and they often reveal positioning [the channel name](../youtube-channel-name-ideas/) does not.
 
 ## Checking a channel in under a minute
 
@@ -70,6 +70,6 @@ With the public numbers you can still answer the questions that matter:
 
 ## A note on sites that show "estimated earnings"
 
-Every one of them is running views through an assumed revenue-per-thousand figure, exactly as we do. The difference is whether they tell you. A site that presents a single confident dollar figure with no range and no formula is not better informed than one showing a range. It is just less honest about the same arithmetic.
+Every one of them is running views through [an assumed revenue-per-thousand figure](../is-social-blade-accurate/), exactly as we do. The difference is whether they tell you. A site that presents a single confident dollar figure with no range and no formula is not better informed than one showing a range. It is just less honest about the same arithmetic.
 
 When you see an earnings number for someone else's channel, including on this site, read it as a bracket produced by public view counts, and nothing more.

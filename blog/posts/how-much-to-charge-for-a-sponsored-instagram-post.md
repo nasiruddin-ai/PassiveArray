@@ -59,7 +59,7 @@ Then anchor on your strongest number. If your engagement is above your tier, lea
 
 ## Common mistakes
 
-1. **Pricing on followers alone.** A 100K account with dead engagement is worth less than a 30K account with a real community, and experienced brands know it.
+1. **Pricing on followers alone.** A 100K account with [dead engagement](../how-to-increase-instagram-engagement-rate/) is worth less than a 30K account with a real community, and experienced brands know it.
 2. **Forgetting usage rights.** The fee you agreed covers one post on your grid. It does not cover six months of paid media unless you said so.
 3. **Undercharging the first deal.** Brands talk to each other and keep records. Your first rate becomes your reference rate.
 4. **Bundling everything into one number.** When the brand asks to cut the budget, an itemised quote lets you remove a deliverable instead of discounting your rate.

@@ -7,7 +7,7 @@ category: Earnings
 tools: youtube-money-calculator, youtube-sponsorship-price-calculator
 ---
 
-"How much does YouTube pay per view" has no single answer, and any site that gives you one number is guessing. What exists is a formula and a range. This article shows both, so you can read a [YouTube money calculator](../../creator-tools/youtube-money-calculator/) result and know what it is really saying.
+"How much does YouTube pay per view" has no single answer, and [any site that gives you one number](../is-social-blade-accurate/) is guessing. What exists is a formula and a range. This article shows both, so you can read a [YouTube money calculator](../../creator-tools/youtube-money-calculator/) result and know what it is really saying.
 
 ## Two terms that get mixed up
 
@@ -51,6 +51,6 @@ Ad revenue is usually the smallest income line for a channel that takes sponsors
 When you check a channel, first confirm it earns from ads at all with the [monetization checker](../../creator-tools/youtube-monetization-checker/), then treat the range as a bracket, not a payslip:
 
 1. If the audience is mostly in the US, UK, Canada or Australia and the videos are long-form, expect the upper half.
-2. If the content is music, kids or reaction, expect the lower third.
+2. If the [content is music](../how-much-does-youtube-pay-musicians/), kids or reaction, expect the lower third.
 3. If half or more of recent uploads are Shorts, expect the bottom of the range.
 4. Only the creator's own YouTube Studio shows the real number. Everything else, including this site, is an estimate from public views.

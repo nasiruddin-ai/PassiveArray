@@ -54,7 +54,7 @@ Most creators end up with a mix. Ad and fund income is the least predictable. Fa
 
 The biggest live-streaming platform after YouTube. Most creators start as **Affiliates**. In 2026 Twitch lowered the Affiliate requirements to 4 hours streamed on 4 different days, an average of at least 3 concurrent viewers, and 25 followers, all within 30 days. You do not apply. Twitch invites you once you meet them.
 
-The standard subscription split is **50/50**. Twitch's **Plus Program** raises it to 60/40 or 70/30 for streamers who hold enough paid subscriptions for three months in a row. Twitch also pays for **Bits**, which viewers buy to tip, and a share of ads.
+The standard subscription split is **50/50**. Twitch's **Plus Program** raises it to 60/40 or 70/30 for [streamers who hold enough paid subscriptions](../how-do-twitch-streamers-make-money/) for three months in a row. Twitch also pays for **Bits**, which viewers buy to tip, and a share of ads.
 
 **Good for:** gamers, live hosts, and anyone whose content is better live than edited. **Watch out for:** discovery is weak for new streamers. Most grow by bringing an audience from elsewhere, often YouTube clips.
 
@@ -68,7 +68,7 @@ A newer live-streaming platform built on a generous split. Kick says it uses a *
 
 ## TikTok
 
-The strongest platform for being discovered by strangers fast. TikTok's **Creator Rewards Program** pays for original videos at least one minute long. To join you need to be 18 or older, have at least 10,000 followers and at least 100,000 video views in the last 30 days, and use a personal account rather than a business one. The program is only available in some countries, so check in the app under your creator tools.
+The strongest platform for being discovered by strangers fast. TikTok's **Creator Rewards Program** [pays for original videos at least one minute long](../tiktok-creator-rewards-program/). To join you need to be 18 or older, have at least 10,000 followers and at least 100,000 video views in the last 30 days, and use a personal account rather than a business one. The program is only available in some countries, so check in the app under your creator tools.
 
 **Good for:** testing ideas quickly, and reaching people who have never heard of you. **Watch out for:** reach can be very uneven from one video to the next, and short videos rarely build the long-term search traffic that YouTube does.
 
@@ -76,7 +76,7 @@ Estimate what a TikTok account could earn with our [TikTok money calculator](../
 
 ## Instagram
 
-Instagram pays through **subscriptions**, **gifts** that viewers send on Reels, and **bonuses** offered to some creators. Gifts need a professional account, an age of 18 or over, and at least 500 followers. Most Instagram income still comes from brand deals, because brands value Instagram's audience and its shopping features.
+Instagram pays through **subscriptions**, **gifts** that viewers send on Reels, and **bonuses** offered to some creators. Gifts need a professional account, an age of 18 or over, and at least 500 followers. [Most Instagram income still comes from brand deals](../how-do-instagram-creators-make-money/), because brands value Instagram's audience and its shopping features.
 
 **Good for:** lifestyle, fashion, food, fitness and any creator whose audience follows a person. **Watch out for:** platform payouts are small compared with brand deals, so treat Instagram as a sponsorship channel first.
 
@@ -207,7 +207,7 @@ Yes, through a different program. X retired Creator Revenue Sharing on 7 Septemb
 
 ### Is Twitch or YouTube better for streaming?
 
-Twitch has the stronger live-streaming culture and chat features. YouTube is better at being found after the stream, because recordings and clips keep getting search and suggested views. Many streamers go live on Twitch and upload edited videos to YouTube.
+Twitch has the stronger live-streaming culture and chat features. YouTube is better at being found after the stream, because recordings and clips keep getting search and suggested views. Many streamers [go live on Twitch](../how-to-add-twitch-follower-count-to-obs/) and upload edited videos to YouTube.
 
 ### What happened to Vimeo On Demand?
 

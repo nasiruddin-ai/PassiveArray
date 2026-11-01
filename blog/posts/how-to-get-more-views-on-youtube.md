@@ -68,7 +68,7 @@ Put the most important words first, because long titles get cut off on phones. A
 
 ## Problem 2: people click but do not keep watching
 
-**5. Deliver the promise in the first 30 seconds.** Viewers leave when the start does not match the title. Skip the long intro, the logo animation and the "before we start, subscribe" plug. Show the result first, then explain how.
+**5. Deliver the promise in the first 30 seconds.** Viewers leave when the start does not match the title. Skip the long intro, the logo animation and the "before we start, subscribe" plug. [Show the result first](../how-to-write-a-youtube-script/), then explain how.
 
 A weak opening: "Hey everyone, welcome back to the channel. Today we're going to be talking about budget travel, but first a quick word about..."
 
@@ -80,13 +80,13 @@ A strong opening: "This is everything I spent in 10 days in Japan: $987, includi
 
 ## Problem 3: YouTube is not showing the video to many people
 
-**8. Answer searches people actually make.** Search traffic is the most reliable source for small channels, because it does not depend on YouTube already trusting you. Use the [keyword generator](../../creator-tools/youtube-keyword-generator/) to find the exact phrases people type, and title videos to match. After a week, check the **YouTube search terms** report in the video's Reach tab to see which phrases found it. [Free YouTube keyword research](../free-youtube-keyword-research/) explains the full method.
+**8. Answer searches people actually make.** [Search traffic](../how-youtube-seo-works/) is the most reliable source for small channels, because it does not depend on YouTube already trusting you. Use the [keyword generator](../../creator-tools/youtube-keyword-generator/) to find the exact phrases people type, and title videos to match. After a week, check the **YouTube search terms** report in the video's Reach tab to see which phrases found it. [Free YouTube keyword research](../free-youtube-keyword-research/) explains the full method.
 
-**9. Make videos for one clear audience.** YouTube recommends videos to people who watched similar videos. A channel that jumps between unrelated subjects confuses that. Ten videos for the same viewer beat ten videos for ten different viewers. If you want to cover two very different subjects, a second channel is often better than one mixed channel.
+**9. Make videos for one clear audience.** YouTube recommends videos to people who watched similar videos. A channel that jumps between unrelated subjects confuses that. [Ten videos for the same viewer](../how-to-grow-a-youtube-channel/) beat ten videos for ten different viewers. If you want to cover two very different subjects, a second channel is often better than one mixed channel.
 
 **10. Make series and link them.** End screens, cards, pinned comments and playlists send viewers from one video to the next. A viewer who watches three of your videos in a row is a strong signal that your channel suits them. YouTube lists a new upload sending viewers back to earlier episodes as one reason old videos suddenly grow.
 
-**11. Use Shorts as a trailer, not a replacement.** A Short that answers one question from a long video, with a link to the full video, brings new viewers to your catalogue. Shorts views alone rarely turn into long-form viewers unless you give people a reason to click through. Judge Shorts and long-form separately in the Content tab.
+**11. Use Shorts as a trailer, not a replacement.** [A Short that answers one question](../youtube-shorts-seo/) from a long video, with a link to the full video, brings new viewers to your catalogue. Shorts views alone rarely turn into long-form viewers unless you give people a reason to click through. Judge Shorts and long-form separately in the Content tab.
 
 **12. Post consistently enough to learn.** YouTube says view growth is not correlated with how often you upload, and quality matters more than quantity. Consistency matters for a different reason: it gives you enough videos to compare and improve. One video a week for six months teaches you more than ten videos in a burst. [The best time to post](../best-time-to-post-on-youtube/) matters far less than this.
 
@@ -95,7 +95,7 @@ A strong opening: "This is everything I spent in 10 days in Japan: $987, includi
 External traffic is smaller for most channels, but you control it completely, and it helps a brand-new video get its first viewers.
 
 - **Answer questions where people ask them.** Forums, Reddit communities, Discord servers and Q&A sites, where your video genuinely answers the question. Read each community's rules first, and post the answer, not just a link.
-- **Embed videos in your own blog or website.** A written guide with the video embedded can rank in Google and send viewers for years.
+- **Embed videos in your own blog or website.** A written guide with the video embedded can [rank in Google](../how-to-rank-youtube-videos-on-google/) and send viewers for years.
 - **Use your email list.** If you have one, a short email for each new video brings your most loyal viewers back on day one.
 - **Collaborate.** A video with another creator in your niche puts you in front of an audience that already watches your kind of content.
 - **Paid ads through YouTube itself are allowed.** Promoting a video through Google Ads is legitimate and is reported separately as YouTube advertising traffic. It is not the same as buying views, but paid viewers often do not stay, so test small.

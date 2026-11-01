@@ -40,7 +40,7 @@ Kids' content sits below all three for a separate reason: videos made for kids c
 
 A high-band niche does not guarantee a high CPM. The other big factors are:
 
-1. **Audience country.** A finance channel watched mostly in a low-paying ad market can earn less per view than a gaming channel watched in the US. Country often outweighs niche.
+1. **Audience country.** A finance channel watched mostly in a low-paying ad market can earn less per view than [a gaming channel](../how-to-grow-a-gaming-youtube-channel/) watched in the US. Country often outweighs niche.
 2. **Season.** Advertisers spend most from October to December and least in January.
 3. **Video length.** Videos of eight minutes or more can carry mid-roll ads, which means more impressions per view.
 4. **Advertiser-friendliness.** Videos with limited ads earn a fraction of their potential, whatever the niche.

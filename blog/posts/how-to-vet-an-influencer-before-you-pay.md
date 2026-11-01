@@ -7,13 +7,13 @@ category: For brands
 tools: instagram-fake-follower-checker, youtube-channel-comparison, youtube-subscriber-count-checker
 ---
 
-Most influencer marketing money is wasted before the campaign starts, on creators whose audience was never going to buy anything. The checks that catch this take about ten minutes per creator and need no subscription, starting with a free [fake follower checker](../../creator-tools/instagram-fake-follower-checker/).
+Most [influencer marketing](../how-influencer-marketing-works/) money is wasted before the campaign starts, on creators whose audience was never going to buy anything. The checks that catch this take about ten minutes per creator and [need no subscription](../free-influencer-marketing-tools/), starting with a free [fake follower checker](../../creator-tools/instagram-fake-follower-checker/).
 
 ## Ten minutes, in order
 
 ### 1. Engagement against their size, not in isolation
 
-A 2% engagement rate means nothing on its own. It is strong for a 500,000-follower Instagram account and weak for a 5,000-follower one, because typical rates fall steeply as accounts grow.
+A 2% engagement rate [means nothing on its own](../instagram-engagement-rate-by-industry/). It is strong for a 500,000-follower Instagram account and weak for a 5,000-follower one, because typical rates fall steeply as accounts grow.
 
 Run the account through the fake follower checker or the relevant [engagement calculator](../../creator-tools/instagram-engagement-rate-calculator/), which grade against the benchmark for that tier rather than a flat number. Our [benchmarks by follower count](../instagram-engagement-rate-by-follower-count/) lists the typical rates if you want to check by hand.
 
@@ -23,7 +23,7 @@ This one signal catches most bought engagement. On a real account, comments run 
 
 ### 3. Read twenty comments
 
-Not the count, the content. "🔥🔥" and "nice post" from accounts with no profile picture is a pod or a bot farm. Real audiences ask questions, disagree, and reference things from previous posts.
+Not the count, the content. "🔥🔥" and "nice post" from accounts with no profile picture is a pod or a bot farm. [Real audiences ask questions](../instagram-captions/), disagree, and reference things from previous posts.
 
 ### 4. Following versus followers
 
@@ -43,7 +43,7 @@ For YouTube, ignore subscriber count and look at average views on recent uploads
 
 ### 8. Audience fit
 
-The highest engagement rate in the world is worthless if the audience is in a country you do not ship to, or an age band that does not buy your product. This is the question public data cannot answer, which brings us to the next section.
+The highest engagement rate in the world is worthless if the audience is in a country you do not ship to, or an age band that does not buy your product. This is the question [public data cannot answer](../how-to-audit-an-instagram-account/), which brings us to the next section.
 
 ## What to ask the creator for
 
@@ -54,7 +54,7 @@ Public numbers take you most of the way. Two screenshots close the gap, and any 
 
 Ask for the screenshot showing the date range, not a cropped number. Hesitation or excuses here is itself the answer. Honest creators send these within a day, because they get asked constantly.
 
-If you are running a larger campaign, ask for results from a past collaboration: link clicks, code redemptions, or a sales figure the brand was happy to share.
+If you are running a larger campaign, ask for [results from a past collaboration](../does-influencer-marketing-work/): link clicks, code redemptions, or a sales figure the brand was happy to share.
 
 ## Red flags worth walking away from
 
@@ -62,7 +62,7 @@ If you are running a larger campaign, ask for results from a past collaboration:
 - Comments almost entirely emoji, from accounts that all look alike.
 - A follower count that jumped by thousands overnight with no viral post behind it.
 - Refusal to share Insights screenshots while claiming large reach.
-- A rate card far above what their average reach supports, with no reasoning.
+- [A rate card far above what their average reach supports](../how-much-to-charge-for-a-sponsored-tiktok/), with no reasoning.
 - Reach that has halved in three months while the rate has not moved.
 
 ## Yellow flags worth a conversation

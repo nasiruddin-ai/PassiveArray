@@ -7,7 +7,7 @@ category: Sponsorships
 tools: youtube-sponsorship-price-calculator, youtube-engagement-rate-calculator, youtube-money-calculator
 ---
 
-Most creators price their first sponsorship by guessing, then find out a year later they were charging a third of the rate. Brands, meanwhile, price on one thing: how many people will see the message. Once you price the same way they do, the negotiation gets much shorter.
+Most creators price their first sponsorship by guessing, then find out a year later they were charging a third of the rate. [Brands, meanwhile, price on one thing](../how-influencer-marketing-works/): how many people will see the message. Once you price the same way they do, the negotiation gets much shorter.
 
 ## Brands buy views, not subscribers
 

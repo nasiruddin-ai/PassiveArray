@@ -57,14 +57,14 @@ This is the serious kind. YouTube can remove a channel from the Partner Program 
 - breaks YouTube's channel monetization policies or Community Guidelines,
 - inflates views, likes or subscribers artificially,
 - relies on **reused content**: other people's material with no meaningful added value, judged across the whole channel,
-- publishes **inauthentic content**: content that is mass-produced, generic, repetitive or manipulative. YouTube renamed its "repetitious content" policy to this in July 2025, and says such content was always ineligible,
+- publishes **inauthentic content**: content that is [mass-produced, generic, repetitive or manipulative](../can-ai-voice-youtube-channels-be-monetized/). YouTube renamed its "repetitious content" policy to this in July 2025, and says such content was always ineligible,
 - has been **inactive**: YouTube may turn off monetization on a channel that has not uploaded a video or posted in the Posts tab for six months or more.
 
 ## How to recover a demonetized channel
 
 1. **Read the email and the notice in Studio.** It names the policy.
 2. **Appeal if you think it is a mistake.** You have 21 days from a suspension to appeal, or 7 days if you were warned of a scheduled suspension. The appeal is a short unlisted video that explains how your channel as a whole follows the policies, with your channel URL in the first 30 seconds. YouTube says it responds within 14 days.
-3. **If the decision stands, fix the cause.** Remove or rework the videos that broke the policy. For reused content, that means adding real commentary, analysis or original material, not small edits.
+3. **If the decision stands, fix the cause.** Remove or rework the videos that broke the policy. For reused content, that means [adding real commentary, analysis or original material](../how-to-grow-a-faceless-youtube-channel/), not small edits.
 4. **Reapply after 90 days.** If the appeal is rejected, you can reapply to the Partner Program 90 days after the suspension date.
 
 A channel removed for inactivity can usually reapply once it is active again.

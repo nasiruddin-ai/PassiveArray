@@ -7,7 +7,7 @@ category: For brands
 tools: instagram-fake-follower-checker, tiktok-fake-follower-checker, instagram-audit
 ---
 
-Nobody sells "fake followers" as a labelled product any more. What you get today is a mix of bot accounts, inactive accounts bought in bulk, engagement pods and paid likes, and each leaves a slightly different fingerprint in the public numbers. You do not need access to the follower list to see most of them.
+Nobody sells "fake followers" as a labelled product any more. [What you get today](../influencer-marketing-trends-2026/) is a mix of bot accounts, inactive accounts bought in bulk, engagement pods and paid likes, and each leaves a slightly different fingerprint in the public numbers. [You do not need access to the follower list](../free-influencer-marketing-tools/) to see most of them.
 
 The Passive Array checkers, the [Instagram fake follower checker](../../creator-tools/instagram-fake-follower-checker/) and the [TikTok fake follower checker](../../creator-tools/tiktok-fake-follower-checker/), work only from the numbers on a profile: followers, following, posts, average likes and average comments. Here is what they look for, in the order that matters most.
 
@@ -37,7 +37,7 @@ Rate far above the tier's typical, combined with comments under 0.5% of likes, i
 
 ## 6. Growth that jumps
 
-This one needs a second visit. Check the follower count today and again in a week. Real growth is lumpy but continuous. A jump of thousands overnight with no viral post to explain it is a purchase. Passive Array does not store your lookups, so note the number yourself.
+This one needs a second visit. [Check the follower count today](../how-to-audit-an-instagram-account/) and again in a week. Real growth is lumpy but continuous. A jump of thousands overnight with no viral post to explain it is a purchase. Passive Array does not store your lookups, so [note the number yourself](../how-to-track-tiktok-followers/).
 
 ## 7. The audience does not match the content
 

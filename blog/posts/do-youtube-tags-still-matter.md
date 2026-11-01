@@ -11,7 +11,7 @@ Tags used to be the first thing a YouTube SEO guide told you to fix. Then YouTub
 
 ## What YouTube says
 
-YouTube's own help page says tags can help if the content of the video is commonly misspelled, and that otherwise they play a minimal role in helping people find your video. That is the official position, and years of creator testing agree with it: the title, the thumbnail, the first lines of the description, the spoken words in the video and, above all, how viewers behave once they click, decide where a video ranks.
+YouTube's own help page says tags can help if the content of the video is commonly misspelled, and that otherwise they play a minimal role in helping people find your video. That is the official position, and years of creator testing agree with it: the title, the thumbnail, [the first lines of the description](../youtube-description-templates/), the spoken words in the video and, above all, how viewers behave once they click, decide where a video ranks.
 
 ## What tags still do
 
@@ -31,7 +31,7 @@ The tag field holds **500 characters** in total, including commas. That is about
 
 ## How to see any video's tags
 
-YouTube hides tags from viewers, but they are in the page's data. The extension reads them from the page itself, no API key, and lists them as clickable chips in the sidebar of every watch page. Click one to search it; click Copy all to reuse a competitor's set as a starting point. Reading tags is public data and allowed; copying a competitor's tags wholesale is legal but pointless, because their tags describe their video. [How to find YouTube video tags](../how-to-find-youtube-video-tags/) covers two more ways that need no extension.
+[YouTube hides tags from viewers](../youtube-hashtags-vs-tags/), but they are in the page's data. The extension reads them from the page itself, no API key, and lists them as clickable chips in the sidebar of every watch page. Click one to search it; click Copy all to reuse a competitor's set as a starting point. Reading tags is public data and allowed; copying a competitor's tags wholesale is legal but pointless, because their tags describe their video. [How to find YouTube video tags](../how-to-find-youtube-video-tags/) covers two more ways that need no extension.
 
 ## A sensible tag routine, five minutes per video
 

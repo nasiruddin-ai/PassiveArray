@@ -7,7 +7,7 @@ category: Growth
 tools: youtube-subscriber-count-checker, youtube-channel-quality-checker, youtube-engagement-rate-calculator
 ---
 
-Subscriber count is the number creators celebrate and the number that tells you least. Views per subscriber is the one that tells you whether those subscribers are a community or a list.
+Subscriber count is [the number creators celebrate](../how-to-hide-youtube-subscriber-count/) and the number that tells you least. Views per subscriber is the one that tells you whether those subscribers are a community or a list.
 
 ## The calculation
 
@@ -23,7 +23,7 @@ A channel with 40,000 subscribers averaging 8,000 views per upload is at 20%. Ou
 |---|---|
 | 30% and above | Strong. Subscribers genuinely turn up for uploads |
 | 10% to 30% | Normal for most active channels |
-| Under 10% | Many subscribers are inactive, or your views come from elsewhere |
+| Under 10% | [Many subscribers are inactive](../how-to-revive-a-dead-youtube-channel/), or your views come from elsewhere |
 
 These bands are what our channel tools use, and they need context to be useful.
 
@@ -64,7 +64,7 @@ Both healthy means a real audience. Both weak, at a size where that is unusual, 
 
 1. **Check consistency first.** Irregular uploads train the algorithm and the audience to stop expecting you.
 2. **Look at your thumbnails against your own back catalogue.** Compare the click appeal of your recent set with the videos from when the ratio was healthy.
-3. **Ask whether you drifted.** Audiences subscribe to a specific promise. Pivots cost the part of the audience that came for the old one, and that is sometimes the right trade, but make it deliberately.
+3. **Ask whether you drifted.** Audiences subscribe to a specific promise. [Pivots cost the part of the audience](../why-did-my-youtube-subscribers-go-down/) that came for the old one, and that is sometimes the right trade, but make it deliberately.
 4. **Stop counting subscribers as the goal.** Average views per upload is the number that pays, both in ad revenue and in what a brand will pay you. [Sponsorship pricing](../how-much-to-charge-for-a-sponsored-youtube-video/) is built on average views, not subscribers.
 
 ## Check yours

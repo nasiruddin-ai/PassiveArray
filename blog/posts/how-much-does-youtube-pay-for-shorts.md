@@ -33,7 +33,7 @@ The result is that a Short and a long-form video with identical view counts prod
 
 **A viral Short is not a payday.** It is an audience acquisition event. Millions of Shorts views may produce less direct revenue than one solid long-form video, while delivering far more new subscribers.
 
-**The subscribers may not watch your long videos.** This is the part that catches people out. Shorts subscribers were converted in a feed that autoplays the next video; many never open a ten-minute upload. Check your [views per subscriber](../views-per-subscriber/) before assuming a growing subscriber count means a growing long-form audience.
+**The subscribers may not watch your long videos.** This is the part that catches people out. [Shorts subscribers](../how-to-grow-youtube-channel-with-shorts/) were converted in a feed that autoplays the next video; many never open a ten-minute upload. Check your [views per subscriber](../views-per-subscriber/) before assuming a growing subscriber count means a growing long-form audience.
 
 ## The strategy that actually works
 
@@ -46,7 +46,7 @@ Treat Shorts as the top of the funnel and long-form as the business.
 
 ## Use original audio where you can
 
-Every licensed track in a Short routes part of the pool to a rights holder before creators are paid. Original audio, your own voice, or music you have cleared keeps that portion in the creator pool. For a channel posting Shorts at volume, this is one of the few levers that reliably moves the number.
+Every licensed track in a Short routes part of the pool to a rights holder before creators are paid. Original audio, your own voice, or [music you have cleared](../how-to-grow-a-music-youtube-channel/) keeps that portion in the creator pool. For a channel posting Shorts at volume, this is one of the few levers that reliably moves the number.
 
 ## Checking your own figures
 

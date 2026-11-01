@@ -38,7 +38,7 @@ As on the Instagram tools, the grade is the ratio of your rate to the typical ra
 
 ## Why the rate falls with size, faster than on Instagram
 
-TikTok's For You feed gives every video a test audience regardless of follower count, so small accounts get likes from people who never followed them, and those likes count against a small follower base. As the account grows, the follower base catches up with the reach and the ratio falls toward the platform's floor. This is also why a brand-new account can show an engagement rate above 20% for its first few weeks. It is real, and it will not last.
+[TikTok's For You feed](../how-to-grow-on-tiktok/) gives every video a test audience regardless of follower count, so small accounts get likes from people who never followed them, and those likes count against a small follower base. As the account grows, the follower base catches up with the reach and the ratio falls toward the platform's floor. This is also why a brand-new account can show an engagement rate above 20% for its first few weeks. It is real, and it will not last.
 
 ## What the audit looks at beyond the rate
 
@@ -48,4 +48,4 @@ TikTok's For You feed gives every video a test audience regardless of follower c
 
 ## For brands
 
-Screen with the rate and tier grade, then look at views per video, which on TikTok often bears little relation to followers. A 40K-follower account averaging 300K views is the account you want, and a 400K-follower account averaging 20K views is the one to price down. The [TikTok pricing calculator](../../creator-tools/tiktok-pricing-calculator/) on this site starts from average views per video, not followers, then adjusts for engagement, so feed it the real average views before you send an offer.
+Screen with the rate and tier grade, then look at views per video, which on TikTok often bears little relation to followers. A 40K-follower account averaging 300K views is [the account you want](../free-influencer-marketing-tools/), and a 400K-follower account averaging 20K views is [the one to price down](../how-much-to-charge-for-a-sponsored-tiktok/). The [TikTok pricing calculator](../../creator-tools/tiktok-pricing-calculator/) on this site starts from average views per video, not followers, then adjusts for engagement, so feed it the real average views before you send an offer.

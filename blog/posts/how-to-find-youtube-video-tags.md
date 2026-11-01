@@ -38,7 +38,7 @@ Click it on any watch page and the tags appear in a dialog box. Some browsers st
 
 Less than you think.
 
-Copying a competitor's tag list wholesale is legal and almost useless. Their tags describe their video. YouTube's own documentation says tags play a minimal role in discovery, with one specific exception: they help when your subject is commonly misspelled. Everything else about ranking is driven by the title, the thumbnail, the description, what is actually said in the video, and above all how viewers behave after clicking.
+Copying a competitor's tag list wholesale is legal and almost useless. Their tags describe their video. YouTube's own documentation says [tags play a minimal role in discovery](../youtube-hashtags-vs-tags/), with one specific exception: they help when your subject is commonly misspelled. Everything else about ranking is driven by the title, the thumbnail, the description, what is actually said in the video, and above all how viewers behave after clicking.
 
 What a competitor's tags are genuinely good for is **vocabulary**. If several ranking videos on a topic all use a phrase you had not thought of, that phrase is what your audience calls the thing. Put it in your title (the [YouTube title analyzer](../../creator-tools/youtube-title-analyzer/) checks where the keyword sits) and your first two lines of description, where it will actually do work. That is worth far more than pasting it into your tag box.
 

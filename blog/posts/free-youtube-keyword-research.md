@@ -7,7 +7,7 @@ category: YouTube SEO
 tools: youtube-keyword-generator, youtube-tag-generator, youtube-title-analyzer
 ---
 
-Every paid keyword tool sells you two things: a list of phrases, and a judgement about whether you can win them. You can get both free, and the free version of the second one is often more honest than the paid number. Our [YouTube keyword research tool](../../research/) does both from measured data, and the steps below show how to do it by hand.
+Every [paid keyword tool](../tubebuddy-vs-vidiq/) sells you two things: a list of phrases, and a judgement about whether you can win them. You can get both free, and the free version of the second one is often more honest than the paid number. Our [YouTube keyword research tool](../../research/) does both from measured data, and the steps below show how to do it by hand.
 
 ## Step 1: get the phrases from autocomplete
 
@@ -39,7 +39,7 @@ Our extension scores this automatically, showing an overall score with interest 
 
 ## Step 3: check the search volume claim carefully
 
-Here is the part worth being cynical about. No tool outside Google has YouTube's search volume data. Every "monthly searches" number you see in a YouTube SEO tool is modelled, usually from Google web search data or from clickstream panels, and then presented with a confident-looking precision it has not earned.
+Here is the part worth being cynical about. No tool outside Google has YouTube's search volume data. Every "monthly searches" number you see in a [YouTube SEO tool](../best-free-youtube-seo-tools/) is modelled, usually from Google web search data or from clickstream panels, and then presented with a confident-looking precision it has not earned.
 
 We deliberately do not publish a search volume figure, because we would be making it up. What we show instead is what the top results are actually doing: median views per day, how big the channels are, how fresh the videos are. That is measured rather than modelled, and it answers the real question better anyway.
 
@@ -53,12 +53,12 @@ The sweet spot is usually a specific long-tail phrase inside a popular subject. 
 
 ## Step 5: write the title for the phrase, not the tags
 
-Once you have the phrase, put it near the front of the title, in natural language. The [YouTube title analyzer](../../creator-tools/youtube-title-analyzer/) checks keyword position and length. Put it again in the first two lines of the description, where it is visible before the fold. Say it out loud in the first thirty seconds of the video, because the transcript is indexed.
+Once you have the phrase, put it near the front of the title, in natural language. The [YouTube title analyzer](../../creator-tools/youtube-title-analyzer/) checks keyword position and length. Put it again in the [first two lines of the description](../youtube-description-templates/), where it is visible before the fold. Say it out loud in the first thirty seconds of the video, because the transcript is indexed.
 
 Tags come last and matter least. See [do YouTube tags still matter](../do-youtube-tags-still-matter/) for why. When you do write them, the [YouTube tag generator](../../creator-tools/youtube-tag-generator/) keeps the list under 500 characters.
 
 ## What this method cannot do
 
-It cannot tell you whether a topic will trend next month. It cannot see search volume. It cannot predict your retention, which is the thing that actually decides whether you keep the position after YouTube tests your video.
+It cannot tell you whether a topic will trend next month. It cannot see search volume. It cannot predict your retention, which is the thing that actually decides whether you [keep the position](../how-to-check-if-a-youtube-video-is-ranking/) after YouTube tests your video.
 
 What it can do is stop you making videos about settled topics, and point you at the ones where a smaller channel is already proving the door is open. That is most of the value, and it costs nothing.

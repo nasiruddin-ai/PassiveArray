@@ -88,17 +88,17 @@ The same update adds an **activity requirement**. From 1 February 2027 a channel
 
 ## How to check your own progress
 
-Open YouTube Studio, choose **Earn** in the left menu, and the page shows your subscriber count, watch hours and Shorts views against the thresholds, with a **Notify me** button that emails you when you qualify. Those are the only exact numbers; everything a third-party tool shows about your channel is an estimate built from public data.
+Open YouTube Studio, choose **Earn** in the left menu, and the page shows your subscriber count, watch hours and Shorts views against the thresholds, with a **Notify me** button that emails you when you qualify. Those are the only exact numbers; everything [a third-party tool](../is-social-blade-accurate/) shows about your channel is an estimate built from public data.
 
 ## How to check someone else's channel
 
-Watch hours are private, so no outside tool can see whether another channel has crossed 4,000. What is public is the subscriber count (rounded by YouTube to three figures), the upload history, whether recent videos are marked made for kids, and whether ads are served on the watch pages of recent uploads.
+Watch hours are private, so no outside tool can see [whether another channel has crossed 4,000](../how-to-tell-if-a-youtube-channel-is-monetized/). What is public is the subscriber count (rounded by YouTube to three figures), the upload history, whether recent videos are marked made for kids, and whether ads are served on the watch pages of recent uploads.
 
 The [monetization checker](../../creator-tools/youtube-monetization-checker/) reads those signals and returns a verdict with a confidence score. Ads on recent uploads is the strongest signal, because only Partner Program channels carry them. When YouTube serves the checker an ad-free page, which happens, the tool says the ad check was unavailable and rates its confidence lower rather than guessing.
 
 ## Meeting the requirements is the start, not the payday
 
-A channel that crosses 1,000 subscribers and 4,000 hours is typically earning a small amount per month, because the same views that got it there are now the views being monetized. What those views are worth depends on the audience's country, the niche and the share that are Shorts. Our guide to [how much YouTube pays for 1,000 views](../how-much-does-youtube-pay-for-1000-views/) explains the range, and the [YouTube money calculator](../../creator-tools/youtube-money-calculator/) runs it on any channel.
+A channel that crosses 1,000 subscribers and 4,000 hours is [typically earning a small amount per month](../how-much-does-youtube-pay-after-monetization/), because the same views that got it there are now the views being monetized. What those views are worth depends on the audience's country, the niche and the share that are Shorts. Our guide to [how much YouTube pays for 1,000 views](../how-much-does-youtube-pay-for-1000-views/) explains the range, and the [YouTube money calculator](../../creator-tools/youtube-money-calculator/) runs it on any channel.
 
 ## Frequently asked questions
 

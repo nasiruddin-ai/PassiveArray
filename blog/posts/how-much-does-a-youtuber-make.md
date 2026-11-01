@@ -9,7 +9,7 @@ tools: youtube-money-calculator, youtube-sponsorship-price-calculator, youtube-m
 
 A YouTuber's ad income comes down to one formula: monthly views, divided by 1,000, multiplied by RPM. For long-form channels RPM usually falls between **$0.50 and $4.00**, so a channel with 100,000 monthly views earns roughly **$50 to $400 a month** from ads, and a channel with 1 million monthly views roughly **$500 to $4,000**. Sponsorships, memberships and products often add more than ads do.
 
-There is no "average YouTuber salary". YouTube does not publish one, and most channels earn nothing because they are not in the Partner Program. What there is, is the formula, and you can apply it to any channel.
+There is no "average YouTuber salary". YouTube does not publish one, and most channels earn nothing because they are [not in the Partner Program](../how-to-tell-if-a-youtube-channel-is-monetized/). What there is, is the formula, and you can apply it to any channel.
 
 ## Ad income by monthly views
 

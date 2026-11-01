@@ -1,0 +1,18 @@
+# Rebuilds the site once a day so blog posts dated today go live (blog/build-blog.js leaves
+# future-dated posts out of the build). Needs the repository secret VERCEL_DEPLOY_HOOK:
+# Vercel > Project > Settings > Git > Deploy Hooks, branch main.
+name: Daily publish
+on:
+  schedule:
+    - cron: "15 0 * * *"
+  workflow_dispatch:
+jobs:
+  rebuild:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger Vercel deploy
+        env:
+          HOOK: ${{ secrets.VERCEL_DEPLOY_HOOK }}
+        run: |
+          if [ -z "$HOOK" ]; then echo "::warning::VERCEL_DEPLOY_HOOK secret is not set, skipping"; exit 0; fi
+          curl -fsS -X POST "$HOOK"

@@ -129,7 +129,7 @@ Faceless works where the screen, the hands or the story is the point:
 - **Cooking and recipes**, filmed as hands and food.
 - **Gaming**, where the game is on screen.
 
-Faceless struggles where trust in a person is the point, such as finance advice, fitness coaching, parenting and careers advice. Faceless channels must also be careful with YouTube's inauthentic content policy: mass-produced, repetitive videos with little original input can lose monetization. A faceless channel still needs original scripts, research and editing. [YouTube demonetization](../youtube-demonetization/) explains the policy.
+Faceless struggles where trust in a person is the point, such as finance advice, fitness coaching, parenting and careers advice. Faceless channels must also be careful with [YouTube's inauthentic content policy](../can-ai-voice-youtube-channels-be-monetized/): mass-produced, repetitive videos with little original input can lose monetization. A faceless channel still needs original scripts, research and editing. [YouTube demonetization](../youtube-demonetization/) explains the policy.
 
 ## Most popular niches, and why popular is not the same as good
 
@@ -173,7 +173,7 @@ Ratings are a starting point. This test tells you whether a niche works for you.
 1. **Check demand.** Put your topic into the [YouTube keyword generator](../../creator-tools/youtube-keyword-generator/). If people search for dozens of specific questions about it, there is room for a channel. If you only find a handful of broad phrases, the niche may be too small or too vague.
 2. **Check the competition.** Search those questions on YouTube. If the top results are old, short, low quality or from small channels, that is an opening. If every question is answered by large channels with recent videos, look for a narrower angle.
 3. **Check for breakouts.** Look for small channels in the niche whose videos get far more views than their subscriber count. That shows YouTube is willing to recommend newcomers there. Our [outliers feed](../../research/outliers/) lists videos doing many times their channel's usual views, updated daily.
-4. **List 30 ideas.** If you cannot list 30 videos you could make, the niche is too narrow or not one you know well enough. The [video ideas generator](../../creator-tools/youtube-video-ideas-generator/) helps fill gaps.
+4. **List 30 ideas.** If you cannot [list 30 videos you could make](../youtube-video-ideas-for-beginners/), the niche is too narrow or not one you know well enough. The [video ideas generator](../../creator-tools/youtube-video-ideas-generator/) helps fill gaps.
 5. **Make five videos.** Five is enough to learn whether you enjoy it and whether anyone watches. It is not enough to judge long-term success, so judge your own enjoyment more than the views.
 
 ### An example
@@ -200,15 +200,15 @@ For ad pay per view, personal finance and investing, B2B software reviews, insur
 
 ### What are the most popular niches on YouTube?
 
-By audience size, music, children's entertainment, gaming and general entertainment dominate. Popular is not the same as a good place to start, because those niches are crowded with large channels and companies.
+By audience size, [music](../how-to-grow-a-music-youtube-channel/), children's entertainment, gaming and general entertainment dominate. Popular is not the same as a good place to start, because those niches are crowded with large channels and companies.
 
 ### What is the best niche for a faceless YouTube channel?
 
-Software tutorials, coding, insurance and legal explainers, true stories and documentaries, craft and cooking all work well faceless, because the screen, the hands or the story is the point. Faceless channels still need original scripts and editing to stay within YouTube's inauthentic content rules.
+Software tutorials, coding, insurance and legal explainers, true stories and documentaries, craft and cooking all work well faceless, because the screen, the hands or the story is the point. [Faceless channels still need original scripts and editing](../how-to-grow-a-faceless-youtube-channel/) to stay within YouTube's inauthentic content rules.
 
 ### What is the easiest YouTube niche to start?
 
-Low-effort niches include software tutorials, careers advice, exam prep, productivity and gaming. Gaming is the easiest to start but the hardest to stand out in and the lowest paid per view.
+Low-effort niches include software tutorials, careers advice, exam prep, productivity and gaming. Gaming is the easiest to start but [the hardest to stand out in](../how-to-grow-a-gaming-youtube-channel/) and the lowest paid per view.
 
 ### Can I change my niche later?
 
@@ -216,7 +216,7 @@ Yes, but it costs some momentum. YouTube recommends videos to viewers similar to
 
 ### How do I find my niche?
 
-List what you know well, what you could make 30 videos about, and what you would enjoy making for two years. Then check search demand and competition for each with a keyword tool and YouTube search. The [niche finder](../../creator-tools/youtube-niche-finder/) ranks niches against your goal to narrow the list.
+List what you know well, what you could make 30 videos about, and what you would enjoy making for two years. Then check search demand and competition for each with [a keyword tool](../tubebuddy-vs-vidiq/) and YouTube search. The [niche finder](../../creator-tools/youtube-niche-finder/) ranks niches against your goal to narrow the list.
 
 ### Is it too late to start a YouTube channel in 2026?
 

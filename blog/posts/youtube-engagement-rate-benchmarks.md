@@ -45,7 +45,7 @@ A 4% engagement rate sounds low if you are used to Instagram, where likes are on
 
 - **A small, loyal audience.** Channels under 10K subscribers routinely post 5% to 10% because nearly every viewer is a fan.
 - **Asking.** A specific ask ("tell me in the comments which one you picked") measurably lifts comments. A generic "like and subscribe" does not.
-- **Shorts.** Short videos usually run two to three times the engagement rate of long videos on the same channel because the like button is on screen the whole time. The tools flag Shorts so you do not compare them with long-form directly.
+- **Shorts.** Short videos usually run [two to three times the engagement rate](../youtube-shorts-engagement-rate/) of long videos on the same channel because the like button is on screen the whole time. The tools flag Shorts so you do not compare them with long-form directly.
 
 ## How to use the grade
 

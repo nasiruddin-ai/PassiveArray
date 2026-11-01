@@ -245,13 +245,13 @@ module.exports = function (NICHES) {
       platform: "YouTube",
       intent: "rank",
       short: "Hashtags for a YouTube video, in the order that decides which three show up.",
-      intro: "YouTube shows only the first three hashtags from your description, above the title. This builds a set in the right order: the specific ones first where they do the work, broader ones after.",
+      intro: "YouTube shows up to three hashtags from your description by the title, picking the ones it considers most engaging. This builds a set in the right order: the specific ones first where they do the work, broader ones after.",
       inputs: [
         { id: "topic", label: "What the video is about", type: "text", placeholder: "Type your topic, e.g. home coffee brewing" },
         { id: "count", label: "How many", type: "select", options: [["5", "5"], ["8", "8"], ["12", "12"], ["15", "15"]], value: "8" },
       ],
       how: [
-        "Only the first three appear above your title, so specific tags go first where they attract the right viewer.",
+        "Only up to three appear by your title, so keep the list short and the specific tags first.",
         "YouTube ignores every hashtag on a video that has more than 60, and only the first three show with the title, so a short, specific list works best.",
         "Hashtags are a small signal. They help people browsing a tag, they do not rescue a weak title.",
       ],

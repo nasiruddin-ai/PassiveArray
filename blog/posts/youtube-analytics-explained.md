@@ -27,7 +27,7 @@ Change the date range at the top right. The default is the last 28 days. For a s
 | Tab | What it shows | Use it to answer |
 |---|---|---|
 | Overview | Views, watch time, subscribers and revenue for the period, Realtime activity and your top content | "Is the channel up or down?" |
-| Content | Results split by format: videos, Shorts, live streams and posts, with impressions, CTR and traffic sources | "Which format and which videos are working?" |
+| Content | Results split by format: videos, Shorts, [live streams](../how-to-get-more-views-on-youtube-live/) and posts, with impressions, CTR and traffic sources | "Which format and which videos are working?" |
 | Audience | Returning and new viewers, unique viewers, countries, age, gender, other channels and content your viewers watch, and when they are on YouTube | "Who watches, and are they coming back?" |
 | Revenue | Estimated revenue, RPM, CPM and revenue sources, once you are in the Partner Program | "What do I earn, and from where?" |
 | Trends | What viewers search for on YouTube, including your audience's searches over the last 28 days | "What should my next video be about?" |
@@ -50,7 +50,7 @@ The Revenue tab appears once you are in the YouTube Partner Program. It shows es
 
 ### Trends
 
-The Trends tab shows what people are searching for on YouTube, including searches made by your own audience. Use it to find topics your viewers already want. It is the closest thing Studio has to a keyword tool. Our [keyword generator](../../creator-tools/youtube-keyword-generator/) adds the long-tail phrases people type into the search box.
+The Trends tab shows what people are searching for on YouTube, including searches made by your own audience. Use it to [find topics your viewers already want](../youtube-video-ideas-for-beginners/). It is the closest thing Studio has to a [keyword tool](../best-free-youtube-seo-tools/). Our [keyword generator](../../creator-tools/youtube-keyword-generator/) adds the long-tail phrases people type into the search box.
 
 ## The video tabs
 
@@ -66,7 +66,7 @@ Each video has its own analytics, with five tabs.
 
 Two video reports deserve special attention.
 
-**Search terms**, in the Reach tab under YouTube search, shows the exact phrases people typed before watching. If the terms do not match what you thought the video was about, rewrite the title and description for the terms people actually use.
+**Search terms**, in the Reach tab under YouTube search, shows [the exact phrases people typed](../how-to-check-if-a-youtube-video-is-ranking/) before watching. If the terms do not match what you thought the video was about, rewrite the title and description for the terms people actually use.
 
 **Key moments for audience retention**, in the Engagement tab, shows how well each part of the video held attention. YouTube lets you compare it with your **typical retention**, based on your 10 latest videos of similar length. It marks the intro, the top moments where viewers rewatched, spikes and dips.
 
@@ -88,13 +88,13 @@ Total hours viewers spent watching. It matters for two reasons. It is one of the
 
 ### Average view duration and average percentage viewed
 
-**Average view duration** is the average number of minutes watched per view. **Average percentage viewed** is the same thing as a share of the video's length. YouTube says both are signals: the percentage matters more for short videos, the duration more for long ones. For Shorts, both are calculated from engaged views.
+**Average view duration** is the average number of minutes watched per view. **Average percentage viewed** is the same thing as a share of the video's length. YouTube says both are signals: the percentage matters more for short videos, the duration more for long ones. For Shorts, both are [calculated from engaged views](../youtube-shorts-engagement-rate/).
 
 ### The retention graph
 
 The line in the Engagement tab shows the share of viewers still watching at each moment. Four shapes to recognize:
 
-- **A steep drop in the first 30 seconds.** The opening did not match what the title and thumbnail promised.
+- **A steep drop in the first 30 seconds.** [The opening](../how-to-write-a-youtube-script/) did not match what the title and thumbnail promised.
 - **A slow, steady decline.** Normal. Every video loses viewers over time.
 - **A sudden dip in the middle.** Something lost people there: a slow section, an ad read, an off-topic tangent.
 - **A spike.** People rewound to rewatch, or skipped ahead to that moment. Spikes often show the part viewers actually came for.
@@ -114,11 +114,11 @@ An estimate of how many different people watched in the period, counting each pe
 - **Regular viewers** have watched a video on your channel at least once a month for more than six months of the past year. YouTube calls them your most loyal audience.
 - **Casual viewers** watch your channel occasionally.
 
-YouTube notes that these segments do not affect reach or monetization. They describe your audience, they do not change how it is served. A growing number of regular viewers is still the strongest sign of a healthy channel, because they are the people who watch whatever you publish next. Regular viewers are a high bar, so small percentages are normal, especially on new or Shorts-led channels.
+YouTube notes that these segments do not affect reach or monetization. They describe your audience, they do not change how it is served. A [growing number of regular viewers](../how-to-grow-a-youtube-channel/) is still the strongest sign of a healthy channel, because they are the people who watch whatever you publish next. Regular viewers are a high bar, so small percentages are normal, especially on new or Shorts-led channels.
 
 ### Subscribers
 
-Studio shows subscribers gained and lost, and which videos brought new ones. A video that brings in many subscribers per view is a guide to what new viewers want more of.
+Studio shows [subscribers gained and lost](../why-did-my-youtube-subscribers-go-down/), and which videos brought new ones. A video that brings in many subscribers per view is a guide to what new viewers want more of.
 
 ### Traffic sources
 
@@ -137,7 +137,7 @@ Traffic sources show where views came from. The main ones, as YouTube defines th
 | External | Websites and apps that embed or link to the video |
 | Direct or unknown | Typed URLs, bookmarks, signed-out viewers and unidentified apps |
 
-Each source tells a different story. Search traffic means your title answers what people type. Suggested traffic means your video works next to others in your niche. Browse traffic means YouTube is putting you on people's Home page. If one source falls, you know where to look.
+Each source tells a different story. Search traffic means [your title answers what people type](../how-youtube-seo-works/). Suggested traffic means your video works next to others in your niche. Browse traffic means YouTube is putting you on people's Home page. If one source falls, you know where to look.
 
 ## How to read the numbers together
 
@@ -171,7 +171,7 @@ So the video is good and the packaging is not. The fix is a new title or thumbna
 4. **Returning and regular viewers.** Rising means people come back for you, not just for one video.
 5. **The top traffic source for your newest video.** It tells you whether YouTube is recommending it or only your subscribers watched.
 
-That takes ten minutes. Most of the rest of Analytics is for diagnosing a specific problem once these five have shown you one.
+That takes ten minutes. Most of the rest of Analytics is for [diagnosing a specific problem](../how-to-audit-a-youtube-channel/) once these five have shown you one.
 
 ## What analytics cannot tell you
 
@@ -181,7 +181,7 @@ That takes ten minutes. Most of the rest of Analytics is for diagnosing a specif
 
 **Revenue figures are estimates.** Studio shows estimated revenue. The amount you are paid is finalized at the start of the next month. [How and when YouTube pays you](../how-does-youtube-pay-you/) explains the timing.
 
-**It only shows your own channel.** No one can see another channel's Studio analytics. To compare yourself with others, use public numbers. The [growth tracker](../../creator-tools/youtube-channel-growth-tracker/) records any channel's subscribers and views daily. The [engagement rate calculator](../../creator-tools/youtube-engagement-rate-calculator/) compares likes and comments per view, and [YouTube engagement rate benchmarks](../youtube-engagement-rate-benchmarks/) show what is typical.
+**It only shows your own channel.** No one can see another channel's Studio analytics. To compare yourself with others, [use public numbers](../social-blade-alternatives/). The [growth tracker](../../creator-tools/youtube-channel-growth-tracker/) records any channel's subscribers and views daily. The [engagement rate calculator](../../creator-tools/youtube-engagement-rate-calculator/) compares likes and comments per view, and [YouTube engagement rate benchmarks](../youtube-engagement-rate-benchmarks/) show what is typical.
 
 ## Sources
 

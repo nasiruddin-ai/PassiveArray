@@ -58,13 +58,13 @@ YouTube's Help Center names three elements in search ranking:
 - **Engagement:** "Engagement signals are a valuable way to determine relevance," such as how long people watch videos for that query.
 - **Quality:** signals that "help determine which channels demonstrate expertise" on the topic.
 
-YouTube says how much each element counts "may vary by search type". It adds that search results "are not a list of the most-viewed videos for a given search", and that YouTube "doesn't accept payment for better placement within organic search results." Search can also be personalized from search and watch history, so two people can see different results for the same words.
+YouTube says how much each element counts "may vary by search type". It adds that search results "are not a list of the most-viewed videos for a given search", and that YouTube "doesn't accept payment for better placement within organic search results." Search can also be personalized from search and watch history, so [two people can see different results](../how-to-check-if-a-youtube-video-is-ranking/) for the same words.
 
-Search is the surface where a new channel competes mostly on how well it answers the query, not on how many people already watch it. Our [keyword generator](../../creator-tools/youtube-keyword-generator/) shows the real phrases people type, and [free YouTube keyword research](../free-youtube-keyword-research/) explains how to choose between them.
+Search is the surface where a new channel competes mostly on [how well it answers the query](../how-youtube-seo-works/), not on how many people already watch it. Our [keyword generator](../../creator-tools/youtube-keyword-generator/) shows the real phrases people type, and [free YouTube keyword research](../free-youtube-keyword-research/) explains how to choose between them.
 
 ### Shorts
 
-The Shorts feed is personalized from what viewers watch, skip and engage with inside the feed. Shorts traffic is reported separately in Studio as **Shorts**. Because viewers swipe rather than choose from thumbnails, the opening second does the job a thumbnail does on long-form video.
+[The Shorts feed](../youtube-shorts-seo/) is personalized from what viewers watch, skip and engage with inside the feed. Shorts traffic is reported separately in Studio as **Shorts**. Because viewers swipe rather than choose from thumbnails, the opening second does the job a thumbnail does on long-form video.
 
 ## The signals YouTube has named
 
@@ -107,9 +107,9 @@ YouTube's performance FAQ answers most of the theories creators pass around. Her
 
 | Belief | What YouTube says |
 |---|---|
-| "Upload at the perfect time." | Publish time "is not known to impact a video's long-term performance". It matters more for Live and Premiere videos. [Best time to post](../best-time-to-post-on-youtube/) explains when timing helps |
+| "Upload at the perfect time." | Publish time "is not known to impact a video's long-term performance". It matters more for [Live and Premiere videos](../how-to-get-more-views-on-youtube-live/). [Best time to post](../best-time-to-post-on-youtube/) explains when timing helps |
 | "You must upload daily or weekly." | View growth is not correlated with time between uploads. Quality matters more than frequency |
-| "Taking a break kills your channel." | YouTube found no correlation between how long a break lasts and how views change. It may take time to re-engage viewers afterwards |
+| "Taking a break kills your channel." | YouTube found no correlation between how long a break lasts and how views change. It may take time to [re-engage viewers afterwards](../how-to-revive-a-dead-youtube-channel/) |
 | "Tags drive recommendations." | YouTube calls tags "not important". They mainly help with common misspellings. See [do YouTube tags still matter](../do-youtube-tags-still-matter/) |
 | "Demonetized videos get buried." | The system does not track monetization status. Some content is both demonetized and recommended less, because of what it contains |
 | "Set your channel country to reach that country." | Channel location settings are not used in recommendations |
@@ -120,7 +120,7 @@ Three more beliefs that YouTube has not addressed directly, with our view:
 
 - **"Deleting old videos resets the algorithm."** Since each video is judged on its own viewers, removing an old video does not boost new ones. It does remove whatever views that video was still earning.
 - **"Long videos are always favoured."** YouTube says satisfaction matters, not length. A tight eight minutes that viewers finish beats a padded twenty.
-- **"Shorts hurt long-form."** YouTube's Help Center does not say this. Shorts and long-form are recommended on different surfaces to viewers in different modes, so judge each format by its own numbers.
+- **"Shorts hurt long-form."** YouTube's Help Center does not say this. [Shorts and long-form are recommended on different surfaces](../how-to-grow-youtube-channel-with-shorts/) to viewers in different modes, so judge each format by its own numbers.
 
 ## Why your views dropped
 
@@ -135,7 +135,7 @@ Most of these are about viewers, not a penalty. To find which one applies, check
 
 ## Why an old video suddenly takes off
 
-YouTube gives the reverse reasons too: the topic is rising, new viewers are binge-watching older videos, the video is getting more clicks from recommendations, or a new upload sent viewers back to earlier episodes. An old video taking off is often a sign of what your audience wants more of.
+YouTube gives the reverse reasons too: the topic is rising, new viewers are binge-watching older videos, the video is getting more clicks from recommendations, or a new upload sent viewers back to earlier episodes. An old video taking off is often a sign of [what your audience wants more of](../youtube-video-ideas-for-beginners/).
 
 ## Changing a title or thumbnail after upload
 
@@ -151,7 +151,7 @@ This part is our advice, built on what YouTube has said above.
 4. **Answer real searches.** Search is the surface where a new channel competes on relevance rather than reputation. The [keyword generator](../../creator-tools/youtube-keyword-generator/) shows what people type.
 5. **Build series.** End screens, playlists and follow-up videos send satisfied viewers to your next video, and YouTube lists new uploads sending viewers back to old ones as a reason old videos grow.
 6. **Ignore the hacks.** Upload times, tag stuffing and daily uploads are not what YouTube rewards. A better video for the same audience is.
-7. **Judge by your audience.** If your regular viewers come back and watch to the end, the systems will find more people like them.
+7. **Judge by your audience.** If your [regular viewers come back](../how-to-grow-a-youtube-channel/) and watch to the end, the systems will find more people like them.
 
 For the numbers that show whether this is working, read [YouTube Analytics explained](../youtube-analytics-explained/). For fixes grouped by the problem they solve, read [how to get more views on YouTube](../how-to-get-more-views-on-youtube/).
 

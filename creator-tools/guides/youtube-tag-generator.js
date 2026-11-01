@@ -63,7 +63,7 @@ module.exports = {
         "<b>Start from a real search phrase.</b> Use the <a href=\"../youtube-keyword-generator/\">keyword generator</a> to find the exact phrase your video answers, then generate tags from that phrase.",
         "<b>Put the effort where it counts.</b> Write the title with the <a href=\"../youtube-title-generator/\">title generator</a> and the first two lines with the <a href=\"../youtube-description-generator/\">description generator</a>. Those carry far more weight than any tag.",
       ],
-      after: ["Hashtags are a different field. They go in the description, and only the first three show above your title. Build those with the <a href=\"../youtube-hashtag-generator/\">YouTube hashtag generator</a>."],
+      after: ["Hashtags are a different field. They go in the description, and YouTube shows up to three of them, the ones it considers most engaging, by your title. Build those with the <a href=\"../youtube-hashtag-generator/\">YouTube hashtag generator</a>."],
     },
   ],
   faq: [
@@ -71,7 +71,7 @@ module.exports = {
     ["Do YouTube tags help with SEO?", "Only a little. YouTube says tags play a minimal role in discovery and mainly help when your subject is commonly misspelled. Your title, thumbnail, description and how long viewers watch matter far more."],
     ["How many tags should I use on a YouTube video?", "Use as many accurate tags as fit, which is usually 20 to 30 short ones inside the 500-character limit. Accuracy matters more than count; delete anything that does not describe this exact video."],
     ["Should I copy tags from a popular video?", "You can read them as research, but copying them wholesale is close to useless. Their tags describe their video. Look for phrases several top videos share, then use those words in your title and description, where they do more work."],
-    ["Are YouTube tags the same as hashtags?", "No. Tags are hidden in the Tags box in YouTube Studio. Hashtags are written in the title or description, are visible to viewers, and only the first three from the description appear above the title."],
+    ["Are YouTube tags the same as hashtags?", "No. Tags are hidden in the Tags box in YouTube Studio. Hashtags are written in the title or description, are visible to viewers, and YouTube shows up to three of them by the title."],
     ["Can I change tags after I publish a video?", "Yes. Open the video in YouTube Studio, edit the Tags box under Show more, and save. Changing tags does not reset views or comments."],
     ["Is this tag generator using AI?", "The list is written by AI from your topic when AI writing is available, and built from your topic plus the variations people commonly type when it is not. Either way it never adds tags that have nothing to do with what you typed."],
   ],

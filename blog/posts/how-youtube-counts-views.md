@@ -30,7 +30,7 @@ Yes, if you watch it like any viewer would. Watching your own video once from yo
 
 ## Views versus engaged views
 
-Shorts moved to counting a view on every start or replay in March 2025, and YouTube extended the same start-to-play rule to every format on 24 August 2026. That makes public view counts higher and easier to earn than they used to be.
+Shorts moved to [counting a view on every start or replay](../youtube-shorts-engagement-rate/) in March 2025, and YouTube extended the same start-to-play rule to every format on 24 August 2026. That makes public view counts higher and easier to earn than they used to be.
 
 YouTube kept a stricter measure for money. Partner Program earnings are still based on **engaged views** and **engaged watch hours**, and eligibility on qualified views, so the change did not alter what anyone is paid. In YouTube Studio you can see both. If you are tracking progress toward [monetization requirements](../youtube-monetization-requirements/), engaged views are the number that matters.
 

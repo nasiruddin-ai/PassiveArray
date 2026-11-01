@@ -12,7 +12,10 @@
 //   keyword: how much does youtube pay for 1000 views    the search this answers
 //   tools: slug-one, slug-two creator-tool slugs to show at the end, optional
 //   updated: 2026-09-20       optional
+//   related: slug-one, slug-two   hand-picked posts for "Read next", optional (filled up from the category)
 //   ---
+// A post dated in the future stays out of the build until that day, and links to it from other
+// posts render as plain text until then, so a batch can be committed ahead and go live day by day.
 // Markdown supported: ## and ### headings, paragraphs, - and 1. lists, **bold**,
 // *italic*, `code`, [links](url), > quotes, | tables |, --- rules.
 
@@ -170,15 +173,34 @@ function parse(file) {
     category: cat,
     keyword: meta.keyword || "",
     tools: (meta.tools || "").split(",").map((s) => s.trim()).filter(Boolean),
+    related: (meta.related || "").split(",").map((s) => s.trim()).filter(Boolean),
     minutes: Math.max(1, Math.round(words / 220)),
     html: markdown(body),
     faq,
   };
 }
 
-function loadPosts() {
+function loadPosts(today = new Date().toISOString().slice(0, 10)) {
   if (!fs.existsSync(POSTS_DIR)) return [];
-  return fs.readdirSync(POSTS_DIR).filter((f) => f.endsWith(".md")).map(parse).sort((a, b) => (a.date < b.date ? 1 : -1));
+  const all = fs.readdirSync(POSTS_DIR).filter((f) => f.endsWith(".md")).map(parse);
+  const live = all.filter((p) => p.date <= today);
+  const liveSlugs = new Set(live.map((p) => p.slug));
+  const known = new Set(all.map((p) => p.slug));
+  const toolSlugs = new Set(site.tools.map((t) => t.slug));
+  for (const p of live) {
+    p.html = p.html.replace(/<a href="([^"]+)">([\s\S]*?)<\/a>/g, (m, href, text) => {
+      const b = /^(?:\.\.\/|\/blog\/)([a-z0-9-]+)\/(?:#[\w-]*)?$/.exec(href);
+      if (b) {
+        if (!known.has(b[1])) throw new Error(p.slug + " links to a post that does not exist: " + href);
+        return liveSlugs.has(b[1]) ? m : text;
+      }
+      const t = /creator-tools\/([a-z0-9-]+)\//.exec(href);
+      if (t && !toolSlugs.has(t[1])) throw new Error(p.slug + " links to a tool that does not exist: " + href);
+      return m;
+    });
+    p.related = p.related.filter((s) => liveSlugs.has(s));
+  }
+  return live.sort((a, b) => (a.date < b.date ? 1 : -1));
 }
 
 /* ------------------------------------------------------------------ pieces */
@@ -316,7 +338,8 @@ function buildInto(outDir, posts) {
   posts.forEach((p, i) => {
     const dir = path.join(outDir, p.slug);
     fs.mkdirSync(dir, { recursive: true });
-    const related = posts.filter((r) => r.category.slug === p.category.slug && r.slug !== p.slug).slice(0, 3);
+    const picked = p.related.map((s) => posts.find((r) => r.slug === s)).filter(Boolean);
+    const related = picked.concat(posts.filter((r) => r.category.slug === p.category.slug && r.slug !== p.slug && !picked.includes(r))).slice(0, 3);
     fs.writeFileSync(path.join(dir, "index.html"), postPage(p, posts[i - 1], posts[i + 1], related));
   });
 

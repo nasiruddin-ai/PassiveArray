@@ -28,7 +28,7 @@ Type a time in a comment, such as `4:32`, and YouTube turns it into a clickable 
 
 ## Timestamps in your description become chapters
 
-A list of timestamps in your video description does more than make links. If it follows YouTube's rules, it splits the progress bar into chapters with titles:
+A list of timestamps in [your video description](../youtube-description-templates/) does more than make links. If it follows YouTube's rules, it splits the progress bar into chapters with titles:
 
 - The first timestamp must be `0:00`.
 - There must be at least three timestamps.
@@ -40,7 +40,7 @@ Write one per line, time first:
 - `1:15 What you need`
 - `4:40 Step one`
 
-Chapters help viewers skip to what they came for, and YouTube can show them in search results. Our [description generator](../../creator-tools/youtube-description-generator/) includes a timestamps block for you to set to your real chapters.
+Chapters help viewers skip to what they came for, and YouTube can [show them in search results](../how-to-rank-youtube-videos-on-google/). Our [description generator](../../creator-tools/youtube-description-generator/) includes a timestamps block for you to set to your real chapters.
 
 ## Embeds that start at a time
 

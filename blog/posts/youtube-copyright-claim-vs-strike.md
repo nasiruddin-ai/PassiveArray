@@ -22,7 +22,7 @@ A **copyright claim** usually comes from Content ID, YouTube's automatic matchin
 
 ## What a Content ID claim does
 
-Copyright owners upload their music, film and TV to Content ID. When your upload matches, the owner's chosen setting applies:
+Copyright owners [upload their music](../how-much-does-youtube-pay-musicians/), film and TV to Content ID. When your upload matches, the owner's chosen setting applies:
 
 - **Monetize:** ads run on your video and the revenue goes to the claimant.
 - **Track:** the video stays up, and the owner just sees its statistics.

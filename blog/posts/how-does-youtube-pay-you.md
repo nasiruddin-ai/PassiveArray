@@ -7,7 +7,7 @@ category: Earnings
 tools: youtube-money-calculator, youtube-monetization-checker
 ---
 
-YouTube pays creators once a month through **AdSense for YouTube**. Your earnings for a month are finalized early the following month, and if your balance is at least **$100** (or the local equivalent, such as £60 or €70), Google issues the payment between the **21st and 26th**. If you are below the threshold, the balance rolls over until you reach it.
+YouTube pays creators once a month through **AdSense for YouTube**. Your earnings for a month are finalized early the following month, and if your balance is at least **$100** (or the local equivalent, such as £60 or €70), Google issues the payment between the **21st and 26th**. If you are below the threshold, [the balance rolls over until you reach it](../how-much-does-youtube-pay-after-monetization/).
 
 Here is the whole path, from a view to money in your bank.
 
@@ -37,7 +37,7 @@ The last row is the expensive one. If you do not submit tax information, Google 
 | When | What happens |
 |---|---|
 | During the month | Estimated earnings build up in YouTube Studio and AdSense |
-| Around the 3rd of the next month | Last month's earnings are finalized and added to your balance |
+| Between the 7th and 12th of the next month | Last month's earnings are finalized and added to your balance |
 | 21st to 26th | Payment is issued if your balance is at least $100 and there are no holds |
 | A few days to a few weeks later | Money arrives, depending on payment method and bank |
 

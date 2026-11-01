@@ -1283,12 +1283,12 @@
       hero: { label: "Hashtags", value: chosen.length, note: "The first three appear above your video title. Those are the specific ones." },
       tags: chosen,
       rows: [
-        { name: "Shown above your title", value: chosen.slice(0, 3).map(function (c) { return c.tag; }).join(" ") },
+        { name: "Most likely shown by your title", value: chosen.slice(0, 3).map(function (c) { return c.tag; }).join(" ") },
         { name: "Total characters", value: chosen.map(function (c) { return c.tag; }).join(" ").length },
         { name: "YouTube's limit", sub: "more than this and all are ignored", value: "60 hashtags" },
       ],
       copy: chosen.map(function (c) { return c.tag; }).join(" "),
-      note: "Paste these at the end of your description. Specific tags are first on purpose: only the first three are shown above the title, and a narrow tag brings the right viewer while a broad one competes with millions of videos.",
+      note: "Paste these at the end of your description. Specific tags are first on purpose: YouTube shows up to three hashtags by the title, and a narrow tag brings the right viewer while a broad one competes with millions of videos.",
     };
   };
 

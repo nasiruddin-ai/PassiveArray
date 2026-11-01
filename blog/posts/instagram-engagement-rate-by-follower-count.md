@@ -7,7 +7,7 @@ category: Engagement
 tools: instagram-engagement-rate-calculator, instagram-engagement-rate-benchmark, instagram-audit
 ---
 
-Instagram engagement rate is the first number a brand looks at before a deal and the first number a creator checks after a post. It is also the number most often compared unfairly, because the typical rate falls steeply as an account grows. A 2% rate is excellent for one account and a warning for another. The [Instagram engagement rate calculator](../../creator-tools/instagram-engagement-rate-calculator/) grades any account against the typical rate for its size.
+Instagram engagement rate is the first number [a brand looks at before a deal](../how-do-instagram-creators-make-money/) and the first number a creator checks after a post. It is also the number [most often compared unfairly](../instagram-engagement-rate-by-industry/), because the typical rate falls steeply as an account grows. A 2% rate is excellent for one account and a warning for another. The [Instagram engagement rate calculator](../../creator-tools/instagram-engagement-rate-calculator/) grades any account against the typical rate for its size.
 
 ## The formula
 
@@ -51,11 +51,11 @@ Likes are about 92% of total engagement on a typical account. That matters when 
 
 ## What moves the rate
 
-- **Carousels and Reels** tend to earn more comments and saves than single images. Saves and shares are not in the public formula, but they drive reach, which drives the likes that are.
+- **Carousels and Reels** tend to earn more comments and saves than single images. Saves and shares are not in the public formula, but [they drive reach](../how-to-increase-instagram-engagement-rate/), which drives the likes that are.
 - **Posting less, better.** Engagement per post rises when the account stops posting filler. Total engagement per week may not.
-- **Replying to comments** roughly doubles comment counts over time, because a reply is itself a comment and it invites the next one.
+- **Replying to comments** roughly doubles comment counts over time, because a reply is itself a comment and [it invites the next one](../instagram-captions/).
 - **Giveaways** spike the rate for a week and then depress it, because giveaway followers do not engage afterwards.
 
 ## Using the number in a deal
 
-For a brand, engagement rate is a screening number, not a price. Screen out accounts far below their tier, then price on reach and on the audience fit. The [Instagram pricing calculator](../../creator-tools/instagram-pricing-calculator/) on this site starts from followers and engagement and adjusts for the tier, which is the same order of operations.
+For a brand, engagement rate is [a screening number, not a price](../does-influencer-marketing-work/). Screen out accounts far below their tier, then price on reach and on the audience fit. The [Instagram pricing calculator](../../creator-tools/instagram-pricing-calculator/) on this site starts from followers and engagement and adjusts for the tier, which is the same order of operations.
