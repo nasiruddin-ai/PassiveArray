@@ -3,7 +3,7 @@
 // up to 2,000 top-level, up to 5 inline replies, textFormat plainText) and COMPUTE in public/shared.js.
 module.exports = {
   seoTitle: "YouTube Comment Exporter: Download Comments to CSV Free | Passive Array",
-  seoDescription: "Export YouTube comments to a CSV file for Excel or Google Sheets. Author, comment text, likes, replies, date and a link to each comment. Free, no sign-up.",
+  seoDescription: "Export YouTube comments to a CSV file for Excel or Google Sheets. Author, comment text, likes, replies, date and a link to each comment. Free with a free account.",
   guideUpdated: "October 2026",
   guide: [
     {
@@ -58,7 +58,7 @@ module.exports = {
   faq: [
     ["Can I export comments from any YouTube video?", "Any public video or Short with comments turned on. If the creator has turned comments off, there is nothing to export and the tool says so."],
     ["How many comments can I export?", "Up to 2,000 top-level comments per export, plus up to 5 replies under each one."],
-    ["Do I need to sign in or connect my YouTube account?", "No. Only public comments are read, through Passive Array's own API key, so you never grant access to anything."],
+    ["Do I need an account?", "You can see the comments without one. Downloading the CSV needs a free Passive Array account, which takes a few seconds, and you come straight back to your results. You never connect your YouTube account: only public comments are read, through Passive Array's own API key."],
     ["Why are some replies missing?", "The YouTube API includes up to 5 replies with each comment. The reply_count column still shows how many replies a comment really has."],
     ["Can I export comments to Excel?", "Yes. The CSV opens directly in Excel, Google Sheets and Numbers, with emoji and accents intact."],
   ],

@@ -101,6 +101,8 @@
   }
 
   /* ----------------------------------------------------------- renderers */
+  function markedIn() { try { return !!localStorage.getItem("pa-user"); } catch (e) { return false; } }
+
   function render(out) {
     if (!out) return;
     if (out.error) {
@@ -164,12 +166,14 @@
       h += "<div class=\"card\"><div class=\"copybox\" id=\"copybox\">" + esc(out.copy) + "</div><div class=\"actions\"><button type=\"button\" class=\"btn ghost\" id=\"copybtn\">Copy</button></div></div>";
     }
     if (out.download) {
-      h += "<div class=\"actions dlrow\"><button type=\"button\" class=\"btn\" id=\"dlbtn\">" + esc(out.download.label || "Download CSV") + "</button>" + (out.download.hint ? "<span class=\"note\">" + esc(out.download.hint) + "</span>" : "") + "</div>";
+      var gated = T.downloadNeedsAccount && !markedIn();
+      h += "<div class=\"actions dlrow\"><button type=\"button\" class=\"btn\" id=\"dlbtn\">" + esc(out.download.label || "Download CSV") + "</button>" +
+        "<span class=\"note\">" + (gated ? "Free account needed to download. Takes a few seconds, and you come straight back here." : esc(out.download.hint || "")) + "</span></div>";
     }
     if (out.note) h += "<p class=\"note\">" + out.note + "</p>";
     results.innerHTML = h;
     var dl = document.getElementById("dlbtn");
-    if (dl) dl.addEventListener("click", function () {
+    function saveFile() {
       var blob = new Blob(["﻿" + out.download.text], { type: out.download.mime || "text/csv;charset=utf-8" });
       var a = document.createElement("a");
       a.href = URL.createObjectURL(blob);
@@ -177,7 +181,26 @@
       document.body.appendChild(a);
       a.click();
       setTimeout(function () { URL.revokeObjectURL(a.href); a.remove(); }, 500);
+    }
+    if (dl) dl.addEventListener("click", function () {
+      if (!T.downloadNeedsAccount) return saveFile();
+      dl.disabled = true;
+      // The server is the authority: the HttpOnly session cookie decides, not the local marker.
+      fetch("/api/auth?action=me", { credentials: "same-origin", cache: "no-store" })
+        .then(function (r) { return r.json(); })
+        .catch(function () { return { ok: false }; })
+        .then(function (me) {
+          dl.disabled = false;
+          if (me && me.ok) return saveFile();
+          var back = new URL(location.origin + location.pathname);
+          var v = values();
+          Object.keys(v).forEach(function (k) { if (String(v[k]).trim() !== "") back.searchParams.set(k, v[k]); });
+          back.searchParams.set("dl", "1");
+          location.href = "/signup/?next=" + encodeURIComponent(back.pathname + back.search);
+        });
     });
+    // Back from sign-up with ?dl=1: start the download the visitor asked for.
+    if (dl && T.downloadNeedsAccount && /[?&]dl=1/.test(location.search) && !render.autoDownloaded) { render.autoDownloaded = true; dl.click(); }
     if (typeof out.after === "function") out.after(results);
     var cb = document.getElementById("copybtn");
     if (cb) cb.addEventListener("click", function () {

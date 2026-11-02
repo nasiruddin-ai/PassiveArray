@@ -70,8 +70,9 @@ module.exports = [
     action: "comments",
     intent: "check",
     buttonLabel: "Export comments",
+    downloadNeedsAccount: true,
     short: "Download a video's comments to CSV for Excel or Google Sheets: author, text, likes, replies, date.",
-    intro: "Paste a video or Shorts link. You get the comments in a table and a CSV file with the author, comment text, likes, reply count, date and a direct link to each comment.",
+    intro: "Paste a video or Shorts link. You see the comments in a table right away, and with a free Passive Array account you can download them all as a CSV with the author, comment text, likes, reply count, date and a direct link to each comment.",
     inputs: [
       { id: "video", label: "Video or Shorts link", type: "text", placeholder: "https://www.youtube.com/watch?v=..." },
       { id: "order", label: "Order", type: "select", value: "relevance", options: [["relevance", "Top comments"], ["time", "Newest first"]] },
@@ -80,7 +81,7 @@ module.exports = [
     how: [
       "Comments come from the official YouTube Data API, 100 per request, with up to 5 replies each.",
       "Comments held for review, flagged as spam or deleted are never returned by the API.",
-      "The CSV is built in your browser and starts with a byte-order mark so Excel reads emoji and accents correctly.",
+      "The CSV is built in your browser and starts with a byte-order mark so Excel reads emoji and accents correctly. Downloading it needs a free account; viewing the comments does not.",
     ],
   },
   {
