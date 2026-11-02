@@ -111,6 +111,28 @@ module.exports = [
     ],
   },
   {
+    slug: "youtube-comment-analyzer",
+    howTitle: "How the analysis works",
+    name: "YouTube Comment Analyzer",
+    platform: "YouTube",
+    api: "youtube",
+    action: "comments",
+    intent: "check",
+    buttonLabel: "Analyze comments",
+    short: "Comment analytics for any video: a heat map of when viewers comment, unanswered questions, reply rate, top commenters and top words.",
+    intro: "Paste a video or Shorts link. You get the comment analytics YouTube Studio does not show: a heat map of when viewers comment, comments per day, the questions nobody answered, buying and collab comments, the creator's reply rate, top commenters and the words that come up most.",
+    inputs: [
+      { id: "video", label: "Video or Shorts link", type: "text", placeholder: "https://www.youtube.com/watch?v=..." },
+      { id: "order", label: "Comments to analyze", type: "select", value: "time", options: [["time", "Newest first (best for timing)"], ["relevance", "Top comments (best for questions)"]] },
+      { id: "max", label: "How many", type: "select", value: "1000", options: [["500", "Up to 500"], ["1000", "Up to 1,000"], ["2000", "Up to 2,000"]] },
+    ],
+    how: [
+      "Comments come from the official YouTube Data API, up to 2,000 per run with up to 5 replies each, and are analyzed in your browser. Works on any public video, yours or a competitor's.",
+      "Times are shown in your own time zone. A question is a comment with a question mark or one that starts with a question word; it counts as answered when the channel itself replied in the replies we can read.",
+      "Buying and collab comments are matched by words like price, link, discount, sponsor or collab. These are simple rules, not AI, so read the comments before acting on them.",
+    ],
+  },
+  {
     slug: "youtube-comment-search",
     howTitle: "How the search works",
     name: "YouTube Comment Search",

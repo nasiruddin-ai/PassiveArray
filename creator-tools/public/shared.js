@@ -1870,6 +1870,130 @@
     return t.replace(re, "<mark>$1</mark>");
   }
 
+  /* ------------------------------------------------------------ comment analyzer */
+  var STOP = {};
+  ("the a an and or but if of to in on at for with from by is are was were be been being it its this that these those i you he she we they me my your our their his her them us " +
+   "so not no yes do does did done have has had just like can could would should will im ive its dont cant thats there here what when where who why how which all any more most very " +
+   "too also than then into out up down about over again only own same such get got one two video videos really much even well still make made know think see way want need good great " +
+   "please thank thanks lol omg yeah hey hi hello because some other them him who whom been being am let lets ill youre theyre were wasnt isnt arent didnt doesnt").split(" ").forEach(function (w) { STOP[w] = 1; });
+  var Q_START = /^(how|what|why|when|where|which|who|can|could|does|do|did|is|are|should|will|would|anyone|any)\b/i;
+  // Phrases a buyer or partner writes, not single everyday words like "contact" or "available".
+  var INTENT = /\b(price|pricing|how much (is|does|for|do)|buy|purchase|where (can|do) i (get|buy|find|order)|link (to|for|please|pls|plz)|drop the link|discount|coupon|promo code|affiliate|sponsor\w*|collab\w*|business (email|inquiry|enquiry|contact)|merch|ship(ping)? to)\b/i;
+  var DAYS = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+
+  function isQuestion(t) { t = String(t || "").trim(); return t.indexOf("?") >= 0 || Q_START.test(t); }
+  function localDay(iso) { var d = new Date(iso); return d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0"); }
+  function commentRows(d, list, n) {
+    return list.slice(0, n).map(function (c) {
+      var txt = c.text.length > 220 ? c.text.slice(0, 220) + "…" : c.text;
+      return [{ html: "<b>" + esc(c.author) + "</b>" }, { html: "<a href=\"" + esc(commentLink(d, c)) + "\" target=\"_blank\" rel=\"noopener\" style=\"color:inherit\">" + esc(txt) + "</a>" }, fmt(c.likes), dateStr(c.publishedAt)];
+    });
+  }
+
+  function heatMap(grid, max) {
+    var W = chartWidth(), L = 40, T = 18, R = 6, cw = (W - L - R) / 24, ch = W < 520 ? 18 : 24, H = T + ch * 7 + 4;
+    var cells = "";
+    for (var dw = 0; dw < 7; dw++) for (var h = 0; h < 24; h++) {
+      var v = grid[dw][h].length, op = v ? 0.15 + 0.85 * (v / max) : 0.04;
+      cells += "<rect class=\"heat\" data-dw=\"" + dw + "\" data-h=\"" + h + "\" x=\"" + (L + h * cw + 1).toFixed(1) + "\" y=\"" + (T + dw * ch + 1) + "\" width=\"" + (cw - 2).toFixed(1) + "\" height=\"" + (ch - 2) + "\" rx=\"3\" fill=\"var(--teal)\" fill-opacity=\"" + op.toFixed(2) + "\" style=\"cursor:" + (v ? "pointer" : "default") + "\"><title>" + DAYS[dw] + " " + String(h).padStart(2, "0") + ":00 · " + v + " comment" + (v === 1 ? "" : "s") + "</title></rect>";
+    }
+    var labels = DAYS.map(function (n, i) { return "<text class=\"axis\" x=\"" + (L - 6) + "\" y=\"" + (T + i * ch + ch / 2) + "\" text-anchor=\"end\" dominant-baseline=\"middle\">" + n + "</text>"; }).join("") +
+      [0, 6, 12, 18].map(function (h) { return "<text class=\"axis\" x=\"" + (L + h * cw + 2).toFixed(1) + "\" y=\"" + (T - 6) + "\">" + String(h).padStart(2, "0") + ":00</text>"; }).join("");
+    return "<svg class=\"chartsvg\" width=\"" + W + "\" height=\"" + H + "\" viewBox=\"0 0 " + W + " " + H + "\" role=\"img\" aria-label=\"Heat map of comments by day of week and hour\">" + labels + cells + "</svg><div id=\"heatpick\" class=\"note\" style=\"margin-top:10px\">Click a square to read the comments posted then.</div>";
+  }
+
+  COMPUTE["youtube-comment-analyzer"] = function (v, d) {
+    var all = d.comments, top = all.filter(function (c) { return !c.parent; });
+    if (!top.length) return { error: "We could not read any public comments on this video. Comments may be turned off, the video may be made for kids, or every comment may be held or removed." };
+    var owner = d.video.channelId;
+    var byParent = {};
+    all.forEach(function (c) { if (c.parent) (byParent[c.parent] = byParent[c.parent] || []).push(c); });
+    var answered = function (c) { return (byParent[c.id] || []).some(function (r) { return r.authorChannelId === owner; }); };
+    var viewers = top.filter(function (c) { return c.authorChannelId !== owner; });
+    var replied = viewers.filter(answered);
+    var questions = viewers.filter(function (c) { return isQuestion(c.text); });
+    var openQ = questions.filter(function (c) { return !answered(c); }).sort(function (a, b) { return b.likes - a.likes; });
+    var intent = viewers.filter(function (c) { return INTENT.test(c.text); }).sort(function (a, b) { return b.likes - a.likes; });
+
+    // When viewers comment: day of week x hour, in the visitor's time zone, and comments per day.
+    var grid = []; for (var i = 0; i < 7; i++) { grid.push([]); for (var h = 0; h < 24; h++) grid[i].push([]); }
+    var perDay = {};
+    top.forEach(function (c) { var t = new Date(c.publishedAt); grid[t.getDay()][t.getHours()].push(c); var k = localDay(c.publishedAt); perDay[k] = (perDay[k] || 0) + 1; });
+    var maxCell = 0, best = null;
+    grid.forEach(function (row, dw) { row.forEach(function (cell, h) { if (cell.length > maxCell) { maxCell = cell.length; best = { dw: dw, h: h }; } }); });
+    var dayKeys = Object.keys(perDay).sort();
+    var gains = [];
+    if (dayKeys.length) {
+      for (var t = new Date(dayKeys[0] + "T12:00:00"), end = new Date(dayKeys[dayKeys.length - 1] + "T12:00:00"); t <= end; t.setDate(t.getDate() + 1)) {
+        var k = localDay(t.toISOString()); gains.push({ d: k, g: perDay[k] || 0, days: 1 });
+      }
+    }
+    var busiest = dayKeys.slice().sort(function (a, b) { return perDay[b] - perDay[a]; })[0];
+    var tz = ""; try { tz = Intl.DateTimeFormat().resolvedOptions().timeZone; } catch (e) {}
+
+    // Who comments, and what they talk about.
+    var people = {};
+    top.forEach(function (c) { var k = c.authorChannelId || c.author; var p = people[k] || (people[k] = { name: c.author, n: 0, likes: 0 }); p.n++; p.likes += c.likes || 0; });
+    var topPeople = Object.keys(people).map(function (k) { return people[k]; }).filter(function (p) { return p.n > 1; }).sort(function (a, b) { return b.n - a.n || b.likes - a.likes; }).slice(0, 10);
+    var freq = {};
+    top.forEach(function (c) {
+      var seen = {};
+      String(c.text || "").toLowerCase().replace(/https?:\/\/\S+|@\S+/g, " ").replace(/[’']/g, "").split(/[^\p{L}\p{N}]+/u).forEach(function (w) {
+        if (w.length < 3 || STOP[w] || /^\d+$/.test(w) || seen[w]) return; seen[w] = 1; freq[w] = (freq[w] || 0) + 1;
+      });
+    });
+    var words = Object.keys(freq).sort(function (a, b) { return freq[b] - freq[a]; }).slice(0, 24).filter(function (w) { return freq[w] > 1; });
+
+    var notes = [];
+    if (d.truncated) notes.push("<span class=\"warn\">This video has more comments than we read.</span> The analysis covers the " + (d.order === "time" ? "newest " : "top ") + fmt(d.topLevel) + " comments.");
+    notes.push("Times are in your time zone" + (tz ? " (" + esc(tz) + ")" : "") + ". This shows when viewers comment, not the best time to publish: YouTube says publish time is not known to affect a video's long-term performance (see <a href=\"../../blog/best-time-to-post-on-youtube/\">best time to post on YouTube</a>). It is useful for knowing when to reply, go live or post an update.");
+    notes.push("Replies come up to 5 per comment, so a creator reply deep in a long thread can be missed. Comments held for review, likely spam or deleted are never returned by YouTube's API.");
+
+    var tables = [];
+    function section(title, sub, head, rows, empty) {
+      return "<div class=\"card chartcard\"><div class=\"charthead\"><b>" + esc(title) + "</b><span>" + esc(sub) + "</span></div>" + (rows.length
+        ? "<div class=\"tablewrap\"><table><thead><tr>" + head.map(function (h) { return "<th>" + esc(h) + "</th>"; }).join("") + "</tr></thead><tbody>" + rows.map(function (r) { return "<tr>" + r.map(function (c) { return "<td>" + (c && typeof c === "object" ? c.html : c) + "</td>"; }).join("") + "</tr>"; }).join("") + "</tbody></table></div>"
+        : "<p class=\"note\">" + esc(empty) + "</p>") + "</div>";
+    }
+    tables.push(section("Questions without a reply from the channel", fmt(openQ.length) + " of " + fmt(questions.length) + " questions · most liked first", ["Author", "Question", "Likes", "Posted"], commentRows(d, openQ, 25), "Every question we read has a reply from the channel."));
+    tables.push(section("Buying and collab comments", fmt(intent.length) + " found · price, link, discount, sponsor, collab and similar", ["Author", "Comment", "Likes", "Posted"], commentRows(d, intent, 15), "No comment mentions buying, links, sponsors or collabs."));
+    tables.push(section("Most active commenters", "people with more than one comment", ["Commenter", "Comments", "Likes on them"], topPeople.map(function (p) { return [{ html: "<b>" + esc(p.name) + "</b>" }, fmt(p.n), fmt(p.likes)]; }), "Nobody commented more than once in this sample."));
+    if (words.length) tables.push("<div class=\"card chartcard\"><div class=\"charthead\"><b>Words viewers use most</b><span>number of comments that use each word</span></div><div class=\"tags\">" + words.map(function (w) { return "<span class=\"tag\">" + esc(w) + " · " + freq[w] + "</span>"; }).join("") + "</div></div>");
+
+    var summary = [
+        { name: "Channel reply rate", sub: "viewer comments with a reply from the channel", value: viewers.length ? pct(replied.length / viewers.length * 100, 0) : "n/a" },
+        { name: "Questions", sub: fmt(openQ.length) + " without a channel reply", value: fmt(questions.length) },
+        { name: "Buying and collab comments", value: fmt(intent.length) },
+        { name: "Different commenters", value: fmt(Object.keys(people).length) },
+        { name: "Busiest hour", sub: "in your time zone", value: best ? DAYS[best.dw] + " " + String(best.h).padStart(2, "0") + ":00" : "n/a" },
+        { name: "Busiest day", sub: busiest ? perDay[busiest] + " comments" : "", value: busiest ? esc(shortDate(busiest) + ", " + busiest.slice(0, 4)) : "n/a" },
+    ];
+    // Laid out by hand so the summary comes before the charts (the renderer draws charts first).
+    var card = function (title, sub, inner) { return "<div class=\"card chartcard\"><div class=\"charthead\"><b>" + esc(title) + "</b>" + (sub ? "<span>" + esc(sub) + "</span>" : "") + "</div>" + inner + "</div>"; };
+    var tiles = "<div class=\"tiles\">" + summary.map(function (r) { return "<div class=\"tile\"><span class=\"name\">" + esc(r.name) + (r.sub ? "<small>" + esc(r.sub) + "</small>" : "") + "</span><span class=\"val\">" + r.value + "</span></div>"; }).join("") + "</div>";
+    return {
+      hero: { label: "Comments analyzed", value: fmt(top.length), note: videoHeroNote(d) },
+      blocks: [tiles,
+        card("When viewers comment", "day of week × hour, darker = more comments", heatMap(grid, Math.max(1, maxCell))),
+        card("Comments per day", gains.length ? "from " + shortDate(gains[0].d) + " to " + shortDate(gains[gains.length - 1].d) : "", barChart(gains, "comments")),
+      ].concat(tables),
+      download: { label: "Download the analyzed comments (CSV)", hint: "With a column marking questions and buying or collab comments", filename: d.video.id + "-comment-analysis.csv", text: csv(["author", "text", "likes", "replies", "published_at", "is_question", "answered_by_channel", "buying_or_collab", "comment_url"], top.map(function (c) { return [c.author, c.text, c.likes, c.replies, c.publishedAt, isQuestion(c.text) ? "yes" : "no", answered(c) ? "yes" : "no", INTENT.test(c.text) ? "yes" : "no", commentLink(d, c)]; })) },
+      note: notes.join(" "),
+      after: function (root) {
+        var pick = root.querySelector("#heatpick");
+        Array.prototype.forEach.call(root.querySelectorAll("rect.heat"), function (r) {
+          r.addEventListener("click", function () {
+            var cell = grid[+r.getAttribute("data-dw")][+r.getAttribute("data-h")];
+            if (!cell.length || !pick) return;
+            var label = DAYS[+r.getAttribute("data-dw")] + " " + String(r.getAttribute("data-h")).padStart(2, "0") + ":00";
+            pick.innerHTML = "<b>" + label + "</b> · " + cell.length + " comment" + (cell.length === 1 ? "" : "s") + ", most liked first:<ul style=\"margin:8px 0 0;padding-left:20px\">" +
+              cell.slice().sort(function (a, b) { return b.likes - a.likes; }).slice(0, 10).map(function (c) { return "<li><b>" + esc(c.author) + "</b>: <a href=\"" + esc(commentLink(d, c)) + "\" target=\"_blank\" rel=\"noopener\" style=\"color:inherit\">" + esc(c.text.length > 160 ? c.text.slice(0, 160) + "…" : c.text) + "</a> (" + fmt(c.likes) + " likes)</li>"; }).join("") + "</ul>";
+          });
+        });
+      },
+    };
+  };
+
   COMPUTE["youtube-comment-search"] = function (v, d) {
     var raw = String(v.q || "").trim();
     if (!raw) return { error: "Type a word, phrase or username to search for." };
