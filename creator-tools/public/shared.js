@@ -1876,7 +1876,8 @@
    "so not no yes do does did done have has had just like can could would should will im ive its dont cant thats there here what when where who why how which all any more most very " +
    "too also than then into out up down about over again only own same such get got one two video videos really much even well still make made know think see way want need good great " +
    "please thank thanks lol omg yeah hey hi hello because some other them him who whom been being am let lets ill youre theyre were wasnt isnt arent didnt doesnt").split(" ").forEach(function (w) { STOP[w] = 1; });
-  var Q_START = /^(how|what|why|when|where|which|who|can|could|does|do|did|is|are|should|will|would|anyone|any)\b/i;
+  // A question word must start a question, not an exclamation: "What a collab" and "Can't wait" are not questions.
+  var Q_START = /^(how|why|where|when|which|who|whose)\b|^(can|could|does|do|did|is|are|was|should|will|would|has|have|anyone|anybody)\s|^what\s+(is|are|was|were|do|does|did|should|can|about|if|time|happened)\b/i;
   // Phrases a buyer or partner writes, not single everyday words like "contact" or "available".
   var INTENT = /\b(price|pricing|how much (is|does|for|do)|buy|purchase|where (can|do) i (get|buy|find|order)|link (to|for|please|pls|plz)|drop the link|discount|coupon|promo code|affiliate|sponsor\w*|collab\w*|business (email|inquiry|enquiry|contact)|merch|ship(ping)? to)\b/i;
   var DAYS = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
