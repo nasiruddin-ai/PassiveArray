@@ -58,7 +58,9 @@ const VERIFY_TAG = GOOGLE_VERIFICATION ? `<meta name="google-site-verification" 
 //
 // The measurement id is public (it appears in the page source), so it lives
 // here rather than in an environment variable, and can still be overridden.
-const GA4_ID = (process.env.GA4_ID !== undefined ? process.env.GA4_ID : "G-ZPSB0F8VM4").trim();
+// Several streams can share one gtag.js: list them comma-separated.
+const GA4_IDS = (process.env.GA4_ID !== undefined ? process.env.GA4_ID : "G-ZPSB0F8VM4,G-W12Z0YLW71").split(",").map((s) => s.trim()).filter(Boolean);
+const GA4_ID = GA4_IDS[0] || "";
 const GTM_ID = (process.env.GTM_ID || "").trim();
 const ANALYTICS = !!(GA4_ID || GTM_ID);
 
@@ -77,7 +79,7 @@ try{if(localStorage.getItem('pa-consent')==='granted')gtag('consent','update',{a
 // library and configures the stream.
 // gtag.js (~180 KB) is the heaviest file on the page, so it loads after the first scroll, tap or
 // key press, or 6 seconds after load, whichever comes first. Consent defaults are set above it.
-const GA4_HEAD = GA4_ID ? `<script>gtag('js',new Date());gtag('config','${GA4_ID}');
+const GA4_HEAD = GA4_ID ? `<script>gtag('js',new Date());${GA4_IDS.map((id) => `gtag('config','${id}');`).join("")}
 (function(){var done=false;function go(){if(done)return;done=true;var s=document.createElement('script');s.async=true;s.src='https://www.googletagmanager.com/gtag/js?id=${GA4_ID}';document.head.appendChild(s);}
 ['scroll','pointerdown','keydown','touchstart'].forEach(function(e){addEventListener(e,go,{once:true,passive:true});});
 addEventListener('load',function(){setTimeout(go,6000);});})();</script>` : "";
