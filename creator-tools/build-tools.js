@@ -325,8 +325,32 @@ function guideHtml(t) {
     ${related}
     ${t.platform === "YouTube" ? `<div class="ga-box ga-cta"><b>Want this done for you?</b><span>Keyword research, titles, tags and channel structure by the founder.</span><a class="btn ghost" href="/youtube-seo-service/">YouTube SEO service</a></div>` : ""}
   </aside>`;
-  const note = t.guideUpdated ? `<p class="note">Guide by <a href="/founder/">Nasir Uddin</a>, founder of Passive Array. Rules and figures checked ${esc(t.guideUpdated)}.</p>` : "";
+  const note = t.guideUpdated ? authorBox("Guide by", t.guideUpdated) : "";
   return `<article class="card guide"><div class="guide-main">${secs.map(sec).join("")}${faq}${note}</div>${aside}</article>`;
+}
+
+/* ------------------------------------------------------------------ author card */
+// Shown under every tool guide and blog post. Facts match FOUNDER in pages/site-pages.js
+// (LinkedIn, October 2026): SEO since March 2022, based in Dhaka.
+const AUTHOR = {
+  name: "Nasir Uddin",
+  photo: "/founder-nasir-192.webp",
+  role: "Founder of Passive Array \u00b7 SEO and AI automation specialist",
+  bio: "Nasir has worked in SEO since 2022, for e-commerce stores, affiliate sites and design agencies. He builds Passive Array's free tools to show their working, and checks the rules and figures on each page against the platforms' own help pages.",
+  linkedin: "https://www.linkedin.com/in/seoconsultantnasir/",
+};
+function authorBox(label, checked) {
+  const a = AUTHOR;
+  return `<aside class="author-box" aria-label="About the author">
+  <a class="author-photo" href="/founder/"><img src="${a.photo}" alt="${esc(a.name)}" width="72" height="72" loading="lazy" decoding="async"></a>
+  <div class="author-body">
+    <div class="author-kicker">${esc(label)}</div>
+    <div class="author-name"><a href="/founder/">${esc(a.name)}</a></div>
+    <div class="author-role">${a.role}</div>
+    <p>${esc(a.bio)}</p>
+    <div class="author-meta"><span>Rules and figures checked ${esc(checked)}</span><a href="/founder/">About Nasir</a><a href="${a.linkedin}" rel="noopener" target="_blank">LinkedIn</a></div>
+  </div>
+</aside>`;
 }
 
 /* ------------------------------------------------------------------ tool page */
@@ -779,7 +803,7 @@ ${scripts}
 </html>`;
 }
 
-module.exports = { ANALYTICS_HEAD, GTM_BODY, GTM_ID, GA4_ID, ANALYTICS, buildInto, homePage, tools, SITE, BRAND, TAGLINE, header, footer, shell, postCard, fmtDate, esc, ICON, VERIFY_TAG, intentOf, INTENTS, guideHtml, faqLd };
+module.exports = { authorBox, AUTHOR, ANALYTICS_HEAD, GTM_BODY, GTM_ID, GA4_ID, ANALYTICS, buildInto, homePage, tools, SITE, BRAND, TAGLINE, header, footer, shell, postCard, fmtDate, esc, ICON, VERIFY_TAG, intentOf, INTENTS, guideHtml, faqLd };
 
 if (require.main === module) {
   const out = path.join(HERE, ".out");

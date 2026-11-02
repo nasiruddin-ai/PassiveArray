@@ -278,7 +278,7 @@ function postPage(p, prev, next, related) {
   <article class="prose">
 ${p.html}
 ${p.faq.length ? `<section class="guide-faq" id="faq"><h2>Frequently asked questions</h2><div class="faq">${p.faq.map(([q, a]) => `<details><summary>${esc(q)}</summary>${markdown(a)}</details>`).join("")}</div></section>` : ""}
-  <p class="note">By <a href="${root}founder/">Nasir Uddin</a>, founder of Passive Array. Rules and figures checked ${site.fmtDate(p.updated)}.</p>
+  ${site.authorBox("Written by", site.fmtDate(p.updated))}
   </article>
   ${toolCards(p.tools, root)}
   ${related.length ? `<section class="tools-used"><h2>More in ${esc(p.category.label)}</h2><div class="grid c3">${related.map((r) => card(r, root)).join("")}</div></section>` : ""}
@@ -309,7 +309,7 @@ function postingLd(p) {
       dateModified: p.updated,
       articleSection: p.category.label,
       image: p.image ? site.SITE + `/blog/${p.slug}/cover.jpg` : site.SITE + "/og-image-1200x630.png",
-      author: { "@type": "Person", name: "Nasir Uddin", url: site.SITE + "/founder/" },
+      author: { "@type": "Person", name: "Nasir Uddin", url: site.SITE + "/founder/", image: site.SITE + "/founder-nasir.jpg", jobTitle: "SEO and AI automation specialist", sameAs: [site.AUTHOR.linkedin] },
       publisher: { "@type": "Organization", name: site.BRAND, url: site.SITE + "/", logo: { "@type": "ImageObject", url: site.SITE + "/icon-512.png" } },
       mainEntityOfPage: site.SITE + `/blog/${p.slug}/`,
   };
