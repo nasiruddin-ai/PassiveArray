@@ -1995,6 +1995,101 @@
     };
   };
 
+  /* --------------------------------------------------------------- channel comment audit */
+  // Scam and link spam that got past the channel's filters, using the blocked-word phrase sets.
+  var SPAM_WORDS = BLOCK_SETS.filter(function (b) { return b.id === "scam" || b.id === "money" || b.id === "links"; }).reduce(function (a, b) { return a.concat(b.words); }, []);
+  function isSpam(t) { t = String(t || "").toLowerCase(); for (var i = 0; i < SPAM_WORDS.length; i++) if (t.indexOf(SPAM_WORDS[i]) >= 0) return true; return false; }
+
+  COMPUTE["youtube-comment-audit"] = function (v, d) {
+    var ch = d.channel, owner = ch.id;
+    var read = d.videos.filter(function (x) { return x.comments && x.comments.length; });
+    if (!read.length) return { error: "None of the latest videos had comments we could read. Comments may be off, the videos may be made for kids, or the channel may be new." };
+    var top = [], byParent = {}, perVideo = [], seenOn = {}, spam = [];
+    read.forEach(function (x) {
+      var dv = { video: { url: x.url } };
+      x.comments.forEach(function (c) { if (c.parent) (byParent[c.parent] = byParent[c.parent] || []).push(c); });
+      var t = x.comments.filter(function (c) { return !c.parent; }).map(function (c) { c._v = x; c._d = dv; return c; });
+      top = top.concat(t);
+      var viewers = t.filter(function (c) { return c.authorChannelId !== owner; });
+      var answeredF = function (c) { return (byParent[c.id] || []).some(function (r) { return r.authorChannelId === owner; }); };
+      var qs = viewers.filter(function (c) { return isQuestion(c.text); });
+      perVideo.push({ x: x, read: t.length, viewers: viewers.length, replied: viewers.filter(answeredF).length, questions: qs.length, open: qs.filter(function (c) { return !answeredF(c); }).length, intent: viewers.filter(function (c) { return INTENT.test(c.text); }).length, per1k: x.views ? x.commentCount / x.views * 1000 : 0 });
+      viewers.forEach(function (c) { var k = c.authorChannelId || c.author; (seenOn[k] = seenOn[k] || { name: c.author, vids: {}, n: 0 }); seenOn[k].vids[x.id] = 1; seenOn[k].n++; });
+      viewers.forEach(function (c) { if (isSpam(c.text)) spam.push(c); });
+    });
+    var answered = function (c) { return (byParent[c.id] || []).some(function (r) { return r.authorChannelId === owner; }); };
+    var viewers = top.filter(function (c) { return c.authorChannelId !== owner; });
+    var replied = viewers.filter(answered).length;
+    var questions = viewers.filter(function (c) { return isQuestion(c.text); });
+    var openQ = questions.filter(function (c) { return !answered(c); }).sort(function (a, b) { return b.likes - a.likes; });
+    var intent = viewers.filter(function (c) { return INTENT.test(c.text); }).sort(function (a, b) { return b.likes - a.likes; });
+    var people = Object.keys(seenOn).map(function (k) { var p = seenOn[k]; p.videos = Object.keys(p.vids).length; return p; });
+    var regulars = people.filter(function (p) { return p.videos >= 2; }).sort(function (a, b) { return b.videos - a.videos || b.n - a.n; });
+    var views = read.reduce(function (s, x) { return s + (x.views || 0); }, 0), counted = read.reduce(function (s, x) { return s + (x.commentCount || 0); }, 0);
+    var per1k = views ? counted / views * 1000 : 0;
+
+    // The score: Passive Array's rubric, each part shown with its inputs.
+    var rr = viewers.length ? replied / viewers.length : 0, qa = questions.length ? (questions.length - openQ.length) / questions.length : 1;
+    var regShare = people.length ? regulars.length / people.length : 0, spamShare = viewers.length ? spam.length / viewers.length : 0;
+    var parts = [
+      { name: "Reply rate", pts: Math.min(35, rr / 0.30 * 35), max: 35, why: Math.round(rr * 100) + "% of viewer comments got a reply from the channel (full marks at 30%)" },
+      { name: "Questions answered", pts: 25 * qa, max: 25, why: questions.length ? (questions.length - openQ.length) + " of " + questions.length + " questions have a reply from the channel" : "No questions in the comments read" },
+      { name: "Conversation", pts: Math.min(20, per1k / 5 * 20), max: 20, why: fmt(per1k, 1) + " comments per 1,000 views on these videos (full marks at 5)" },
+      { name: "Regular commenters", pts: Math.min(10, regShare / 0.10 * 10), max: 10, why: Math.round(regShare * 100) + "% of commenters commented on two or more of these videos (full marks at 10%)" },
+      { name: "Free of scam spam", pts: Math.max(0, 10 - spamShare / 0.05 * 10), max: 10, why: spam.length + " scam or link-spam comment" + (spam.length === 1 ? "" : "s") + " visible (zero points at 5% of comments)" },
+    ];
+    var score = Math.round(parts.reduce(function (s, p) { return s + p.pts; }, 0));
+    var band = score >= 80 ? "Thriving" : score >= 60 ? "Healthy" : score >= 40 ? "Needs attention" : "Neglected";
+
+    var grid = []; for (var i = 0; i < 7; i++) { grid.push([]); for (var h = 0; h < 24; h++) grid[i].push([]); }
+    top.forEach(function (c) { var t = new Date(c.publishedAt); grid[t.getDay()][t.getHours()].push(c); });
+    var maxCell = 0; grid.forEach(function (r) { r.forEach(function (c) { if (c.length > maxCell) maxCell = c.length; }); });
+
+    var card = function (title, sub, inner) { return "<div class=\"card chartcard\"><div class=\"charthead\"><b>" + esc(title) + "</b>" + (sub ? "<span>" + esc(sub) + "</span>" : "") + "</div>" + inner + "</div>"; };
+    var table = function (head, rows) { return "<div class=\"tablewrap\"><table><thead><tr>" + head.map(function (x) { return "<th>" + esc(x) + "</th>"; }).join("") + "</tr></thead><tbody>" + rows.map(function (r) { return "<tr>" + r.map(function (c) { return "<td>" + c + "</td>"; }).join("") + "</tr>"; }).join("") + "</tbody></table></div>"; };
+    var link = function (c, n) { var txt = c.text.length > n ? c.text.slice(0, n) + "…" : c.text; return "<a href=\"" + esc(commentLink(c._d, c)) + "\" target=\"_blank\" rel=\"noopener\" style=\"color:inherit\">" + esc(txt) + "</a>"; };
+    var short = function (t) { t = String(t || ""); return esc(t.length > 48 ? t.slice(0, 48) + "…" : t); };
+
+    var tiles = [
+      { name: "Comment health score", sub: band + " · Passive Array's rubric", value: score + "/100" },
+      { name: "Channel reply rate", sub: "viewer comments with a channel reply", value: Math.round(rr * 100) + "%" },
+      { name: "Unanswered questions", sub: "of " + fmt(questions.length) + " questions", value: fmt(openQ.length) },
+      { name: "Regular commenters", sub: "on two or more videos", value: fmt(regulars.length) },
+      { name: "Buying and collab comments", value: fmt(intent.length) },
+      { name: "Comments per 1,000 views", sub: "YouTube's comment counts on these videos", value: fmt(per1k, 1) },
+    ];
+    var blocks = [
+      "<div class=\"tiles\">" + tiles.map(function (r) { return "<div class=\"tile\"><span class=\"name\">" + esc(r.name) + (r.sub ? "<small>" + esc(r.sub) + "</small>" : "") + "</span><span class=\"val\">" + r.value + "</span></div>"; }).join("") + "</div>",
+      card("How the score adds up", "Passive Array's rubric, not a YouTube metric", table(["Part", "Points", "Why"], parts.map(function (p) { return ["<b>" + esc(p.name) + "</b>", Math.round(p.pts) + " / " + p.max, esc(p.why)]; }))),
+      card("Video by video", "newest first", table(["Video", "Read", "Reply rate", "Open questions", "Buying / collab", "Comments per 1k views"], perVideo.map(function (p) {
+        return ["<a href=\"" + esc(p.x.url) + "\" target=\"_blank\" rel=\"noopener\" style=\"color:inherit\">" + short(p.x.title) + "</a>", fmt(p.read), p.viewers ? Math.round(p.replied / p.viewers * 100) + "%" : "n/a", fmt(p.open), fmt(p.intent), fmt(p.per1k, 1)];
+      }).concat(d.videos.filter(function (x) { return !(x.comments && x.comments.length); }).map(function (x) { return [short(x.title), "—", "—", "—", "—", esc(x.skipped || "not read")]; })))),
+      card("When viewers comment", "all videos combined, in your time zone · click a square", heatMap(grid, Math.max(1, maxCell))),
+      card("Questions without a reply from the channel", fmt(openQ.length) + " across all videos · most liked first", openQ.length ? table(["Video", "Question", "Likes"], openQ.slice(0, 30).map(function (c) { return [short(c._v.title), link(c, 200), fmt(c.likes)]; })) : "<p class=\"note\">Every question we read has a reply from the channel.</p>"),
+      card("Regulars: people who comment on several videos", "your most loyal viewers", regulars.length ? table(["Viewer", "Videos commented on", "Comments"], regulars.slice(0, 15).map(function (p) { return ["<b>" + esc(p.name) + "</b>", fmt(p.videos), fmt(p.n)]; })) : "<p class=\"note\">Nobody commented on more than one of these videos in the comments read.</p>"),
+      card("Buying and collab comments", fmt(intent.length) + " found", intent.length ? table(["Video", "Comment", "Likes"], intent.slice(0, 15).map(function (c) { return [short(c._v.title), link(c, 200), fmt(c.likes)]; })) : "<p class=\"note\">No comment mentions buying, links, sponsors or collabs.</p>"),
+      card("Scam and link spam still visible", fmt(spam.length) + " found", spam.length ? table(["Video", "Comment"], spam.slice(0, 15).map(function (c) { return [short(c._v.title), link(c, 160)]; })) + "<p class=\"note\" style=\"margin-top:10px\">Hide these and stop the next ones with the <a href=\"../youtube-blocked-words-list/\">blocked words list generator</a>.</p>" : "<p class=\"note\">No scam or link-spam phrases in the comments read.</p>"),
+    ];
+    return {
+      profile: { img: ch.thumbnail, title: ch.title, url: ch.url, meta: [ch.handle, ch.hiddenSubscribers ? "" : fmt(ch.subscribers) + " subscribers"].filter(Boolean).join(" · ") },
+      hero: { label: "Comment health score", value: score + "/100", note: esc(band) + " · " + fmt(top.length) + " comments read across " + read.length + " video" + (read.length === 1 ? "" : "s") },
+      blocks: blocks,
+      download: { label: "Download all comments read (CSV)", hint: "One row per comment, with the video and the audit flags", filename: fileSafe(ch.handle || ch.title) + "-comment-audit.csv", text: csv(["video", "author", "text", "likes", "replies", "published_at", "is_question", "answered_by_channel", "buying_or_collab", "scam_spam", "comment_url"], top.map(function (c) { return [c._v.title, c.author, c.text, c.likes, c.replies, c.publishedAt, isQuestion(c.text) ? "yes" : "no", answered(c) ? "yes" : "no", INTENT.test(c.text) ? "yes" : "no", isSpam(c.text) ? "yes" : "no", commentLink(c._d, c)]; })) },
+      note: "We read the newest " + fmt(d.per) + " comments on each of the latest " + d.videos.length + " uploads. The score is Passive Array's own rubric with the thresholds shown above, not a number YouTube publishes. Replies come up to 5 per comment, so an answer deep in a long thread can be missed, and comments held for review, likely spam or deleted are never returned by YouTube's API. Times are in your time zone.",
+      after: function (root) {
+        var pick = root.querySelector("#heatpick");
+        Array.prototype.forEach.call(root.querySelectorAll("rect.heat"), function (r) {
+          r.addEventListener("click", function () {
+            var cell = grid[+r.getAttribute("data-dw")][+r.getAttribute("data-h")];
+            if (!cell.length || !pick) return;
+            pick.innerHTML = "<b>" + DAYS[+r.getAttribute("data-dw")] + " " + String(r.getAttribute("data-h")).padStart(2, "0") + ":00</b> · " + cell.length + " comment" + (cell.length === 1 ? "" : "s") + ":<ul style=\"margin:8px 0 0;padding-left:20px\">" +
+              cell.slice().sort(function (a, b) { return b.likes - a.likes; }).slice(0, 10).map(function (c) { return "<li><b>" + esc(c.author) + "</b>: " + link(c, 140) + "</li>"; }).join("") + "</ul>";
+          });
+        });
+      },
+    };
+  };
+
   COMPUTE["youtube-comment-search"] = function (v, d) {
     var raw = String(v.q || "").trim();
     if (!raw) return { error: "Type a word, phrase or username to search for." };

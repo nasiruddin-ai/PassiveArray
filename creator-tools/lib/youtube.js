@@ -491,6 +491,31 @@ async function getComments(videoInput, opts = {}) {
   });
 }
 
+/* ------------------------------------------------------------------ channel comment audit
+   The channel's latest uploads (up to 10, from getChannel) and the newest comments on each, read
+   through getComments so every video is cached on its own. About 2 quota units per video. Videos
+   made for kids or with no comments are listed but not read. */
+async function getChannelComments(channelInput, opts = {}) {
+  const ch = await getChannel(channelInput);
+  const howMany = Math.max(1, Math.min(10, Math.round(n(opts.videos) || 10)));
+  const per = Math.max(100, Math.min(300, Math.round(n(opts.per) || 100)));
+  const order = opts.order === "relevance" ? "relevance" : "time";
+  const list = (ch.recent.videos || []).slice().sort((a, b) => (a.publishedAt < b.publishedAt ? 1 : -1)).slice(0, howMany);
+  const videos = await Promise.all(list.map(async (v) => {
+    const base = { id: v.id, title: v.title, publishedAt: v.publishedAt, views: v.views, commentCount: v.comments, seconds: v.seconds, url: v.url };
+    if (v.madeForKids) return { ...base, skipped: "made for kids, comments are off" };
+    if (!v.comments) return { ...base, skipped: "no public comments" };
+    try {
+      const d = await getComments(v.id, { max: per, order });
+      return { ...base, comments: d.comments, topLevel: d.topLevel, truncated: d.truncated };
+    } catch (e) {
+      return { ...base, skipped: e.code === "comments_off" ? "comments are off" : "could not be read" };
+    }
+  }));
+  const { recent, ...channel } = ch;
+  return { channel, videos, per, order, fetchedAt: new Date().toISOString() };
+}
+
 function errorBody(e) {
   const code = e.code || "api";
   const messages = {
@@ -552,6 +577,7 @@ async function handleRequest(action, params = {}) {
     if (action === "lookalike") return { code: 200, body: { ok: true, ...(await lookalike(params.channel)) } };
     if (action === "videos") return { code: 200, body: { ok: true, videos: await getVideos(params.ids) } };
     if (action === "comments") return { code: 200, body: { ok: true, ...(await getComments(params.video, { max: params.max, order: params.order })) } };
+    if (action === "audit") return { code: 200, body: { ok: true, ...(await getChannelComments(params.channel, { videos: params.videos, per: params.per, order: params.order })) } };
     if (action === "top") return { code: 200, body: { ok: true, ...(await topChannels()) } };
     if (action === "monetization") return { code: 200, body: { ok: true, ...(await monetizationCheck(params.channel)) } };
     return { code: 404, body: { ok: false, code: "action", error: "Unknown action." } };
@@ -560,4 +586,4 @@ async function handleRequest(action, params = {}) {
   }
 }
 
-module.exports = { configure, handleRequest, parseChannelInput, parseVideoId, getChannel, getComments, errorBody, yt, statsForIds, n, isoDurationToSeconds, cached, monetizationCheck, probeAds, watchEstimate };
+module.exports = { configure, handleRequest, parseChannelInput, parseVideoId, getChannel, getComments, getChannelComments, errorBody, yt, statsForIds, n, isoDurationToSeconds, cached, monetizationCheck, probeAds, watchEstimate };

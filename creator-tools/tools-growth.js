@@ -111,6 +111,28 @@ module.exports = [
     ],
   },
   {
+    slug: "youtube-comment-audit",
+    howTitle: "How the audit works",
+    name: "YouTube Comment Audit",
+    platform: "YouTube",
+    api: "youtube",
+    action: "audit",
+    intent: "check",
+    buttonLabel: "Audit comments",
+    short: "Audit a channel's comment section across its latest videos: reply rate, unanswered questions, regulars, spam and a 0 to 100 comment health score.",
+    intro: "Paste a channel. We read the newest comments on its latest uploads and show how the comment section is doing as a whole: the reply rate, every unanswered question in one list, the viewers who come back video after video, spam that slipped through, and a comment health score with every point explained.",
+    inputs: [
+      { id: "channel", label: "Channel link or @handle", type: "text", placeholder: "@handle or a channel link" },
+      { id: "videos", label: "Latest videos to audit", type: "select", value: "10", options: [["5", "5 videos"], ["10", "10 videos"]] },
+      { id: "per", label: "Comments per video", type: "select", value: "100", options: [["100", "Newest 100"], ["200", "Newest 200"], ["300", "Newest 300"]] },
+    ],
+    how: [
+      "We read the newest comments on the channel's latest uploads through the official YouTube Data API, with up to 5 replies each. Videos made for kids or with comments off are listed but not read.",
+      "The score is Passive Array's own: reply rate 35 points, questions answered 25, comments per 1,000 views 20, returning commenters 10 and freedom from scam spam 10. The full-mark thresholds are our editorial choices and are shown in the result.",
+      "Questions, buying and collab comments and scam spam are found with simple visible word rules, not AI.",
+    ],
+  },
+  {
     slug: "youtube-comment-analyzer",
     howTitle: "How the analysis works",
     name: "YouTube Comment Analyzer",
