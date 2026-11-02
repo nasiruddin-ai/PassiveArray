@@ -27,7 +27,7 @@ module.exports = {
       p: ["As of October 2026, these are the rules in YouTube's help pages. They change from time to time, so check YouTube Help before you rely on one:"],
       list: [
         "You add hashtags in the <b>description</b>, or in the <b>title</b>.",
-        "If the title has no hashtags, YouTube shows <b>the first three hashtags from the description</b> with the title. That is why order matters.",
+        "From the hashtags in your description, YouTube shows <b>up to three</b> by the title, picking the ones it considers most engaging. Putting your most specific hashtags first keeps the list focused.",
         "Clicking a hashtag opens a page of other videos using it, so a hashtag is a small doorway, not a ranking boost.",
         "A video with <b>more than 60 hashtags</b> has all of its hashtags ignored, according to YouTube's help page.",
         "Hashtags cannot contain spaces, and a hashtag that has nothing to do with the video can break YouTube's policy on misleading metadata.",
@@ -51,7 +51,7 @@ module.exports = {
         ],
       },
       after: [
-        "The first three are the ones shown with your title. That is a reasonable start, but read the list before you paste it. Here, <b>#home</b> and <b>#homeguide</b> say nothing about coffee and should go. You might swap in a tag you know your audience uses, such as the brewing method you show.",
+        "The first three are your strongest candidates for the spots by the title. That is a reasonable start, but read the list before you paste it. Here, <b>#home</b> and <b>#homeguide</b> say nothing about coffee and should go. You might swap in a tag you know your audience uses, such as the brewing method you show.",
         "Longer lists, 15 here, include <b>#shorts</b>. Delete it if the video is not a Short. In general, cut any tag that would surprise someone who clicked it.",
       ],
     },
@@ -85,9 +85,9 @@ module.exports = {
   ],
   faq: [
     ["How many hashtags should I use on YouTube?", "Three to eight is plenty for most videos. Only three show with your title, and as of October 2026 YouTube ignores every hashtag on a video that has more than 60."],
-    ["Where do hashtags go on a YouTube video?", "In the description, usually at the end, or in the title. If the title has none, YouTube shows the first three from the description with the title."],
+    ["Where do hashtags go on a YouTube video?", "In the description, usually at the end, or in the title. YouTube shows up to three hashtags from the description by the title, choosing the ones it considers most engaging."],
     ["Do hashtags help YouTube videos get more views?", "A little. They let viewers browsing a hashtag find your video. They are a small signal compared with your title, thumbnail and how long people watch."],
-    ["Why are the specific hashtags first?", "Because the first three are the ones viewers see. A specific tag brings people looking for exactly your topic, while a broad tag like #youtube competes with millions of videos."],
+    ["Why are the specific hashtags first?", "Because only up to three show by the title, so the list should lead with your best ones. A specific tag brings people looking for exactly your topic, while a broad tag like #youtube competes with millions of videos."],
     ["Does this generator know which hashtags are popular?", "No. It builds hashtags from your words using a fixed pattern and has no live data. Check a hashtag by clicking it on YouTube and seeing what videos it leads to."],
     ["Should I use #shorts on a long video?", "No. Use #shorts only on Shorts. The generator adds it only to its longer lists, so delete it if it does not apply."],
     ["Are hashtags the same as YouTube tags?", "No. Hashtags are visible and clickable; tags are hidden in YouTube Studio and mostly help with misspellings. Use the <a href=\"../youtube-tag-generator/\">tag generator</a> for those."],

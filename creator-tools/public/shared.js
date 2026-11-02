@@ -1280,7 +1280,7 @@
     chosen = chosen.filter(function (c) { if (seen[c.tag]) return false; seen[c.tag] = 1; return true; });
 
     return {
-      hero: { label: "Hashtags", value: chosen.length, note: "The first three appear above your video title. Those are the specific ones." },
+      hero: { label: "Hashtags", value: chosen.length, note: "Up to three show by your video title. The specific ones come first." },
       tags: chosen,
       rows: [
         { name: "Most likely shown by your title", value: chosen.slice(0, 3).map(function (c) { return c.tag; }).join(" ") },
@@ -1289,6 +1289,56 @@
       ],
       copy: chosen.map(function (c) { return c.tag; }).join(" "),
       note: "Paste these at the end of your description. Specific tags are first on purpose: YouTube shows up to three hashtags by the title, and a narrow tag brings the right viewer while a broad one competes with millions of videos.",
+    };
+  };
+
+  /* ------------------------------------------- blocked words list generator */
+  /* Phrases, not single everyday words: YouTube holds any comment that contains or closely
+     matches a blocked term, so "free" or "link" would hide real viewers. No slur list: we do not
+     print slurs on the site, and YouTube's own Strict hold setting is built for that. */
+  var BLOCK_SETS = [
+    { id: "scam", name: "Scams and fake support", levels: "light", words: ["whatsapp me", "message me on whatsapp", "contact me on whatsapp", "chat me on whatsapp", "text me on whatsapp", "telegram me", "message me on telegram", "contact me on telegram", "reach me on telegram", "add me on telegram", "my telegram is", "write to me on telegram", "signal me", "wa.me", "t.me/", "you have been selected", "you have been chosen", "you are among the winners", "you won a prize", "claim your prize", "claim your reward", "congratulations you won", "congrats you won", "dm to claim", "message to claim", "giveaway winner", "selected winner", "winner of the giveaway", "official support team", "customer support number", "recovery expert", "account recovery service", "recover your account", "hire a hacker", "ethical hacker", "spell caster", "spell casting", "sugar daddy", "sugar mommy"] },
+    { id: "money", name: "Crypto and investment spam", levels: "light", words: ["bitcoin investment", "crypto investment", "invest in bitcoin", "forex trading", "binary options", "guaranteed profit", "guaranteed returns", "guaranteed income", "double your money", "daily profit", "weekly profit", "earn 5000 weekly", "trading signals", "account manager helped", "my portfolio manager", "expert trader", "crypto mentor", "investment manager", "financial expert helped", "recovered my funds", "recover lost crypto", "free crypto", "free bitcoin", "crypto airdrop", "usdt giveaway", "pump group", "mining investment", "make money from home", "work from home and earn"] },
+    { id: "links", name: "Fake links and freebies", levels: "light", words: ["bit.ly", "tinyurl", "cutt.ly", "shorturl", "is.gd", "rb.gy", "t.ly/", "free gift card", "free gift cards", "free robux", "free vbucks", "free v-bucks", "free v bucks", "free discord nitro", "free nitro", "steam gift card", "free iphone", "verify your account", "login to claim", "click the link in my bio", "link in my bio", "link in my profile", "click my profile", "check my profile", "look at my profile", "visit my profile"] },
+    { id: "adult", name: "Adult and dating spam", levels: "recommended", words: ["onlyfans", "only fans", "0nlyfans", "nudes", "send nudes", "hot girls", "sexy girls", "hot singles", "meet singles", "adult dating", "dating site", "hookup", "hook up tonight", "lonely tonight", "see my pics", "my private photos", "my private pics", "18+ content", "xxx", "porn", "camgirl", "cam girl", "sexting"] },
+    { id: "promo", name: "Sub4sub and self-promotion", levels: "recommended", words: ["sub4sub", "sub 4 sub", "sub for sub", "sub2sub", "subscribe to me", "sub to me", "subscribe to my channel", "please subscribe to my channel", "check out my channel", "check my channel", "visit my channel", "go to my channel", "watch my video", "watch my latest video", "support my channel", "support my small channel", "pls subscribe", "plz subscribe", "plz sub", "sub back", "subbed back", "i subscribed to you", "i subbed to you", "subscribe back", "buy subscribers", "buy views", "free subscribers", "get free subscribers", "promote your channel", "grow your channel fast"] },
+    { id: "bot", name: "Bot and copy-paste spam", levels: "recommended", words: ["read my name", "don't read my name", "dont read my name", "do not read my name", "click on my name", "tap my profile", "look at my pfp", "check my pfp", "i'm not a bot", "im not a bot", "not a bot btw", "this comment is copied", "copied comment", "like if you agree and subscribe"] },
+    { id: "swear", name: "Swear words", levels: "strict", words: ["fuck", "fucking", "fck", "f*ck", "motherfucker", "shit", "bullshit", "bitch", "bastard", "asshole", "dickhead", "cunt", "prick", "twat", "wanker", "slut", "whore", "stfu", "piss off"] },
+  ];
+  var BLOCK_ORDER = { light: 1, recommended: 2, strict: 3 };
+
+  COMPUTE["youtube-blocked-words-list"] = function (v) {
+    var level = BLOCK_ORDER[v.level] ? v.level : "recommended";
+    var split = function (t) { return String(t || "").split(/[,\n]+/).map(function (w) { return w.trim().toLowerCase(); }).filter(Boolean); };
+    var skip = {};
+    split(v.skip).forEach(function (w) { skip[w] = 1; });
+    var sets = BLOCK_SETS.filter(function (b) { return BLOCK_ORDER[b.levels] <= BLOCK_ORDER[level]; });
+    var all = [];
+    var rows = sets.map(function (b) {
+      var kept = b.words.filter(function (w) { return !skip[w]; });
+      all = all.concat(kept);
+      return [{ html: "<b>" + esc(b.name) + "</b>", lead: true }, kept.length, esc(kept.slice(0, 4).join(", ")) + (kept.length > 4 ? ", ..." : "")];
+    });
+    var own = split(v.extra).filter(function (w) { return !skip[w]; });
+    if (own.length) rows.push([{ html: "<b>Your own words</b>", lead: true }, own.length, esc(own.slice(0, 4).join(", ")) + (own.length > 4 ? ", ..." : "")]);
+    all = uniq(all.concat(own));
+    if (!all.length) return { error: "Everything was left out. Clear the \"Leave these out\" box or add your own words." };
+    var text = all.join(", ");
+    var label = { light: "Light", recommended: "Recommended", strict: "Strict" }[level];
+    return {
+      hero: { label: label + " blocked words list", value: fmt(all.length) + " phrases", note: "Copy it, then paste it into YouTube Studio. Comments that match are held for you to review, not deleted." },
+      table: { head: ["Category", "Phrases", "Examples"], rows: rows },
+      copy: text,
+      list: [
+        "Press <b>Copy</b> below the list.",
+        "Open <b>YouTube Studio</b> on a computer and click <b>Settings</b>.",
+        "Go to <b>Community moderation</b>, then <b>Content controls</b>.",
+        "Paste the list into <b>Blocked words</b> (phrases are separated by commas) and click <b>Save</b>.",
+        "Optional: turn on <b>Link text</b> to hold comments with links and hashtags too.",
+        "Check the <b>Held</b> tab on your Comments page every few days. YouTube keeps held comments there for up to 60 days, and you can approve any real viewer it caught.",
+      ],
+      download: { label: "Download as .txt", hint: fmt(text.length) + " characters", filename: "youtube-blocked-words-" + level + ".txt", mime: "text/plain;charset=utf-8", text: text },
+      note: "Blocked words match text, not meaning, so a scammer who changes the spelling can still get through, and a real comment that happens to contain a phrase will be held. That is why held comments wait for you instead of disappearing. The list applies to comments, live chat and posts in your Community.",
     };
   };
 

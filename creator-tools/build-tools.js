@@ -346,7 +346,7 @@ const CLUSTERS = [
   ["find-youtube-influencers-by-niche", "search-youtube-influencers-by-location", "youtube-lookalike-finder", "youtube-channel-comparison"],
   ["twitch-follower-count-checker", "twitch-follower-tracker", "twitch-channel-comparison", "youtube-subscriber-count-checker"],
   ["youtube-channel-growth-tracker", "youtube-subscriber-count-checker", "youtube-channel-comparison", "youtube-channel-quality-checker", "twitch-follower-tracker"],
-  ["youtube-comment-exporter", "youtube-comment-picker", "youtube-engagement-rate-calculator", "youtube-thumbnail-downloader"],
+  ["youtube-comment-exporter", "youtube-comment-picker", "youtube-blocked-words-list", "youtube-engagement-rate-calculator", "youtube-thumbnail-downloader"],
   ["youtube-channel-value-calculator", "youtube-money-calculator", "youtube-monetization-checker", "youtube-sponsorship-price-calculator"],
   ["x-follower-to-following-ratio", "x-account-comparison", "instagram-follower-to-following-ratio"],
 ];

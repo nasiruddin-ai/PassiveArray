@@ -110,6 +110,26 @@ module.exports = [
     ],
   },
   {
+    slug: "youtube-blocked-words-list",
+    howTitle: "How the list is built",
+    name: "YouTube Blocked Words List Generator",
+    platform: "YouTube",
+    intent: "create",
+    buttonLabel: "Build my list",
+    short: "A copy-ready blocked words list for YouTube comments: scams, crypto spam, fake links, adult spam and sub4sub.",
+    intro: "Pick how strict you want to be and add your own words. You get one comma-separated list to paste into YouTube Studio, built from the phrases spammers actually use, so it catches scams without hiding your real viewers.",
+    inputs: [
+      { id: "level", label: "How strict", type: "select", value: "recommended", options: [["light", "Light: scams, crypto and fake links only"], ["recommended", "Recommended: plus adult spam, sub4sub and bot spam"], ["strict", "Strict: everything, including swear words"]] },
+      { id: "extra", label: "Your own words or phrases", type: "textarea", optional: true, placeholder: "Comma or one per line, e.g. a scammer's fake name, a rival's link" },
+      { id: "skip", label: "Leave these out", type: "textarea", optional: true, placeholder: "Anything from our list you want to allow, e.g. telegram" },
+    ],
+    how: [
+      "Every phrase comes from a common spam pattern: fake support and 'message me on WhatsApp' scams, fake investment managers, shortened links, adult bots, sub4sub requests and copy-paste bot comments.",
+      "We use phrases, not single common words, because YouTube holds any comment containing or closely matching a blocked term. Blocking 'free' or 'link' would hide real viewers.",
+      "The list is built in your browser. Nothing is sent anywhere, and nothing is changed on your channel until you paste it in yourself.",
+    ],
+  },
+  {
     slug: "youtube-channel-value-calculator",
     name: "YouTube Channel Value Calculator",
     platform: "YouTube",
