@@ -6,6 +6,7 @@ keyword: how to grow youtube channel gaming
 category: Growth
 tools: youtube-niche-finder, youtube-channel-name-generator, youtube-video-ideas-generator
 related: how-to-get-more-views-on-youtube-live, how-to-grow-youtube-channel-with-shorts, youtube-cpm-by-niche
+image: Grow a gaming YouTube channel, comparing new release games with evergreen games
 ---
 
 To grow a gaming YouTube channel, pick a lane of games narrow enough that one type of viewer wants every video, make videos that answer what those players search for, and use Shorts and live streams to feed your long-form uploads rather than replace them. Gameplay alone is not enough: the channels that grow add something a viewer cannot get by playing the game themselves, such as skill, knowledge, story or personality.
@@ -66,6 +67,8 @@ You do not need a face cam. Many gaming channels use voice only. What you cannot
 ## Search videos vs browse videos
 
 Gaming videos get views from two very different places, and you should know which one each video is built for.
+
+![Two cards comparing gaming search videos, which answer a typed question, with browse videos picked from Home feeds](gaming-search-vs-browse-videos.webp "Know which one each video is built for.")
 
 ### Search videos
 
@@ -189,6 +192,8 @@ This is our suggestion for a first two months, not a YouTube rule.
 3. **Days 11 to 40: publish.** One long video a week, mostly search videos, each with chapters. Cut one or two Shorts from each.
 4. **Days 41 to 50: try live.** If you meet the requirements, stream on a fixed day and time. Cut one highlight video from each stream.
 5. **Days 51 to 60: review.** In Studio, compare traffic sources, click-through rate and the first 30 seconds of retention across your videos. Make more of what worked.
+
+![Timeline of a 60-day plan for a new gaming channel, from choosing a game family to reviewing analytics](gaming-channel-60-day-plan.webp "Our suggested first two months, not a YouTube rule.")
 
 To see how other channels in your game are growing, add them to the YouTube channel growth tracker on Passive Array and watch their daily numbers. The [outliers feed](../../research/outliers/) lists videos getting many times their channel's usual views, which is a good way to spot gaming formats that are working right now.
 

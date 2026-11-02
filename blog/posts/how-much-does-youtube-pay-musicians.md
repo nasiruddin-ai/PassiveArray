@@ -6,6 +6,7 @@ keyword: how much does youtube pay music artists
 category: Earnings
 tools: youtube-money-calculator, youtube-channel-value-calculator
 related: how-to-grow-a-music-youtube-channel, youtube-copyright-claim-vs-strike, how-much-does-youtube-pay-after-monetization
+image: How YouTube pays musicians, with the 55% long-form ad revenue share and fan uploads at 50 percent of music industry revenue on YouTube
 ---
 
 YouTube does not pay musicians a fixed rate per stream, and it does not publish one. A music artist earns from several separate streams: ad revenue on their own channel's videos, Content ID revenue when other people's uploads use their recordings, Art Tracks delivered by a distributor, a share of Shorts revenue set aside for music, and fan funding such as Super Thanks and merch. How much reaches you depends on which of those you have switched on, and on who sits between you and YouTube.
@@ -25,6 +26,8 @@ YouTube's artist resources and Help Center describe the money in a few distinct 
 | YouTube Premium | Premium members watching your content | Shared with partners and rights holders |
 | Supers and memberships | Fans paying through Super Chat, Super Stickers, Super Thanks or memberships | You, through the Partner Program |
 | Shopping and tickets | Merch tagged in videos, concerts promoted on your channel | You, through your store or ticketing partner |
+
+![Who receives music money first on YouTube: channel ads, Content ID, Art Tracks and the Shorts music share](who-gets-music-money-first.webp "Where the four main music revenue routes land first, from YouTube for Artists and YouTube Help.")
 
 The first two usually matter most. They are also the two most often confused, so they get their own sections below.
 
@@ -102,6 +105,8 @@ When creators use your track in their Shorts, part of the Shorts revenue goes to
 | No music | All of it | None |
 | One track | Half | Half |
 | Two tracks | One third | Two thirds |
+
+![Bar chart of a Short's Creator Pool share: all of it with no music, half with one track, one third with two tracks](shorts-music-split.webp "How music in a Short reduces its share of the Creator Pool, per YouTube's Shorts monetization policies.")
 
 The music share is paid to rights holders under YouTube's music agreements. YouTube does not publish how much a single use is worth, so treat Shorts as exposure first and income second. A song that takes off as a Shorts sound can pull listeners to your full videos and Art Tracks, which is where the ad money is larger.
 

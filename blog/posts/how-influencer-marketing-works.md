@@ -6,6 +6,7 @@ keyword: how influencer marketing works
 category: For brands
 tools: find-youtube-influencers-by-niche, youtube-sponsorship-price-calculator, instagram-pricing-calculator
 related: how-to-vet-an-influencer-before-you-pay, does-influencer-marketing-work, free-influencer-marketing-tools
+image: How influencer marketing works, with the free Find YouTube Influencers in Your Niche tool listing skincare routine channels and their live stats
 ---
 
 Influencer marketing works like this: a brand pays a creator, in money, free product or commission, to show or recommend something to the creator's audience, and the creator labels that content as an ad. The brand is buying two things at once: attention from a specific audience, and a recommendation from someone that audience already trusts. Everything else, from finding creators to measuring results, is about buying those two things at a fair price.
@@ -56,6 +57,8 @@ One rule applies across all of them: a free product is still a payment for discl
 8. Publish, then decide whether to amplify with ads.
 9. Measure against the goal and decide what to repeat.
 
+![Timeline of a small influencer campaign: weeks 1 to 2 find and vet creators, week 3 agree terms, weeks 4 to 5 make and approve the content, then measure 30 days after posting](small-influencer-campaign-timeline.webp "Typical timing for a small campaign, from first search to results.")
+
 ### 1. Set one goal
 
 Pick one main goal per campaign, because the goal decides which creators fit and how you measure success.
@@ -104,6 +107,8 @@ Brands that price first negotiate better. You do not need the creator's rate car
 
 These are estimates, not market prices. Niche, audience country and how much work the content needs all move the real number. They give you a range so you know whether a quote is close or far off.
 
+![Instagram Influencer Pricing Calculator result for 30,000 followers at 3% engagement: a feed post at $315 to $585, with reel, story and bundle prices](instagram-pricing-calculator-example.webp "Example numbers: 30,000 followers at 3% engagement in the free Instagram pricing calculator.")
+
 ### 6. Brief and contract
 
 The brief tells the creator what you need without writing their script. A good brief fits on one page:
@@ -151,6 +156,8 @@ They shortlist one YouTube creator and two Instagram creators:
 For account A, 3% engagement is 1.5 times the 2.0% typical rate the pricing calculator uses for accounts between 10,000 and 100,000 followers, so the feed post midpoint is 30 x $10 x 1.5 = $450, with a range of 30% either side. For account B, 1.6% is 0.8 times typical, so the midpoint is 60 x $10 x 0.8 = $480.
 
 A plan within budget: the YouTube integration at about $1,000, a reel from account A at about $600, a feed post from account B at about $480, and roughly $500 for product, shipping and a 15% audience discount code. That leaves a few hundred dollars to boost whichever piece performs best.
+
+![Bar chart of an example $3,000 first campaign: about $1,000 for a YouTube integration, $600 for a reel, $480 for a feed post, $500 for product and shipping, and a few hundred kept back](example-3000-campaign-budget.webp "Example: how the $3,000 test budget splits across creators and costs.")
 
 Notice what drove the choice. Account B has twice the followers of account A but costs about the same, because its engagement is below typical for its size. Price follows reach and engagement, not follower count.
 

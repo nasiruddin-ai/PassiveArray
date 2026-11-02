@@ -5,6 +5,7 @@ date: 2026-10-29
 keyword: how does youtube count views
 category: Growth
 tools: youtube-engagement-rate-calculator, youtube-channel-quality-checker, youtube-money-calculator
+image: How YouTube counts views: since August 2026 a view counts when playback starts, while engaged views still decide Partner Program pay
 ---
 
 YouTube does not publish an exact formula for a view, and it is deliberately vague so the system is harder to game. What it does say, and what creators can observe, is enough to answer most questions.
@@ -24,6 +25,8 @@ So there is no minimum watch time for a public view any more. The often-repeated
 
 This is why view counts sometimes fall. YouTube counts first, then reviews, and removes what fails the review.
 
+![Three-step diagram: a view is counted when playback starts, YouTube reviews it for bots, loops, bought views and forced playback, and invalid views are removed](count-first-review-later.webp "YouTube counts first and filters later, which is why counts can drop.")
+
 ## Do your own views count?
 
 Yes, if you watch it like any viewer would. Watching your own video once from your account can add a view. Replaying it repeatedly to inflate the number will be filtered, and watching it inside YouTube Studio's preview is not a view.
@@ -31,6 +34,8 @@ Yes, if you watch it like any viewer would. Watching your own video once from yo
 ## Views versus engaged views
 
 Shorts moved to [counting a view on every start or replay](../youtube-shorts-engagement-rate/) in March 2025, and YouTube extended the same start-to-play rule to every format on 24 August 2026. That makes public view counts higher and easier to earn than they used to be.
+
+![Timeline: Shorts count every start or replay from March 2025, all formats count a view at playback start from 24 August 2026, and earnings still use engaged views](youtube-view-counting-timeline.webp "How view counting changed, and what stayed the same for earnings.")
 
 YouTube kept a stricter measure for money. Partner Program earnings are still based on **engaged views** and **engaged watch hours**, and eligibility on qualified views, so the change did not alter what anyone is paid. In YouTube Studio you can see both. If you are tracking progress toward [monetization requirements](../youtube-monetization-requirements/), engaged views are the number that matters.
 

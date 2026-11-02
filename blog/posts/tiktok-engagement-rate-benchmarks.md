@@ -6,6 +6,7 @@ updated: 2026-10-10
 keyword: what is average tiktok engagement rate
 category: Engagement
 tools: tiktok-engagement-rate-calculator, tiktok-audit, tiktok-fake-follower-checker
+image: TikTok engagement rate benchmarks by account size, with the Passive Array TikTok engagement rate calculator grading an example account
 ---
 
 Put an Instagram creator and a TikTok creator side by side and the TikTok engagement rate will look three to five times higher. That is not a sign one is better. TikTok's feed is built to show videos to people who do not follow the creator, and the like button sits under the thumb for the whole video. The benchmarks have to be different, and they are.
@@ -30,7 +31,11 @@ On TikTok most views come from people who do not follow the creator, so the calc
 | Macro | 500K to 1M | 5% |
 | Mega | over 1M | 4% |
 
+![Bar chart of typical TikTok engagement by tier: nano 12%, micro 8%, mid 6%, macro 5%, mega 4%](tiktok-engagement-by-tier.webp "Passive Array's TikTok benchmarks by follower count.")
+
 Compare that with Instagram's 4.0% for nano accounts sliding to 0.8% for mega accounts, from our [Instagram engagement benchmarks](../instagram-engagement-rate-by-follower-count/). A TikTok account at 3% is doing badly for its size; an Instagram account at 3% is probably doing well.
+
+![Bar chart comparing typical engagement for nano and mega accounts: TikTok 12% and 4%, Instagram 4.0% and 0.8%](tiktok-vs-instagram-engagement.webp "TikTok and Instagram benchmarks are on different scales.")
 
 ## Grading against the tier
 

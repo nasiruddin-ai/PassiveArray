@@ -6,6 +6,7 @@ keyword: youtube description template
 category: YouTube SEO
 tools: youtube-description-generator, youtube-timestamp-link-generator, youtube-keyword-generator
 related: youtube-timestamp-link, youtube-hashtags-vs-tags, how-youtube-seo-works
+image: YouTube description templates, with the Passive Array YouTube Description Generator drafting a description for cleaning a rusty cast iron pan
 ---
 
 A good YouTube description template has four parts in this order: two opening lines that say what the video is about using its main keyword, a short summary of what the viewer gets, chapter timestamps, and then links, credits and two or three hashtags. That order follows YouTube's own advice: viewers only see the first lines before they tap "Show more", so those lines have to do the work.
@@ -45,6 +46,8 @@ This works for most long-form videos. Each numbered item is a block of the descr
 9. **Hashtags (last line, two or three):** `#[specific] #[topic] #[broad]`
 
 Why this order: blocks 1 and 2 answer the viewer and carry the keyword, block 3 creates chapters and helps viewers skip, and everything after that is for people who already decided to read more. Hashtags go last because YouTube pulls them from the description anyway.
+
+![Four steps of a YouTube description in order: opening lines with the keyword, a short summary, chapters, then links, credits and hashtags](youtube-description-order.webp "The universal template in four blocks, in the order viewers read them.")
 
 ## A filled-in example
 
@@ -144,6 +147,8 @@ Chapters are the most useful part of most descriptions. They let viewers skip to
 3. Each chapter must be **at least 10 seconds** long.
 
 Write each one on its own line: `00:00 Intro`, then `01:12 What you need`, and so on. Timestamps you add manually override YouTube's automatic chapters. YouTube also says channels with active strikes, and videos with content that may be inappropriate for some viewers, do not have access to chapters, so if yours are not appearing, check those first.
+
+![YouTube's three chapter rules: the first timestamp is 00:00, at least three timestamps in ascending order, and each chapter at least 10 seconds long](youtube-chapter-rules.webp "Break any of these and YouTube does not show chapters.")
 
 Name chapters by what happens in them. "03:40 Removing the rust" helps a viewer and describes the content. "03:40 Part 2" does neither. To share one exact moment rather than build chapters, the [YouTube Timestamp Link Generator](../../creator-tools/youtube-timestamp-link-generator/) gives you a watch link, short link and embed code that start at the time you choose. [How to link to a specific time in a YouTube video](../youtube-timestamp-link/) explains the other ways to do it.
 

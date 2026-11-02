@@ -5,6 +5,7 @@ date: 2026-08-21
 keyword: how much should i charge for a sponsored youtube video
 category: Sponsorships
 tools: youtube-sponsorship-price-calculator, youtube-engagement-rate-calculator, youtube-money-calculator
+image: How to price a YouTube sponsorship by CPM, with the Passive Array sponsorship price calculator pricing an integration for @YouTubeCreators
 ---
 
 Most creators price their first sponsorship by guessing, then find out a year later they were charging a third of the rate. [Brands, meanwhile, price on one thing](../how-influencer-marketing-works/): how many people will see the message. Once you price the same way they do, the negotiation gets much shorter.
@@ -35,6 +36,8 @@ The calculator's default range is **$20 to $50 per thousand views** for a 60-sec
 
 So a channel averaging 120,000 views prices a mid-range integration at 120 x $35 = **$4,200**, a dedicated video at about **$7,350**, and a Shorts mention at about **$1,050**. Quote the range, not the midpoint: "$2,400 to $6,000 depending on placement and usage rights" gives the brand room to say yes.
 
+![Bar chart for an example 120,000-view channel: dedicated video about $7,350, 60-second integration $4,200, Shorts mention about $1,050](youtube-sponsorship-price-by-format.webp "Example: one channel, three formats.")
+
 ## What changes the price after the formula
 
 - **Usage rights.** If the brand wants to run your video as an ad on their own channels, that is a separate fee, typically 20% to 50% on top for a limited period. Never include it by default.
@@ -52,3 +55,5 @@ So a channel averaging 120,000 views prices a mid-range integration at 120 x $35
 ## Check your number
 
 Run your channel through the sponsorship price calculator to see the range with the live average-view count and the engagement adjustment applied. Then check the [engagement rate calculator](../../creator-tools/youtube-engagement-rate-calculator/) so you can quote the grade in your media kit.
+
+![YouTube sponsorship price calculator result for @YouTubeCreators with prices for an integration, a dedicated video and a Shorts mention](youtube-sponsorship-calculator-result.webp "The calculator on a public channel, @YouTubeCreators.")

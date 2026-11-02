@@ -6,6 +6,7 @@ keyword: how to grow youtube dead channel
 category: Growth
 tools: youtube-channel-quality-checker, youtube-channel-growth-tracker, youtube-title-analyzer
 related: how-to-grow-a-youtube-channel, why-did-my-youtube-subscribers-go-down, how-to-audit-a-youtube-channel
+image: Bring a dead channel back, with the Passive Array YouTube Channel Quality Checker scoring engagement, reach, consistency and audience
 ---
 
 You can revive a dead YouTube channel, because YouTube judges each new video on its own viewers, not on the channel's past slump. YouTube's recommendation help says its system "uses fresh performance data for each individual video, rather than relying on past results." What a dead channel usually has is not a penalty but an audience that stopped watching: subscribers who moved on, a topic that cooled, or a long gap between uploads. The fix is to diagnose which one, decide who the channel is for now, and give that audience a reason to come back. A quick first check is the [YouTube Channel Quality Checker](../../creator-tools/youtube-channel-quality-checker/), which scores your recent uploads on engagement, reach and upload consistency and shows the raw figure behind each score.
@@ -80,6 +81,8 @@ After the diagnosis, you have three options. The right one depends on what you f
 | You want to cover something with no overlap with the old audience | **New channel** | A mixed channel confuses both audiences and recommendations |
 | Channel has strikes, reused content history or bought subscribers | Fix the issue first, or **new channel** | A clean channel is easier than repairing a compromised one |
 
+![Four options after diagnosing a dead channel: restart, pivot, start a new channel, or fix policy issues first](restart-pivot-or-new-channel.webp "Choose from what the diagnosis found.")
+
 ### The case for keeping the old channel
 
 Because YouTube uses fresh data for each video, a new upload on an old channel is not held back by the slump. And an old channel has things a new one does not: a back catalogue that can pick up views when a new video sends people to it, existing subscribers who may still respond to the right video, and features you may already have unlocked.
@@ -91,6 +94,8 @@ Inactive subscribers do not hurt your videos' reach directly, but they do make y
 ## A 90-day comeback plan
 
 This plan is our suggestion, built on what YouTube has said about breaks, series and old videos. Adjust the pace to what you can sustain.
+
+![Timeline of a 90-day YouTube comeback plan: days 1 to 14, 15 to 45, 46 to 90, and monthly measurement](90-day-comeback-plan.webp "The three phases of the plan.")
 
 ### Days 1 to 14: fix what you already have
 

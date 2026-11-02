@@ -6,6 +6,7 @@ keyword: youtube video ideas for beginners
 category: Growth
 tools: youtube-video-ideas-generator, youtube-keyword-generator, youtube-niche-finder
 related: how-to-write-a-youtube-script, free-youtube-keyword-research, best-youtube-niches
+image: Video ideas people want to watch, with the Passive Array YouTube Video Ideas Generator showing 12 ideas for home cooking
 ---
 
 The best YouTube video ideas for beginners answer a specific question that people in your niche already search for, using something you can film well with what you have now. Tutorials, honest reviews, "first time trying" videos, beginner mistakes and step-by-step projects all work because they have a clear promise and a clear audience. Generic ideas like "my day" or "Q&A" usually only work once people already know you.
@@ -36,6 +37,8 @@ YouTube's search box suggests what people commonly type. That makes it the most 
 4. Write down every suggestion that is a real question someone could have.
 
 The [YouTube keyword generator](../../creator-tools/youtube-keyword-generator/) does a version of this for you, turning one keyword into dozens of long-tail ideas to check in YouTube search. [Free YouTube keyword research](../free-youtube-keyword-research/) explains how to judge which of those phrases a small channel can actually rank for.
+
+![YouTube Keyword Generator results for sourdough, grouped by search intent such as how-to and beginner](keyword-generator-sourdough.webp "Real output from the free YouTube Keyword Generator for the seed sourdough.")
 
 ### 2. Comments, yours and other people's
 
@@ -91,6 +94,8 @@ The questions you had when you started your hobby or job are the questions begin
 | A specific result | ...that tastes like a cafe latte |
 | A constraint | ...without a machine, under $20, in 5 minutes |
 | A format | Step by step, I tried, ranked, vs, mistakes, first time |
+
+![Four steps that turn a topic into a video idea: who it is for, a result, a constraint and a format](topic-to-video-idea.webp "Add an audience, a result, a constraint and a format.")
 
 Then test the title: could someone type something close to it in search, or would they click it in their feed? Write the title before you film. If you cannot write a clear title, the idea is not ready. When it is, [how to write a YouTube script](../how-to-write-a-youtube-script/) shows how to plan the video around that promise.
 
@@ -210,6 +215,8 @@ When you have a list of 20 to 50 ideas, score each one from 1 to 3 on three thin
 | Ability: can I make this well now? | Need new skills or gear | Need some practice | Can film it this week |
 
 Film the ideas with the highest total first. An example: "how to cook rice without a rice cooker" might score 3 for demand (it appears in search suggestions), 2 for competition, and 3 for ability, for a total of 8. "Ultimate guide to Japanese cuisine" might score 2, 1 and 1. Start with the rice.
+
+![Two example video ideas scored on demand, competition and ability: rice without a rice cooker scores 8, a Japanese cuisine guide scores 4](score-video-ideas-example.webp "Example scores: film the rice video first.")
 
 ## Keep an idea bank
 

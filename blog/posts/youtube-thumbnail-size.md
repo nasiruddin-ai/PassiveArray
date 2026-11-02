@@ -5,6 +5,7 @@ date: 2026-10-29
 keyword: youtube thumbnail size
 category: YouTube SEO
 tools: youtube-thumbnail-tester, youtube-thumbnail-downloader, youtube-title-analyzer
+image: YouTube thumbnail size: 1280 x 720 pixels at 16:9 recommended, with a maximum file size of 2 MB
 ---
 
 The size YouTube asks for and the size viewers see are two very different things. Get the first right so the upload is accepted and sharp. Design for the second, because that is where the click is won.
@@ -37,9 +38,13 @@ YouTube stores and serves thumbnails at fixed sizes, and the largest is 1280 x 7
 
 The 4:3 sizes (640 x 480 and smaller) add bars above and below a 16:9 image. That is normal and not something to design around.
 
+![YouTube Thumbnail Downloader showing the five stored sizes of one video's thumbnail, from 1280 x 720 down to 120 x 90](thumbnail-downloader-stored-sizes.webp "Every stored size of one YouTube Creators thumbnail, in the free thumbnail downloader.")
+
 ## The size people actually see
 
 Nobody sees your thumbnail at 1280 x 720. On a phone home feed it fills the width of the screen, about 350 to 430 pixels wide. In suggested videos beside a playing video on desktop, it is around 168 pixels wide. In search on mobile it can be smaller still.
+
+![Bar chart comparing the 1280 pixel uploaded thumbnail with about 350 to 430 pixels in the phone home feed and about 168 pixels in suggested videos on desktop](thumbnail-size-viewers-see.webp "Approximate widths viewers actually see your thumbnail at.")
 
 That smallest view is the test. A thumbnail that only works full size does not work.
 

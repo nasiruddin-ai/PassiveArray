@@ -5,6 +5,7 @@ date: 2026-10-29
 keyword: youtube alternatives
 category: Growth
 tools: twitch-follower-count-checker, tiktok-money-calculator, instagram-money-calculator
+image: YouTube alternatives for creators: Kick streamers keep 95% of each subscription, YouTube pays 55% of long-form ad revenue
 ---
 
 No platform replaces YouTube for long-form video that keeps getting found through search for years. But several are better at specific things:
@@ -37,11 +38,15 @@ This guide is for creators who want to know where else to publish and how each p
 | Vimeo | Hosting, selling video | Selling through Vimeo's streaming storefronts | Paid plans; no ad revenue |
 | Patreon | Paying fans | Memberships; 10% platform fee | Anyone |
 
+![Bar chart of the share creators keep: Kick 95%, Twitch Plus up to 70%, YouTube long-form ads 55%, Twitch standard 50%, YouTube Shorts 45%](creator-revenue-shares.webp "Creator shares from each platform's own rules. They cover different kinds of income.")
+
 For the YouTube side in full, read [YouTube monetization requirements](../youtube-monetization-requirements/) and [YouTube ad revenue explained](../youtube-ad-revenue-explained/).
 
 ## Four ways platforms pay creators
 
 It helps to know the model before comparing numbers, because the platforms pay in very different ways.
+
+![Four cards: ad revenue share, funds and reward pools, fan payments and selling directly, with example platforms for each](how-platforms-pay-creators.webp "The four payment models behind every platform in this guide.")
 
 1. **Ad revenue share.** The platform shows ads on your videos and pays you a share. YouTube is the main example. Earnings scale with views and with how valuable your audience is to advertisers.
 2. **Creator funds and reward pools.** The platform sets aside money and divides it between eligible creators by views, watch time or engagement. TikTok's Creator Rewards, Snapchat's program, X's rewards and Rumble's Creator Program all work broadly this way. You cannot predict your share in advance.
@@ -59,6 +64,8 @@ The standard subscription split is **50/50**. Twitch's **Plus Program** raises i
 **Good for:** gamers, live hosts, and anyone whose content is better live than edited. **Watch out for:** discovery is weak for new streamers. Most grow by bringing an audience from elsewhere, often YouTube clips.
 
 Check any Twitch channel's numbers with our [Twitch follower count checker](../../creator-tools/twitch-follower-count-checker/), or follow one over time with the [Twitch follower tracker](../../creator-tools/twitch-follower-tracker/).
+
+![Twitch follower count checker results for shroud, showing followers, average VOD views, followers per year and partner status](twitch-follower-count-checker.webp "Real output from the free Twitch follower count checker for shroud.")
 
 ## Kick
 

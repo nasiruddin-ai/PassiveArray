@@ -5,6 +5,7 @@ date: 2026-09-02
 keyword: average views per subscriber
 category: Growth
 tools: youtube-subscriber-count-checker, youtube-channel-quality-checker, youtube-engagement-rate-calculator
+image: Views per subscriber, where 30% and above reads as strong and 10% to 30% is normal for most active channels
 ---
 
 Subscriber count is [the number creators celebrate](../how-to-hide-youtube-subscriber-count/) and the number that tells you least. Views per subscriber is the one that tells you whether those subscribers are a community or a list.
@@ -16,6 +17,8 @@ Subscriber count is [the number creators celebrate](../how-to-hide-youtube-subsc
 Use the last ten uploads rather than a single video, and exclude anything that went unusually viral, because one runaway video will flatter the result for months.
 
 A channel with 40,000 subscribers averaging 8,000 views per upload is at 20%. Our [subscriber count checker](../../creator-tools/youtube-subscriber-count-checker/) works this out automatically from the official API.
+
+![Example calculation: 8,000 average views divided by 40,000 subscribers, times 100, equals 20% views per subscriber](views-per-subscriber-calculation.webp "Example: the calculation for a 40,000-subscriber channel.")
 
 ## What a healthy figure looks like
 
@@ -60,6 +63,8 @@ The two numbers answer different questions and are strongest together, so run th
 
 Both healthy means a real audience. Both weak, at a size where that is unusual, is the fake-audience fingerprint. High views per subscriber with low engagement usually means search traffic. Low views per subscriber with high engagement means a small loyal core inside a large dormant list, which is a good position to grow from.
 
+![Four cards reading views per subscriber with engagement rate: both healthy, both weak, high views with low engagement, low views with high engagement](views-per-subscriber-with-engagement.webp "The two numbers together tell you what kind of audience a channel has.")
+
 ## What to do about a falling ratio
 
 1. **Check consistency first.** Irregular uploads train the algorithm and the audience to stop expecting you.
@@ -70,3 +75,5 @@ Both healthy means a real audience. Both weak, at a size where that is unusual, 
 ## Check yours
 
 Paste your channel into the [subscriber count checker](../../creator-tools/youtube-subscriber-count-checker/). Views per subscriber sits under the headline numbers, with average views on recent uploads next to it. Then run the [quality checker](../../creator-tools/youtube-channel-quality-checker/), which folds this ratio together with engagement, upload frequency and channel age into a single score out of 100.
+
+![YouTube Subscriber Count Checker results for TED, showing 27.9 million subscribers, 47,951 average views on the last 10 uploads and 0.2% views per subscriber](subscriber-count-checker-views-per-subscriber.webp "Real output from the free subscriber count checker for @TED, a channel created in 2006. Very old channels often show a low ratio.")

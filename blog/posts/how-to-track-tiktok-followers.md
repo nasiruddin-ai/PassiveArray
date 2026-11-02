@@ -6,6 +6,7 @@ keyword: how to track tiktok followers
 category: Growth
 tools: tiktok-audit, tiktok-engagement-rate-calculator, tiktok-account-comparison
 related: how-to-grow-on-tiktok, tiktok-engagement-rate-benchmarks, how-to-spot-fake-followers
+image: Track TikTok followers free, with the Passive Array TikTok Account Audit scoring an example account using example numbers
 ---
 
 To track your own TikTok followers, open **TikTok Studio**, go to **Analytics** and look at the **Followers** section, which shows your follower count over time and who your followers are. To track anyone else's account, write down the follower count from their profile on the same day each week and work out the change yourself. TikTok does not offer a free public feed of other accounts' numbers, so every free method comes down to a regular log.
@@ -51,6 +52,8 @@ The free method that works for any public account, yours or someone else's, is a
 5. **Write the exact figure if you can.** Profiles round large counts (12.3K, 1.2M). For your own account, use TikTok Studio, which shows exact figures. For someone else's, rounding hides small weekly changes, so track monthly instead of weekly once an account passes about 100,000 followers.
 6. **Work out the change.** Weekly growth % = (this week's followers minus last week's) / last week's followers x 100.
 
+![Four steps of a weekly TikTok follower log: fixed day, profile numbers, last 12 videos and growth percentage](weekly-tiktok-follower-log.webp "Five minutes a week per account.")
+
 A sheet with these columns is enough:
 
 | Column | What to enter | Why it matters |
@@ -76,6 +79,8 @@ Say a cooking account logs these numbers over four weeks. This is an example, no
 | 2 | 8,610 | +160 | 1.9% | 45,000 |
 | 3 | 9,300 | +690 | 8.0% | 410,000 |
 | 4 | 9,420 | +120 | 1.3% | 52,000 |
+
+![Bar chart of example weekly follower gains: +250, +160, +690 in the viral week 3, and +120](tiktok-weekly-follower-gains-example.webp "Example numbers: most of the growth came from one week.")
 
 Over the four weeks the account grew from 8,200 to 9,420, which is 14.9%. That looks strong, but most of it came from week 3, when one video reached far beyond the usual audience.
 

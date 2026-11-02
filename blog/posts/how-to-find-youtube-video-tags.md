@@ -5,6 +5,7 @@ date: 2026-09-16
 keyword: how to find youtube tags on a video
 category: YouTube SEO
 tools: youtube-tag-generator, youtube-keyword-generator, youtube-title-analyzer
+image: See any YouTube video's hidden tags with Ctrl+U and a search for keywords, in a tags field limited to 500 characters
 ---
 
 YouTube stopped showing tags to viewers years ago, but it never stopped sending them to your browser. Every tag a creator set is still in the page you are already looking at. Here are three ways to read them, from fastest to most manual, and a [YouTube tag generator](../../creator-tools/youtube-tag-generator/) for writing your own.
@@ -19,6 +20,8 @@ Works in any browser, costs nothing, needs no software.
 4. The tags appear as a comma-separated list inside a meta tag.
 
 If the search finds nothing, the video has no tags set. That is common and, as we cover below, not necessarily a mistake.
+
+![Four steps to read YouTube tags from the page source: open the video, press Ctrl+U, search for keywords, then read the comma-separated list](find-tags-in-page-source.webp "Method 1, in four steps.")
 
 ## Method 2: the Passive Array extension
 
@@ -61,5 +64,7 @@ Five minutes per video, no more:
 5. Any other language your audience searches in.
 
 Stop around 480 characters so a later edit does not push you over the 500-character limit.
+
+![YouTube Tag Generator results for home espresso machine, 15 tags using 338 of the 500 characters, including the misspelling expresso machine](tag-generator-espresso.webp "Real output from the free YouTube Tag Generator, with a common misspelling added.")
 
 Then spend the time you saved on the title and the first thirty seconds of the video, which is where ranking is actually won.

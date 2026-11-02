@@ -5,6 +5,7 @@ date: 2026-09-15
 keyword: how much does youtube pay for shorts
 category: Earnings
 tools: youtube-money-calculator, youtube-engagement-rate-calculator, youtube-channel-quality-checker
+image: Long-form versus Shorts monetization: 55% of ad revenue on your own video compared with 45% of a shared, pooled Shorts revenue
 ---
 
 Creators who switch to Shorts often see views multiply and revenue fall. That is not a bug or a penalty. Shorts are paid through a completely different mechanism from long-form videos, and once you understand it the numbers stop being surprising, and so does the estimate from a [YouTube money calculator](../../creator-tools/youtube-money-calculator/).
@@ -27,6 +28,8 @@ Three things compound:
 
 The result is that a Short and a long-form video with identical view counts produce very different revenue, usually by an order of magnitude or more. This is why we do not publish a single "Shorts RPM" figure: the honest version is a fraction of your long-form RPM, and the fraction moves with your music usage and your audience.
 
+![Three reasons a Shorts view pays less: lower ad load, music paid out of the pool first, and a huge number of views sharing the pool](why-shorts-pay-less-per-view.webp "Why a Shorts view earns so much less than a long-form view.")
+
 ## What this means for your channel
 
 **Views stop predicting revenue.** If you post both formats, your total views and your total earnings will drift apart. That is expected. Our money calculator shows the Shorts share of recent uploads for exactly this reason, so you can discount the estimate when the share is high.
@@ -43,6 +46,8 @@ Treat Shorts as the top of the funnel and long-form as the business.
 - Give every Short a clear reason to go and watch something longer.
 - Keep the long-form catalogue worth arriving at.
 - Price sponsorships separately. A Shorts mention is worth roughly a quarter of a full integration in our [sponsorship calculator](../../creator-tools/youtube-sponsorship-price-calculator/), because the attention is briefer and there is no clickable link in the video.
+
+![Shorts strategy in three steps: get discovered with Shorts, point viewers to longer videos, earn on long-form and price sponsorships separately](shorts-as-top-of-funnel.webp "Shorts as the top of the funnel, long-form as the business.")
 
 ## Use original audio where you can
 

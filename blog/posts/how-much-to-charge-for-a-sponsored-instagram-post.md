@@ -5,6 +5,7 @@ date: 2026-09-19
 keyword: how much to charge for a sponsored instagram post
 category: Sponsorships
 tools: instagram-pricing-calculator, instagram-engagement-rate-calculator, instagram-money-calculator
+image: What to charge for a sponsored Instagram post, with the Passive Array Instagram pricing calculator pricing a 50,000-follower account at 2% engagement
 ---
 
 Ask ten creators what they charge for a sponsored Instagram post and you will get ten numbers with no shared logic behind them. Brands, meanwhile, work from a formula. Here is the formula, and an [Instagram pricing calculator](../../creator-tools/instagram-pricing-calculator/) that runs it, so you can quote a price you can defend.
@@ -18,6 +19,8 @@ The industry default is a rate per thousand followers:
 Our calculator starts at **$10 per 1,000 followers** for a feed post. A 50,000-follower account starts at $500, a 200,000-follower account at $2,000.
 
 That is the starting point, not the answer. Two accounts of the same size are rarely worth the same, and the adjustments below are where the real number comes from.
+
+![Four-step diagram from base price per 1,000 followers to engagement multiplier, format and separately quoted extras](instagram-sponsored-post-price-steps.webp "From follower count to a quote.")
 
 ## Engagement moves the number
 
@@ -50,6 +53,8 @@ These are separate line items. Quote them separately or you are giving them away
 - **Whitelisting.** Letting a brand run ads from your handle is more valuable to them than reposting, because it borrows your credibility. Charge accordingly.
 - **Extra revisions and approvals.** Two rounds included, more billed. This protects your time from a committee.
 - **Rush turnaround.** A week's notice is normal. Two days is a premium.
+
+![Four cards for charges to quote separately: usage rights, exclusivity, whitelisting, and revisions and rush](instagram-sponsorship-extra-charges.webp "Line items to keep out of the base fee.")
 
 ## Quote a range, then anchor
 

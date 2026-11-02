@@ -5,6 +5,7 @@ date: 2026-09-21
 keyword: youtube keyword research tool free
 category: YouTube SEO
 tools: youtube-keyword-generator, youtube-tag-generator, youtube-title-analyzer
+image: Free YouTube keyword research, with the Passive Array YouTube Keyword Generator showing ideas for photography tips
 ---
 
 Every [paid keyword tool](../tubebuddy-vs-vidiq/) sells you two things: a list of phrases, and a judgement about whether you can win them. You can get both free, and the free version of the second one is often more honest than the paid number. Our [YouTube keyword research tool](../../research/) does both from measured data, and the steps below show how to do it by hand.
@@ -36,6 +37,8 @@ Search the phrase and look at the first ten results. Ask four questions:
 **Do the results actually answer the phrase?** Sometimes the top videos are loosely related because nothing better exists. That gap is the opportunity.
 
 Our extension scores this automatically, showing an overall score with interest and competition broken out, plus a flag on any small channel that is ranking. But the four questions above are the whole method, and you can run them by eye.
+
+![Four questions to judge YouTube keyword competition: channel size, outperforming videos, age of the top results and how well they fit the phrase](judge-youtube-keyword-competition.webp "The four questions to ask of the first ten results.")
 
 ## Step 3: check the search volume claim carefully
 

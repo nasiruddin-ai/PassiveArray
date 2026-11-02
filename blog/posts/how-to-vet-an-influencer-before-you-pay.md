@@ -5,6 +5,7 @@ date: 2026-08-25
 keyword: check influencer engagement rate free
 category: For brands
 tools: instagram-fake-follower-checker, youtube-channel-comparison, youtube-subscriber-count-checker
+image: How to vet a creator before you pay, with the free YouTube Channel Comparison tool putting three skincare channels side by side
 ---
 
 Most [influencer marketing](../how-influencer-marketing-works/) money is wasted before the campaign starts, on creators whose audience was never going to buy anything. The checks that catch this take about ten minutes per creator and [need no subscription](../free-influencer-marketing-tools/), starting with a free [fake follower checker](../../creator-tools/instagram-fake-follower-checker/).
@@ -41,6 +42,8 @@ Open their last fifteen posts. Steady output and steady performance is a working
 
 For YouTube, ignore subscriber count and look at average views on recent uploads. A 500,000-subscriber channel averaging 20,000 views is a 20,000-view channel. The [subscriber count checker](../../creator-tools/youtube-subscriber-count-checker/) shows both side by side.
 
+![YouTube Subscriber Count Checker result for YouTube Creators: 11,000,000 subscribers next to 677,127 average views on the last 10 uploads](subscribers-vs-average-views.webp "Subscribers and average views on recent uploads, side by side, for @YouTubeCreators.")
+
 ### 8. Audience fit
 
 The highest engagement rate in the world is worthless if the audience is in a country you do not ship to, or an age band that does not buy your product. This is the question [public data cannot answer](../how-to-audit-an-instagram-account/), which brings us to the next section.
@@ -71,9 +74,13 @@ If you are running a larger campaign, ask for [results from a past collaboration
 - Very high engagement on a brand-new account. Real, and temporary. Price for now, not for the projection.
 - A big gap between best and median post performance. Ask which format drives the good ones and buy that format.
 
+![Two cards: red flags worth walking away from, and yellow flags worth a conversation with the creator](red-flags-and-yellow-flags.webp "Red flags end the deal; yellow flags start a conversation.")
+
 ## Compare the shortlist properly
 
 Once three or four creators pass, compare them on the same rows rather than on impressions. Our [channel comparison tool](../../creator-tools/youtube-channel-comparison/) puts two or three YouTube channels side by side with the leader marked on every row; the Instagram and TikTok comparison tools do the same from numbers you enter.
+
+![YouTube Channel Comparison of three skincare channels across subscribers, average views, views per subscriber, engagement, comments and upload rate, with the leader on each row in green](channel-comparison-shortlist.webp "Real output from the free channel comparison tool for three skincare channels.")
 
 Then price each one from reach rather than followers. [Sponsorship pricing](../how-much-to-charge-for-a-sponsored-youtube-video/) covers the method creators use, which is also the method you should be checking their quote against.
 

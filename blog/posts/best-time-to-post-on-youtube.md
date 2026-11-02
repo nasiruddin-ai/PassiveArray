@@ -5,6 +5,7 @@ date: 2026-10-29
 keyword: best time to post on youtube
 category: Growth
 tools: youtube-channel-growth-tracker, youtube-subscriber-count-checker, youtube-video-ideas-generator
+image: The best time to post on YouTube: publish one to two hours before your viewers' peak, based on 28 days of Studio data
 ---
 
 Search for the best time to post on YouTube and you will find confident answers: Thursday at 3 pm, weekends at noon. Most come from small samples of other people's channels, in other time zones, with other audiences. Your audience is not theirs. The answer that holds up is in your own YouTube Studio.
@@ -27,6 +28,8 @@ The card only appears once a channel has enough viewers. If you do not see it ye
 2. **Publish one to two hours before it starts.** That gives YouTube time to process the video and start testing it before the peak arrives.
 3. **Use scheduled publishing** in Studio so the video goes live at that time without you being there.
 4. **Pick a day you can repeat.** A regular day and time trains your audience to expect you, which is worth more than finding the perfect slot once.
+
+![Four steps to pick a publish time: find the darkest block on the heat map, publish one to two hours earlier, schedule it, and repeat the same slot](how-to-pick-a-publish-time.webp "Turn Studio's audience heat map into a publish time you can keep.")
 
 ## Test it instead of trusting it
 

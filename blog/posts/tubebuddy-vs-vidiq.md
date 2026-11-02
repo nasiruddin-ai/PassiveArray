@@ -6,6 +6,7 @@ keyword: tubebuddy vs vidiq
 category: YouTube SEO
 tools: youtube-keyword-generator, youtube-title-analyzer, youtube-tag-generator
 related: best-free-youtube-seo-tools, free-youtube-keyword-research, do-youtube-tags-still-matter
+image: TubeBuddy vs vidIQ, TubeBuddy for managing your channel and vidIQ for finding what to make
 ---
 
 TubeBuddy is the better choice if you want to manage and test your own channel: A/B testing, bulk edits across many videos and scheduling are its strengths. vidIQ is the better choice if you want ideas and coaching: AI-generated video ideas, trends, outlier videos and an AI coach built around your channel. Both connect to your channel through Google sign-in, both have free tiers, and for keyword research, titles and tags, free tools such as the [YouTube Keyword Generator](../../creator-tools/youtube-keyword-generator/) do most of the same job without an account.
@@ -106,6 +107,8 @@ Common causes, none specific to one tool:
 - **You ran out of credits** (vidIQ). Credits reset monthly.
 
 ## Which one should you choose?
+
+![Four cards showing when to pick TubeBuddy Legend, vidIQ Boost, TubeBuddy Pro or a free tool](which-to-choose.webp "Pick by the job you need done.")
 
 | Your situation | Best fit |
 |---|---|

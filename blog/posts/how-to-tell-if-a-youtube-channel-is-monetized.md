@@ -6,6 +6,7 @@ keyword: is this channel monetized
 category: Earnings
 tools: youtube-monetization-checker, youtube-money-calculator
 related: youtube-monetization-requirements, how-to-check-any-youtube-channel-stats, is-social-blade-accurate
+image: How to tell if a YouTube channel is monetized, with the Passive Array monetization checker verdict for @YouTubeCreators
 ---
 
 You cannot know for certain whether a YouTube channel is monetized unless you own it. YouTube does not publish a channel's Partner Program status anywhere, and it can run ads on videos from channels that are **not** in the program. What you can do is read the public signals together: subscribers against the 1,000 threshold, ads on several recent long-form videos, a **Join** button, **Super Thanks**, a merch shelf. When most of them point the same way, you can be fairly confident. One signal on its own proves very little.
@@ -32,6 +33,8 @@ So an ad before a video tells you that **YouTube** is making money from the vide
 | **Thanks** button on videos (Super Thanks) | In the program at least at the fan funding level | Same as above |
 | Merch shelf or tagged products | YouTube Shopping is switched on | Shopping is also available from the lower tier |
 | Reused clips, compilations or near-identical uploads | Higher risk of rejection or removal | Some such channels are monetized until a review catches up |
+
+![Four public monetization signals and what each proves: subscribers, ads, Join or Thanks buttons, and Shorts](monetization-signals-what-they-prove.webp "What the public signals can and cannot prove, from YouTube's Partner Program pages.")
 
 Read them together. A channel with 2 million subscribers, ads on five of five recent videos and a Join button is almost certainly a partner. A channel with 300 subscribers and an ad on one video is almost certainly not being paid, whatever the ad suggests.
 
@@ -71,6 +74,8 @@ From 1 February 2027, YouTube says Partner Program creators will also need to "m
 ## What the Passive Array monetization checker actually does
 
 The checker is free and needs no account. It reads only public data, and it shows every signal it used, so you can disagree with the verdict if you know something it does not. Here is exactly what it looks at:
+
+![YouTube monetization checker result for @YouTubeCreators: meets every threshold, likely monetized, 65% confidence, with the ad check unavailable](monetization-checker-verdict.webp "A real result for @YouTubeCreators. The ad check was unavailable from the server, so the verdict rests on eligibility signals.")
 
 - **Subscribers** against the 1,000 subscriber threshold for ad revenue and the 500 subscriber threshold for fan funding. If the channel hides its count, the tool says "hidden" rather than guessing.
 - **Uploads in the last 90 days**, against the 3 recent public uploads that YouTube for Artists lists for the lower tier.

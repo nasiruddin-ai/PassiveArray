@@ -6,6 +6,7 @@ keyword: how tiktok creator fund works
 category: Earnings
 tools: tiktok-money-calculator, tiktok-engagement-rate-calculator
 related: how-much-to-charge-for-a-sponsored-tiktok, how-to-grow-on-tiktok, tiktok-engagement-rate-benchmarks
+image: TikTok Creator Rewards explained, with the 10,000 follower requirement and the one-minute minimum video length
 ---
 
 The TikTok Creator Fund no longer exists. TikTok replaced it with the Creativity Program, which fully took over in the US, UK, France and Germany on 16 December 2023, and in March 2024 that program left beta and became the **Creator Rewards Program**. In 2026 it pays creators who are 18 or older, have at least 10,000 followers and 100,000 video views in the last 30 days, use a personal account, and post original videos **at least one minute long**.
@@ -23,6 +24,8 @@ TikTok's replacement happened in three steps:
 | February 2023 | TikTok launched the **Creativity Program Beta** |
 | 16 December 2023 | TikTok: "the Creativity Program will fully replace the Creator Fund in the US, UK, France, and Germany" |
 | 18 March 2024 | The Creativity Program left beta and became the **Creator Rewards Program** |
+
+![Timeline from the TikTok Creativity Program Beta in February 2023 to the Creator Rewards Program in March 2024](creator-fund-to-creator-rewards-timeline.webp "How TikTok replaced the Creator Fund, from TikTok's Newsroom and program terms.")
 
 When the switch was announced, TikTok said "All creators currently enrolled in the Creator Fund can upgrade to the Creativity Program." There is no way to join the old Creator Fund in 2026. Guides that tell you how to "join the TikTok Creator Fund" or "apply for the Creator Fund" are out of date.
 
@@ -90,6 +93,8 @@ No. You must be a legal resident of a country where the program is available. Ch
 ## How much does Creator Rewards pay?
 
 TikTok does not publish a rate, and RPM varies from account to account. The TikTok money calculator assumes a range of **$0.40 to $1.00 per 1,000 qualified views**. That is our estimate for planning, not a TikTok figure. Only your own dashboard shows your real RPM.
+
+![TikTok money calculator estimate of $120 to $300 a month from 300,000 qualified views](tiktok-money-calculator-estimate.webp "An estimate from the free TikTok money calculator with example numbers (500,000 monthly views). Not a TikTok rate.")
 
 The calculator works like this:
 

@@ -6,6 +6,7 @@ keyword: youtube keyword ranking checker
 category: YouTube SEO
 tools: youtube-keyword-generator, youtube-title-analyzer
 related: how-youtube-seo-works, youtube-analytics-explained, free-youtube-keyword-research
+image: Where does your video rank: the YouTube Studio search report shows real searches, a private-window search is one sample
 ---
 
 The most reliable way to check if a YouTube video is ranking is not to search for it yourself. It is the **YouTube search** report in YouTube Studio: open the video, go to **Analytics > Reach**, and open the YouTube search card under traffic sources. YouTube says this report shows the terms viewers searched when they found your video. If a keyword is there and growing, the video ranks for it in a way that matters. Searching the keyword yourself in a private window then tells you roughly where it sits.
@@ -24,6 +25,8 @@ That has three practical consequences:
 
 So the right question is not "what position am I?" but "which searches send me viewers, and is that growing?" Positions are a useful early signal, especially before a video has much traffic. The search report is the result.
 
+![Four ways to check where a YouTube video ranks: the Studio search report, a private-window search, a paid rank tracker and a Google search](three-ways-to-check-youtube-rank.webp "Only the Studio report shows real searches; every other check is one sample.")
+
 ## Method 1: the YouTube search report in Studio (best)
 
 This report shows real searches from real viewers, so it is free from the personalization problem.
@@ -35,6 +38,8 @@ This report shows real searches from real viewers, so it is free from the person
 5. Open the **Traffic source: YouTube search** card to see the terms viewers searched.
 
 YouTube notes that some reports may not be available on mobile, so use a computer for this.
+
+![Four steps to the YouTube search report in YouTube Studio: Content, Analytics and Reach, YouTube search traffic source, then the search terms](youtube-search-report-path.webp "The path to the terms viewers searched to find your video.")
 
 ### How to read it
 

@@ -6,6 +6,7 @@ keyword: how to grow tiktok followers
 category: Growth
 tools: tiktok-engagement-rate-calculator, tiktok-audit, tiktok-likes-to-followers-ratio
 related: how-to-track-tiktok-followers, tiktok-engagement-rate-benchmarks, tiktok-creator-rewards-program
+image: Grow on TikTok, with the Passive Array TikTok Engagement Rate Calculator showing an 8.83% engagement rate by views
 ---
 
 To grow on TikTok, make videos that the people TikTok tests them on watch to the end, react to and share, then give those viewers a reason to follow: a clear topic, a series to come back for, and replies that start conversations. TikTok says follower count is not a direct factor in its recommendations, so a new account can reach the For You feed. What decides reach is how viewers respond to each video.
@@ -75,6 +76,8 @@ Say an account has 50,000 followers and its last 12 videos average 30,000 views,
 - By followers: 2,650 / 50,000 = **5.3%**
 - Views per follower: 30,000 / 50,000 = **60%**
 
+![TikTok engagement rate calculator result for the worked example: 8.83% by views graded Average, 5.3% by followers graded Below average](tiktok-engagement-rate-calculator-example.webp "The worked example in the free TikTok engagement rate calculator (example numbers).")
+
 ## What is a good TikTok engagement rate?
 
 On this site's scale, the rate by views is graded the same for every account:
@@ -98,6 +101,8 @@ The rate by followers falls as accounts grow, so it is graded against a typical 
 | Mega | Over 1M | 4% |
 
 These are the reference points our tools grade against, not figures published by TikTok. In the worked example, 8.8% by views grades Average. By followers, 5.3% is about two thirds of the 8% micro-tier figure, which grades Below average. Two different verdicts on the same account are normal on TikTok: they answer different questions.
+
+![Bar chart of typical TikTok engagement rate by followers: 12% nano, 8% micro, 6% mid, 5% macro, 4% mega](tiktok-engagement-rate-by-follower-tier.webp "Passive Array's reference rates by follower tier, not TikTok figures.")
 
 ### TikTok vs Instagram engagement
 
@@ -192,6 +197,8 @@ This is our suggestion, not a TikTok rule.
 3. **Days 6 to 25: post a series.** Plan one series of at least five videos on your core topic, with openings modelled on your best videos. Reply to the best comment on each with a video.
 4. **Days 26 to 28: measure.** Recalculate engagement on the latest 12 videos and compare followers gained per 1,000 views with your baseline.
 5. **Days 29 to 30: decide.** Keep the format that converted best, drop what did not, and plan the next series.
+
+![Timeline of a 30-day TikTok plan from baseline to posting a series and measuring again](tiktok-30-day-growth-plan.webp "Our suggested 30-day plan, not a TikTok rule.")
 
 If you also post the same videos as YouTube Shorts, judge them there by YouTube's own numbers: our guide to [growing a YouTube channel with Shorts](../how-to-grow-youtube-channel-with-shorts/) explains how that platform differs.
 

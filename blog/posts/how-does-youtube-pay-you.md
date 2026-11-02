@@ -5,11 +5,14 @@ date: 2026-10-29
 keyword: youtube payout
 category: Earnings
 tools: youtube-money-calculator, youtube-monetization-checker
+image: How YouTube pays creators: a $100 payment threshold for USD accounts and payments issued between the 21st and 26th of the month
 ---
 
 YouTube pays creators once a month through **AdSense for YouTube**. Your earnings for a month are finalized early the following month, and if your balance is at least **$100** (or the local equivalent, such as £60 or €70), Google issues the payment between the **21st and 26th**. If you are below the threshold, [the balance rolls over until you reach it](../how-much-does-youtube-pay-after-monetization/).
 
 Here is the whole path, from a view to money in your bank.
+
+![Four steps to getting paid by YouTube: join the Partner Program and link AdSense, verify identity at a $10 balance, add tax info, then the monthly payment cycle](youtube-payout-setup-steps.webp "The four steps between joining the Partner Program and your first payment.")
 
 ## Step 1: join the Partner Program and link AdSense
 
@@ -38,10 +41,13 @@ The last row is the expensive one. If you do not submit tax information, Google 
 |---|---|
 | During the month | Estimated earnings build up in YouTube Studio and AdSense |
 | Between the 7th and 12th of the next month | Last month's earnings are finalized and added to your balance |
+| 20th | Cut-off: your balance on this date must have reached the payment threshold |
 | 21st to 26th | Payment is issued if your balance is at least $100 and there are no holds |
 | A few days to a few weeks later | Money arrives, depending on payment method and bank |
 
 So earnings from a video that took off in March are finalized in early April and paid in late April.
+
+![Timeline of the YouTube payment cycle: earnings finalized on the 7th to 12th, threshold cut-off on the 20th, payment issued on the 21st to 26th](youtube-payout-timeline.webp "The monthly AdSense for YouTube payment cycle, from YouTube Help.")
 
 ## Payment methods
 

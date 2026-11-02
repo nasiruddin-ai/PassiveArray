@@ -6,6 +6,7 @@ keyword: youtube channel name ideas
 category: Growth
 tools: youtube-channel-name-generator, youtube-niche-finder
 related: how-to-grow-a-youtube-channel, best-youtube-niches, youtube-video-ideas-for-beginners
+image: Pick a channel name that lasts, with the Passive Array YouTube Channel Name Generator showing 20 name ideas for home coffee
 ---
 
 A good YouTube channel name is short, easy to say and spell, says something about who you are or what you make, and is free as a YouTube handle. The fastest way to find one is to pick a naming pattern (your name, a niche word plus a twist, a made-up word, and so on), generate a shortlist, then check each option against YouTube's handle rules and existing channels before you commit.
@@ -23,6 +24,8 @@ Every YouTube channel has two names, and they follow different rules.
 | Must be unique? | No. Many channels can share a name | Yes. Only one channel can hold each handle |
 | Spaces allowed? | Yes | No |
 | How often can you change it? | Twice within a 14-day period | Twice within a 14-day period |
+
+![Side-by-side comparison of a YouTube channel name and a handle: where each shows, uniqueness, spaces and how often you can change it](channel-name-vs-handle.webp "Names can be shared; handles cannot.")
 
 Both are changed in YouTube Studio under **Customization > Profile**, then **Publish**.
 
@@ -45,6 +48,8 @@ YouTube also says it "reserves the right to change, reclaim, or remove a handle 
 ### What happens when you change your handle
 
 You can change your handle twice within a 14-day period. YouTube holds your old handle for 14 days in case you want it back, and both the old and new handle links work during that time. After that, the old handle becomes available to anyone. If you printed your old handle on merch or in old video descriptions, those links will eventually break or point to someone else.
+
+![Timeline of a handle change: the old handle is held for 14 days with both links working, then becomes available to anyone](changing-your-youtube-handle.webp "After 14 days your old handle is free for anyone to take.")
 
 ### What happens when you change your channel name
 

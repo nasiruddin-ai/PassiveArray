@@ -6,6 +6,7 @@ keyword: good engagement rate on youtube shorts
 category: Engagement
 tools: youtube-engagement-rate-calculator, youtube-channel-quality-checker
 related: youtube-engagement-rate-benchmarks, how-youtube-counts-views, how-to-grow-youtube-channel-with-shorts
+image: How to judge a YouTube Shorts engagement rate, with the Passive Array YouTube engagement rate calculator grading @YouTubeCreators at 5.29%, Good
 ---
 
 A good engagement rate on YouTube Shorts is **4% to 6% of views**, and above 6% is excellent, on the same scale Passive Array uses for every YouTube video: (likes + comments) / views x 100. YouTube does not publish an official Shorts benchmark, so compare a Short with your own other Shorts first. And read every Shorts rate knowing that since 31 March 2025 YouTube counts a Shorts view on every start or replay, which makes the public rate lower than it would have been under the old count.
@@ -74,6 +75,8 @@ Your engagement rate has views at the bottom of the fraction, so the way YouTube
 | 31 March 2025 | Shorts views began counting "the number of times a Short starts to play or replay, with no minimum watch time requirement." The previous metric was kept in YouTube Analytics as **Engaged views**. |
 | 24 August 2026 | Views are counted "the moment a video starts to play across all formats, including Shorts", long-form videos and live streams. |
 
+![Timeline of how YouTube counted Shorts views before 31 March 2025, from 31 March 2025 and from 24 August 2026](youtube-shorts-view-count-changes.webp "The two changes to how YouTube counts a view, per YouTube Help.")
+
 YouTube says these changes do not affect Partner Program earnings or eligibility. Shorts ad revenue sharing is based on engaged Shorts views. Our guide to [how YouTube counts views](../how-youtube-counts-views/) explains the full rules, including which views YouTube filters out.
 
 ### What this does to the rate
@@ -103,6 +106,8 @@ Keep the two apart. The rate on engaged views is useful for comparing your own S
 | Views (public) | Anyone | Comparing channels, sponsorship checks, the grade on this site |
 | Engaged views | Channel owner, in YouTube Studio | Comparing your own Shorts with each other |
 | Subscribers | Anyone, if the count is public | How much of the subscribed audience reacts; rarely useful for Shorts |
+
+![Two cards comparing public views, which anyone can see, with engaged views, which only the channel owner sees in YouTube Studio](shorts-engagement-rate-denominators.webp "Use public views to compare channels and engaged views to compare your own Shorts.")
 
 ## The Shorts metrics that matter more than the rate
 

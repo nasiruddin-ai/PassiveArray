@@ -5,6 +5,7 @@ date: 2026-09-22
 keyword: how much does youtube pay for 1000 views
 category: Earnings
 tools: youtube-money-calculator, youtube-sponsorship-price-calculator, youtube-channel-quality-checker
+image: YouTube money calculator result showing an estimated monthly earnings range for a public channel
 ---
 
 This is the most searched question in creator economics, and almost every answer you will find is a single confident number. There is no single number. There is a formula, a range, and a handful of things that decide where you land inside it. The [YouTube money calculator](../../creator-tools/youtube-money-calculator/) runs that formula on any channel.
@@ -34,11 +35,15 @@ Our calculator defaults to an RPM range of **$0.50 to $4.00**. The low end fits 
 
 So "how much does YouTube pay for 1,000 views" honestly answers: **somewhere between fifty cents and four dollars for most channels**, and more in a few niches.
 
+![What 1,000 views pays at the default RPM range: $0.50 at the low end, $4 at the high end, more in finance and B2B niches](youtube-1000-views-range.webp "The low and high end of the default RPM range, applied to 1,000 views.")
+
 That range feels unsatisfying. It is also the truth, and knowing why it is wide is more useful than memorising a fake average.
 
 ## What decides where you land
 
 **Your niche.** Advertisers bid far more to reach someone watching a video about business software, insurance or investing than someone watching a music video. Finance and B2B channels regularly run above the top of the default range. If that is your niche, raise the high RPM in the calculator and the estimate follows.
+
+![Four things that decide what 1,000 views pays: niche, audience country, video length and Shorts share, and ad blockers and skips](what-decides-youtube-rpm.webp "What decides where a channel lands in the range.")
 
 **Your audience's country.** Advertising budgets are concentrated in a handful of markets. The same video, with the same watch time, earns very differently depending on where the viewers are. This is why creators in different countries compare notes and get wildly different answers to the same question, and both are telling the truth.
 

@@ -6,6 +6,7 @@ keyword: why youtube subscriber count decreased
 category: Growth
 tools: youtube-subscriber-count-checker, youtube-channel-growth-tracker
 related: youtube-live-subscriber-count, youtube-analytics-explained, views-per-subscriber
+image: Why your subscribers went down, with the Passive Array YouTube Channel Growth Tracker showing a flat, rounded subscriber line for MrBeast
 ---
 
 Your YouTube subscriber count goes down for one of a few reasons: viewers unsubscribed, YouTube removed subscribers it identified as spam, subscribers closed their Google accounts, or the public number dropped to a lower rounding step. YouTube's Help Center lists the first three as the normal causes of fluctuation and says that "in every case" it has looked at, there was "no issue causing viewers to be unsubscribed by YouTube". So a drop is almost never a bug, and it is rarely as big as it first looks.
@@ -75,6 +76,8 @@ Because the count is rounded down, losing a handful of subscribers just above a 
 | Tuesday | 99,996 | 99.9K | "We lost 100 subscribers" |
 | Wednesday | 100,021 | 100K | "We got them back" |
 
+![Example of a rounding-step drop: the public count falls from 100K to 99.9K while the exact Studio count falls by only 8](rounding-step-drop-example.webp "Example numbers: a 100-subscriber drop that is really 8.")
+
 The channel lost 8 subscribers on Tuesday, not 100. A creator who only reads the public count, or a stats site that reads the API, sees a drop twelve times bigger than the real one. The same thing happens at every step, and it is most dramatic right after a milestone, when the channel is just above the line.
 
 Check the exact number in YouTube Studio: **Analytics**, **Overview** tab, **Realtime** card, **See live count**. Our guide to the [YouTube live subscriber count](../youtube-live-subscriber-count/) explains the rounding table in full and why live counters lag behind.
@@ -95,6 +98,8 @@ Work through these steps in YouTube Studio. It takes about ten minutes.
 4. **Find the day and the size.** Open **Advanced mode** from any Analytics report and set the date range to cover the drop. YouTube's Analytics API defines *subscribers gained* as "the number of times that users subscribed to a channel" and *subscribers lost* as "the number of times that users unsubscribed from a channel". Look at both by day. A steady trickle of losses is normal churn. A single sharp day is usually a cleanup or one video.
 5. **Break the losses down by content.** In Advanced mode, view subscribers by video. If one video gained and then lost many subscribers, it probably reached people outside your audience.
 6. **Compare with views.** If views and watch time held steady while subscribers fell, the people you lost were not watching. If views fell too, the loss is real and you have a content problem to work on.
+
+![Four checks in YouTube Studio to find why subscribers dropped: real size, alerts, day and size, and views](find-why-subscribers-dropped.webp "Work through the checks in order.")
 
 Here is a worked example with made-up numbers. A channel normally gains about 60 subscribers a day and loses about 20. On one Tuesday, Advanced mode shows 58 gained and 410 lost, a Studio alert says spam subscribers were removed, and daily views are unchanged. That is a spam cleanup. Nothing about the channel needs fixing, and the lower count is now more accurate than the old one.
 

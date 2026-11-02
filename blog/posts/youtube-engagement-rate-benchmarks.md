@@ -5,6 +5,7 @@ date: 2026-09-18
 keyword: good engagement rate on youtube
 category: Engagement
 tools: youtube-engagement-rate-calculator, youtube-channel-quality-checker, youtube-subscriber-count-checker
+image: What a good YouTube engagement rate is: 4% to 6% of views is Good and above 6% is Excellent on Passive Array's scale
 ---
 
 Engagement rate is the one number that tells you whether people actually reacted to a video, not just whether it was served to them. On YouTube it is simple to calculate and easy to get wrong, because there are two ways to measure it and they give very different answers. The [YouTube engagement rate calculator](../../creator-tools/youtube-engagement-rate-calculator/) does the arithmetic for any channel.
@@ -17,6 +18,8 @@ Passive Array measures YouTube engagement **by views**:
 
 For a channel, the tools average likes, comments and views over the last 10 uploads first, then apply the same formula. That smooths out one viral video or one flop.
 
+![YouTube engagement rate calculator result for @YouTubeCreators: 5.29% engagement by views, graded Good, over the last 10 uploads](youtube-engagement-rate-calculator.webp "The calculator on a public channel, @YouTubeCreators.")
+
 The other common method divides by subscribers instead of views. It is useful for a different question (how much of the audience that opted in still shows up), but it punishes channels that get most of their views from search and recommendations, which today is most channels. So the grade you see in the tools and in the Chrome extension is always the by-views number.
 
 ## The scale
@@ -28,6 +31,8 @@ The other common method divides by subscribers instead of views. It is useful fo
 | 2% to 4% | Average |
 | 4% to 6% | Good |
 | Above 6% | Excellent |
+
+![Bar chart of Passive Array's YouTube engagement scale from Low under 1% to Excellent above 6% of views](youtube-engagement-scale.webp "Passive Array's grading scale, not a YouTube benchmark.")
 
 The same scale is used on every YouTube tool on this site and in the Passive Array for YouTube extension, so a grade on a video page and a grade on a channel report mean the same thing.
 

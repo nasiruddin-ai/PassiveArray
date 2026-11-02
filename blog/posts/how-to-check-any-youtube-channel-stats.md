@@ -6,6 +6,7 @@ updated: 2026-10-10
 keyword: how to check youtube channel stats
 category: Growth
 tools: youtube-subscriber-count-checker, youtube-channel-quality-checker, youtube-channel-comparison
+image: How to check any YouTube channel's stats, with the free YouTube Subscriber Count Checker showing YouTube Creators
 ---
 
 You can learn a great deal about any YouTube channel without owning it. You can also be misled, because some of the most quoted numbers are rounded, estimated or simply invented by the site showing them. Here is the line between the two, and a [YouTube subscriber count checker](../../creator-tools/youtube-subscriber-count-checker/) that stays on the right side of it.
@@ -47,6 +48,8 @@ These exist only in the creator's own YouTube Studio:
 
 Any site claiming to show a channel's real earnings, watch time or demographics is modelling them, not reading them. The honest ones say so.
 
+![Two cards comparing public channel data from the YouTube Data API with data only the owner sees in YouTube Studio](public-vs-private-channel-data.webp "What anyone can check, and what stays inside the owner's Studio.")
+
 ## How to read a channel from the outside
 
 With the public numbers you can still [answer the questions that matter](../how-to-audit-a-youtube-channel/):
@@ -67,6 +70,8 @@ With the public numbers you can still [answer the questions that matter](../how-
 2. Read average views on recent uploads before you read subscribers. It is the number that predicts everything else.
 3. Check views per subscriber and uploads per month underneath.
 4. If you are comparing several channels, use the [channel comparison tool](../../creator-tools/youtube-channel-comparison/), which puts two or three side by side and marks the leader on every row.
+
+![YouTube Subscriber Count Checker results for YouTube Creators, showing subscribers, total views, average views on the last 10 uploads, views per subscriber and recent videos](subscriber-count-checker-youtube-creators.webp "Real output from the free subscriber count checker for @YouTubeCreators.")
 
 ## A note on sites that show "estimated earnings"
 

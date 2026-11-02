@@ -6,6 +6,7 @@ keyword: youtube live subscriber count
 category: Growth
 tools: youtube-subscriber-count-checker, youtube-most-subscribed-channels, youtube-channel-growth-tracker
 related: why-did-my-youtube-subscribers-go-down, how-to-check-any-youtube-channel-stats, is-social-blade-accurate
+image: Why live sub counts lag, with the Passive Array YouTube Subscriber Count Checker showing the public count for YouTube Creators
 ---
 
 You can see a true live subscriber count for **your own channel only**: in YouTube Studio, open **Analytics**, go to the **Overview** tab, find the **Realtime** card and click **See live count**. For every other channel, the number anyone outside YouTube can read is rounded. YouTube shortens public counts for channels with 1,000 or more subscribers, and its official API returns the same figure rounded down to three significant figures. So a channel with 1,234,567 subscribers reads as 1,230,000 everywhere, including on live counter sites.
@@ -22,6 +23,8 @@ YouTube Studio is the only place that shows the exact, near-real-time subscriber
 2. Click **Analytics** in the left menu.
 3. Stay on the **Overview** tab and find the **Realtime** card on the right.
 4. Click **See live count**. YouTube's Help page describes this as the place "to view your subscriber count over time".
+
+![Four steps to see your exact live subscriber count: YouTube Studio, Analytics, the Realtime card, See live count](see-your-live-subscriber-count.webp "Only the channel's owners and managers can see this count.")
 
 The **Channel analytics** card on the Studio dashboard also shows your current subscribers, next to watch time and views for the last 28 days. That is the quickest check if you only want today's figure.
 
@@ -76,6 +79,8 @@ A live counter site, an OBS overlay or a "realtime" widget for someone else's ch
 3. Spread that rate across the time between real updates and animate the last digits.
 4. When YouTube's rounded figure changes, correct the estimate, sometimes with a visible jump up or down.
 
+![How a live subscriber counter works: read the rounded count, average the growth, animate the last digits, correct when the real figure changes](how-live-counters-estimate.webp "The ticking digits between real updates are an estimate.")
+
 Here is how that looks with numbers. Say a channel has 1,234,567 real subscribers and gains about 500 a day.
 
 | What you look at | What it shows |
@@ -84,6 +89,8 @@ Here is how that looks with numbers. Say a channel has 1,234,567 real subscriber
 | Channel page on YouTube | 1.23M |
 | YouTube Data API (every outside tool) | 1,230,000 |
 | A live counter site | Something like 1,234,210, ticking up |
+
+![Example channel shown four ways: 1,234,567 in Studio, 1.23M on the channel page, 1,230,000 in the API and an estimate on a live counter](one-channel-four-numbers.webp "Example numbers: the same channel in four places.")
 
 The live counter's last four digits are a model. The channel will not reach 1,240,000, the next public step, for roughly 11 more days at that pace, and the API will say 1,230,000 the whole time. A counter can be close to the truth on a steady channel and far off on one that just had a viral video or a spam cleanup. When the next real step arrives, the counter snaps to it.
 

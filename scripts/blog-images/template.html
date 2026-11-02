@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Blog image</title>
+<style>
+@font-face{font-family:P;src:url(../../assets/fonts/poppins-500.woff2) format("woff2");font-weight:500}
+@font-face{font-family:P;src:url(../../assets/fonts/poppins-600.woff2) format("woff2");font-weight:600}
+@font-face{font-family:P;src:url(../../assets/fonts/poppins-700.woff2) format("woff2");font-weight:700}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{background:#1F2A44}
+body{font-family:P,Arial,sans-serif;color:#fff}
+.bg{position:relative;overflow:hidden;background:radial-gradient(circle at 92% 0%,rgba(91,106,191,.45),transparent 45%),radial-gradient(circle at 0% 100%,rgba(42,157,143,.35),transparent 50%),#1F2A44}
+.bg:before{content:"";position:absolute;inset:0;background-image:radial-gradient(rgba(143,211,199,.10) 1.5px,transparent 1.5px);background-size:26px 26px;pointer-events:none}
+
+/* ---------- cover 1200x630 ---------- */
+#cover{width:1200px;height:630px;display:flex;padding:56px 0 56px 64px;gap:40px}
+#cover .left{position:relative;flex:0 0 560px;display:flex;flex-direction:column}
+.brand{display:flex;align-items:center}
+.brand img{height:42px;width:auto;display:block}
+.kick{margin-top:34px;align-self:flex-start;padding:8px 18px;border-radius:999px;background:#2A9D8F;font-size:19px;font-weight:700;letter-spacing:.08em;text-transform:uppercase}
+.title{margin-top:20px;font-weight:700;letter-spacing:-.03em;line-height:1.06}
+.title em{font-style:normal;color:#FFD166}
+.sub{margin-top:18px;font-size:23px;font-weight:500;color:#C3CAD8;line-height:1.35}
+.url{margin-top:auto;font-size:19px;font-weight:600;color:#8FD3C7}
+#cover .right{position:relative;flex:1;display:flex;align-items:center}
+#cover .right.pad{padding-right:56px;justify-content:flex-end}
+#cover .right.pad .stats,#cover .right.pad .vs{width:100%}
+.shot{position:relative;width:640px;border-radius:18px;overflow:hidden;background:#0F1524;border:2px solid rgba(143,211,199,.35);box-shadow:0 40px 80px -30px rgba(0,0,0,.8)}
+.shot .bar{display:flex;align-items:center;gap:8px;height:36px;padding:0 16px;background:#141C30;font-size:14px;font-weight:600;color:#9FB0CC}
+.shot .bar i{width:11px;height:11px;border-radius:50%;background:#3A4766}
+.shot .bar span{margin-left:10px}
+.shot img{display:block;width:100%}
+.tag{position:absolute;left:-26px;bottom:-18px;padding:10px 18px;border-radius:14px;background:#FFD166;color:#1F2A44;font-size:19px;font-weight:700;box-shadow:0 12px 30px -10px rgba(0,0,0,.6)}
+.stats{display:flex;flex-direction:column;gap:22px;width:520px}
+.stat{padding:26px 30px;border-radius:22px;background:rgba(15,21,36,.75);border:2px solid rgba(143,211,199,.25)}
+.stat b{display:block;font-size:84px;line-height:1;letter-spacing:-.04em;color:#FFD166}
+.stat span{display:block;margin-top:10px;font-size:22px;font-weight:600;color:#DCE4F5}
+.stat small{display:block;margin-top:4px;font-size:16px;font-weight:500;color:#9FB0CC}
+.vs{display:flex;gap:18px;align-items:stretch;width:540px}
+.side{flex:1;padding:24px 22px;border-radius:22px;background:rgba(15,21,36,.75);border:2px solid rgba(143,211,199,.25)}
+.side h3{font-size:30px;letter-spacing:-.02em}
+.side p{margin-top:4px;font-size:16px;color:#8FD3C7;font-weight:600}
+.side ul{list-style:none;margin-top:16px}
+.side li{margin-top:10px;padding-left:24px;position:relative;font-size:19px;font-weight:500;color:#DCE4F5;line-height:1.3}
+.side li:before{content:"";position:absolute;left:0;top:9px;width:11px;height:11px;border-radius:3px;background:#2A9D8F}
+.vsdot{align-self:center;flex:0 0 auto;width:60px;height:60px;margin:0 -39px;z-index:2;border-radius:50%;background:#E05B5B;display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:700}
+
+/* ---------- figures 1200 wide ---------- */
+#figure{width:1200px;padding:52px 56px 44px}
+.fhead{display:flex;align-items:center;justify-content:space-between;gap:28px}
+.fhead h2{font-size:38px;letter-spacing:-.02em;line-height:1.15}
+.fhead .mark{flex:0 0 auto;height:34px;width:auto;display:block}
+.fsub{margin-top:8px;font-size:21px;color:#C3CAD8;font-weight:500}
+.flow{display:flex;align-items:stretch;margin-top:34px}
+.step{flex:1;padding:26px 24px;border-radius:20px;background:rgba(15,21,36,.75);border:2px solid rgba(143,211,199,.25)}
+.step .n{width:44px;height:44px;border-radius:12px;background:#2A9D8F;display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:700}
+.step h3{margin-top:16px;font-size:27px;letter-spacing:-.02em}
+.step p{margin-top:8px;font-size:19px;line-height:1.4;color:#DCE4F5;font-weight:500}
+.step .you{margin-top:14px;padding-top:12px;border-top:1px solid rgba(143,211,199,.2);font-size:17px;color:#FFD166;font-weight:600;line-height:1.35}
+.arrow{flex:0 0 46px;display:flex;align-items:center;justify-content:center;color:#8FD3C7;font-size:34px;font-weight:700}
+.tl{position:relative;display:flex;margin-top:40px}
+.tl:before{content:"";position:absolute;left:30px;right:30px;top:29px;height:4px;border-radius:2px;background:linear-gradient(90deg,#2A9D8F,#FFD166)}
+.ev{position:relative;flex:1;padding:0 10px;text-align:center}
+.ev .dot{width:62px;height:62px;margin:0 auto;border-radius:50%;background:#1F2A44;border:4px solid #2A9D8F;display:flex;align-items:center;justify-content:center;font-size:21px;font-weight:700}
+.ev:last-child .dot{border-color:#FFD166}
+.ev b{display:block;margin-top:16px;font-size:24px;letter-spacing:-.01em}
+.ev span{display:block;margin-top:6px;font-size:18px;line-height:1.35;color:#C3CAD8;font-weight:500}
+.ffoot{margin-top:30px;display:flex;align-items:center;justify-content:space-between;gap:30px}
+.fnote{font-size:16px;color:#9FB0CC;font-weight:500;line-height:1.4}
+.ffoot .mark{flex:0 0 auto;height:32px;width:auto;display:block}
+.picks{margin-top:30px;display:grid;grid-template-columns:1fr 1fr;gap:18px}
+.pick{padding:22px 24px;border-radius:18px;background:rgba(15,21,36,.75);border:2px solid rgba(143,211,199,.25)}
+.pick h3{font-size:25px}
+.bars{margin-top:30px;display:flex;flex-direction:column;gap:16px}
+.bar{display:grid;grid-template-columns:300px 1fr 170px;align-items:center;gap:18px}
+.bar .bl{font-size:20px;font-weight:600;color:#DCE4F5;line-height:1.25}
+.bar .bt{height:34px;border-radius:10px;background:rgba(15,21,36,.75);border:1px solid rgba(143,211,199,.2);overflow:hidden}
+.bar .bf{height:100%;border-radius:10px;background:linear-gradient(90deg,#2A9D8F,#8FD3C7)}
+.bar.hi .bf{background:linear-gradient(90deg,#E9B949,#FFD166)}
+.bar .bv{font-size:22px;font-weight:700;color:#FFD166}
+.pick h3 small{font-size:17px;color:#8FD3C7;font-weight:600;margin-left:8px}
+.pick ul{list-style:none;margin-top:10px}
+.pick li{margin-top:8px;padding-left:22px;position:relative;font-size:18px;line-height:1.35;color:#DCE4F5;font-weight:500}
+.pick li:before{content:"";position:absolute;left:0;top:8px;width:10px;height:10px;border-radius:3px;background:#FFD166}
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script>
+const D = JSON.parse(decodeURIComponent(location.hash.slice(1)));
+const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+// *word* in a title becomes the yellow highlight.
+const hl = (s) => esc(s).replace(/\*([^*]+)\*/g, "<em>$1</em>");
+const LOGO = "../../passive-array-brand/logo/passive-array-logo-horizontal-on-dark.svg";
+const brand = `<div class="brand"><img src="${LOGO}" alt="Passive Array"></div>`;
+function visual(v) {
+  if (v.type === "shot") return `<div class="shot"><div class="bar"><i></i><i></i><i></i><span>${esc(v.label)}</span></div><img src="${v.src}" style="${v.style || ""}"></div>${v.tag ? `<div class="tag">${esc(v.tag)}</div>` : ""}`;
+  if (v.type === "stats") return `<div class="stats">${v.items.map((s) => `<div class="stat"><b>${esc(s.big)}</b><span>${esc(s.label)}</span>${s.note ? `<small>${esc(s.note)}</small>` : ""}</div>`).join("")}</div>`;
+  if (v.type === "vs") return `<div class="vs">${v.sides.map((s, i) => `${i ? `<div class="vsdot">VS</div>` : ""}<div class="side"><h3>${esc(s.name)}</h3><p>${esc(s.tagline)}</p><ul>${s.points.map((p) => `<li>${esc(p)}</li>`).join("")}</ul></div>`).join("")}</div>`;
+  return "";
+}
+if (D.kind === "cover") {
+  document.getElementById("root").innerHTML = `<div id="cover" class="bg"><div class="left">${brand}<div class="kick">${esc(D.kicker)}</div><div class="title" style="font-size:${D.size || 64}px">${hl(D.title)}</div>${D.sub ? `<div class="sub">${esc(D.sub)}</div>` : ""}<div class="url">passivearray.com/blog</div></div><div class="right${D.visual.type === "shot" ? "" : " pad"}">${visual(D.visual)}</div></div>`;
+} else {
+  let inner = "";
+  if (D.type === "flow") inner = `<div class="flow">${D.steps.map((s, i) => `${i ? `<div class="arrow">&rarr;</div>` : ""}<div class="step"><div class="n">${i + 1}</div><h3>${esc(s.title)}</h3><p>${esc(s.text)}</p>${s.you ? `<div class="you">${esc(s.you)}</div>` : ""}</div>`).join("")}</div>`;
+  if (D.type === "timeline") inner = `<div class="tl">${D.events.map((e, i) => `<div class="ev"><div class="dot">${esc(e.dot || i + 1)}</div><b>${esc(e.when)}</b><span>${esc(e.what)}</span></div>`).join("")}</div>`;
+  if (D.type === "bars") { const max = Math.max(...D.bars.map((x) => x.value)); inner = `<div class="bars">${D.bars.map((x) => `<div class="bar${x.hi ? " hi" : ""}"><div class="bl">${esc(x.label)}</div><div class="bt"><div class="bf" style="width:${Math.max(3, (x.value / max) * 100)}%"></div></div><div class="bv">${esc(x.display || x.value)}</div></div>`).join("")}</div>`; }
+  if (D.type === "picks") inner = `<div class="picks">${D.picks.map((p) => `<div class="pick"><h3>${esc(p.name)}<small>${esc(p.tagline || "")}</small></h3><ul>${p.points.map((x) => `<li>${esc(x)}</li>`).join("")}</ul></div>`).join("")}</div>`;
+  document.getElementById("root").innerHTML = `<div id="figure" class="bg"><div class="fhead"><h2>${hl(D.title)}</h2></div>${D.sub ? `<div class="fsub">${esc(D.sub)}</div>` : ""}${inner}<div class="ffoot"><div class="fnote">${D.note ? esc(D.note) : ""}</div><img class="mark" src="${LOGO}" alt="Passive Array"></div></div>`;
+}
+</script>
+</body>
+</html>

@@ -5,6 +5,7 @@ date: 2026-10-29
 keyword: how much does a youtuber make
 category: Earnings
 tools: youtube-money-calculator, youtube-sponsorship-price-calculator, youtube-monetization-checker
+image: Estimated YouTube ad income: up to $4,000 a month at 1 million monthly views, and $0 for channels outside the Partner Program
 ---
 
 A YouTuber's ad income comes down to one formula: monthly views, divided by 1,000, multiplied by RPM. For long-form channels RPM usually falls between **$0.50 and $4.00**, so a channel with 100,000 monthly views earns roughly **$50 to $400 a month** from ads, and a channel with 1 million monthly views roughly **$500 to $4,000**. Sponsorships, memberships and products often add more than ads do.
@@ -24,6 +25,8 @@ Using the default RPM range in our [YouTube money calculator](../../creator-tool
 | 10,000,000 | $5,000 to $40,000 | $60,000 to $480,000 |
 
 These are ad revenue only, for long-form videos, on a monetized channel. Channels in high-paying niches such as finance can earn several times the top of each range. Channels whose views are mostly Shorts earn far below the bottom.
+
+![Bar chart of estimated monthly ad income: $5 to $40 at 10,000 views, $50 to $400 at 100,000, $250 to $2,000 at 500,000 and $500 to $4,000 at 1 million](youtuber-ad-income-by-views.webp "Estimated monthly ad income by monthly views, at a $0.50 to $4.00 RPM.")
 
 ## Why subscribers do not decide pay
 
@@ -47,6 +50,8 @@ For many full-time YouTubers, ads are not the main income. The other lines:
 - **Products and courses.** Merchandise, digital products and courses sold to the audience.
 - **YouTube Premium revenue.** A share of Premium subscription revenue based on how long Premium members watch the creator's videos.
 
+![Four income lines beyond ads: sponsorships, fan funding such as memberships and Super Chat, affiliate links, and products and courses](youtuber-income-beyond-ads.webp "The main income lines for YouTubers besides ad revenue.")
+
 ## Gross is not take-home
 
 The figures above are what YouTube pays out. A creator then pays tax, editing, equipment, software and sometimes a manager or network share. A channel earning $4,000 a month from ads may keep much less once it pays an editor. [How YouTube pays you](../how-does-youtube-pay-you/) covers payment timing and tax withholding.
@@ -56,5 +61,7 @@ The figures above are what YouTube pays out. A creator then pays tax, editing, e
 1. Confirm it is monetized with the [monetization checker](../../creator-tools/youtube-monetization-checker/). If not, its ad income is zero.
 2. Run it through the [YouTube money calculator](../../creator-tools/youtube-money-calculator/), which reads the last 30 days of views from the official YouTube API and applies an RPM range you can edit.
 3. Read the result as a bracket. Only the creator's own YouTube Studio shows the real figure.
+
+![YouTube money calculator estimate for the YouTube Creators channel, showing a monthly earnings range, yearly range, monthly views and the RPM range used](money-calculator-estimate.webp "An example estimate from the free YouTube money calculator. It is a range from public views, not real income.")
 
 For the same arithmetic on single videos, see [how much YouTube pays for 1 million views](../how-much-does-youtube-pay-for-1-million-views/).

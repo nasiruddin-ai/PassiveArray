@@ -6,6 +6,7 @@ keyword: how to increase instagram engagement rate
 category: Engagement
 tools: instagram-engagement-rate-calculator, instagram-growth-advisor, instagram-content-ideas-generator
 related: instagram-engagement-rate-by-follower-count, how-to-audit-an-instagram-account, instagram-captions
+image: How to increase your Instagram engagement rate, with the Passive Array engagement rate calculator grading an example account at 1.49%, Below average
 ---
 
 To increase your Instagram engagement rate, first find out why it is low: either fewer of your followers are seeing your posts, the ones who see them are not responding, or your follower count is inflated by people who will never engage. Each cause has different fixes. Most of them come down to making posts that the people who see them want to watch, save, share or reply to, because that is what Instagram's ranking systems try to predict.
@@ -68,6 +69,8 @@ Instagram has explained what each part of the app tries to predict. This is the 
 | Explore | Posts from accounts you do not follow | Likes, saves, shares |
 | Reels | Mostly accounts you do not follow, chosen to entertain | Resharing, watching to the end, liking, visiting the audio page |
 
+![Four cards listing the most important predicted actions for Instagram Feed, Stories, Explore and Reels](instagram-ranking-predicted-actions.webp "What each part of Instagram tries to predict, from its 2023 ranking explainer.")
+
 The same explainer says Reels are also judged by asking people whether a Reel was "worth their time or fun". So engagement Instagram wants is not any reaction at all; it is the kind that shows a person valued the post. A share to a friend says more than a like, and watching to the end says more than a tap.
 
 ## Fixes that raise engagement
@@ -120,6 +123,8 @@ Since December 2025 Instagram allows five hashtags per post or Reel. Five specif
 4. **Day 29:** Recalculate using only the posts from this month.
 5. **Day 30:** Keep what worked, drop what did not, and set the next month's focus.
 
+![Timeline of a 30-day plan: measure on day 1, compare best and worst posts on day 2, post to the pattern, recalculate on day 29, review on day 30](instagram-engagement-30-day-plan.webp "The 30-day plan at a glance.")
+
 If you want a ranked plan built from your own numbers, the [Instagram growth advisor](../../creator-tools/instagram-growth-advisor/) takes your followers, engagement rate, posting pace, share of Reels and goal, and returns the three to five changes most likely to move the number, with the reason for each. When you run out of ideas, the [content ideas generator](../../creator-tools/instagram-content-ideas-generator/) gives twelve post ideas for your niche with a hook for each.
 
 ## A worked example
@@ -128,6 +133,8 @@ This is a made-up account to show the maths. Say a travel account has 18,000 fol
 
 - Engagement rate: (260 + 9) / 18,000 x 100 = 1.49%
 - Our tool's typical rate for 10K to 100K accounts: 2.0%, so this is about 0.75 of typical, graded Below average
+
+![Instagram engagement rate calculator result for 18,000 followers, 260 likes and 9 comments: 1.49%, Below average for the micro tier](instagram-engagement-rate-example.webp "The worked example in the calculator, with example numbers.")
 
 An [audit of the account](../how-to-audit-an-instagram-account/) shows a giveaway six months ago that added about 4,000 followers, and comments at 3.5% of likes, which looks like a real but partly inactive audience. Reach in Insights is flat.
 

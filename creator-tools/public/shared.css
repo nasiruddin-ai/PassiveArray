@@ -402,6 +402,10 @@ a.card.post .pdate { margin-top: auto; font-size: .8rem; color: var(--muted); }
 .prose p { margin: 0 0 16px; }
 .prose ul, .prose ol { margin: 0 0 18px; padding-left: 24px; }
 .prose li { margin: 6px 0; }
+.post-hero { margin: 0 0 28px; }
+.post-hero img, .prose figure img { display: block; width: 100%; height: auto; border-radius: 14px; border: 1px solid var(--line); }
+.prose figure { margin: 28px 0; }
+.prose figcaption { margin-top: 8px; font-size: .85rem; color: var(--muted); text-align: center; }
 .prose blockquote { margin: 0 0 18px; padding: 14px 20px; border-left: 3px solid var(--teal); background: var(--soft); border-radius: 0 12px 12px 0; }
 .prose blockquote p { margin: 0; }
 .prose code { font-family: ui-monospace, Consolas, monospace; font-size: .9em; background: var(--soft-indigo); padding: 2px 6px; border-radius: 6px; }

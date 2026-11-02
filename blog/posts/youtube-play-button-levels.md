@@ -5,6 +5,7 @@ date: 2026-10-29
 keyword: youtube play button levels
 category: Growth
 tools: youtube-subscriber-count-checker, youtube-channel-growth-tracker, youtube-most-subscribed-channels
+image: YouTube play button levels: Silver at 100,000 subscribers and Gold at 1 million
 ---
 
 The play button plaques are YouTube's Creator Awards. They are given at subscriber milestones, and the first one arrives at 100,000 subscribers, not before.
@@ -19,6 +20,8 @@ The play button plaques are YouTube's Creator Awards. They are given at subscrib
 | Custom Creator Award | 50,000,000 | A one-off design made for the channel, often called the ruby award |
 | Red Diamond Creator Award | 100,000,000 | Red crystal play button |
 
+![The YouTube play button ladder: Silver at 100,000, Gold at 1 million, Diamond at 10 million, Custom at 50 million, Red Diamond at 100 million subscribers](youtube-play-button-levels-ladder.webp "Every Creator Award level and the subscribers it needs.")
+
 There is no plaque for 1,000 or 10,000 subscribers. Those milestones get a mention in YouTube Studio, not an award.
 
 ## How you get one
@@ -26,6 +29,8 @@ There is no plaque for 1,000 or 10,000 subscribers. Those milestones get a menti
 Reaching the number is not the whole requirement. When a channel crosses a milestone, YouTube reviews it before the award is offered. The channel has to be in good standing: following the Community Guidelines, with no recent strikes and no signs of fake subscribers. Channels that grew through purchased subscribers or that break YouTube's policies are refused.
 
 If the review passes, the award is offered through YouTube Studio, where you redeem it and enter a delivery address. It can take weeks from crossing the milestone to the plaque arriving, and longer in some countries. The exact steps are on YouTube's Creator Awards help page, which is the place to check if the offer does not appear.
+
+![Four steps to a play button: cross the milestone, YouTube reviews the channel, redeem in Studio, the plaque arrives](how-to-claim-a-youtube-play-button.webp "From milestone to plaque.")
 
 ## Questions people ask
 

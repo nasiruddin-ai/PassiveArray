@@ -5,6 +5,7 @@ date: 2026-10-29
 keyword: copyright claim vs strike
 category: Growth
 tools: youtube-monetization-checker, youtube-money-calculator
+image: Content ID claim versus copyright strike: an automatic match that leaves the channel unaffected, against a legal takedown that lasts 90 days
 ---
 
 A **copyright claim** usually comes from Content ID, YouTube's automatic matching system. It does not harm your channel. It lets the copyright owner block your video, track it, or take its ad revenue. A **copyright strike** comes from a formal legal takedown request. It removes the video and counts against your channel, and **three strikes within 90 days can end the channel**.
@@ -40,6 +41,8 @@ If you believe the claim is wrong, for example you own the content, have a licen
 
 Dispute only when you are confident. A claimant who disagrees with your appeal can respond with a takedown request, which brings a strike.
 
+![Four steps of a Content ID dispute: dispute in Studio, the claimant's 30-day reply, an appeal, and the claimant's 7-day reply](content-id-dispute-process.webp "How a Content ID dispute and appeal run, and the deadlines at each step.")
+
 Often there is an easier fix: Studio lets you trim out the claimed section, mute the song, or swap it for a track from the YouTube Audio Library. That removes the claim.
 
 ## What a copyright strike does
@@ -58,6 +61,8 @@ There are three ways:
 1. **Wait 90 days** after completing Copyright School.
 2. **Ask the claimant to retract** their takedown request. This is often the quickest route if you know the person, used their work by mistake, or can agree a licence.
 3. **File a counter notification** if the video was removed by mistake or your use is fair use. This is a legal process: you give your contact details, which go to the claimant, and they can take you to court. Only do it if you are sure.
+
+![Four cards: wait 90 days after Copyright School, ask for a retraction, file a counter notification, or act on a 7-day scheduled removal warning](ways-to-resolve-a-copyright-strike.webp "Three ways to resolve a strike, and the warning that lets you avoid one.")
 
 ## The 7-day warning
 

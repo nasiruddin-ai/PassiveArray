@@ -6,6 +6,7 @@ keyword: does influencer marketing work
 category: For brands
 tools: instagram-emv-calculator, youtube-engagement-rate-calculator, instagram-fake-follower-checker
 related: how-influencer-marketing-works, influencer-marketing-trends-2026, how-to-vet-an-influencer-before-you-pay
+image: Does influencer marketing work, with Linqia's 2026 findings that 62% of enterprise marketers are increasing influencer budgets and 79% struggle to measure ROI
 ---
 
 Influencer marketing works for some brands and some deals, and the only reliable way to know if it works for yours is to measure each deal against a goal you set before it ran. Industry surveys show brands keep raising their budgets, but the same surveys show most marketers find return on investment hard to prove. So treat "does it work" as a measurement question, not a belief.
@@ -80,6 +81,8 @@ After 30 days, the video has 48,000 views, the tracked link has 600 clicks, and 
 | Gross profit | $1,800 x 60% | $1,080 |
 | ROI on first orders | ($1,080 - $1,200) / $1,200 | -10% |
 
+![Four-step example of measuring a $1,200 YouTube integration: 48,000 views at a $25 effective CPM, 600 clicks at $2.00 each, 30 sales at $40 each, and -10% ROI on first orders](example-youtube-integration-measured.webp "Example: the same deal judged on views, clicks, sales and profit.")
+
 On first orders alone, this deal lost a little money. That is common, and it is not the end of the analysis:
 
 - **Repeat buyers.** If 30% of these customers buy once more in the next six months, that is 9 more orders, $540 in revenue and $324 in gross profit. Total gross profit becomes $1,404, and ROI becomes about +17%.
@@ -106,6 +109,8 @@ Say an Instagram reel cost $600 and earned 60,000 views, 2,400 likes, 90 comment
 | Saves | 150 x $0.40 | $60 |
 | Link clicks | 300 x $0.60 | $180 |
 | EMV | | $945 |
+
+![Earned Media Value Calculator result of $945 for the example reel, with the value of impressions, likes, comments, shares, saves and link clicks](emv-calculator-reel-example.webp "Example numbers: the $600 reel above, run through the free EMV calculator.")
 
 With impressions valued at $4 per 1,000, EMV is $825; at $10, it is $1,185. Against a $600 fee, the attention was worth more than it cost to buy as ads, on these weights.
 

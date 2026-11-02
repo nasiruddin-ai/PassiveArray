@@ -5,6 +5,7 @@ date: 2026-09-04
 keyword: average instagram engagement rate
 category: Engagement
 tools: instagram-engagement-rate-calculator, instagram-engagement-rate-benchmark, instagram-audit
+image: Instagram engagement rate by follower count: about 4.0% typical for nano accounts and 0.8% for mega accounts in Passive Array's benchmarks
 ---
 
 Instagram engagement rate is the first number [a brand looks at before a deal](../how-do-instagram-creators-make-money/) and the first number a creator checks after a post. It is also the number [most often compared unfairly](../instagram-engagement-rate-by-industry/), because the typical rate falls steeply as an account grows. A 2% rate is excellent for one account and a warning for another. The [Instagram engagement rate calculator](../../creator-tools/instagram-engagement-rate-calculator/) grades any account against the typical rate for its size.
@@ -29,6 +30,8 @@ These are the benchmarks the Passive Array tools use, including the [Instagram e
 | Macro | 500K to 1M | 1.1% |
 | Mega | over 1M | 0.8% |
 
+![Bar chart of typical Instagram engagement by tier: nano 4.0%, micro 2.0%, mid 1.4%, macro 1.1%, mega 0.8%](instagram-engagement-by-tier.webp "Passive Array's benchmarks by account size.")
+
 The drop is not a sign that big accounts are worse. A 5,000-follower account is followed by people who chose it recently and see most of its posts. A 2M-follower account is followed by many people who tapped follow years ago and whose feeds are now full. Reach as a share of followers shrinks with size, and engagement shrinks with it.
 
 ## How the grade is worked out
@@ -44,6 +47,8 @@ The calculator does not grade you against a single fixed number. It divides your
 | Above 160% | Excellent |
 
 So a micro account at 3.5% (1.75x the 2.0% typical) is graded Excellent, while a nano account at 3.5% (0.88x the 4.0% typical) is Average. Same number, different meaning, which is exactly what a brand comparing the two should know.
+
+![Instagram engagement rate calculator result for 40,000 followers, 1,350 likes and 50 comments: 3.5%, Excellent for the micro tier](instagram-engagement-rate-calculator-micro.webp "The micro account example in the calculator, with example numbers.")
 
 ## Likes and comments are not equal
 

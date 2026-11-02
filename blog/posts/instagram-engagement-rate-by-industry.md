@@ -6,6 +6,7 @@ keyword: average instagram engagement rate by industry
 category: Engagement
 tools: instagram-engagement-rate-benchmark, instagram-engagement-rate-calculator
 related: instagram-engagement-rate-by-follower-count, how-to-increase-instagram-engagement-rate, how-to-audit-an-instagram-account
+image: Instagram engagement rate by industry: Hootsuite 2026 puts the all-industry average at 4.2%, Quid's 2026 report puts the brand median at 0.30%
 ---
 
 The average Instagram engagement rate by industry depends heavily on which report you read. In 2026, Hootsuite puts the all-industry Instagram average at **4.2%**, with industries ranging from 3.2% to 5.5%. Quid's benchmark report (formerly Rival IQ) puts the all-industry median for brands at **0.30%**. Socialinsider reports **0.48%** for 2025. All three divide by followers, yet the highest figure is fourteen times the lowest, because they measure different posts, different accounts and different kinds of engagement.
@@ -32,6 +33,8 @@ Hootsuite published these figures on 13 October 2026. It says they "reflect each
 | Consumer goods and retail | 3.6% |
 | Media and entertainment | 3.2% |
 | **All industries** | **4.2%** |
+
+![Bar chart of Hootsuite 2026 Instagram engagement rates for nonprofit, utilities and energy, education, all industries, consumer goods and retail, and media and entertainment](hootsuite-instagram-engagement-by-industry.webp "Highest and lowest industries in Hootsuite's 13 October 2026 figures.")
 
 Hootsuite also lists a separate Instagram Reels engagement rate of 2.7% for media and entertainment, next to that industry's 3.2% Instagram figure. Its rule of thumb is that "a good engagement rate generally falls between 1% and 5%, depending on the platform and industry."
 
@@ -71,6 +74,8 @@ Socialinsider's article text does not give an Instagram breakdown by industry, s
 | Hootsuite | 2026 | 4.2% | Total engagements / followers, per post | Not stated | Best-performing content type |
 | Quid (Rival IQ) | 2026 | 0.30% | Total interactions / followers | 150 random companies per industry | Median |
 | Socialinsider | 2026 (2025 data) | 0.48% | (Likes + comments) / followers | Brand accounts, organic posts | Average |
+
+![Bar chart comparing the all-industry Instagram figures of Hootsuite 2026 at 4.2%, Socialinsider 2026 at 0.48% and Quid 2026 at 0.30%](instagram-benchmark-reports-compared.webp "Three reports, three methods, three very different answers.")
 
 ## Why benchmark reports disagree so much
 

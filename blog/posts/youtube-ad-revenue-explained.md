@@ -5,6 +5,7 @@ date: 2026-10-29
 keyword: youtube ad revenue
 category: Earnings
 tools: youtube-money-calculator, youtube-monetization-checker
+image: How YouTube splits ad revenue: 55% of net ad revenue on long-form videos and 45% of the Shorts revenue allocated to the creator
 ---
 
 YouTube keeps part of the money advertisers pay and gives the rest to creators in the YouTube Partner Program. On long-form videos, creators get **55%** of the net revenue from ads shown on their videos. On Shorts, ad revenue from the Shorts feed is pooled and creators get **45%** of the share allocated to them. YouTube Premium revenue is shared separately, based on watch time.
@@ -23,6 +24,8 @@ Shorts work differently, because ads run between Shorts in the feed rather than 
 2. **Part of the pool covers music licensing.** A Short with no music sends all of its share to the creator pool. A Short using one track sends half. A Short using two tracks sends a third.
 3. **The creator pool is split** by each monetizing creator's share of engaged Shorts views in each country.
 4. **The creator keeps 45%** of what is allocated to them.
+
+![Diagram of Shorts ad revenue being pooled, reduced for music licensing, split by engaged views, with 45% kept by the creator](how-shorts-ad-revenue-is-shared.webp "How YouTube shares Shorts feed ad revenue, per its Shorts monetization policies.")
 
 So a Short earns less per view than a long-form video, and using licensed music lowers it further. [How YouTube pays for Shorts](../how-much-does-youtube-pay-for-shorts/) works through this in detail.
 
@@ -61,3 +64,5 @@ You do not need to calculate the split yourself, because RPM already includes it
 > Monthly ad earnings = (monthly views / 1,000) x RPM
 
 The [YouTube money calculator](../../creator-tools/youtube-money-calculator/) does this for any channel using its last 30 days of views. First check the channel is in the Partner Program with the [monetization checker](../../creator-tools/youtube-monetization-checker/), because without it the split does not apply. To see how the money then reaches you, read [how and when YouTube pays you](../how-does-youtube-pay-you/).
+
+![YouTube money calculator estimate for @YouTubeCreators: $120 to $960 a month from about 240,000 monthly views](youtube-money-calculator-estimate.webp "An estimate from the free YouTube money calculator for @YouTubeCreators. A range from public views, not real income.")

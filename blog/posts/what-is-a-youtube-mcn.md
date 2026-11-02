@@ -5,6 +5,7 @@ date: 2026-10-29
 keyword: youtube mcn
 category: Earnings
 tools: youtube-monetization-checker, youtube-money-calculator, youtube-sponsorship-price-calculator
+image: Do you need a YouTube MCN: when a network may help and when it is probably not needed
 ---
 
 A YouTube **MCN** (multi-channel network) is a company that works with many YouTube channels and offers them services in exchange for a share of their YouTube revenue. YouTube describes MCNs as third-party service providers that may help with audience development, content programming, collaborations, digital rights management, monetization and sales. YouTube does not endorse them, and says plainly that **you do not need to join an MCN to succeed on YouTube**.
@@ -25,6 +26,8 @@ Some MCNs are hands-on partners. Others mainly collect a cut and offer little. T
 ## How MCNs make money
 
 YouTube's revenue share does not change when you join an MCN. YouTube still pays the same share; the money is then split with the network. In YouTube's words, MCNs typically take a percentage of revenue from the creator's portion. The percentage is set by the contract and varies by network and channel size.
+
+![Diagram of MCN revenue: YouTube pays the usual creator share, the MCN takes a contract percentage, you receive the rest](how-mcn-revenue-share-works.webp "An MCN's cut comes out of your share, not YouTube's.")
 
 So the question is always: are the services worth more than the percentage?
 
@@ -62,6 +65,8 @@ You can remove a network's access to your channel from YouTube Studio:
 1. Open **YouTube Studio** and go to the **Network relationship** card.
 2. Choose **Remove access**, then **Leave network**.
 3. The MCN has 30 days to respond. If it does not, its access is removed automatically.
+
+![Three steps to leave an MCN in YouTube Studio: the Network relationship card, Remove access, then 30 days for the network to respond](how-to-leave-an-mcn.webp "Leaving a network in YouTube Studio. It does not cancel your contract.")
 
 Removing access in Studio does not cancel your contract. If you are still under contract, you may still owe the network under its terms. Read the termination section before you leave.
 

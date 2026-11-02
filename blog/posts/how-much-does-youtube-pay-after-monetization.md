@@ -6,6 +6,7 @@ keyword: how much does youtube pay after monetization
 category: Earnings
 tools: youtube-money-calculator, youtube-monetization-checker
 related: how-does-youtube-pay-you, youtube-monetization-requirements, why-is-my-youtube-rpm-low
+image: What YouTube pays after monetization, showing the 55% long-form ad revenue share and the 45% Shorts revenue share
 ---
 
 YouTube pays nothing for reaching 1,000 subscribers or 4,000 watch hours. Those numbers only let you apply. Once you are accepted, you are paid for **monetized views**, at a rate per 1,000 views called RPM, and a channel that has just crossed the threshold usually earns somewhere between a few dollars and a few tens of dollars a month. Your first actual payment arrives when your balance reaches **$100**.
@@ -79,6 +80,8 @@ This is why so many creators are disappointed by their first month. The views th
 
 YouTube pays through **AdSense for YouTube**, once a month. According to YouTube Help:
 
+![Timeline of the YouTube payment cycle: earnings finalized on the 7th to 12th, threshold cut-off on the 20th, payment issued on the 21st to 26th](youtube-payout-timeline.webp "The monthly AdSense for YouTube payment cycle, from YouTube Help.")
+
 1. At **$10** in your balance, you are asked to verify your identity and your address. Payments are held until both are done.
 2. Last month's estimated earnings are **finalized between the 7th and 12th** of the month and added to your balance.
 3. Your balance on the **20th** must have reached the payment threshold, which is **$100** for USD accounts.
@@ -143,6 +146,8 @@ If one video or the whole channel loses ads, [YouTube demonetization](../youtube
 ## How to estimate any channel's earnings
 
 To estimate another channel's ad income, check first that it is actually in the Partner Program. The [monetization checker](../../creator-tools/youtube-monetization-checker/) reads public signals, such as subscribers, recent uploads and whether recent videos carry ad placements, and returns a verdict with a confidence score rather than a yes or no. Then run the channel through the money calculator, which uses views on videos from the last 30 days and your chosen RPM range.
+
+![YouTube Money Calculator estimate for a public channel, showing a monthly earnings range, yearly range, views and the RPM range used](money-calculator-estimate.webp "An example estimate from the free YouTube Money Calculator. It is a range from public views, not real income.")
 
 Both results are estimates from public data. Only the channel owner's YouTube Studio shows real revenue.
 

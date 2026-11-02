@@ -5,6 +5,7 @@ date: 2026-10-29
 keyword: youtube demonetization
 category: Earnings
 tools: youtube-monetization-checker, youtube-money-calculator
+image: YouTube demonetization explained, with the 21-day appeal window and the 90-day wait to reapply
 ---
 
 "Demonetized" means two different things on YouTube. Most often it means a **single video** has limited or no ads, shown by a yellow or red dollar icon in YouTube Studio. More seriously, it can mean a **whole channel** has been removed from the YouTube Partner Program and earns nothing. They have different causes and different fixes.
@@ -60,12 +61,16 @@ This is the serious kind. YouTube can remove a channel from the Partner Program 
 - publishes **inauthentic content**: content that is [mass-produced, generic, repetitive or manipulative](../can-ai-voice-youtube-channels-be-monetized/). YouTube renamed its "repetitious content" policy to this in July 2025, and says such content was always ineligible,
 - has been **inactive**: YouTube may turn off monetization on a channel that has not uploaded a video or posted in the Posts tab for six months or more.
 
+![Comparison of a single demonetized video with a yellow or red icon and a channel removed from the YouTube Partner Program](video-vs-channel-demonetization.webp "The two kinds of demonetization and how each one is fixed.")
+
 ## How to recover a demonetized channel
 
 1. **Read the email and the notice in Studio.** It names the policy.
 2. **Appeal if you think it is a mistake.** You have 21 days from a suspension to appeal, or 7 days if you were warned of a scheduled suspension. The appeal is a short unlisted video that explains how your channel as a whole follows the policies, with your channel URL in the first 30 seconds. YouTube says it responds within 14 days.
 3. **If the decision stands, fix the cause.** Remove or rework the videos that broke the policy. For reused content, that means [adding real commentary, analysis or original material](../how-to-grow-a-faceless-youtube-channel/), not small edits.
 4. **Reapply after 90 days.** If the appeal is rejected, you can reapply to the Partner Program 90 days after the suspension date.
+
+![Timeline for recovering a demonetized channel: appeal within 21 days, a response within 14 days, reapply after 90 days](channel-demonetization-recovery-timeline.webp "The deadlines after a Partner Program suspension, per YouTube Help.")
 
 A channel removed for inactivity can usually reapply once it is active again.
 

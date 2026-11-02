@@ -6,6 +6,7 @@ keyword: how to get more views on youtube for music
 category: Growth
 tools: youtube-keyword-generator, youtube-title-generator, youtube-description-generator
 related: how-much-does-youtube-pay-musicians, youtube-copyright-claim-vs-strike, how-to-grow-youtube-channel-with-shorts
+image: Grow a music YouTube channel, comparing artist channels with beat producer channels
 ---
 
 To get more views on YouTube for music, treat your channel as more than a place to upload songs. Get your releases delivered properly through a distributor so they appear on YouTube Music, claim an Official Artist Channel when you qualify, and surround each release with videos people actually search for and share: Shorts, performances, behind-the-scenes and, for producers, clearly titled type beats. A lone audio upload with a still image rarely grows on its own.
@@ -76,6 +77,8 @@ YouTube has a dedicated Shorts for Artists section on its artist site, aimed at 
 
 How the money works for Shorts with music, according to YouTube's Shorts monetization terms: ad revenue from the Shorts feed is pooled, and part of it pays for music licensing. A Short with no music puts all its revenue in the Creator Pool. A Short with one track puts half in the pool and half toward music licensing; with two tracks, a third goes to the pool. Creators keep 45% of their allocated share whether or not they used music. That licensing share is how rights holders, including artists through their distributor, earn from Shorts that use their songs. [How much YouTube pays musicians](../how-much-does-youtube-pay-musicians/) covers what that adds up to.
 
+![Bar chart of how much of a Short's revenue goes to the Creator Pool: all of it with no music, half with one track, a third with two](shorts-creator-pool-share-with-music.webp "Music in a Short sends part of its revenue to music licensing.")
+
 Shorts rules that matter for musicians:
 
 - Shorts can be up to three minutes long.
@@ -133,6 +136,8 @@ There is a trade-off, and it is the same one every search niche has:
 - **Pairings and sub-genres**, like two artists together or an artist plus a mood, are more specific and often easier to rank for.
 
 A practical approach is to upload mostly for rising artists and specific pairings, with a smaller share aimed at the biggest names. Check what appears when you search each phrase, and look at how many views the top results have compared with their channel sizes. If small channels are ranking, there is room.
+
+![Four cards on choosing artists for type beats: biggest names, rising artists, pairings and sub-genres, and checking the results first](type-beat-artists-to-target.webp "Upload mostly for rising artists and specific pairings.")
 
 ### What goes in a beat description
 

@@ -6,6 +6,7 @@ keyword: influencer marketing trends 2026
 category: For brands
 tools: find-youtube-influencers-by-niche, youtube-sponsorship-price-calculator, instagram-emv-calculator
 related: does-influencer-marketing-work, how-influencer-marketing-works, free-influencer-marketing-tools
+image: Influencer marketing trends for 2026, with the IAB's projected $37 billion US creator ad spend for 2025 and Linqia's finding that 79% of enterprise marketers struggle to measure ROI
 ---
 
 The biggest influencer marketing trends in 2026 are platforms building their own AI-assisted creator search, creator content being turned into paid ads, more work going to smaller creators, pressure to prove return on investment, and stricter rules on disclosure and fake engagement. Each trend below is based on something a platform or regulator announced, or a named report measured, in 2025 or 2026. We do not make forecasts with numbers, because nobody can measure the future.
@@ -29,6 +30,8 @@ These are the figures behind the trends. Each is the publisher's own survey or e
 ## 1. Spending keeps moving toward creators
 
 The IAB's Creator Economy Ad Spend & Strategy Report, released in November 2025, projected US creator ad spend at $37 billion for 2025, up from $29.5 billion in 2024 and $13.9 billion in 2021. It said creator spend was growing about four times faster than the media industry overall. In 2026 surveys, Linqia found 62% of enterprise marketers increasing budgets, and Influencer Marketing Hub found 87.49% of its respondents expecting an increase.
+
+![Bar chart of US creator ad spend from the IAB: $13.9 billion in 2021, $29.5 billion in 2024 and a projected $37 billion in 2025](us-creator-ad-spend-iab.webp "US creator ad spend, from the IAB's November 2025 report. The 2025 figure is a projection.")
 
 **What it means for you:** more brands competing for the same creators. Good creators in a narrow niche get booked earlier, and rates follow demand. Price from data, not from what a creator's last sponsor paid. The [YouTube Sponsorship Price Calculator](../../creator-tools/youtube-sponsorship-price-calculator/) prices an integration from a channel's recent average views, so you know where a fair range sits before you negotiate.
 
@@ -58,6 +61,8 @@ Linqia's 2026 survey reported that 100% of its enterprise respondents repurpose 
 
 Influencer Marketing Hub's 2026 report found 51.43% of respondents showing expansion intent for nano creators and 52.83% for micro creators, against 20.59% for macro creators.
 
+![Bar chart of expansion intent by creator size: 52.83% for micro creators, 51.43% for nano creators and 20.59% for macro creators](expansion-intent-by-creator-size.webp "Expansion intent by creator tier, from Influencer Marketing Hub's 2026 benchmark report.")
+
 YouTube's Open Call, part of Creator Partnerships, points the same way. Brands post sponsored opportunities and invited creators submit videos. To take part, creators must be in the YouTube Partner Program, in the US, UK or India, with between 500 and 500,000 subscribers, and have posted a Short in the last 30 days. Participation is by invitation only.
 
 **What it means for you:** a small brand can work with several smaller creators instead of one large one, and test which audiences buy. Smaller creators often answer their own email and price lower in total. The trade-off is more admin per view, which is why tracking each creator separately matters.
@@ -73,6 +78,8 @@ The platforms are responding with their own measurement. YouTube said in March 2
 ## 6. Social commerce is growing, unevenly
 
 Influencer Marketing Hub's 2026 report found that 53.33% of respondents were not using social commerce, while 46.67% planned to test it in 2026. Among those using it, TikTok Shop accounted for 66.17% of platform selections, followed by Instagram Checkout at 13.16% and YouTube Shopping at 9.02%.
+
+![Bar chart of social commerce platform selections among adopters: TikTok Shop 66.17%, Instagram Checkout 13.16%, YouTube Shopping 9.02%](social-commerce-platforms.webp "Platform selections among social commerce adopters, from Influencer Marketing Hub's 2026 report.")
 
 **What it means for you:** if you sell physical products and your customers are on TikTok, shoppable creator content is worth testing. If not, a link and a code still work. Do not rebuild your store around a channel your customers do not use.
 

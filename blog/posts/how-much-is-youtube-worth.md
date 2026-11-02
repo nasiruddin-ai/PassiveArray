@@ -5,6 +5,7 @@ date: 2026-10-29
 keyword: youtube net worth
 category: Earnings
 tools: youtube-channel-value-calculator, youtube-money-calculator
+image: YouTube's 2025 ad revenue of $40.4 billion and the over $100 billion it says it paid creators, artists and media companies in four years
 ---
 
 YouTube does not have a published net worth or valuation. It is owned by Alphabet, Google's parent company, and Alphabet does not value YouTube separately. What Alphabet does report is YouTube's **advertising revenue**: **$40.4 billion in 2025**, up from $36.1 billion in 2024. It also said YouTube's revenue across ads and subscriptions **exceeded $60 billion** for 2025. Any "YouTube net worth" figure you see is an analyst's or a website's estimate built on those numbers.
@@ -21,6 +22,8 @@ Alphabet publishes YouTube ad revenue as its own line in every quarterly and ann
 | Q3 2026 | $11.21 billion |
 
 Q3 2026, reported on 28 October 2026, was about 9% higher than the same quarter a year earlier.
+
+![Timeline of YouTube's reported money: bought for $1.65 billion in 2006, $36.15 billion ad revenue in 2024, $40.37 billion in 2025, $11.21 billion in Q3 2026](youtube-revenue-timeline.webp "YouTube's purchase price and reported ad revenue, from Alphabet's filings.")
 
 Subscription revenue from YouTube Premium, YouTube Music and YouTube TV is not reported on its own. Alphabet groups it with other products, such as Google One and devices, under "Google subscriptions, platforms, and devices". The one combined figure it has given is that YouTube's ads and subscriptions revenue together passed $60 billion in 2025. In its Q3 2026 results it also said YouTube Music and Premium had passed 150 million subscribers worldwide, including trials.
 
@@ -41,3 +44,5 @@ Google bought YouTube in 2006 for $1.65 billion in stock, less than two years af
 ## And what is a YouTube channel worth?
 
 If you searched "YouTube net worth" to find what a single channel is worth, that is a different question with a similar answer: there is no official figure, only estimates built on revenue. Our [YouTube channel value calculator](../../creator-tools/youtube-channel-value-calculator/) estimates a channel's value as its estimated yearly ad earnings multiplied by a number of years you choose, and the [YouTube money calculator](../../creator-tools/youtube-money-calculator/) estimates its monthly ad earnings. For the earnings side in plain terms, see [how much a YouTuber makes](../how-much-does-a-youtuber-make/).
+
+![YouTube channel value calculator result for the YouTube Creators channel, showing an estimated value range from yearly ad earnings times 2 to 3 years](channel-value-calculator-estimate.webp "An example estimate from the free YouTube channel value calculator. It is a planning range from public views, not an appraisal.")

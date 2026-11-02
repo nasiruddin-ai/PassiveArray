@@ -6,6 +6,7 @@ keyword: how to grow youtube channel with shorts
 category: Growth
 tools: youtube-title-generator, youtube-hashtag-generator, youtube-channel-growth-tracker
 related: how-to-grow-a-youtube-channel, youtube-shorts-seo, can-youtube-shorts-be-monetized
+image: Grow your channel with Shorts: a Short can be up to 3 minutes long, and Shorts-heavy channels can have under 1% regular viewers
 ---
 
 To grow a YouTube channel with Shorts, make each Short hold viewers past the first seconds, keep every Short aimed at the same audience, and link each one to a longer video or series so viewers have somewhere to go next. Shorts are the fastest way for a small channel to reach new people, but a Shorts viewer swiped to you rather than chose you. Growth comes from turning some of those swipes into people who come back. Write the on-screen text and title first; the [YouTube Title Generator](../../creator-tools/youtube-title-generator/) suggests short, specific options you can adapt.
@@ -98,11 +99,15 @@ In the Shorts feed, viewers see the video before they read the title. Titles and
 
 So use a few relevant hashtags, not a wall of trending ones. The [YouTube Hashtag Generator](../../creator-tools/youtube-hashtag-generator/) suggests topic hashtags from a keyword, and [YouTube hashtags vs tags](../youtube-hashtags-vs-tags/) explains how the two differ. There are no "viral hashtags": a hashtag shows YouTube what the video is about, it does not push the video to more people.
 
+![YouTube Hashtag Generator results for budget recipes, with the three hashtags most likely shown by the title and YouTube's 60-hashtag limit](youtube-hashtag-generator-budget-recipes.webp "Real output from the free YouTube Hashtag Generator for the topic budget recipes.")
+
 For search-specific tactics, see [YouTube Shorts SEO](../youtube-shorts-seo/).
 
 ## Turn Shorts viewers into subscribers who stay
 
 This is the part most Shorts advice skips. YouTube's own help on audience segments warns that channels posting mostly Shorts can have a regular-viewer share "as low as <1%." Shorts bring reach; they do not automatically bring loyalty.
+
+![Four steps from a Shorts viewer to a returning subscriber: one topic, a related video link, a series and a channel page](shorts-viewer-to-subscriber-path.webp "Give every Shorts viewer somewhere to go next.")
 
 ### 1. Keep the channel about one thing
 
@@ -152,6 +157,8 @@ This is our suggested routine, not a YouTube rule.
 3. **Days 8 to 21: make 10 to 15 Shorts that follow the rule.** Same audience, same promise, one idea each. Add a related video link to every one.
 4. **Days 22 to 28: make one long video** that expands the best-performing Short, and link the Short to it.
 5. **Days 29 and 30: compare.** Did stayed to watch and subscribers per Short improve? Did any Shorts viewers reach the long video? Keep what worked.
+
+![Timeline of a 30-day Shorts plan: audit, find the pattern, make 10 to 15 Shorts, make one long video, compare](30-day-shorts-plan.webp "Our suggested 30-day routine, not a YouTube rule.")
 
 ## Track whether Shorts are growing the channel
 

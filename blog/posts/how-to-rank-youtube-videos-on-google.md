@@ -6,6 +6,7 @@ keyword: how to rank youtube videos on google
 category: YouTube SEO
 tools: youtube-keyword-generator, youtube-title-analyzer, youtube-timestamp-link-generator
 related: how-youtube-seo-works, youtube-timestamp-link, how-to-check-if-a-youtube-video-is-ranking
+image: How to rank YouTube videos on Google, with the Passive Array YouTube Keyword Generator showing ideas for replace bike chain
 ---
 
 To rank a YouTube video on Google, target a query where Google already shows videos, write a title that matches how people phrase that query in Google, give the video a clear description and chapters, and embed it on a page of your own site that is about that video. Google's documentation says videos can appear in the main results, in Video mode, in Google Images and in Discover, and that timestamps in a YouTube description can become "key moments" in Google results.
@@ -90,6 +91,8 @@ Google shows your YouTube title as the result's headline. It needs to match the 
 
 Say the query is "how to replace a bike chain without a chain tool". A made-up example of a title that works on both platforms: "Replace a bike chain without a chain tool (5 minutes, no special tools)". Check it with the [YouTube Title Analyzer](../../creator-tools/youtube-title-analyzer/), which scores length and keyword position separately so you can see which part is weak.
 
+![YouTube Title Analyzer scoring the example title Replace a bike chain without a chain tool at 66 out of 100, with keyword position near the front](title-analyzer-bike-chain.webp "The example title in the free YouTube Title Analyzer: the keyword is early, but at 71 characters the end gets cut.")
+
 ### Step 4: make the description readable as a page
 
 A YouTube watch page is a web page, and the description is most of its text. Write it for someone arriving from Google who wants to know if this video answers their question:
@@ -113,6 +116,8 @@ This is the most direct thing you can do for Google. Google says it can use the 
 3. Each chapter is at least 10 seconds long.
 
 Write each label as a phrase someone might search: "Remove the old chain without a tool" rather than "Step 2". A chapter label that matches a sub-question can be shown as its own jump point in Google. If you want to share a link that starts at one of those moments, the [YouTube Timestamp Link Generator](../../creator-tools/youtube-timestamp-link-generator/) builds the watch link, the youtu.be short link and the embed code for any start time. [How to link to a specific time in a YouTube video](../youtube-timestamp-link/) explains the URL formats.
+
+![Three steps from YouTube chapters to Google key moments: add chapters, label them as searches, and Google may show them in results](chapters-to-key-moments.webp "Google says it prioritizes key moments you set in the YouTube description.")
 
 ### Step 6: upload a clear custom thumbnail
 

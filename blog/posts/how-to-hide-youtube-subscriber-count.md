@@ -6,6 +6,7 @@ keyword: how to hide youtube subscriber count
 category: Growth
 tools: youtube-subscriber-count-checker, youtube-channel-growth-tracker
 related: youtube-live-subscriber-count, why-did-my-youtube-subscribers-go-down, views-per-subscriber
+image: Can you hide your sub count? YouTube removed the option in July 2022, and counts above 1,000 subscribers are already shortened
 ---
 
 You cannot hide your YouTube subscriber count any more. YouTube removed the option on 29 July 2022, saying that "YouTube channels will no longer be able to hide their subscriber counts" to make it harder for people to impersonate other creators. The only way to stop the public seeing your subscribers now is to hide your entire channel, which also makes your channel name, videos, likes and subscriptions private.
@@ -43,6 +44,8 @@ Here is what is still under your control, based on YouTube's current Help pages:
 | The list of channels you subscribe to | Yes, and it is private by default | YouTube Settings, Privacy, Keep all my subscriptions private |
 | Your name in other channels' subscriber lists | Yes | The same privacy setting |
 | Your whole channel | Yes, reversibly | YouTube Studio, Settings, Channel, Advanced settings, Remove YouTube Content |
+
+![Four cards showing what you can make private on YouTube: not the subscriber count, the exact count is already private, your subscriptions, and the whole channel](what-you-can-make-private-on-youtube.webp "What is still under your control.")
 
 The second row surprises many creators. Above 1,000 subscribers, the public number is already rounded. YouTube's Help page says "Your audience can view a shortened version of your subscriber count," which moves in steps of 10 between 1,000 and 9,999, 100 between 10,000 and 99,999, and so on. Below 1,000, the count is shown exactly. Our guide to the [YouTube live subscriber count](../youtube-live-subscriber-count/) has the full table of steps.
 
@@ -114,6 +117,8 @@ If your own Studio dashboard shows your subscribers but the YouTube app does not
 Partly, and this causes a lot of confusion. YouTube did not hide counts, but it **shortened** them. The YouTube Data API revision history records that from 10 September 2019, subscriber counts returned by the API "are rounded down to three significant figures". The public display follows the same steps. So since 2019 nobody outside a channel has seen its exact count above 1,000, and live counter sites estimate the last digits. Then in 2022 YouTube went the other way and removed the creator's option to hide the count completely.
 
 The result in 2026: every public channel shows a count, and above 1,000 subscribers that count is approximate.
+
+![Timeline of YouTube subscriber count changes: API rounding in September 2019, the June 2022 announcement, removal of the hide option on 29 July 2022](youtube-subscriber-count-changes-timeline.webp "From rounded counts to no hiding at all.")
 
 ## Should you hide your subscriber count, even if you could?
 

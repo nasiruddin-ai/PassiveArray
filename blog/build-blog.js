@@ -13,17 +13,38 @@
 //   tools: slug-one, slug-two creator-tool slugs to show at the end, optional
 //   updated: 2026-09-20       optional
 //   related: slug-one, slug-two   hand-picked posts for "Read next", optional (filled up from the category)
+//   image: Alt text for the cover  optional; needs blog/images/<slug>/cover.webp (page) and cover.jpg (share preview)
 //   ---
 // A post dated in the future stays out of the build until that day, and links to it from other
 // posts render as plain text until then, so a batch can be committed ahead and go live day by day.
 // Markdown supported: ## and ### headings, paragraphs, - and 1. lists, **bold**,
-// *italic*, `code`, [links](url), > quotes, | tables |, --- rules.
+// *italic*, `code`, [links](url), > quotes, | tables |, --- rules, and figures on their own line:
+// ![Alt text](file.webp "Optional caption") with the file in blog/images/<slug>/.
 
 const fs = require("fs");
 const path = require("path");
 const site = require("../creator-tools/build-tools.js");
 
 const POSTS_DIR = path.join(__dirname, "posts");
+const IMAGES_DIR = path.join(__dirname, "images");
+
+// Pixel size of a WebP, PNG or JPEG, so every <img> carries width and height and the page never shifts.
+function imageSize(file) {
+  const b = fs.readFileSync(file);
+  if (b.toString("ascii", 0, 4) === "RIFF" && b.toString("ascii", 8, 12) === "WEBP") {
+    const kind = b.toString("ascii", 12, 16);
+    if (kind === "VP8X") return [1 + b.readUIntLE(24, 3), 1 + b.readUIntLE(27, 3)];
+    if (kind === "VP8L") { const v = b.readUInt32LE(21); return [1 + (v & 0x3fff), 1 + ((v >> 14) & 0x3fff)]; }
+    return [b.readUInt16LE(26) & 0x3fff, b.readUInt16LE(28) & 0x3fff];
+  }
+  if (b.readUInt32BE(0) === 0x89504e47) return [b.readUInt32BE(16), b.readUInt32BE(20)];
+  for (let i = 2; i < b.length;) {
+    const m = b[i + 1], len = b.readUInt16BE(i + 2);
+    if (m >= 0xc0 && m <= 0xcf && m !== 0xc4 && m !== 0xc8 && m !== 0xcc) return [b.readUInt16BE(i + 7), b.readUInt16BE(i + 5)];
+    i += 2 + len;
+  }
+  throw new Error("Unknown image format: " + file);
+}
 const { esc } = site;
 
 /* ------------------------------------------------------------------ categories
@@ -86,7 +107,7 @@ function inline(s) {
 }
 const slugify = (s) => s.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");
 
-function markdown(src) {
+function markdown(src, slug) {
   const lines = src.replace(/\r\n/g, "\n").split("\n");
   const out = [];
   let i = 0;
@@ -104,6 +125,15 @@ function markdown(src) {
       i++; continue;
     }
     if (/^---+$/.test(t)) { flush(); out.push("<hr>"); i++; continue; }
+    if ((m = /^!\[([^\]]+)\]\(([\w.-]+)(?:\s+"([^"]+)")?\)$/.exec(t))) {
+      flush();
+      if (!slug) throw new Error("Images are only allowed in post bodies: " + t);
+      const file = path.join(IMAGES_DIR, slug, m[2]);
+      if (!fs.existsSync(file)) throw new Error(slug + " uses a missing image: blog/images/" + slug + "/" + m[2]);
+      const [w, h] = imageSize(file);
+      out.push(`<figure><img src="${m[2]}" alt="${esc(m[1])}" width="${w}" height="${h}" loading="lazy" decoding="async">${m[3] ? `<figcaption>${inline(m[3])}</figcaption>` : ""}</figure>`);
+      i++; continue;
+    }
     if (t.startsWith("> ")) {
       flush();
       const q = [];
@@ -164,8 +194,9 @@ function parse(file) {
     }
   }
   const words = body.split(/\s+/).length;
+  const slug = file.replace(/\.md$/, "");
   return {
-    slug: file.replace(/\.md$/, ""),
+    slug,
     title: meta.title,
     description: meta.description,
     date: meta.date,
@@ -175,9 +206,19 @@ function parse(file) {
     tools: (meta.tools || "").split(",").map((s) => s.trim()).filter(Boolean),
     related: (meta.related || "").split(",").map((s) => s.trim()).filter(Boolean),
     minutes: Math.max(1, Math.round(words / 220)),
-    html: markdown(body),
+    html: markdown(body, slug),
+    image: cover(slug, meta.image),
     faq,
   };
+}
+
+// The cover is optional: a WebP for the page and a JPEG for share previews, which not every app reads as WebP.
+function cover(slug, alt) {
+  if (!alt) return null;
+  const webp = path.join(IMAGES_DIR, slug, "cover.webp");
+  if (!fs.existsSync(webp) || !fs.existsSync(path.join(IMAGES_DIR, slug, "cover.jpg"))) throw new Error(slug + " has image: but no cover.webp and cover.jpg in blog/images/" + slug + "/");
+  const [w, h] = imageSize(webp);
+  return { alt, w, h };
 }
 
 function loadPosts(today = new Date().toISOString().slice(0, 10)) {
@@ -233,6 +274,7 @@ function postPage(p, prev, next, related) {
     <p class="lead">${esc(p.description)}</p>
     <div class="meta"><b>${esc(p.category.label.toUpperCase())}</b><span>${site.fmtDate(p.date)}</span><span>${p.minutes} min read</span>${p.updated !== p.date ? `<span>Updated ${site.fmtDate(p.updated)}</span>` : ""}</div>
   </div>
+  ${p.image ? `<figure class="post-hero"><img src="cover.webp" alt="${esc(p.image.alt)}" width="${p.image.w}" height="${p.image.h}" fetchpriority="high" decoding="async"></figure>` : ""}
   <article class="prose">
 ${p.html}
 ${p.faq.length ? `<section class="guide-faq" id="faq"><h2>Frequently asked questions</h2><div class="faq">${p.faq.map(([q, a]) => `<details><summary>${esc(q)}</summary>${markdown(a)}</details>`).join("")}</div></section>` : ""}
@@ -253,6 +295,7 @@ ${p.faq.length ? `<section class="guide-faq" id="faq"><h2>Frequently asked quest
     active: "blog",
     narrow: true,
     body,
+    image: p.image ? site.SITE + `/blog/${p.slug}/cover.jpg` : undefined,
     jsonld: p.faq.length ? [posting, site.faqLd(p.faq.map(([q, a]) => [q, markdown(a)]))] : posting,
   });
 }
@@ -265,7 +308,7 @@ function postingLd(p) {
       datePublished: p.date,
       dateModified: p.updated,
       articleSection: p.category.label,
-      image: site.SITE + "/og-image-1200x630.png",
+      image: p.image ? site.SITE + `/blog/${p.slug}/cover.jpg` : site.SITE + "/og-image-1200x630.png",
       author: { "@type": "Person", name: "Nasir Uddin", url: site.SITE + "/founder/" },
       publisher: { "@type": "Organization", name: site.BRAND, url: site.SITE + "/", logo: { "@type": "ImageObject", url: site.SITE + "/icon-512.png" } },
       mainEntityOfPage: site.SITE + `/blog/${p.slug}/`,
@@ -341,6 +384,8 @@ function buildInto(outDir, posts) {
     const picked = p.related.map((s) => posts.find((r) => r.slug === s)).filter(Boolean);
     const related = picked.concat(posts.filter((r) => r.category.slug === p.category.slug && r.slug !== p.slug && !picked.includes(r))).slice(0, 3);
     fs.writeFileSync(path.join(dir, "index.html"), postPage(p, posts[i - 1], posts[i + 1], related));
+    const imgs = path.join(IMAGES_DIR, p.slug);
+    if (fs.existsSync(imgs)) for (const f of fs.readdirSync(imgs)) fs.copyFileSync(path.join(imgs, f), path.join(dir, f));
   });
 
   for (const cat of CATEGORIES) {

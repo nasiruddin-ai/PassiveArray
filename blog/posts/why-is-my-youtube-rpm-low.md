@@ -5,6 +5,7 @@ date: 2026-10-26
 keyword: why youtube rpm is low
 category: Earnings
 tools: youtube-money-calculator, youtube-channel-quality-checker, youtube-engagement-rate-calculator
+image: The usual long-form YouTube RPM range, from $0.50 at the low end to $4.00 at the high end per 1,000 views
 ---
 
 A low YouTube RPM almost always comes down to four things: **where your viewers are**, **what your videos are about**, **how much of your viewing is Shorts**, and **how many of your views carried no ad at all**. For most long-form channels RPM lands between **$0.50 and $4.00**, so a figure in the lower half of that is not a fault, it is a position. This guide walks through the nine reasons, how to check each in your own analytics, and which ones you can move.
@@ -16,6 +17,8 @@ If you want to see what a given RPM means in money, the [YouTube money calculato
 YouTube defines **RPM** as the revenue you earned per 1,000 views, **after** YouTube's share, from ads, channel memberships, Premium revenue, Super Chat and Super Stickers combined. It divides by every view, including the ones that showed no ad.
 
 **CPM** is different. It is what advertisers paid per 1,000 ad impressions, before YouTube's cut, counting only the views that showed an ad. That is why your CPM is always higher than your RPM, and why "YouTube pays $X" headlines that quote CPM overstate what reaches you. Our guide to [how much YouTube pays per view](../how-much-does-youtube-pay-per-view/) covers the two numbers in detail.
+
+![Three-step diagram of why RPM is lower than CPM: advertisers' CPM, minus YouTube's share, divided by every view including those with no ad](cpm-to-rpm.webp "How CPM becomes RPM.")
 
 The practical result: RPM goes down whenever views grow faster than revenue. A viral video that reached a cheap audience, or a run of Shorts, lowers RPM even if your total earnings went up.
 
@@ -87,6 +90,8 @@ Of the nine, you have real control over four:
 - **Video length**, where the content supports eight minutes or more
 - **Advertiser-friendliness**, especially in the first minute
 - **Original audio on Shorts**, which keeps more of the pool
+
+![The four RPM levers a creator controls: topic selection, video length, advertiser-friendliness and original audio on Shorts](rpm-what-you-can-change.webp "The four RPM levers you can actually move.")
 
 Audience geography moves slowly and only by making content that audience wants. Season you cannot change. Unmonetized views you can only reduce at the margin.
 

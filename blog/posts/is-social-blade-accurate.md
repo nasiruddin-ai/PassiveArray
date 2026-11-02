@@ -6,6 +6,7 @@ keyword: is social blade income accurate
 category: Earnings
 tools: youtube-subscriber-count-checker, youtube-money-calculator, youtube-channel-growth-tracker
 related: how-much-does-youtube-pay-per-view, why-is-my-youtube-rpm-low, social-blade-alternatives
+image: Is Social Blade accurate, showing its default $0.25 to $4.00 per 1,000 views earnings range and YouTube's rounding of public subscriber counts
 ---
 
 Social Blade is accurate for public numbers and loose for money. Its subscriber and view figures come from YouTube's public data, so they match what YouTube shows anyone (with subscribers rounded by YouTube itself). Its earnings figures are not income data at all: Social Blade says it multiplies a channel's daily views by a fixed range of $0.25 to $4.00 per 1,000 views, and assumes every view is monetized. A channel's real income can fall inside that range, below it or above it.
@@ -57,6 +58,8 @@ Here is the method, only as far as Social Blade itself documents it in its help 
 3. Multiply by a **low value of $0.25** and a **high value of $4.00**. Social Blade's calculator calls this "the accepted formula that Social Blade LLC uses to calculate the RPM range"; its blog calls it a default CPM range.
 4. Show the result as a daily, monthly and yearly range.
 
+![Diagram of Social Blade's earnings method: daily views divided by 1,000, multiplied by $0.25 and $4.00, shown as a range](how-social-blade-estimates-earnings.webp "Social Blade's documented earnings method, and what each step cannot see.")
+
 Social Blade's help page adds two important points. The estimate **assumes every view on the channel is monetized**, which it says is usually not the case. And estimated earnings are, in its words, "just that, estimated". Its calculator lists why the range is so wide: quality of traffic, source country, niche, the price of specific ads, adblock and the actual click rate. Logged-in users can set their own range in Social Blade's settings, which then replaces the default across the site.
 
 We were not able to load Social Blade's help pages directly while writing this (its site blocked automated access); the quotes above are from its pages as indexed by search, on 1 November 2026.
@@ -96,6 +99,8 @@ Now three different channels that all get those same 50,000 daily views:
 | B: comedy Shorts, global audience, monetized | Most views are Shorts, paid from a shared pool | Likely near or below the $375 bottom |
 | C: gaming, long-form, not in the Partner Program | No ads served for the channel | $0 from ads |
 
+![Three example channels with the same 50,000 daily views and very different ad income](same-views-different-income.webp "Example channels, not real data: the same views can earn above, below or nothing against Social Blade's range.")
+
 The Social Blade range is "wrong" for all three, in different directions, because the formula cannot see what makes them different. That is not a flaw in the arithmetic. It is the limit of what anyone can calculate from public view counts. Channel A's creator might also earn more from one sponsorship than from a month of ads; [how much a YouTuber makes](../how-much-does-a-youtuber-make/) covers the other income lines.
 
 ## Social Blade vs real income: why creators see big gaps
@@ -121,6 +126,8 @@ For someone else's channel, the best you can do is a transparent estimate:
 2. Run the channel through the [YouTube Money Calculator](../../creator-tools/youtube-money-calculator/). It uses the channel's views on videos from the last 30 days and an RPM range you can edit (defaults $0.50 to $4.00). It is an estimate built the same basic way as Social Blade's, with the difference that every input is on the page and you can change it for the niche.
 3. Adjust the range using what you know: raise the high end for finance or software topics, lower both ends for a Shorts-heavy or kids audience.
 4. Treat the result as a bracket, never a figure. [How much YouTube pays per view](../how-much-does-youtube-pay-per-view/) explains why.
+
+![YouTube Subscriber Count Checker showing public subscribers, total views, video count and recent averages for @YouTubeCreators](subscriber-count-checker-public-numbers.webp "Public numbers for @YouTubeCreators from the free subscriber count checker, read from the YouTube Data API.")
 
 To watch a channel's public subscribers and views day by day from now on, add it to the [YouTube Channel Growth Tracker](../../creator-tools/youtube-channel-growth-tracker/). It records one point a day from the YouTube Data API, starting the day the channel is first tracked, with nothing backfilled or estimated. It does not have Social Blade's years of history.
 

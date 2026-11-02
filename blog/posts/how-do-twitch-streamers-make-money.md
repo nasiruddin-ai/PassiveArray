@@ -6,6 +6,7 @@ keyword: how do creators make money on twitch
 category: Earnings
 tools: twitch-follower-count-checker, twitch-follower-tracker, twitch-channel-comparison
 related: how-to-add-twitch-follower-count-to-obs, youtube-alternatives-for-creators, how-to-get-more-views-on-youtube-live
+image: How Twitch streamers make money, with the 50 to 70% subscription split and the 55% ad revenue share
 ---
 
 Twitch streamers make money from five main sources: **subscriptions** (including gift subs and Prime subs), **Bits** that viewers use to cheer, a share of **ad revenue**, **sponsorships** with brands, and income off Twitch such as merchandise and YouTube. To be paid by Twitch you need to be an **Affiliate** or a **Partner**. In 2026 Affiliate takes 25 followers, 4 hours streamed on 4 different days, and an average of at least 3 viewers on 4 of those days, all within 30 days.
@@ -72,6 +73,8 @@ The standard split is **50/50 of net subscription revenue**. Twitch's **Plus Pro
 | Standard | 50/50 | None |
 | Plus Level 1 | 60/40 | 100 Plus Points for 3 consecutive months |
 | Plus Level 2 | 70/30 | 300 Plus Points for 3 consecutive months |
+
+![Bar chart of Twitch subscription splits: 50% standard, 60% at Plus Level 1, 70% at Plus Level 2](twitch-subscription-split.webp "Your share of net subscription revenue under Twitch's Plus Program.")
 
 Plus Points count Tier 1 subs as 1 point, Tier 2 as 2 points and Tier 3 as 6 points. Since 2024, Affiliates can qualify too, not only Partners, and Twitch removed the old US$100,000 annual cap on the 70/30 share. Twitch has also announced region-specific criteria in some markets, such as lower thresholds in Latin America, so check the Plus Program details in your Creator Dashboard.
 
@@ -144,6 +147,8 @@ Say a streamer is an Affiliate with 40 Tier 1 subscribers, 10,000 Bits cheered a
 3. **Ads.** 55% of net ad revenue. Twitch does not publish a rate, so use your own Ads Manager numbers after the first month.
 4. **Total from Twitch.** Roughly $220 a month plus ads, before tax.
 
+![Example month for a Twitch Affiliate: about $120 from 40 subs, $100 from 10,000 Bits, plus ads](twitch-affiliate-income-example.webp "The worked example as a diagram. Example numbers at gross US prices, before tax and fees.")
+
 Now say the same streamer reaches 100 Plus Points for three months in a row. The subscription share moves to 60/40, so the same subs pay up to about $144 instead of $120. At 300 points the split is 70/30. This is why streamers push Tier 2 and Tier 3 subs, which count for 2 and 6 points.
 
 One sponsored stream at a fair rate can be worth more than the whole month above. That is the pattern for most mid-sized streamers: Twitch income covers the basics, sponsorships and off-platform income grow it.
@@ -164,6 +169,8 @@ Many people search for "twitch stats money" or "twitch stats subs" hoping to see
 Any site that shows a precise subscriber count or monthly income for a channel is estimating, unless the streamer shared it. The same caution applies to stats sites on other platforms, as our look at [whether Social Blade is accurate](../is-social-blade-accurate/) explains.
 
 What you can do with public data is compare growth. The [Twitch follower tracker](../../creator-tools/twitch-follower-tracker/) records a channel's follower total every day, with 7, 30 and 90-day change, and the [Twitch channel comparison](../../creator-tools/twitch-channel-comparison/) puts two or three streamers side by side on followers, live viewers, average VOD views and growth pace.
+
+![Twitch channel comparison of shroud, pokimane and LIRIK on followers, live viewers, average VOD views and followers per year](twitch-channel-comparison.webp "Public numbers from the free Twitch channel comparison. Subscriber counts and income are not public.")
 
 ## Mistakes that hold Twitch income back
 

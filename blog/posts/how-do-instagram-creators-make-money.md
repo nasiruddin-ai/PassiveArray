@@ -6,6 +6,7 @@ keyword: how do instagram creators make money
 category: Earnings
 tools: instagram-money-calculator, instagram-pricing-calculator, instagram-emv-calculator
 related: how-much-to-charge-for-a-sponsored-instagram-post, how-to-increase-instagram-engagement-rate, how-to-make-a-creator-media-kit
+image: How Instagram creators get paid, with the Instagram money calculator estimating $525 to $975 per sponsored post for example numbers
 ---
 
 Instagram creators make most of their money from **brands**, not from Instagram. Sponsored posts, reels and stories, often with extra fees for partnership ads and usage rights, are the main income for most accounts. Instagram's own payouts, **subscriptions**, **gifts** on reels, **badges** in Live and invite-only **bonuses**, add to that, but each has its own eligibility rules and several are limited to certain countries.
@@ -35,6 +36,8 @@ So if you are asking "does Instagram pay money for videos", the honest answer in
 
 That is why the money calculator estimates sponsored post income rather than views income. For most creators, brand deals are the number that matters.
 
+![Instagram money calculator estimate of $525 to $975 per sponsored post for 60,000 followers and 2.5% engagement](instagram-money-calculator-estimate.webp "An estimate from the free Instagram money calculator with example numbers (60,000 followers, 2.5% engagement, 4 posts a month).")
+
 ## 1. Brand deals: where most of the money is
 
 A brand pays you to feature its product in a post, reel, story or carousel. You agree the deliverables, the fee, the deadline and what the brand may do with the content afterwards.
@@ -54,6 +57,8 @@ Say a creator has 60,000 followers, a 2.5% engagement rate and closes 4 sponsore
 3. **Adjusted price:** 60 x $10 x 1.25 = $750 per post.
 4. **Range:** $525 to $975 per sponsored post.
 5. **Per month at 4 posts:** $2,100 to $3,900. **Per year:** $25,200 to $46,800.
+
+![Example of pricing an Instagram sponsored post: micro tier, 1.25x engagement adjustment, $525 to $975 per post](instagram-sponsored-post-example.webp "The worked example as a diagram. Example numbers, not a real account.")
 
 The weak point in that sum is the number of deals. Four paid posts every month is a busy schedule for an account that size. If you are planning a budget, use the number of deals you have actually closed in the last few months.
 
@@ -138,6 +143,8 @@ Some of the steadiest creator income never touches Instagram's payment systems:
 | Bonuses | Invitation only | Yes, tests have run in selected countries |
 | Creator marketplace | Professional account, Partner Monetization Policies | Yes |
 | Brand deals | None from Instagram, but paid partnership label required | No |
+
+![Instagram's own payouts: gifts, subscriptions, badges and bonuses, with their main rules](instagram-payouts-at-a-glance.webp "Instagram's own payout features and their main rules, from Instagram's Help Center and Meta.")
 
 Every Instagram monetization tool sits on top of the **Partner Monetization Policies**: an authentic, established presence, content that follows the Community Guidelines and Content Monetization Policies, and residence in an eligible country. Meta also says it can change or end these features at any time. The definitive answer for your account is the monetization section of your Professional dashboard.
 

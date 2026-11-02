@@ -11,3 +11,6 @@ passive-array-brand/.render
 # OS and editor
 .DS_Store
 Thumbs.db
+
+# Raw tool captures for blog images (re-capture with scripts/blog-images/shots.js)
+scripts/blog-images/shots/

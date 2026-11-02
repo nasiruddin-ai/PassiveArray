@@ -6,6 +6,7 @@ keyword: how to do instagram audit
 category: Engagement
 tools: instagram-audit, instagram-engagement-rate-calculator, instagram-fake-follower-checker
 related: how-to-spot-fake-followers, instagram-engagement-rate-by-follower-count, how-to-increase-instagram-engagement-rate
+image: How to audit an Instagram account, with the Passive Array Instagram audit giving an example account an audience quality score of 75 out of 100
 ---
 
 An Instagram audit is a structured check of an account's profile, content, engagement, audience quality and growth, so you can see what is working and what to fix. For your own account, you use the public profile plus Instagram Insights. For someone else's, such as a creator a brand is about to hire, you work from public numbers and ask for screenshots of what only Insights can show.
@@ -24,6 +25,8 @@ This guide gives you a six-part audit you can run in under an hour, a template t
 | 6. Account health and audience | Is anything restricted? Who is the audience? | Account Status and Insights (owner only) |
 
 Parts 1 to 5 work on any public account. Part 6 needs the account owner, either because it is your account or because you ask the owner for screenshots.
+
+![Two cards: profile, content, engagement, audience quality and growth work on any public account; Account Status and Insights need the owner](instagram-audit-six-parts.webp "Five parts work from public numbers; the sixth needs the account owner.")
 
 ## Before you start: get the numbers down
 
@@ -169,6 +172,8 @@ Working through the audit:
 5. **Content:** about 2 posts a week and few Reels.
 
 **Diagnosis:** a real audience, healthy quality, modest growth and engagement held up by a few hits. The clearest fixes are more Reels (the format Instagram says reaches new audiences), studying what the top three posts had in common, and making more of that. [How to increase your Instagram engagement rate](../how-to-increase-instagram-engagement-rate/) turns findings like these into a plan.
+
+![Instagram audit result for the example home-baking account: 75 out of 100, with scores for engagement, authenticity, growth and consistency](instagram-audit-example-result.webp "The worked example in the audit tool, with example numbers.")
 
 ## Free tools versus paid audit tools
 

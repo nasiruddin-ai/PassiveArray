@@ -6,6 +6,7 @@ keyword: best instagram bio ideas
 category: Growth
 tools: instagram-bio-generator, instagram-audit
 related: instagram-captions, how-to-audit-an-instagram-account, do-instagram-hashtags-still-work
+image: Instagram bios that get follows, with the Passive Array Instagram Bio Generator showing five bio options under 150 characters
 ---
 
 The best Instagram bio ideas answer one question for a stranger: why should I follow this account? A bio that works says what you post, who it is for, one reason to trust you, and what to do next, all inside Instagram's 150-character limit. Copying a clever line from a list rarely does that, because the line was written for someone else's account.
@@ -22,6 +23,8 @@ Before writing, know the space you have. These are Instagram's own rules from it
 | Links | Up to five websites, visible to anyone on or off Instagram | Instagram Help Center |
 | @ and # in the bio | Become tappable links to that profile or hashtag page | Instagram announcement, 2018 |
 | Name, username and bio | Matched against what people type in Search | Instagram search explainer, 2021 |
+
+![Four Instagram bio rules: 150 characters, five links, tappable @ and # and searchable name, username and bio](instagram-bio-rules.webp "Instagram's own limits for the bio and links.")
 
 A few details matter more than they look:
 
@@ -45,6 +48,8 @@ A bio that converts visitors into followers does four jobs. You do not have to p
 2. **Who it is for, or what they get.** "For busy weeknights", "for beginners", "so you can stop guessing". This turns a description into a reason to follow.
 3. **Proof or personality.** One fact that earns trust ("Ex-pastry chef", "Certified PT", "500+ recipes tested") or one line that sounds like you. Pick one, not both, when space is tight.
 4. **The next step.** What a visitor should do now: "New recipe every Tuesday", "Free guide below", "DM 'price' for rates". Point it at your first link.
+
+![The four-line bio formula with an example: what you post, who it is for, proof and the next step](four-line-bio-formula.webp "All four jobs, in about 110 characters.")
 
 ### Worked example: building a bio step by step
 

@@ -6,6 +6,7 @@ keyword: how to do youtube channel audit
 category: Growth
 tools: youtube-channel-quality-checker, youtube-engagement-rate-calculator, youtube-channel-comparison
 related: how-to-check-any-youtube-channel-stats, youtube-analytics-explained, how-to-vet-an-influencer-before-you-pay
+image: Audit any YouTube channel, with the Passive Array YouTube Channel Quality Checker scoring a channel 80 out of 100
 ---
 
 A YouTube channel audit is a structured check of a channel's health: whether YouTube is showing its videos, whether people click and keep watching, whether the audience comes back, and whether anything (strikes, inconsistency, one viral video) is distorting the picture. For your own channel you do it in YouTube Studio, where the private numbers live. For anyone else's channel you can only use public data, so you audit reach, engagement, consistency and growth instead of watch time and click-through rate.
@@ -93,6 +94,8 @@ Use this for a competitor, a creator you might sponsor, a client's channel befor
 
 Paste the channel into the quality checker. It reads the public subscriber count, channel age and the last 10 uploads, then scores:
 
+![YouTube Channel Quality Checker result for YouTube Creators: 80 out of 100, with points for engagement, reach, consistency and audience](youtube-channel-quality-checker-youtube-creators.webp "Real output from the free channel quality checker for @YouTubeCreators.")
+
 | Part | Points | Measured as | Full marks at |
 |---|---|---|---|
 | Engagement | 35 | (likes + comments) / views, last 10 uploads | 4% or more |
@@ -167,6 +170,8 @@ Score each line 0, 1 or 2 points. The thresholds are our suggested rules, not Yo
 | 10 | Focus | Recent uploads serve one clear audience | Two audiences | No clear audience |
 
 Add up the 10 lines for a score out of 20. As a rough guide: 16 to 20 is a healthy channel with small fixes, 10 to 15 has one or two clear problems to work on, and under 10 needs a rethink of format or focus before anything else. Write the line scores down: a repeat audit in 90 days is only useful if you can compare line by line.
+
+![Four cards explaining audit scores: 16 to 20 healthy, 10 to 15 one or two problems, under 10 rethink, repeat in 90 days](youtube-channel-audit-score-bands.webp "A rough guide to the 20-point audit score.")
 
 ## A worked example
 

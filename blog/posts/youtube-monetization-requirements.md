@@ -5,6 +5,7 @@ date: 2026-10-26
 keyword: youtube monetization requirements
 category: Earnings
 tools: youtube-monetization-checker, youtube-subscriber-count-checker, youtube-money-calculator
+image: YouTube monetization requirements: 1,000 subscribers plus 4,000 public watch hours in 12 months or 10 million Shorts views in 90 days
 ---
 
 To earn ad revenue on YouTube in 2026 you need **1,000 subscribers** plus either **4,000 public watch hours in the last 12 months** or **10 million public Shorts views in the last 90 days**. A lower tier for fan funding opens at **500 subscribers** with 3,000 watch hours or 3 million Shorts views. Those are the numbers. The rest of this guide covers what counts toward them, the requirements that are not numbers, and the higher bar YouTube has announced for new applicants from **1 February 2027**.
@@ -23,6 +24,8 @@ The Partner Program has two levels. The lower one unlocks ways for fans to pay y
 | What it unlocks | Channel memberships, Super Chat, Super Thanks, Super Stickers, YouTube Shopping | Everything above, plus ad revenue on long-form and Shorts, and Premium revenue |
 
 You need the subscriber count **and** one of the two routes. You never need both routes. A channel with 1,000 subscribers and 4,000 watch hours qualifies with zero Shorts views, and a Shorts-only channel with 10 million views qualifies with zero watch hours.
+
+![The two YouTube Partner Program tiers: fan funding at 500 subscribers and 3,000 hours or 3M Shorts views, ads at 1,000 subscribers and 4,000 hours or 10M Shorts views](youtube-partner-program-tiers.webp "Both Partner Program tiers side by side, from YouTube's Help pages.")
 
 ## What counts as a public watch hour?
 
@@ -78,6 +81,8 @@ YouTube has announced a higher entry bar for **new applicants** from 1 February 
 | Shorts route | 10 million Shorts views in 90 days | **20 million Shorts views in 90 days** |
 | Fan funding tier | 500 subs, 3,000 hours or 3M views | Unchanged |
 
+![YouTube monetization thresholds until 31 January 2027 compared with the higher thresholds for new applicants from 1 February 2027](youtube-monetization-2027-changes.webp "The higher bar for new applicants from 1 February 2027.")
+
 Three things matter about this:
 
 1. **Channels already in the Partner Program keep their status.** The new thresholds apply to applications, not to members.
@@ -95,6 +100,8 @@ Open YouTube Studio, choose **Earn** in the left menu, and the page shows your s
 Watch hours are private, so no outside tool can see [whether another channel has crossed 4,000](../how-to-tell-if-a-youtube-channel-is-monetized/). What is public is the subscriber count (rounded by YouTube to three figures), the upload history, whether recent videos are marked made for kids, and whether ads are served on the watch pages of recent uploads.
 
 The [monetization checker](../../creator-tools/youtube-monetization-checker/) reads those signals and returns a verdict with a confidence score. Ads on recent uploads is the strongest signal, because only Partner Program channels carry them. When YouTube serves the checker an ad-free page, which happens, the tool says the ad check was unavailable and rates its confidence lower rather than guessing.
+
+![YouTube monetization checker verdict for the YouTube Creators channel, showing likely monetized with 65% confidence and an ad check that could not run](monetization-checker-result.webp "An example result from the free monetization checker. When the ad check is unavailable it lowers its confidence.")
 
 ## Meeting the requirements is the start, not the payday
 

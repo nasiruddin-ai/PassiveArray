@@ -5,6 +5,7 @@ date: 2026-10-26
 keyword: can youtube shorts be monetized
 category: Earnings
 tools: youtube-monetization-checker, youtube-money-calculator, youtube-channel-quality-checker
+image: YouTube Shorts monetization: 10 million public Shorts views in 90 days plus 1,000 subscribers, and a 45% creator share
 ---
 
 Yes. YouTube Shorts have carried ad revenue sharing since February 2023. To earn from them a channel must be in the **YouTube Partner Program** and must accept the **Shorts Monetization Module** in YouTube Studio. The usual way in for a Shorts channel is **1,000 subscribers and 10 million public Shorts views in the last 90 days**, though a channel that qualified through long-form watch hours earns from its Shorts too.
@@ -46,6 +47,8 @@ Ads in the Shorts feed run between Shorts, not inside any one video, so YouTube 
 
 YouTube's own worked example: $100,000 of feed ad revenue, 20% of Shorts using one track, and a creator with 1% of engaged views. The creator is allocated $900 and is paid $405.
 
+![Four-step diagram of Shorts revenue sharing: feed ad revenue pooled, music paid first, pool split by share of engaged views, creator keeps 45%, with YouTube's $100,000 to $405 example](shorts-creator-pool.webp "How the Shorts Creator Pool is shared, with YouTube's own worked example.")
+
 Premium revenue works the same way: creators receive 45% of the net Premium revenue allocated to their Shorts views.
 
 ## Which Shorts cannot be monetized?
@@ -72,6 +75,8 @@ YouTube's announced update, effective 1 February 2027, changes three things for 
 | Shorts route for new applicants | 10 million views in 90 days | 20 million views in 90 days |
 | Earning from the Creator Pool each month | Partner Program membership | 10 million qualified Shorts views in the previous 90 days |
 | Targeted Shorts ads | Pooled | Ads targeted at 5 or fewer channels pay a direct 45% share, on top of the pool |
+
+![Shorts monetization changes from 1 February 2027: 20 million view route for new applicants, 10 million views to earn from the pool, direct 45% share on targeted ads](shorts-monetization-2027-changes.webp "What changes for Shorts monetization on 1 February 2027.")
 
 Channels already in the program keep their membership, and missing the Shorts threshold does not affect long-form earnings. To keep earning from the affected features you must accept the updated terms in Studio by 31 January 2027.
 

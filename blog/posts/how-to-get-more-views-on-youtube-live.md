@@ -6,6 +6,7 @@ keyword: how to get more views on youtube live
 category: Growth
 tools: youtube-title-generator, youtube-thumbnail-tester, youtube-timestamp-link-generator
 related: youtube-live-subscriber-count, how-to-grow-a-youtube-channel, youtube-timestamp-link
+image: Get more viewers on YouTube Live, with the Passive Array YouTube Timestamp Link Generator making links that start at 0:12
 ---
 
 To get more viewers on YouTube live, schedule the stream in advance so people can set reminders, give it a specific title and a clear thumbnail, go live at a regular time when your audience is online, and give viewers a reason to stay and chat once they arrive. Timing matters more for live than for uploads: YouTube's performance FAQ says publish time is not known to affect a normal video's long-term performance, but "publish time is important for formats such as Live and Premiere videos." Start with the title, because a scheduled stream's title and thumbnail are what people see for days before it starts; the [YouTube Title Generator](../../creator-tools/youtube-title-generator/) suggests specific options you can adapt.
@@ -126,6 +127,8 @@ When a stream ends, it becomes a video, and YouTube says likes transfer to the a
 4. **Cut highlights into Shorts and short videos** that link back to the full replay.
 5. **Add the replay to a playlist** of past streams, so regulars can catch up.
 
+![YouTube Timestamp Link Generator result with a watch link, short link, embed code and comment timestamp starting at 0:12](youtube-timestamp-link-generator-result.webp "Timestamp links let viewers jump to the best moments of a replay.")
+
 ### Use Live Redirect and Premieres
 
 YouTube's **Live Redirect** lets you send your audience to a Premiere or another live stream when your stream ends. Set up the Premiere before the live stream, and tell viewers it takes a couple of seconds to reload.
@@ -150,6 +153,8 @@ If your streams currently draw a handful of viewers, this routine builds a live 
 2. **Week 2: promote and stream.** Post the watch page link on your channel, pin it under your latest video, and mention it in that video. Stream on time, with a pinned chat message and a clear plan of segments.
 3. **Week 3: work the replay.** Retitle the replay, add timestamps, cut two or three highlights into Shorts that link to it, and schedule the next stream before you end the current one so viewers can set a reminder straight away.
 4. **Week 4: compare.** Line up reminders set, average concurrent viewers, average view duration and new subscribers for each stream. Keep the format that held people longest and drop what lost them.
+
+![Timeline of a four-week plan to build a live audience: pick a slot, promote and stream, work the replay, compare](youtube-live-four-week-plan.webp "Our suggested four weeks, not a YouTube rule.")
 
 Live streams work best as part of a channel, not instead of one. Uploads bring new viewers; streams turn some of them into regulars who know your name. YouTube lists "live premieres/chats" among the features that build regular viewers, and [how to grow a YouTube channel](../how-to-grow-a-youtube-channel/) shows how streams fit with series, playlists and posts. If you cut highlights into Shorts, [how to grow a YouTube channel with Shorts](../how-to-grow-youtube-channel-with-shorts/) covers linking each Short back to the full video.
 

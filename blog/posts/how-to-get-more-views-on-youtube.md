@@ -5,6 +5,7 @@ date: 2026-10-29
 keyword: how to get more views on youtube
 category: Growth
 tools: youtube-title-analyzer, youtube-thumbnail-tester, youtube-keyword-generator
+image: How to get more views on YouTube, with the free YouTube Title Analyzer scoring a title 79 out of 100
 ---
 
 To get more views on YouTube, find out which of three things is failing: YouTube is **not showing** your video to enough people, the people who see it are **not clicking**, or the people who click are **not watching**. Each has different fixes. YouTube Studio tells you which one applies in about ten minutes, and the twelve fixes below are grouped by the problem they solve.
@@ -45,6 +46,8 @@ Those numbers point to one of three problems:
 | Plenty of impressions, CTR well below your other videos | Not clicked | Problem 1 |
 | Decent CTR, most viewers gone in the first 30 seconds | Not watched | Problem 2 |
 
+![Three cards: not shown, not clicked and not watched, with the YouTube Studio signs of each and which fixes in this guide solve it](not-shown-not-clicked-not-watched.webp "Diagnose which of the three problems you have before you fix anything.")
+
 If you have very few videos or very few views, the numbers will be noisy. Start with Problem 3, fix 8, and answer searches. [YouTube Analytics explained](../youtube-analytics-explained/) walks through each metric in detail.
 
 ## Problem 1: people see the video but do not click
@@ -59,6 +62,8 @@ If you have very few videos or very few views, the numbers will be noisy. Start 
 | Reviewing a new phone | 30 days with this phone: what the reviews did not tell you |
 
 Put the most important words first, because long titles get cut off on phones. Avoid all capitals, which YouTube lists among clickbait habits to avoid. The [title analyzer](../../creator-tools/youtube-title-analyzer/) scores length, keyword position and clarity, and the [title generator](../../creator-tools/youtube-title-generator/) suggests alternatives.
+
+![YouTube Title Analyzer results for The 20-minute morning routine that fixed my focus, scoring 79 out of 100 on length, keyword position, click appeal and trust](title-analyzer-results.webp "Real output from the free title analyzer for one of the specific titles above.")
 
 **2. Design the thumbnail for a phone.** Most viewers see your thumbnail at a few hundred pixels wide or smaller. Use one face or object, high contrast, and three words at most. Check it against both light and dark backgrounds. The [thumbnail tester](../../creator-tools/youtube-thumbnail-tester/) shows it at real feed sizes in light and dark mode, next to other videos. [YouTube thumbnail size](../youtube-thumbnail-size/) covers the specs and [thumbnail examples](../youtube-thumbnail-examples/) shows patterns that work.
 
@@ -113,6 +118,8 @@ External traffic is smaller for most channels, but you control it completely, an
 ## A 30-day plan
 
 If you want a starting routine, this one fits most channels. It is our suggestion, not a YouTube rule.
+
+![Timeline of a 30-day plan: diagnose, fix three old videos, plan four videos from search, publish and link, then compare](30-day-views-plan.webp "A 30-day routine to put the fixes into practice.")
 
 1. **Days 1 to 3: diagnose.** Pull impressions, CTR, retention and traffic sources for your last ten videos. Decide which of the three problems is biggest.
 2. **Days 4 to 7: fix your best three old videos.** Pick the three with the best retention and the weakest CTR. Write new titles and thumbnails, and run Test & compare on at least one.

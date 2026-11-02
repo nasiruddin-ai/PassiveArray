@@ -5,6 +5,7 @@ date: 2026-10-29
 keyword: how much does a 4 million view youtube video make
 category: Earnings
 tools: youtube-money-calculator, youtube-monetization-checker, youtube-sponsorship-price-calculator
+image: Estimated ad revenue for a 4 million view long-form YouTube video: $2,000 at a $0.50 RPM and $16,000 at a $4.00 RPM
 ---
 
 A long-form YouTube video with 4 million views usually earns somewhere between **$2,000 and $16,000** from ads. That is 4,000 thousands of views multiplied by an RPM of $0.50 to $4.00, the default range in our [YouTube money calculator](../../creator-tools/youtube-money-calculator/). If the video is a Short, the figure is a small fraction of that. If the channel is not in the YouTube Partner Program, it is zero.
@@ -25,9 +26,13 @@ RPM is what the creator keeps per 1,000 views, after YouTube's share and after c
 
 The last row is not a typo. Finance, business software and insurance channels can run RPMs well above the usual high end, because advertisers pay far more to reach those viewers. Most channels never see it.
 
+![Bar chart of estimated earnings on 4 million views: $2,000 at $0.50 RPM, $4,000 at $1, $8,000 at $2, $16,000 at $4 and $40,000 at $10](4-million-views-by-rpm.webp "Estimated ad revenue on 4 million long-form views at five RPMs.")
+
 ## Four realistic scenarios
 
 The same 4 million views can be worth very different amounts. These are the patterns that decide it.
+
+![Four scenarios for 4 million views: viral global video about $2K to $4K, tutorial for top ad markets $8K to $16K or more, a Short far below, an unmonetized channel $0](4-million-views-scenarios.webp "Estimated ad revenue for 4 million views in four common situations.")
 
 **A viral entertainment video with a global audience.** Views come from everywhere, many in countries where advertisers pay little. Expect the bottom of the range, around $2,000 to $4,000.
 
@@ -36,6 +41,8 @@ The same 4 million views can be worth very different amounts. These are the patt
 **A Short with 4 million views.** Shorts are paid from a shared pool, not from ads on your own video, and the per-view figure is far lower. A 4 million view Short usually earns an order of magnitude or more below the long-form figures above, and how far below depends on music use and where the viewers are. [How YouTube pays for Shorts](../how-much-does-youtube-pay-for-shorts/) explains why.
 
 **A video on a channel that is not monetized.** No Partner Program, no ad revenue. Check this first with the [monetization checker](../../creator-tools/youtube-monetization-checker/), because a big view count says nothing about it.
+
+![YouTube monetization checker verdict for the YouTube Creators channel, showing likely monetized with 65% confidence and the public signals behind it](monetization-checker-result.webp "An example result from the free YouTube monetization checker. It reads public signals and says how confident it is.")
 
 ## Why viral videos often earn less per view
 

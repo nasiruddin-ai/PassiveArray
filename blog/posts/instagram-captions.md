@@ -6,6 +6,7 @@ keyword: best instagram captions
 category: Engagement
 tools: instagram-caption-analyzer, instagram-hashtag-generator
 related: do-instagram-hashtags-still-work, instagram-bio-ideas, how-to-increase-instagram-engagement-rate
+image: How to write Instagram captions that get read, with the Passive Array Instagram caption analyzer checking a 354-character caption with 5 hashtags
 ---
 
 The best Instagram captions are not the cleverest lines. They do three jobs: the first line makes someone tap "more", the body gives them something worth the tap, and the end tells them what to do next. Add the keywords people search for and up to five relevant hashtags, and you have a caption that works for both people and Instagram Search.
@@ -28,6 +29,8 @@ The rules that matter:
 
 Instagram does not publish exactly how many characters show before the caption is cut off with "more". It depends on the screen and the format. In practice only the first line or two show, so treat roughly the first 125 characters as your preview. The caption analyzer marks that point for you.
 
+![Instagram caption analyzer result for an example recipe caption: 354 of 2,200 characters, 5 of 5 hashtags, a call to action and a question](instagram-caption-analyzer-result.webp "The caption analyzer on the recipe Reel example from this guide.")
+
 One caution on the numbers: Meta's API reference for posting captions still lists 30 hashtags alongside the 2,200-character limit. Instagram's Help Center and its @creators account both say 5 since December 2025, so plan for 5. [Do Instagram hashtags still work?](../do-instagram-hashtags-still-work/) explains the change and how to choose the five.
 
 ## Why captions matter for reach
@@ -41,6 +44,8 @@ Instagram has explained what its ranking systems try to predict. In Adam Mosseri
 Captions also help people find you. Instagram says the text someone types is the most important signal for Search, and that it is matched against captions as well as usernames, bios and hashtags. A caption that names the topic in plain words ("a 15-minute chickpea curry") can be found by people searching for that topic. A caption that only says "Sunday vibes 🌿" cannot.
 
 ## The caption formula: hook, body, ask
+
+![Four-step diagram of the caption formula: hook, body, ask, then keywords and up to 5 hashtags](instagram-caption-formula.webp "Hook, body, ask, then hashtags.")
 
 ### 1. The first line: earn the tap on "more"
 

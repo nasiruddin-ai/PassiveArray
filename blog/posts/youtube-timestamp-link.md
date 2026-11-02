@@ -5,6 +5,7 @@ date: 2026-10-29
 keyword: youtube timestamp link
 category: YouTube SEO
 tools: youtube-timestamp-link-generator, youtube-description-generator
+image: Link to a specific time in a YouTube video, with the Passive Array YouTube Timestamp Link Generator building links that start at 1:30
 ---
 
 A timestamp link opens a YouTube video at a chosen moment instead of the start. It is the difference between "the answer is somewhere in this 40-minute video" and sending someone straight to it.
@@ -21,6 +22,8 @@ A timestamp link opens a YouTube video at a chosen moment instead of the start. 
 YouTube also accepts minutes and seconds, such as `t=1m30s`. Both start at 1 minute 30 seconds.
 
 **3. Use our generator.** The [timestamp link generator](../../creator-tools/youtube-timestamp-link-generator/) takes any YouTube link and a time like 1:30 or 01:02:15, and gives you the watch link, the short link and the embed code, all set to start there.
+
+![YouTube Timestamp Link Generator results for a start time of 1:30, with a watch link, short link, embed code and comment timestamp](timestamp-link-generator-result.webp "Real output from the free timestamp link generator for a YouTube Creators video.")
 
 ## Timestamps in comments
 
@@ -41,6 +44,8 @@ Write one per line, time first:
 - `4:40 Step one`
 
 Chapters help viewers skip to what they came for, and YouTube can [show them in search results](../how-to-rank-youtube-videos-on-google/). Our [description generator](../../creator-tools/youtube-description-generator/) includes a timestamps block for you to set to your real chapters.
+
+![YouTube's three chapter rules: the first timestamp is 0:00, at least three timestamps, and each chapter at least 10 seconds long](timestamps-to-chapters.webp "A timestamp list that follows these rules becomes chapters.")
 
 ## Embeds that start at a time
 

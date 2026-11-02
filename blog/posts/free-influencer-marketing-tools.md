@@ -6,6 +6,7 @@ keyword: influencer marketing tools free
 category: For brands
 tools: find-youtube-influencers-by-niche, search-youtube-influencers-by-location, youtube-lookalike-finder
 related: how-influencer-marketing-works, how-to-vet-an-influencer-before-you-pay, does-influencer-marketing-work
+image: Free influencer marketing tools, with the Find YouTube Influencers in Your Niche tool listing home workout channels and their live stats
 ---
 
 A small brand can run its first influencer campaigns with free tools: a free search to find creators, free calculators to vet and price them, the platforms' own branded content tools for disclosure, and tracked links and discount codes to measure results. What free tools cannot give you is a complete database of every creator, verified audience demographics, contact details, or campaign management in one place. That is what paid influencer platforms charge for.
@@ -38,6 +39,8 @@ YouTube is the easiest platform to search for free, because YouTube publishes ch
 
 Type a topic and the niche finder runs it through YouTube's own channel search, takes the 50 most relevant channels, pulls live statistics for each, drops channels outside your subscriber range (10,000 to 1,000,000 by default) and, if you pick a country, drops channels that have not declared that country. It shows up to 25, biggest first, with subscribers, total views, videos and views per video.
 
+![Find YouTube Influencers in Your Niche results for home workout: 15 channels with country, subscribers, total views, videos and views per video](niche-finder-home-workout.webp "Real output from the free niche finder for the topic home workout.")
+
 The keyword does most of the work. YouTube matches it against channel names and descriptions, so search the way creators describe themselves:
 
 | Instead of | Try |
@@ -58,6 +61,8 @@ Smaller markets often return short lists, because many creators never set a coun
 ### Start from one good creator: the lookalike finder
 
 Once one creator has worked for you, the [YouTube lookalike finder](../../creator-tools/youtube-lookalike-finder/) finds more like them. Paste the channel, and it builds a search from that channel's own keywords and YouTube's topic categories, then lists up to 15 channels sorted by how close their subscriber count is to the seed's. The "Matched on" line shows exactly what it searched for, which explains odd results.
+
+![YouTube lookalike finder results for Lab Muffin Beauty Science: 15 similar skincare channels, with the Matched on line showing the keywords used](lookalike-finder-results.webp "Real output from the free lookalike finder, seeded with a skincare channel.")
 
 ### What these YouTube search tools cannot do
 
@@ -161,6 +166,8 @@ An outside platform cannot see a creator's private analytics unless the creator 
 - You need contracts, payments and usage rights handled in one system.
 
 Even then, keep the free checks. A paid database still lists creators with bought followers, and a ten-minute manual check catches what a score misses.
+
+![Two cards comparing when free influencer tools are enough and when a paid influencer platform starts to pay for itself](free-tools-or-paid-platform.webp "When free tools are enough, and when a paid platform pays for itself.")
 
 ## A free workflow for your first campaign
 

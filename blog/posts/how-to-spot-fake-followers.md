@@ -5,11 +5,14 @@ date: 2026-08-28
 keyword: fake followers checker
 category: For brands
 tools: instagram-fake-follower-checker, tiktok-fake-follower-checker, instagram-audit
+image: How to spot fake followers, with the free Instagram Fake Follower Checker estimating 10 to 25% fake followers for an example account
 ---
 
 Nobody sells "fake followers" as a labelled product any more. [What you get today](../influencer-marketing-trends-2026/) is a mix of bot accounts, inactive accounts bought in bulk, engagement pods and paid likes, and each leaves a slightly different fingerprint in the public numbers. [You do not need access to the follower list](../free-influencer-marketing-tools/) to see most of them.
 
 The Passive Array checkers, the [Instagram fake follower checker](../../creator-tools/instagram-fake-follower-checker/) and the [TikTok fake follower checker](../../creator-tools/tiktok-fake-follower-checker/), work only from the numbers on a profile: followers, following, posts, average likes and average comments. Here is what they look for, in the order that matters most.
+
+![Instagram Fake Follower Checker result: 10 to 25% fake, suspicion score 30, flagging engagement of 0.8% against a typical 2% and comments under 0.3% of likes](fake-follower-checker-example.webp "Example numbers: 50,000 followers, 400 average likes and 1 average comment trip two signals.")
 
 ## 1. Engagement far below the tier
 
@@ -53,6 +56,8 @@ The checkers add the penalties above into a score from 0 to 100 and translate it
 | 20 to 44 | 10 to 25% | Some concerns |
 | 45 to 69 | 25 to 45% | Suspicious |
 | 70 and up | 45% or more | Very suspicious |
+
+![Four cards for each fake follower score band, from healthy under 20 to very suspicious at 70 and up, with what a brand should do at each](fake-follower-score-what-to-do.webp "What each score band means, and what a brand should do next.")
 
 Every real account has a few percent of fake followers it never asked for; bots follow everyone. "Healthy" does not mean zero. And a suspicious score is a reason to look closer, not a verdict: a giveaway, a feature on a big page or a very old account can produce some of these patterns innocently. The [Instagram account audit](../../creator-tools/instagram-audit/) puts the score next to growth and consistency for a fuller picture.
 

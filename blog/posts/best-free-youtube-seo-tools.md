@@ -6,6 +6,7 @@ keyword: best free youtube seo tools
 category: YouTube SEO
 tools: youtube-keyword-generator, youtube-tag-generator, youtube-title-analyzer
 related: free-youtube-keyword-research, how-youtube-seo-works, tubebuddy-vs-vidiq
+image: The best free YouTube SEO tools, with the Passive Array YouTube Keyword Generator showing ideas for vlog editing
 ---
 
 The best free YouTube SEO tools in 2026 are the ones YouTube gives you (the Trends tab in YouTube Studio, the search terms report, Test & compare and the search box itself), plus a small set of free generators for the jobs YouTube does not do for you: expanding a keyword, scoring a title, writing a description and building a tag list. You do not need a paid subscription to rank in YouTube search. You need the right phrase, a title and description that match it, and a video that satisfies the people who search it.
@@ -72,6 +73,8 @@ The title carries more of your SEO than anything else you write, because it is t
 
 The [YouTube Title Analyzer](../../creator-tools/youtube-title-analyzer/) scores a title out of 100 and shows every check separately: length, where the keyword sits, and click appeal. The point is to see which part is weak. A title can score well and still be the wrong promise for the video, so use the score to catch mechanical problems (keyword at the end, title cut off on phones), not to judge the idea.
 
+![YouTube Title Analyzer scoring How to clean a rusty cast iron pan at 76 out of 100, with separate bars for length, keyword position, click appeal and trust](title-analyzer-cast-iron.webp "The worked example's second draft in the free YouTube Title Analyzer, each check shown separately.")
+
 ### Test & compare in YouTube Studio
 
 Once a video is live, YouTube's own **Test & compare** lets you test up to three titles, three thumbnails, or both. YouTube's Help Center says the option with the highest **watch time share** wins and is then shown to all viewers. It works on desktop through YouTube Studio, for long-form videos; Shorts, scheduled live streams and Premieres cannot be tested, and a test should finish within two weeks. Paid tools used to be the only way to A/B test on YouTube. For most creators, this free built-in version is now enough.
@@ -136,6 +139,8 @@ This is our suggested routine, not a YouTube rule. It takes about 30 minutes per
 4. **Write the description (5 minutes).** Phrase in the first two lines, then what the viewer learns, then chapters, links and two or three hashtags.
 5. **Tags (2 minutes).** Exact phrase, misspellings, one broad term. Done.
 6. **Review after 7 days (3 minutes).** Check traffic sources and the search terms report. Add missing phrases to the description. If impressions are good but clicks are low, run Test & compare.
+
+![Bar chart of a 30-minute free YouTube SEO routine: 10 minutes to find the phrase, 5 each for the results page, title and description, 2 for tags and 3 for review](free-youtube-seo-routine.webp "Our suggested routine: most of the time goes on choosing the phrase.")
 
 ## Sources
 

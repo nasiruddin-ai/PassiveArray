@@ -6,6 +6,7 @@ keyword: how much to charge for a sponsored tiktok
 category: Sponsorships
 tools: tiktok-pricing-calculator, tiktok-engagement-rate-calculator, tiktok-money-calculator
 related: how-much-to-charge-for-a-sponsored-instagram-post, how-much-to-charge-for-a-sponsored-youtube-video, tiktok-engagement-rate-benchmarks
+image: What to charge for a sponsored TikTok, with the Passive Array TikTok pricing calculator pricing 40,000 average views at $400 to $800
 ---
 
 Charge for a sponsored TikTok on your **average views per video**, not your followers. A defensible starting range is **$10 to $20 per 1,000 average views**, adjusted up or down for your engagement rate, with extra fees for Spark Ads rights, usage rights and exclusivity. A creator averaging 40,000 views a video with average engagement lands at roughly $400 to $800 for one sponsored video.
@@ -34,6 +35,8 @@ The **engagement adjustment** is your engagement rate by views divided by 7%, ke
 
 These are the calculator's rules, not a TikTok rule or an industry standard. They exist so that two creators with the same views but very different audiences do not get the same price.
 
+![Four-step diagram of the TikTok price: average views, times $10 to $20 per 1,000, times the engagement adjustment, plus extras](tiktok-sponsorship-price-formula.webp "How the pricing calculator builds the number.")
+
 ### A worked example
 
 Say a creator averages 40,000 views a video. This is an example, not a real account.
@@ -43,6 +46,8 @@ Say a creator averages 40,000 views a video. This is an example, not a real acco
 | 3.5% (Below average) | 0.7x | $280 to $560 | $700 to $1,400 | $392 to $784 |
 | 7% (Average) | 1.0x | $400 to $800 | $1,000 to $2,000 | $560 to $1,120 |
 | 12% (Good) | 1.4x | $560 to $1,120 | $1,400 to $2,800 | $784 to $1,568 |
+
+![Bar chart of the price for one sponsored video at 40,000 views: $280 to $560 at 3.5%, $400 to $800 at 7%, $560 to $1,120 at 12% engagement](tiktok-sponsorship-price-by-engagement.webp "Example: same views, different engagement.")
 
 Same reach, double the price from the bottom row to the top. Engagement is the main thing a creator can change in a few weeks, which is why it is worth working on before you raise your rates.
 

@@ -5,6 +5,7 @@ date: 2026-10-29
 keyword: youtube algorithm
 category: Growth
 tools: youtube-title-analyzer, youtube-thumbnail-tester, youtube-keyword-generator
+image: The YouTube algorithm explained: over 80 billion signals, and 39 of 93 breakout videos from channels under 100,000 subscribers
 ---
 
 The YouTube algorithm is not one formula. It is a set of recommendation systems that choose videos for each viewer on Home, in Up next, in Search and in the Shorts feed. YouTube says it learns from **over 80 billion signals**, such as what people watch, skip, search for, like and dislike, and what they say in satisfaction surveys. It uses those signals to predict which videos a particular viewer will be glad they watched. It does not rank videos by a fixed score, and it does not reward a channel for uploading at a certain time, using tags or posting every day.
@@ -33,6 +34,8 @@ Two consequences follow:
 ## How each surface works
 
 Most views come from five places. YouTube treats each one differently.
+
+![Four cards showing how Home, Up next, Search and the Shorts feed each choose videos](youtube-recommendation-surfaces.webp "Each recommendation surface leans on a different signal.")
 
 | Surface | Main signal, in YouTube's words | What it means for you |
 |---|---|---|
@@ -84,6 +87,8 @@ YouTube lists the signals it uses on its Help Center and in its engineering post
 ### How YouTube measures satisfaction
 
 YouTube's recommendations have changed what they optimize for over time, and it has explained why.
+
+![Four-step diagram of how YouTube measures satisfaction: clicks, then watch time, then viewer surveys, then models that predict survey answers](how-youtube-measures-satisfaction.webp "How YouTube's measure of a good recommendation has evolved, per its VP of Engineering.")
 
 Clicks came first. In a 2021 post, YouTube's VP of Engineering, Cristos Goodrow, wrote that clicks alone could mislead, because a video can earn a click and still disappoint. So YouTube added watch time. But not all watch time is equal either: "We don't want viewers regretting the videos they spend time watching." So YouTube added surveys.
 

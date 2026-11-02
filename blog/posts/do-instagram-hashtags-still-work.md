@@ -6,6 +6,7 @@ keyword: do instagram hashtags work anymore
 category: Engagement
 tools: instagram-hashtag-generator, instagram-caption-analyzer
 related: instagram-captions, how-to-increase-instagram-engagement-rate, youtube-hashtags-vs-tags
+image: Do Instagram hashtags still work: up to 5 hashtags per post or Reel since December 2025, down from 30
 ---
 
 Instagram hashtags still work, but for a narrower job than many creators think. They label what a post is about, put it on that hashtag's page and help it match searches. They are not a reach multiplier, and since December 2025 Instagram allows only **5 hashtags per post or Reel**, so a block of 30 generic tags is no longer possible.
@@ -39,6 +40,8 @@ Some third-party guides still say 30, and Meta's API documentation for posting t
 ## What hashtags actually do on Instagram
 
 Instagram has never said hashtags boost reach on their own. What it has explained is how Search and recommendations work, and hashtags play a specific part in both.
+
+![Two cards: hashtags help Search match a post, place it on hashtag pages and help relevant reach; they do not boost reach to followers](what-instagram-hashtags-do.webp "Hashtags label a post; they do not multiply its reach.")
 
 ### Hashtags help Search match your post
 
@@ -78,6 +81,8 @@ With five slots, each tag has to earn its place. A simple mix works for most pos
 6. **Put them in the caption.** That is where Instagram says they help Search.
 
 The hashtag generator does steps 1 and 3 for you: it builds tags from your topic words and a pool for your niche, marks one broad, two medium and two niche tags as your five, and gives spares to rotate. Check its suggestions on Instagram before you use them, as step 2 says.
+
+![Instagram hashtag generator result for sourdough in the food niche: five tags for the post plus spare tags marked broad, medium and niche](instagram-hashtag-generator-five.webp "The hashtag generator's five for a sourdough post, with spares to rotate.")
 
 ### Example: the same post, old and new
 

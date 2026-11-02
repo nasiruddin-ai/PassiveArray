@@ -5,6 +5,7 @@ date: 2026-09-09
 keyword: how do i create a media kit
 category: Sponsorships
 tools: youtube-subscriber-count-checker, instagram-engagement-rate-calculator, youtube-sponsorship-price-calculator
+image: How to make a creator media kit, with the Passive Array YouTube subscriber count checker showing subscribers and average views for @YouTubeCreators
 ---
 
 A media kit is a sales document, not a scrapbook. The brand manager reading it has forty of them in a folder and about thirty seconds for yours. Everything below is organised around that reality, from the numbers up to a rate set with a [sponsorship price calculator](../../creator-tools/youtube-sponsorship-price-calculator/).
@@ -14,6 +15,8 @@ A media kit is a sales document, not a scrapbook. The brand manager reading it h
 Two if you have a lot of case studies. Not eight. The long, beautifully designed decks creators labour over get skimmed exactly as fast as the short ones, and they take ten times longer to update, so they go stale and quietly stop being sent.
 
 A single page, a PDF, updated monthly, attached to the email. That is the whole format.
+
+![Two cards: what to put on a one-page media kit in order, and what to leave off](media-kit-what-to-include.webp "What goes on the page, and what stays off.")
 
 ## What goes on it, in order
 
@@ -32,6 +35,8 @@ A single page, a PDF, updated monthly, attached to the email. That is the whole 
 ## Which numbers, and where to get them free
 
 You do not need a subscription to fill in any of this.
+
+![YouTube subscriber count checker result for @YouTubeCreators with subscribers, total views, average views on the last 10 uploads and uploads per month](youtube-subscriber-count-checker-numbers.webp "The numbers a media kit needs, from the free subscriber count checker.")
 
 - **YouTube subscribers, views, average views per upload.** The [subscriber count checker](../../creator-tools/youtube-subscriber-count-checker/) pulls these from the official API for any channel, including your own. Average views on recent uploads is the number brands care about most, and it is the one creators most often leave out.
 - **Engagement rate, with context.** The [Instagram](../../creator-tools/instagram-engagement-rate-calculator/) and [YouTube](../../creator-tools/youtube-engagement-rate-calculator/) calculators give you the rate and the grade for your size. Put both on the page. "3.4% engagement, above the 2.0% typical for accounts of this size" is far stronger than "3.4% engagement".

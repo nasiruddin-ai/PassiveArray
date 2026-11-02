@@ -5,6 +5,7 @@ date: 2026-10-29
 keyword: youtube cpm by niche
 category: Earnings
 tools: youtube-niche-finder, youtube-money-calculator, youtube-keyword-generator
+image: YouTube CPM by niche: personal finance, B2B software and insurance in the high band against gaming, music and entertainment in the low band
 ---
 
 Two channels with the same views can earn completely different amounts, and the subject of the videos is one of the biggest reasons. Advertisers pay more to reach some viewers than others, and the niche is how YouTube's ad system tells them apart. This guide explains why, which niches tend to pay most, and how to find the number for your own channel.
@@ -36,6 +37,8 @@ These bands match the ones in our [YouTube niche finder](../../creator-tools/you
 
 Kids' content sits below all three for a separate reason: videos made for kids cannot show personalized ads, which pay much more than contextual ones.
 
+![YouTube niches grouped into high, middle and low CPM bands, with kids' content below all three](youtube-cpm-niche-bands.webp "Our editorial bands, not measured data. YouTube does not publish CPM by niche.")
+
 ## Niche is not the only factor
 
 A high-band niche does not guarantee a high CPM. The other big factors are:
@@ -50,6 +53,8 @@ A high-band niche does not guarantee a high CPM. The other big factors are:
 ## How to find your real CPM by topic
 
 Your own numbers beat any chart. In **YouTube Studio**, open **Analytics**, then **Revenue**, then **Advanced mode**, and look at playback-based CPM by video. Group your videos by topic and compare. Many creators find one topic in their catalogue earns two or three times the rest, and that is the most useful thing to know when choosing what to make next.
+
+![Three steps to find your real CPM by topic in YouTube Studio's Revenue tab in Advanced mode](find-your-real-cpm.webp "How to compare CPM across your own videos in YouTube Studio.")
 
 If you are not monetized yet, look at which topics competitors cover and use the [YouTube keyword generator](../../creator-tools/youtube-keyword-generator/) to see whether people search for the commercial angle of your subject: reviews, comparisons, "best" and "how to choose".
 

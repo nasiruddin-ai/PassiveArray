@@ -6,6 +6,7 @@ keyword: youtube tags vs hashtags
 category: YouTube SEO
 tools: youtube-hashtag-generator, youtube-tag-generator
 related: do-youtube-tags-still-matter, how-youtube-seo-works, youtube-shorts-seo
+image: YouTube hashtags vs tags: hashtags are visible and clickable, tags are hidden keywords limited to 500 characters
 ---
 
 YouTube hashtags and tags are two different things. **Hashtags** are words with a # that you put in the title or description: viewers can see them, click them, and land on a page of other videos with the same hashtag. **Tags** are hidden keywords in the video's settings that viewers never see; YouTube says they play a "minimal role" in discovery and mainly help when your topic is commonly misspelled. Hashtags are for viewers browsing a topic. Tags are a small background hint for search.
@@ -62,6 +63,8 @@ YouTube does not give an ideal number, only the 60 limit and a warning that "the
 
 That is enough for every useful hashtag page and keeps the description readable.
 
+![YouTube Hashtag Generator results for sourdough, with specific hashtags first and a note on YouTube's 60-hashtag limit](hashtag-generator-sourdough.webp "Real output from the free YouTube Hashtag Generator for the topic sourdough.")
+
 ## What YouTube tags do
 
 ### Where tags go
@@ -84,6 +87,8 @@ YouTube's Data API documentation gives the limit for the tags field: 500 charact
 - A tag that contains a space is treated "as though it were wrapped in quotation marks", and those quotation marks count too.
 
 So a tag like sourdough starter costs 17 characters plus 2 for the quotes, plus a comma. In practice the field holds roughly 20 to 30 short tags. Stopping a little under the limit leaves room for edits. The [YouTube Tag Generator](../../creator-tools/youtube-tag-generator/) builds a list inside the 500-character limit.
+
+![YouTube Tag Generator results for sourdough starter not rising, using 127 of the 500 characters, including sour dough starter and levain not rising](tag-generator-500-characters.webp "Real output from the free YouTube Tag Generator, with a misspelling and an alternative name added.")
 
 ### What to put in tags
 

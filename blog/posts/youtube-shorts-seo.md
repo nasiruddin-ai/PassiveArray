@@ -6,6 +6,7 @@ keyword: youtube shorts seo
 category: YouTube SEO
 tools: youtube-title-generator, youtube-hashtag-generator, youtube-keyword-generator
 related: how-youtube-seo-works, how-to-grow-youtube-channel-with-shorts, youtube-hashtags-vs-tags
+image: How Shorts get found, with the Passive Array YouTube Title Generator showing 10 title ideas for how to cut an onion without crying
 ---
 
 YouTube Shorts SEO is about two places at once. Most Shorts are watched in the Shorts feed, where there is no search query and the first seconds decide everything. But YouTube also says Shorts appear "in search results across YouTube", and viewers can filter search to Shorts only. So a Short that gets found needs a hook that holds the swipe, plus a title, description and hashtags that tell YouTube what it is about.
@@ -26,6 +27,8 @@ YouTube's Help Center lists where Shorts can appear: in the Shorts feed, "in sea
 | Channel page and Subscriptions | No | Your existing audience |
 
 YouTube's 2025 getting-started guide for Shorts says plainly that Shorts "are mostly viewed in feed". That is the honest framing for Shorts SEO: search is a real but secondary door. Metadata will not push a Short into the feed. What it does is help YouTube understand the topic, help search viewers find it, and give the Short a longer life after the feed moves on.
+
+![Two cards comparing the Shorts feed, where there is no query, with YouTube search, where titles, descriptions and hashtags tell YouTube the topic](shorts-feed-vs-search.webp "The feed brings most Shorts views; search is the smaller door metadata can open.")
 
 ## What counts as a Short
 
@@ -89,6 +92,8 @@ YouTube's Shorts guide says to "use relevant hashtags to increase discoverabilit
 - Hashtags must be directly related to the video. Misleading or unrelated hashtags can lead to removal.
 
 A practical set is one topic hashtag, one niche hashtag and, if you like, #Shorts. The [YouTube Hashtag Generator](../../creator-tools/youtube-hashtag-generator/) builds an ordered set from your topic. The difference between hashtags and the hidden tag field is covered in [YouTube hashtags vs tags](../youtube-hashtags-vs-tags/).
+
+![YouTube Hashtag Generator results for knife skills, with the three hashtags most likely shown by the title and YouTube's 60-hashtag limit](hashtag-generator-knife-skills.webp "Real output from the free YouTube Hashtag Generator for the topic knife skills.")
 
 ### Step 6: link a related video
 

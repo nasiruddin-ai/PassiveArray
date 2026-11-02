@@ -6,6 +6,7 @@ keyword: how to grow youtube channel
 category: Growth
 tools: youtube-channel-growth-tracker, youtube-video-ideas-generator, youtube-niche-finder
 related: how-to-get-more-views-on-youtube, how-to-grow-youtube-channel-with-shorts, views-per-subscriber
+image: Grow a YouTube channel people return to, with the Passive Array YouTube Channel Growth Tracker recording a channel's daily subscribers and views
 ---
 
 To grow a YouTube channel, you need more than views: you need viewers who come back. YouTube itself splits your audience into new, casual and regular viewers, and a channel grows when a steady share of new viewers turns into regulars who watch again and again. That comes from a clear promise (who the channel is for), videos that connect into series, and a reason to return each week. Track the result with the [YouTube Channel Growth Tracker](../../creator-tools/youtube-channel-growth-tracker/), which records a channel's public subscribers and views day by day, so you can see whether the curve is bending, not just whether one video did well.
@@ -27,6 +28,8 @@ The number that shows a healthy channel is how many people come back. YouTube St
 | Regular viewers | Watched "at least once per month for more than 6 months in the past year" | Your core audience: the people who make the channel stable |
 
 YouTube calls regular viewers "your most loyal audience members", and warns that the share can be small: "as low as <1%", especially for new channels, channels with a trending video, or channels that mostly post Shorts. These segments do not change your reach or monetization. They are a diagnostic, and the most honest one YouTube gives you.
+
+![Three audience segments YouTube uses: new viewers, casual viewers and regular viewers, with how often each watched](new-casual-regular-viewers.webp "How YouTube Studio splits your monthly audience.")
 
 A useful public proxy is views per subscriber: how many views a typical new video gets compared with the subscriber count. If it keeps falling, your subscribers have stopped watching. [Views per subscriber](../views-per-subscriber/) explains how to calculate and read it for any channel.
 
@@ -155,6 +158,8 @@ The 1,000 mark matters because it is part of the YouTube Partner Program thresho
 | 25 videos | Do your best videos have something in common? | Plan the next 10 around that common thread |
 | 50 videos | Are casual and regular viewers growing month on month? | Viewers come once and leave: work on series, playlists and community |
 | 12 months | Is views per new video rising? | Revisit the channel promise, or consider a new angle |
+
+![Checkpoints at 10, 25 and 50 videos and at 12 months, each with one question to ask about the channel](youtube-channel-growth-checkpoints.webp "Our suggested checkpoints, not a YouTube rule.")
 
 ## How to track channel growth properly
 

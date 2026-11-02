@@ -5,6 +5,7 @@ date: 2026-09-11
 keyword: how much does youtube pay per view
 category: Earnings
 tools: youtube-money-calculator, youtube-sponsorship-price-calculator
+image: Example YouTube earnings for 400,000 monthly views: $200 at a $0.50 RPM and $1,600 at a $4.00 RPM
 ---
 
 "How much does YouTube pay per view" has no single answer, and [any site that gives you one number](../is-social-blade-accurate/) is guessing. What exists is a formula and a range. This article shows both, so you can read a [YouTube money calculator](../../creator-tools/youtube-money-calculator/) result and know what it is really saying.
@@ -15,6 +16,8 @@ tools: youtube-money-calculator, youtube-sponsorship-price-calculator
 - **RPM** (revenue per thousand) is what the creator receives per thousand video views, after YouTube keeps its share of ad revenue and after the views with no ad at all are counted. This is the number that matters to you.
 
 RPM is always lower than CPM, for two reasons: YouTube keeps 45% of ad revenue on long-form videos, and not every view shows an ad. A channel can have a $10 CPM and a $3 RPM at the same time.
+
+![Four-step diagram from CPM to RPM: advertiser CPM, YouTube keeps 45% on long-form, views with no ad still count, creator RPM](cpm-vs-rpm.webp "From what advertisers pay to what the creator receives.")
 
 ## The formula the calculator uses
 
@@ -28,6 +31,8 @@ The Passive Array YouTube money calculator takes the channel's views over the la
 | High RPM | $4.00 per 1,000 views | Education, how-to, lifestyle with a mostly English-speaking audience |
 
 Finance, business software, insurance and some tech niches can run well above the high default, sometimes past $10, because advertisers in those categories pay much more per impression. If that is your niche, raise the high RPM and the calculator updates. The table in [what YouTube pays for 1,000 views](../how-much-does-youtube-pay-for-1000-views/) shows the same range at four view counts.
+
+![YouTube money calculator estimate for the YouTube Creators channel, showing a monthly earnings range at the default $0.50 to $4 RPM](money-calculator-estimate.webp "An example estimate from the free YouTube money calculator. It is a range from public views, not real income.")
 
 ## A worked example
 

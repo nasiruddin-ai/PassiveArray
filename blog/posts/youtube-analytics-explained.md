@@ -5,6 +5,7 @@ date: 2026-10-29
 keyword: youtube analytics
 category: Growth
 tools: youtube-channel-growth-tracker, youtube-engagement-rate-calculator, youtube-title-analyzer
+image: YouTube Analytics explained, with half of all channels at 2% to 10% impressions CTR and a 28-day default date range
 ---
 
 YouTube Analytics lives in **YouTube Studio**, under **Analytics** in the left menu. It shows how your channel and each video perform: how often YouTube showed them, how many people clicked, how long they watched, who they are, where they came from and, once you are monetized, what you earned. The metrics that matter most are **impressions**, **impressions click-through rate**, **average view duration**, **returning viewers** and **traffic sources**. Read together, they tell you whether a video is not being shown, not being clicked or not being watched.
@@ -99,6 +100,8 @@ The line in the Engagement tab shows the share of viewers still watching at each
 - **A sudden dip in the middle.** Something lost people there: a slow section, an ad read, an off-topic tangent.
 - **A spike.** People rewound to rewatch, or skipped ahead to that moment. Spikes often show the part viewers actually came for.
 
+![Four cards explaining retention graph shapes: a steep early drop, a slow steady decline, a sudden dip mid-video and a spike](retention-graph-shapes.webp "The four retention shapes to recognize in the Engagement tab.")
+
 ### Views and engaged views
 
 Since 24 August 2026, YouTube counts a view the moment a video starts to play, across all formats. The Partner Program still uses engaged views and engaged watch hours. [How YouTube counts views](../how-youtube-counts-views/) explains the difference, and why your Studio numbers and public count can differ.
@@ -142,6 +145,8 @@ Each source tells a different story. Search traffic means [your title answers wh
 ## How to read the numbers together
 
 One metric on its own rarely explains anything. Read them in the order a viewer meets your video: shown, clicked, watched.
+
+![Three-step diagram: shown (impressions), clicked (impressions CTR) and watched (view duration and retention), with what to fix when each is low](shown-clicked-watched.webp "Read the metrics in the order a viewer meets your video.")
 
 | What you see | Likely problem | What to try |
 |---|---|---|

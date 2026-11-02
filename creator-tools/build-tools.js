@@ -93,7 +93,6 @@ const HEAD = `${VERIFY_TAG}
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="manifest" href="/site.webmanifest">
 <meta name="theme-color" content="#1F2A44">
-<meta property="og:image" content="${SITE}/og-image-1200x630.png">
 <meta name="twitter:card" content="summary_large_image">
 ${ANALYTICS_HEAD}`;
 
@@ -741,7 +740,7 @@ function postCard(p, root) {
 }
 
 // path is the site path the page is served at, e.g. "/blog/some-post/". Body goes inside <main class="wrap">.
-function shell({ title, description, path, body, active = "", head = "", scripts = "", jsonld = null, narrow = false, ogTitle }) {
+function shell({ title, description, path, body, active = "", head = "", scripts = "", jsonld = null, narrow = false, ogTitle, image }) {
   const depth = path.split("/").filter(Boolean).length;
   const root = "../".repeat(depth);
   const canonical = SITE + path;
@@ -757,6 +756,7 @@ function shell({ title, description, path, body, active = "", head = "", scripts
 <meta property="og:description" content="${esc(description)}">
 <meta property="og:type" content="website">
 <meta property="og:url" content="${canonical}">
+<meta property="og:image" content="${image || SITE + "/og-image-1200x630.png"}">
 ${HEAD}
 ${head}
 <link rel="preload" href="/fonts/poppins-600.woff2" as="font" type="font/woff2" crossorigin>

@@ -6,6 +6,7 @@ keyword: how to write a youtube script
 category: Growth
 tools: youtube-script-outline-generator, youtube-title-generator
 related: youtube-video-ideas-for-beginners, how-to-get-more-views-on-youtube, youtube-analytics-explained
+image: Write a YouTube script that holds, with the Passive Array YouTube Script Outline Generator showing a timed nine-section outline
 ---
 
 To write a YouTube script, start from the title and thumbnail promise, then plan five parts: a hook that confirms the promise in the first 15 to 30 seconds, a short setup, the main points in order of value, a payoff, and a close that points to your next video. Write it the way you speak, read it out loud, and cut anything that does not move the viewer toward the payoff.
@@ -51,6 +52,8 @@ This is a general-purpose template for an educational or explainer video. Adapt 
 | 3. Main points | The steps, tips or story beats, best value first | About 75% | 1:00 to 8:30 |
 | 4. Payoff | The result, the twist, the strongest point | About 10% | 8:30 to 9:30 |
 | 5. Close | One-line recap, the next video, one call to action | About 5% | 9:30 to 10:00 |
+
+![Bar chart of a 10-minute video script: hook 5%, setup 5%, main points 75%, payoff 10%, close 5%, with timings](youtube-script-template-timings.webp "Our suggested timings for a 10-minute video.")
 
 Copy this into your notes app and fill it in for each video:
 
@@ -184,6 +187,8 @@ Shorts can be up to three minutes, but most work best when they make one point f
 1. **Second 0 to 2: the hook.** The point or the result, said and shown at once.
 2. **The middle: one idea.** One tip, one step, one reveal. Cut every word that is not needed.
 3. **The end: a loop or a pointer.** End in a way that makes rewatching natural, or point to the full video.
+
+![Three parts of a Shorts script: the hook in seconds 0 to 2, one idea in the middle, a loop or pointer at the end](youtube-shorts-script.webp "One point, fast.")
 
 A Short script is often 3 to 8 lines. Read it out loud with a timer.
 

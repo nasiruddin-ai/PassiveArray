@@ -5,6 +5,7 @@ date: 2026-10-29
 keyword: youtube transcript
 category: YouTube SEO
 tools: youtube-description-generator, youtube-timestamp-link-generator, youtube-script-outline-generator
+image: How to get any YouTube transcript: Show transcript is built into YouTube, and automatic captions cover roughly 90 languages
 ---
 
 Every YouTube video that has captions also has a transcript, and YouTube shows it for free. On a computer, open the video, expand the description and click **Show transcript**. The full text appears beside the video with a timestamp on each line, and clicking a line jumps the video to that moment. No extension or website needed.
@@ -18,6 +19,8 @@ Every YouTube video that has captions also has a transcript, and YouTube shows i
 5. Click any line to jump to that point in the video.
 
 If there is a language menu at the bottom of the panel, you can switch between the captions available, such as an uploaded English track and an auto-generated one.
+
+![Four steps to open a YouTube transcript on desktop: open the video, click more, click Show transcript, then click a line to jump to it](open-youtube-transcript-desktop.webp "The built-in transcript, in four clicks.")
 
 ## Copy the text
 
@@ -48,6 +51,8 @@ If you own the channel, you can download the caption file itself, which is clean
 4. Next to the language you want, click **Edit**, then **Options**, then **Download subtitles**.
 
 You get a caption file with timings. Open it in any text editor, or upload it to a subtitle tool to convert it to plain text.
+
+![Three steps to download your own captions: open YouTube Studio, choose Subtitles and the video, then Edit, Options and Download subtitles](download-captions-youtube-studio.webp "For channel owners: the caption file itself, from YouTube Studio.")
 
 ## What to do with a transcript
 

@@ -6,6 +6,7 @@ keyword: how youtube seo works
 category: YouTube SEO
 tools: youtube-keyword-generator, youtube-title-analyzer, youtube-description-generator
 related: youtube-algorithm-explained, free-youtube-keyword-research, how-to-check-if-a-youtube-video-is-ranking
+image: How YouTube SEO works in 2026, with the Passive Array YouTube Keyword Generator showing 35 keyword ideas for youtube seo
 ---
 
 YouTube SEO works by helping YouTube search match your video to what people type. YouTube says its search ranks videos on three things: **relevance** (how well the title, tags, description and video content match the query), **engagement** (how people who searched that query respond to videos) and **quality** (which channels show expertise and trustworthiness on the topic). You control relevance directly through your metadata and what you say in the video. You influence engagement and quality by making the video that best answers the search.
@@ -30,6 +31,8 @@ If you want the bigger picture of how Home, Up next and Shorts choose videos, [t
 ## The three things YouTube search ranks on
 
 YouTube's Help Center names three elements. It also says "the importance of these elements may vary by search type", and it does not publish weights.
+
+![Diagram of the three things YouTube search ranks on: relevance, engagement and quality, and what you control in each](youtube-search-ranking.webp "The three ranking elements YouTube names in its Help Center, and which part is yours.")
 
 | Element | What YouTube says | What you control |
 |---|---|---|
@@ -81,6 +84,8 @@ This is the process we recommend. The rules inside it come from YouTube; the ord
 ### Step 1: choose a phrase people actually type
 
 Start with the viewer's words, not yours. Type your topic into YouTube's search box and note the autocomplete suggestions, which come from real searches. Then put question words in front (how, why, what, best) and repeat. The keyword generator expands one seed keyword into long-tail phrases, questions and comparisons, grouped by what the searcher wants, so you can see which kind of video each one needs.
+
+![YouTube Keyword Generator results for youtube seo, grouped by search intent such as how-to, beginner, questions and best-of](keyword-generator-results.webp "Real output from the free YouTube Keyword Generator for the seed youtube seo.")
 
 YouTube Studio has a search tool too. Go to **YouTube Studio > Analytics > Trends**. YouTube says the top searches card "shows the top searches based on your audience and your saves over the last 28 days", and the content gaps card for Shorts shows searches where viewers "can't find enough quality search results". YouTube notes some of these insights are limited to certain countries, languages and devices.
 

@@ -6,6 +6,7 @@ keyword: how to add twitch follower count on obs
 category: Growth
 tools: twitch-follower-count-checker, twitch-follower-tracker
 related: youtube-live-subscriber-count, how-do-twitch-streamers-make-money, how-to-get-more-views-on-youtube-live
+image: Add a Twitch follower count to OBS, with the Passive Array Twitch Follower Count Checker showing an exact follower total
 ---
 
 To add a Twitch follower count to OBS Studio, create a follower widget with an overlay service such as Streamlabs or StreamElements, copy the widget's URL, and add it to your scene as a **Browser Source**. The most common choice is a **follower goal** widget, which shows your current follower total as a progress bar toward a target. OBS itself has no built-in Twitch follower counter, so every method uses a widget page that reads your count from Twitch.
@@ -21,6 +22,8 @@ Before you set it up, check the number you expect to see. The [Twitch follower c
 | Custom widget | Anything you can code | Streamers comfortable with HTML and CSS |
 
 All three end in the same place: a web page that OBS displays through a Browser Source. The differences are in how the page is built and how much control you get.
+
+![Three steps to show a Twitch follower count in OBS: create a widget, copy its URL, add it as a Browser Source](twitch-follower-count-obs-browser-source.webp "Every method ends in an OBS Browser Source.")
 
 ## What you need
 
@@ -142,6 +145,8 @@ A number on screen does nothing on its own. A goal does, because it gives viewer
 ## Track your follower growth over time
 
 An overlay shows today's total. It does not show whether last month's schedule change or a raid helped. The [Twitch follower tracker](../../creator-tools/twitch-follower-tracker/) records a channel's follower total every day, with gains per day and 7, 30 and 90-day change, and lets you download the history as a CSV. Follower history starts from the day a channel is first tracked; nothing earlier is estimated.
+
+![Twitch Follower Tracker result with a daily follower chart and followers gained per day](twitch-follower-tracker-daily-history.webp "Real output from the free Twitch follower tracker.")
 
 To see how you compare with streamers of a similar size in your category, the [Twitch channel comparison](../../creator-tools/twitch-channel-comparison/) puts two or three channels side by side on followers, live viewers, average VOD views and followers per year.
 
