@@ -109,6 +109,7 @@
       results.innerHTML = "<div class=\"error\">" + esc(out.error) + "</div>" + (out.note ? "<p class=\"note\">" + out.note + "</p>" : "");
       return;
     }
+    if (window.paTrack) window.paTrack("tool_run", { tool_name: T.slug });
     var h = "";
     if (out.profile || out.hero) {
       h += "<div class=\"herocard\">";
@@ -178,6 +179,7 @@
       var a = document.createElement("a");
       a.href = URL.createObjectURL(blob);
       a.download = out.download.filename || "export.csv";
+      if (window.paTrack) window.paTrack("file_download", { tool_name: T.slug, file_name: a.download, file_extension: (a.download.split(".").pop() || "") });
       document.body.appendChild(a);
       a.click();
       setTimeout(function () { URL.revokeObjectURL(a.href); a.remove(); }, 500);

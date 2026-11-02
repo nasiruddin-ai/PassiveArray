@@ -7,6 +7,22 @@
   var ROOT = (document.body && document.body.getAttribute("data-root")) || "";
   var SUBSCRIBE_URL = "/api/subscribe";
 
+  /* GA4 events for the Key events report: tool_run, file_download, sign_up, login, generate_lead,
+     begin_checkout, mcp_key_created, extension_click. They go through gtag, so the consent setup in
+     the head applies. done() runs once the hit is sent (or after 800 ms), for clicks that navigate away. */
+  window.paTrack = function (name, params, done) {
+    var called = false;
+    function finish() { if (!called && done) { called = true; done(); } }
+    if (typeof window.gtag !== "function") { finish(); return; }
+    var p = Object.assign({}, params || {});
+    if (done) { p.event_callback = finish; setTimeout(finish, 800); }
+    window.gtag("event", name, p);
+  };
+  document.addEventListener("click", function (e) {
+    var a = e.target.closest && e.target.closest('a[href*="chromewebstore.google.com"]');
+    if (a) window.paTrack("extension_click", { link_url: a.href, page_path: location.pathname });
+  });
+
   /* Theme */
   function setTheme(t) {
     t = t === "light" ? "light" : "dark";
@@ -193,6 +209,7 @@
         .then(function (res) {
           if (btn) btn.disabled = false;
           if (res && res.ok) {
+            window.paTrack("generate_lead", { form: data.kind || "newsletter" });
             var done = data.kind === "contact" ? "Thanks, your message is in. We reply by email, usually within two working days." :
               data.kind === "newsletter" ? "You're subscribed. The next report lands in your inbox this week." :
               "You're in. Watch your inbox for the first report.";
@@ -327,7 +344,9 @@
       marker(res.email);
       var next = new URLSearchParams(location.search).get("next");
       var safe = next && next.charAt(0) === "/" && next.charAt(1) !== "/" ? next : null;
-      location.replace(safe || (ROOT + "app/"));
+      window.paTrack(res.isNew ? "sign_up" : "login", { method: res.method || "unknown" }, function () {
+        location.replace(safe || (ROOT + "app/"));
+      });
     }
 
     form.addEventListener("submit", function (e) {
@@ -532,6 +551,7 @@
             authCall("google", { credential: response.credential, source: location.pathname }).then(function (r) {
               if (!r || !r.ok) { toast((r && r.error) || "That Google sign-in did not work."); return; }
               marker(r.email);
+              window.paTrack(r.isNew ? "sign_up" : "login", { method: "google_one_tap" });
               paintHeader();
               document.querySelectorAll("[data-google-slot]").forEach(function (s) { s.hidden = true; });
               document.documentElement.classList.remove("has-google");
@@ -678,6 +698,7 @@
         b.disabled = true;
         msg.textContent = "Opening checkout…";
         msg.className = "fmsg";
+        window.paTrack("begin_checkout", { plan: b.getAttribute("data-upgrade"), currency: "USD" });
         billingCall("checkout", { plan: b.getAttribute("data-upgrade") }).then(function (res) {
           if (res && res.ok && res.url) { location.href = res.url; return; }
           b.disabled = false;
@@ -842,6 +863,7 @@
           btn.disabled = false;
           if (!d || !d.ok) { mcpMsg.className = "fmsg bad"; mcpMsg.textContent = (d && d.error) || "Could not create a key."; return; }
           mcpNewKey = d.created.key;
+          window.paTrack("mcp_key_created");
           mcpForm.reset();
           var rev = mcpWrap.querySelector("[data-mcp-reveal]");
           rev.hidden = false;

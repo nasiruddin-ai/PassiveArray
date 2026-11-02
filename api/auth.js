@@ -339,13 +339,15 @@ module.exports = async (req, res) => {
       return send(res, 400, { ok: false, code: "bad_token", error: "That sign-in link has expired or is not valid. Ask for a new one." });
     }
     let since = data.s || new Date().toISOString().slice(0, 10);
+    let isNew = false;
     if (store.enabled()) {
       try {
+        isNew = !(await users.get(data.e));
         const user = await users.upsert(data.e, { verified: true });
         since = user.created;
       } catch (e) { console.error("auth verify store: " + e.message); }
     }
-    return startSession(res, data.e, since, { method: "link" });
+    return startSession(res, data.e, since, { method: "link", isNew });
   }
 
   /* --- sign out ---------------------------------------------------------- */
