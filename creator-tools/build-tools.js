@@ -346,7 +346,7 @@ const CLUSTERS = [
   ["find-youtube-influencers-by-niche", "search-youtube-influencers-by-location", "youtube-lookalike-finder", "youtube-channel-comparison"],
   ["twitch-follower-count-checker", "twitch-follower-tracker", "twitch-channel-comparison", "youtube-subscriber-count-checker"],
   ["youtube-channel-growth-tracker", "youtube-subscriber-count-checker", "youtube-channel-comparison", "youtube-channel-quality-checker", "twitch-follower-tracker"],
-  ["youtube-comment-exporter", "youtube-comment-picker", "youtube-blocked-words-list", "youtube-engagement-rate-calculator", "youtube-thumbnail-downloader"],
+  ["youtube-comment-exporter", "youtube-comment-search", "youtube-first-comment-finder", "youtube-comment-picker", "youtube-blocked-words-list", "youtube-engagement-rate-calculator"],
   ["youtube-channel-value-calculator", "youtube-money-calculator", "youtube-monetization-checker", "youtube-sponsorship-price-calculator"],
   ["x-follower-to-following-ratio", "x-account-comparison", "instagram-follower-to-following-ratio"],
 ];
@@ -386,7 +386,7 @@ function toolPage(template, t) {
     ...tools.filter((o) => o.platform !== t.platform && intentOf(o) === intentOf(t)).slice(0, 1),
   ]).slice(0, 4).map((o) => `<a href="../${o.slug}/" data-k="${esc(INTENTS[intentOf(o)].label.split(" ")[0])}">${esc(anchorName(o))}</a><p class="next-d">${esc(o.short)}</p>`).join("");
   const clientTool = {
-    slug: t.slug, name: t.name, platform: t.platform, api: t.api || null, action: t.action || null, autorun: !!t.autorun,
+    slug: t.slug, name: t.name, platform: t.platform, api: t.api || null, action: t.action || null, autorun: !!t.autorun, params: t.params || null,
     compare: t.compare ? { labels: t.compare.labels, fields: t.compare.fields.map((f) => ({ id: f.id, label: f.label, type: f.type })) } : null,
     inputs: (t.inputs || []).map((f) => ({ id: f.id, label: f.label, type: f.type, optional: !!f.optional })),
   };

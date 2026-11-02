@@ -1840,6 +1840,100 @@
     };
   };
 
+  function markMatch(text, q) {
+    var t = esc(text);
+    if (!q) return t;
+    var re = new RegExp("(" + esc(q).replace(/[.*+?^${}()|[\]\\]/g, "\\$&") + ")", "ig");
+    return t.replace(re, "<mark>$1</mark>");
+  }
+
+  COMPUTE["youtube-comment-search"] = function (v, d) {
+    var raw = String(v.q || "").trim();
+    if (!raw) return { error: "Type a word, phrase or username to search for." };
+    var q = raw.toLowerCase(), qa = q.replace(/^@/, "");
+    var field = v.field === "text" || v.field === "author" ? v.field : "both";
+    var pool = d.comments.filter(function (c) { return v.replies !== "no" || !c.parent; });
+    var hits = pool.filter(function (c) {
+      var inText = field !== "author" && String(c.text || "").toLowerCase().indexOf(q) >= 0;
+      var inAuthor = field !== "text" && String(c.author || "").toLowerCase().replace(/^@/, "").indexOf(qa) >= 0;
+      return inText || inAuthor;
+    });
+    var people = {}; hits.forEach(function (c) { people[c.authorChannelId || c.author] = 1; });
+    var notes = [];
+    if (d.truncated) notes.push("<span class=\"warn\">This video has more comments than we read.</span> We searched the first " + fmt(d.topLevel) + " in the order you chose; switch between top and newest to search a different slice.");
+    notes.push("YouTube's API never returns comments that are held for review, likely spam or deleted. Only up to 5 replies per comment come with each thread, so a reply deep in a long thread can be missed.");
+    notes.push("To find a comment you wrote yourself on any video, open Comment History in your YouTube account, which lists the public comments you have left across YouTube. No outside tool can search one person's comments across YouTube.");
+    if (!hits.length) return { hero: { label: "Matching comments", value: "0", note: videoHeroNote(d) }, rows: [{ name: "Comments searched", value: fmt(pool.length) }, { name: "Searched for", value: esc(raw) }], note: "No comment we could read contains that. Try a shorter word or a different spelling. " + notes.join(" ") };
+    return {
+      hero: { label: "Matching comments", value: fmt(hits.length), note: videoHeroNote(d) },
+      rows: [
+        { name: "Comments searched", sub: v.replies === "no" ? "top-level only" : "including replies", value: fmt(pool.length) },
+        { name: "Different people", value: fmt(Object.keys(people).length) },
+        { name: "Likes on matching comments", value: fmt(hits.reduce(function (s, c) { return s + (c.likes || 0); }, 0)) },
+        { name: "Searched for", sub: field === "both" ? "text and usernames" : field === "text" ? "text only" : "usernames only", value: esc(raw) },
+      ],
+      table: {
+        head: ["Author", "Comment", "Likes", "Posted"],
+        rows: hits.slice(0, 100).map(function (c) {
+          var txt = c.text.length > 280 ? c.text.slice(0, 280) + "…" : c.text;
+          return [{ html: "<b>" + markMatch(c.author, field !== "text" ? qa : "") + "</b>" + (c.parent ? "<br><small>reply</small>" : "") }, { html: "<a href=\"" + esc(commentLink(d, c)) + "\" target=\"_blank\" rel=\"noopener\" style=\"color:inherit\">" + markMatch(txt, field !== "author" ? q : "") + "</a>" }, fmt(c.likes), dateStr(c.publishedAt)];
+        }),
+      },
+      download: { label: "Download the " + fmt(hits.length) + " matches (CSV)", hint: "Opens in Excel or Google Sheets", filename: d.video.id + "-comments-" + fileSafe(raw) + ".csv", text: csv(["author", "author_channel_url", "text", "likes", "type", "published_at", "comment_url"], hits.map(function (c) { return [c.author, c.authorChannelId ? "https://www.youtube.com/channel/" + c.authorChannelId : "", c.text, c.likes, c.parent ? "reply" : "comment", c.publishedAt, commentLink(d, c)]; })) },
+      note: (hits.length > 100 ? "The table shows the first 100 matches; the CSV has all of them. " : "") + notes.join(" "),
+    };
+  };
+
+  function afterUpload(video, c) {
+    var mins = Math.round((new Date(c.publishedAt) - new Date(video.publishedAt)) / 60000);
+    if (!isFinite(mins)) return "";
+    if (mins < 1) return "within a minute of upload";
+    if (mins < 60) return mins + " minute" + (mins === 1 ? "" : "s") + " after upload";
+    if (mins < 2880) return Math.round(mins / 60) + " hours after upload";
+    if (mins < 1051200) return Math.round(mins / 1440) + " days after upload";
+    var yrs = Math.floor(mins / 525600);
+    return yrs + " year" + (yrs === 1 ? "" : "s") + " after upload";
+  }
+
+  COMPUTE["youtube-first-comment-finder"] = function (v, d) {
+    var inOrder = d.comments.filter(function (c) { return !c.parent; });
+    if (!inOrder.length) return { error: "We could not read any public comments on this video. Comments may be turned off, the video may be made for kids, or every comment may be held or removed." };
+    var complete = !d.truncated;
+    // The API puts a pinned comment at the top of the newest-first list whatever its age. When we could
+    // not read the whole section, it is not part of the slice we read, so it must not count as the oldest.
+    var pinned = null;
+    if (!complete && inOrder.length > 1 && inOrder[0].publishedAt < inOrder[1].publishedAt) { pinned = inOrder[0]; inOrder = inOrder.slice(1); }
+    var top = inOrder.slice().sort(function (a, b) { return a.publishedAt < b.publishedAt ? -1 : a.publishedAt > b.publishedAt ? 1 : 0; });
+    var first = top[0];
+    return {
+      hero: {
+        label: complete ? "First comment still visible" : "Oldest comment we could reach",
+        value: esc(first.author),
+        note: "“" + esc(first.text.length > 220 ? first.text.slice(0, 220) + "…" : first.text) + "” · <a href=\"" + esc(commentLink(d, first)) + "\" target=\"_blank\" rel=\"noopener\">Open on YouTube</a>",
+      },
+      rows: [
+        { name: "Posted", value: dateStr(first.publishedAt) + " " + esc(String(first.publishedAt).slice(11, 16)) + " UTC" },
+        { name: "Timing", value: esc(afterUpload(d.video, first)) || "n/a" },
+        { name: "Likes", value: fmt(first.likes) },
+        { name: "Comments read", sub: complete ? "every public top-level comment" : "the newest " + fmt(d.topLevel) + " only", value: fmt(top.length) },
+        { name: "Comment count YouTube reports", sub: "includes replies", value: d.video.commentCount == null ? "Hidden" : fmt(d.video.commentCount) },
+        { name: "Video uploaded", value: dateStr(d.video.publishedAt) },
+      ],
+      table: {
+        head: ["#", "Author", "Comment", "Posted"],
+        rows: top.slice(0, 10).map(function (c, i) {
+          var txt = c.text.length > 200 ? c.text.slice(0, 200) + "…" : c.text;
+          return [String(i + 1), { html: "<b>" + esc(c.author) + "</b>" }, { html: "<a href=\"" + esc(commentLink(d, c)) + "\" target=\"_blank\" rel=\"noopener\" style=\"color:inherit\">" + esc(txt) + "</a>" }, esc(afterUpload(d.video, c))];
+        }),
+      },
+      note: (complete
+        ? "We read every public top-level comment on this video, so this is the earliest one still visible. "
+        : "<span class=\"warn\">This video has more than " + fmt(d.topLevel) + " comments, so this is the oldest of the newest " + fmt(d.topLevel) + ", not necessarily the first ever.</span> On very busy videos the true first comment is too far back for anyone to reach through YouTube's API. ") +
+        (pinned ? "The pinned comment, by " + esc(pinned.author) + " on " + dateStr(pinned.publishedAt) + ", is left out because pinned comments sit at the top whatever their age. " : "") +
+        "Deleted comments, comments held for review and likely spam are never returned, so an earlier comment may exist that nobody can see. Times are when each comment was first posted, even if it was edited later.",
+    };
+  };
+
   // Unbiased random integer in [0, n) from the browser's cryptographic generator.
   function randInt(n) {
     var c = window.crypto || window.msCrypto, buf = new Uint32Array(1), lim = Math.floor(4294967296 / n) * n, x;
@@ -1968,6 +2062,7 @@
     var u = new URL(apiUrl(T.api), location.href);
     u.searchParams.set("action", T.action);
     Object.keys(v).forEach(function (k) { if (String(v[k]).trim() !== "") u.searchParams.set(k, v[k]); });
+    if (T.params) Object.keys(T.params).forEach(function (k) { u.searchParams.set(k, T.params[k]); });
     return fetch(u).then(function (r) { return r.json(); }).catch(function () { return { ok: false, code: "offline", error: "Could not reach the server. Check your connection and try again." }; });
   }
 
