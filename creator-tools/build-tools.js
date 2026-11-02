@@ -96,6 +96,8 @@ const HEAD = `${VERIFY_TAG}
 <link rel="manifest" href="/site.webmanifest">
 <meta name="theme-color" content="#1F2A44">
 <meta name="twitter:card" content="summary_large_image">
+<!-- Prefetch a same-site page when a visitor starts to hover or tap its link, so it opens with no wait for the first byte. Prefetch only, so analytics never counts a page nobody opened. -->
+<script type="speculationrules">{"prefetch":[{"source":"document","where":{"and":[{"href_matches":"/*"},{"not":{"href_matches":["/api/*","/login/*","/signup/*","/account/*","/app/*","/*\\\\?*"]}}]},"eagerness":"moderate"}]}</script>
 ${ANALYTICS_HEAD}`;
 
 // The tools mega-menu. Built from the tool list so it can never drift out of
@@ -483,7 +485,7 @@ ${header(root, "tools", true)}
   <p class="empty" style="display:none">No tool matches. Clear a filter or try another word.</p>
 </main>
 ${footer(root)}
-<script src="site.js"></script>
+<script defer src="site.js"></script>
 </body>
 </html>`;
 }
@@ -731,7 +733,7 @@ ${posts.length ? `
   </section>
 </main>
 ${footer(root)}
-<script src="creator-tools/site.js"></script>
+<script defer src="creator-tools/site.js"></script>
 </body>
 </html>`;
 }
@@ -798,7 +800,7 @@ ${body}
 </main>
 ${footer(root)}
 ${scripts}
-<script src="${root}creator-tools/site.js"></script>
+<script defer src="${root}creator-tools/site.js"></script>
 </body>
 </html>`;
 }

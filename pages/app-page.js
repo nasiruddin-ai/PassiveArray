@@ -249,8 +249,8 @@ ${site.VERIFY_TAG}
     <section class="panel" data-panel="upgrade" hidden><div class="pgrid" data-panel-body="upgrade"></div></section>
   </main>
 </div>
-<script src="${root}creator-tools/site.js"></script>
-<script src="${root}creator-tools/app.js"></script>
+<script defer src="${root}creator-tools/site.js"></script>
+<script defer src="${root}creator-tools/app.js"></script>
 </body>
 </html>`;
 }

@@ -83,7 +83,7 @@ function keywordsPage() {
     path: "/research/",
     active: "research",
     body,
-    scripts: `<script src="${root}creator-tools/research.js"></script>`,
+    scripts: `<script defer src="${root}creator-tools/research.js"></script>`,
     jsonld: rld(webApp("YouTube Keyword Research", "/research/", "Free YouTube keyword research with measured numbers."), "keywords"),
   });
 }
@@ -137,7 +137,7 @@ function outliersPage(kind) {
     path: shorts ? "/research/shorts/" : "/research/outliers/",
     active: "research",
     body,
-    scripts: `<script src="${root}creator-tools/research.js"></script>`,
+    scripts: `<script defer src="${root}creator-tools/research.js"></script>`,
     jsonld: rld(webApp(shorts ? "YouTube Shorts Outliers" : "YouTube Outlier Videos", shorts ? "/research/shorts/" : "/research/outliers/", "Videos that did far better than their channel normally does, updated daily."), shorts ? "shorts" : "outliers"),
   });
 }
