@@ -194,6 +194,65 @@ module.exports = async (req, res) => {
     });
   }
 
+  if (action === "admin-users") {
+    const keyGiven = String((req.query && req.query.secret) || (req.headers && req.headers["x-admin-secret"]) || "");
+    if (!SECRET || keyGiven !== SECRET) {
+      return send(res, 403, { ok: false, error: "Unauthorized. Provide valid secret." });
+    }
+    if (!store.enabled()) {
+      return send(res, 200, { ok: false, error: "Store is not enabled on this deployment." });
+    }
+    const keys = await store.scanKeys("u:*", 1000);
+    const rawUsers = await store.pipeline(keys.map((k) => ["GET", k])).catch(() => []);
+    const list = [];
+    rawUsers.forEach((r) => {
+      if (r && r.result) {
+        try {
+          const u = typeof r.result === "string" ? JSON.parse(r.result) : r.result;
+          list.push({
+            email: u.email,
+            created: u.created || "",
+            channel: u.channel || "",
+            channelId: u.channelId || "",
+            watchCount: Array.isArray(u.watch) ? u.watch.length : 0,
+            watchlist: u.watch || [],
+            google: !!u.google,
+            hasPassword: !!u.pw,
+            weekly: u.weekly !== false,
+          });
+        } catch (_) {}
+      }
+    });
+
+    if (req.query && req.query.sync === "1") {
+      let synced = 0;
+      for (const u of list) {
+        if (u.channel) {
+          await tell({
+            kind: "channel_sync",
+            email: u.email,
+            channel: u.channel,
+            channelId: u.channelId,
+            source: "admin_backfill",
+            receivedAt: new Date().toISOString(),
+          });
+          synced++;
+        }
+      }
+      return send(res, 200, { ok: true, totalUsers: list.length, syncedToSheet: synced, users: list });
+    }
+
+    if (req.query && req.query.format === "csv") {
+      res.setHeader("Content-Type", "text/csv; charset=utf-8");
+      res.setHeader("Content-Disposition", 'attachment; filename="passive-array-users.csv"');
+      const csvHeader = "Email,Created,Channel,ChannelId,WatchCount,Google,Weekly\n";
+      const rows = list.map((u) => [u.email, u.created, u.channel, u.channelId, u.watchCount, u.google ? "yes" : "no", u.weekly ? "yes" : "no"].map((v) => `"${String(v).replace(/"/g, '""')}"`).join(","));
+      return res.status(200).send(csvHeader + rows.join("\n"));
+    }
+
+    return send(res, 200, { ok: true, count: list.length, users: list });
+  }
+
   if (req.method !== "POST") return send(res, 405, { ok: false, error: "Use POST." });
 
   if (!SECRET) {
@@ -383,10 +442,13 @@ module.exports = async (req, res) => {
       if (channel !== undefined) patch.channel = channel;
       try { await users.upsert(session.e, patch); } catch (e) { console.error("auth preferences store: " + e.message); }
     }
-    if (weekly === undefined) return send(res, 200, { ok: true, channel });
-    const saved = await tell({ kind: "preferences", email: session.e, weekly: weekly ? "yes" : "no", receivedAt: new Date().toISOString() });
+    if (weekly === undefined) {
+      if (channel) await tell({ kind: "channel_set", email: session.e, channel, source: "account_preferences", receivedAt: new Date().toISOString() });
+      return send(res, 200, { ok: true, channel });
+    }
+    const saved = await tell({ kind: "preferences", email: session.e, channel: channel || "", weekly: weekly ? "yes" : "no", receivedAt: new Date().toISOString() });
     if (!saved && !store.enabled()) return send(res, 502, { ok: false, error: "Could not save that right now. Please try again in a minute." });
-    return send(res, 200, { ok: true, weekly });
+    return send(res, 200, { ok: true, weekly, channel });
   }
 
   if (action === "delete") {

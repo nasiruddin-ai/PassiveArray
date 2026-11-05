@@ -114,6 +114,8 @@ module.exports = async (req, res) => {
     kind,
     email,
     name: String(body.name || "").slice(0, 120),
+    channel: String(body.channel || "").slice(0, 120),
+    channelId: String(body.channelId || "").slice(0, 80),
     platform: String(body.platform || "").slice(0, 40),
     message: String(body.message || "").slice(0, 3000),
     source: String(body.source || "").slice(0, 300),

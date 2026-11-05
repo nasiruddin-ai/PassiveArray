@@ -16,7 +16,7 @@
  * nothing to set up in the sheet beforehand.
  */
 
-var HEADERS = ["receivedAt", "kind", "email", "name", "platform", "weekly", "message", "source"];
+var HEADERS = ["receivedAt", "kind", "email", "name", "channel", "channelId", "platform", "weekly", "message", "source"];
 
 function doPost(e) {
   try {
@@ -59,17 +59,30 @@ function doPost(e) {
   }
 }
 
-/** Writes one row, creating the header row on first use. */
+/** Writes one row, creating the header row on first use and dynamically adding missing headers. */
 function logRow(body) {
   var sheet = SpreadsheetApp.getActiveSpreadsheet().getSheets()[0];
   if (sheet.getLastRow() === 0) {
     sheet.appendRow(HEADERS);
     sheet.setFrozenRows(1);
     sheet.getRange(1, 1, 1, HEADERS.length).setFontWeight("bold");
+  } else {
+    var lastCol = sheet.getLastColumn();
+    var existingHeaders = lastCol > 0 ? sheet.getRange(1, 1, 1, lastCol).getValues()[0] : [];
+    HEADERS.forEach(function (h) {
+      if (existingHeaders.indexOf(h) === -1) {
+        lastCol++;
+        sheet.getRange(1, lastCol).setValue(h).setFontWeight("bold");
+        existingHeaders.push(h);
+      }
+    });
   }
-  sheet.appendRow(HEADERS.map(function (key) {
+
+  var currentCols = sheet.getRange(1, 1, 1, sheet.getLastColumn()).getValues()[0];
+  var row = currentCols.map(function (key) {
     return body[key] === undefined ? "" : String(body[key]);
-  }));
+  });
+  sheet.appendRow(row);
 }
 
 /** Emails the visitor the one-time link that signs them in. */
