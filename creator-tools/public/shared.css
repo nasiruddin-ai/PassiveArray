@@ -833,12 +833,49 @@ p.center.sub { text-align: center; color: var(--muted); margin: 8px auto 18px; m
 
 .lp-quick {
   display: flex; align-items: center; justify-content: center; gap: 10px; flex-wrap: wrap;
-  margin-top: 16px; font-size: .88rem; color: var(--muted);
+  margin-top: 20px;
 }
-.lp-quick a { color: var(--text); font-weight: 500; }
-.lp-quick a:hover { color: var(--deep); }
-:root[data-theme="dark"] .lp-quick a:hover { color: var(--mint); }
-.lp-sep { opacity: .45; }
+.lp-qbtn {
+  display: inline-flex; align-items: center; gap: 8px;
+  height: 40px; padding: 0 16px; border-radius: 999px;
+  background: var(--card); border: 1px solid var(--line);
+  color: var(--text); font-size: .88rem; font-weight: 600;
+  box-shadow: 0 2px 8px rgba(15, 22, 38, .06);
+  transition: transform .18s cubic-bezier(.2,.8,.2,1), border-color .18s ease, box-shadow .18s ease, background .18s ease, color .18s ease;
+}
+.lp-qbtn svg { color: var(--teal); flex: none; transition: transform .18s ease; }
+:root[data-theme="dark"] .lp-qbtn svg { color: var(--mint); }
+.lp-qbtn .lp-qarr { font-style: normal; color: var(--muted); font-weight: 700; transition: transform .18s ease, color .18s ease; }
+.lp-qbtn:hover {
+  transform: translateY(-2px);
+  border-color: var(--teal);
+  color: var(--deep);
+  box-shadow: 0 8px 20px -6px rgba(42, 157, 143, .28);
+}
+:root[data-theme="dark"] .lp-qbtn:hover {
+  color: var(--mint);
+  border-color: var(--mint);
+  box-shadow: 0 8px 22px -6px rgba(143, 211, 199, .22);
+}
+.lp-qbtn:hover svg { transform: scale(1.1); }
+.lp-qbtn:hover .lp-qarr { transform: translateX(3px); color: currentColor; }
+.lp-qbtn.accent {
+  background: var(--soft);
+  border-color: rgba(42, 157, 143, .35);
+  color: var(--deep);
+}
+:root[data-theme="dark"] .lp-qbtn.accent {
+  background: rgba(42, 157, 143, .14);
+  border-color: rgba(143, 211, 199, .35);
+  color: var(--mint);
+}
+.lp-qbtn.accent:hover {
+  background: var(--teal);
+  border-color: var(--teal);
+  color: #fff;
+}
+.lp-qbtn.accent:hover svg,
+.lp-qbtn.accent:hover .lp-qarr { color: #fff; }
 
 .lp-statwrap { position: relative; z-index: 2; margin-top: 44px; margin-bottom: -48px; }
 .lp-stats { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); background: var(--band); color: var(--band-text); border-radius: 20px; padding: 22px 12px; box-shadow: 0 24px 60px -24px rgba(15,22,38,.55); border: 1px solid rgba(255,255,255,.08); }

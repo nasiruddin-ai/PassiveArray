@@ -725,17 +725,22 @@ ${header(root, "home", false)}
       <button type="submit" class="btn lp-primary">Check channel</button>
     </form>
 
-    <div class="lp-quick">
-      <span>Try:</span>
-      <button type="button" class="lp-try" data-hero-fill="@mkbhd">@mkbhd</button>
-      <button type="button" class="lp-try" data-hero-fill="@veritasium">@veritasium</button>
-      <button type="button" class="lp-try" data-hero-fill="@mrbeast">@mrbeast</button>
-      <span class="lp-sep">·</span>
-      <a href="${root}youtube-extension/">Free Chrome Extension</a>
-      <span class="lp-sep">·</span>
-      <a href="${root}app/">Creator Dashboard</a>
-      <span class="lp-sep">·</span>
-      <a href="${root}youtube-seo-service/">Done-For-You YouTube SEO</a>
+    <div class="lp-quick" aria-label="Quick actions">
+      <a class="lp-qbtn" href="${root}youtube-extension/">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="3.5"/><path d="M12 8.5h8.2M8.9 13.7 4.8 6.6M15.1 13.8l-4.2 7.1"/></svg>
+        <span>Free Chrome Extension</span>
+        <i class="lp-qarr">&rarr;</i>
+      </a>
+      <a class="lp-qbtn" href="${root}app/">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="10" width="5" height="10" rx="1"/><rect x="10" y="4" width="5" height="16" rx="1"/><rect x="17" y="13" width="4" height="7" rx="1"/></svg>
+        <span>Creator Dashboard</span>
+        <i class="lp-qarr">&rarr;</i>
+      </a>
+      <a class="lp-qbtn accent" href="${root}youtube-seo-service/">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M13 2 4 14h7l-1 8 9-12h-7z"/></svg>
+        <span>Done-For-You YouTube SEO</span>
+        <i class="lp-qarr">&rarr;</i>
+      </a>
     </div>
   </div>
 
