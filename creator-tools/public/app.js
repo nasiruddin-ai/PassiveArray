@@ -65,11 +65,22 @@
   var P = {};
   function body(id) { return document.querySelector("[data-panel-body=\"" + id + "\"]"); }
 
+  var previewed = null;
   function onboardingCard() {
-    return "<div class=\"acard onboard\" style=\"grid-column:span 12\"><div class=\"onboard-in\"><div><span class=\"k\">STEP 1 OF 1</span><h2>Add your YouTube channel</h2><p class=\"sub\">One time. The dashboard then shows your channel insights, your progress to monetization and how each upload does against your own average. Public data only, nothing to connect or authorise.</p>" +
-      "<form class=\"aform\" data-set-channel style=\"margin-top:14px\"><input type=\"text\" name=\"channel\" placeholder=\"@yourhandle, channel link or name\" autocomplete=\"off\" required><button class=\"btn\" type=\"submit\">Add my channel</button></form><span class=\"fmsg\" data-set-channel-msg></span>" +
-      "<p class=\"sub\" style=\"margin-top:10px\">Not a creator yet? Try it with <button type=\"button\" class=\"lp-try\" data-fill-channel=\"@mkbhd\">@mkbhd</button> and change it later.</p></div>" +
-      "<div class=\"onboard-art\" aria-hidden=\"true\"><div class=\"kpis\"><div class=\"kpi\"><b>Subs</b><span>7-day change</span></div><div class=\"kpi\"><b>Views</b><span>last 30 days</span></div><div class=\"kpi\"><b>x avg</b><span>per upload</span></div><div class=\"kpi\"><b>Verdict</b><span>monetization</span></div></div></div></div></div>";
+    var guess = (!previewed && watch && watch.ok && watch.channels && watch.channels[0]) || null;
+    var tryBtn = guess
+      ? "<p class=\"sub\" style=\"margin-top:10px\">Watching <b>" + esc(guess.title) + "</b>? <button type=\"button\" class=\"lp-try\" data-fill-channel=\"" + esc(guess.handle || guess.id) + "\">Use " + esc(guess.handle || guess.title) + "</button>.</p>"
+      : "<p class=\"sub\" style=\"margin-top:10px\">Not a creator yet? Try it with <button type=\"button\" class=\"lp-try\" data-fill-channel=\"@mkbhd\">@mkbhd</button> and change it later.</p>";
+    var confirmBox = previewed
+      ? "<div class=\"chan-head\" style=\"margin-top:14px;padding:12px;border:1px solid var(--line,#E3E8EE);border-radius:10px\">" +
+        (previewed.thumbnail ? "<img src=\"" + esc(previewed.thumbnail) + "\" alt=\"\">" : "") +
+        "<div class=\"t\"><h2>" + esc(previewed.title) + "</h2><div class=\"sub\">" + esc(previewed.handle || "") + " · " + (previewed.hiddenSubscribers ? "subscribers hidden" : compact(previewed.subscribers) + " subscribers") + " · " + compact(previewed.videos) + " videos</div></div>" +
+        "<div class=\"chan-acts\"><button type=\"button\" class=\"btn\" data-confirm-channel=\"" + esc(previewed.handle || previewed.id) + "\">Yes, that's my channel</button><button type=\"button\" class=\"btn ghost\" data-cancel-preview>Not me</button></div></div>"
+      : "";
+    return "<div class=\"acard onboard\" style=\"grid-column:span 12\"><div class=\"onboard-in\"><div><span class=\"k\">STEP 1 OF 1</span><h2>Which YouTube channel is yours?</h2><p class=\"sub\">Add your @handle once. We will email you a free snapshot of your channel right now, then track your 7-day growth, your progress to monetization and how each upload does against your own average. Public data only, nothing to connect.</p>" +
+      "<form class=\"aform\" data-set-channel style=\"margin-top:14px\"><input type=\"text\" name=\"channel\" value=\"" + esc(previewed ? (previewed.handle || "") : "") + "\" placeholder=\"@yourhandle, channel link or name\" autocomplete=\"off\" required><button class=\"btn\" type=\"submit\">Find channel</button></form><span class=\"fmsg\" data-set-channel-msg></span>" +
+      confirmBox + tryBtn + "</div>" +
+      "<div class=\"onboard-art\" aria-hidden=\"true\"><div class=\"kpis\"><div class=\"kpi\"><b>Free</b><span>snapshot email</span></div><div class=\"kpi\"><b>Subs</b><span>7-day change</span></div><div class=\"kpi\"><b>x avg</b><span>per upload</span></div><div class=\"kpi\"><b>Verdict</b><span>monetization</span></div></div></div></div></div>";
   }
   function channelCard(full) {
     if (!me || !me.ok) return card("Your channel", "Sign in to track progress to monetization.", "<a class=\"btn\" href=\"" + ROOT + "login/?next=%2Fapp%2F\">Sign in free</a>", { span: full ? 12 : 6 });
@@ -280,20 +291,41 @@
   /* ---------------------------------------------------------- wiring */
   function wire(el) {
     var setCh = el.querySelector("[data-set-channel]");
+    var isOnboard = !!el.querySelector(".onboard");
+    function lookup(v) {
+      var msg = el.querySelector("[data-set-channel-msg]");
+      if (msg) { msg.textContent = isOnboard ? "Finding channel…" : "Saving…"; msg.className = "fmsg"; }
+      if (!isOnboard) {
+        post("/api/channel?action=set", { channel: v }).then(function (r) {
+          if (!r.ok) { if (msg) { msg.textContent = r.error || "Could not save."; msg.className = "fmsg bad"; } return; }
+          me.channel = (r.channel && r.channel.handle) || v; mine = r; monet = null; ideas = null; rerender(); loadMonet(); loadIdeas();
+        });
+        return;
+      }
+      post("/api/channel?action=preview", { channel: v }).then(function (r) {
+        if (!r.ok) { if (msg) { msg.textContent = r.error || "Could not find that channel."; msg.className = "fmsg bad"; } return; }
+        previewed = r.channel; rerender();
+      });
+    }
     if (setCh) setCh.addEventListener("submit", function (e) {
       e.preventDefault();
       var v = setCh.elements.channel.value.trim();
-      if (!v) return;
-      var msg = el.querySelector("[data-set-channel-msg]");
-      if (msg) msg.textContent = "Saving…";
-      post("/api/channel?action=set", { channel: v }).then(function (r) {
-        if (!r.ok) { if (msg) { msg.textContent = r.error || "Could not save."; msg.className = "fmsg bad"; } return; }
-        me.channel = v; mine = r; monet = null; ideas = null; rerender(); loadMonet(); loadIdeas();
+      if (v) lookup(v);
+    });
+    var cfm = el.querySelector("[data-confirm-channel]");
+    if (cfm) cfm.addEventListener("click", function () {
+      var v = cfm.getAttribute("data-confirm-channel");
+      cfm.disabled = true; cfm.textContent = "Saving…";
+      post("/api/channel?action=set", { channel: v, source: "onboarding" }).then(function (r) {
+        if (!r.ok) { cfm.disabled = false; cfm.textContent = "Yes, that's my channel"; var msg = el.querySelector("[data-set-channel-msg]"); if (msg) { msg.textContent = r.error || "Could not save."; msg.className = "fmsg bad"; } return; }
+        previewed = null; me.channel = (r.channel && r.channel.handle) || v; mine = r; monet = null; ideas = null; rerender(); loadMonet(); loadIdeas();
         if (current === "feed") location.hash = "channel";
       });
     });
+    var cancelPrev = el.querySelector("[data-cancel-preview]");
+    if (cancelPrev) cancelPrev.addEventListener("click", function () { previewed = null; rerender(); var i = document.querySelector("[data-set-channel] input"); if (i) { i.value = ""; i.focus(); } });
     el.querySelectorAll("[data-fill-channel]").forEach(function (b) {
-      b.addEventListener("click", function () { var i = el.querySelector("[data-set-channel] input"); if (i) { i.value = b.getAttribute("data-fill-channel"); i.focus(); } });
+      b.addEventListener("click", function () { var v = b.getAttribute("data-fill-channel"); var i = el.querySelector("[data-set-channel] input"); if (i) i.value = v; if (v) lookup(v); });
     });
     var ff = el.querySelector("[data-focus-form]");
     if (ff) ff.addEventListener("submit", function (e) {

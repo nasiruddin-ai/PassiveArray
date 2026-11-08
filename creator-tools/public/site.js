@@ -555,7 +555,8 @@
               paintHeader();
               document.querySelectorAll("[data-google-slot]").forEach(function (s) { s.hidden = true; });
               document.documentElement.classList.remove("has-google");
-              toast(r.isNew ? "Welcome. You are signed up as " + r.email + "." : "Signed in as " + r.email + ".");
+              if (r.isNew) { location.href = ROOT + "app/"; return; }
+              toast("Signed in as " + r.email + ".");
               if (document.querySelector("[data-account]")) location.reload();
             });
           },
@@ -586,6 +587,8 @@
     var signedOut = document.querySelector("[data-account-out]");
     var prefBox = account.querySelector("[data-pref-weekly]");
     var prefMsg = account.querySelector("[data-pref-msg]");
+    var myChForm = account.querySelector("[data-mychannel-form]");
+    var myChMsg = account.querySelector("[data-mychannel-msg]");
     var delMsg = account.querySelector("[data-delete-msg]");
     var setpwWrap = account.querySelector("[data-setpw-wrap]");
     var setpwForm = account.querySelector("[data-setpw-form]");
@@ -612,6 +615,7 @@
       marker(res.email);
       paintHeader();
       account.querySelector("[data-account-email]").textContent = res.email;
+      if (myChForm && res.channel) myChForm.elements.channel.value = res.channel;
       account.querySelector("[data-account-since]").textContent = res.since
         ? new Date(res.since).toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" })
         : "–";
@@ -665,6 +669,30 @@
             setpwMsg.className = "fmsg bad";
           }
         });
+      });
+    }
+
+    if (myChForm) {
+      myChForm.addEventListener("submit", function (e) {
+        e.preventDefault();
+        var value = (myChForm.elements.channel.value || "").trim();
+        myChMsg.textContent = value ? "Finding and saving your channel…" : "Clearing…";
+        myChMsg.className = "fmsg";
+        var url = "/api/channel?action=" + (value ? "set" : "clear");
+        fetch(url, { method: "POST", credentials: "same-origin", cache: "no-store", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ channel: value, source: "account_page" }) })
+          .then(function (r) { return r.json(); })
+          .catch(function () { return { ok: false, error: "Could not reach the server." }; })
+          .then(function (res) {
+            if (res && res.ok) {
+              var ch = res.channel;
+              if (ch && ch.handle) myChForm.elements.channel.value = ch.handle;
+              myChMsg.textContent = ch ? "Saved: " + ch.title + (res.reportSent ? ". Check your inbox for your free channel snapshot." : ".") : "Removed.";
+              myChMsg.className = "fmsg good";
+            } else {
+              myChMsg.textContent = (res && res.error) || "Could not save that channel.";
+              myChMsg.className = "fmsg bad";
+            }
+          });
       });
     }
 

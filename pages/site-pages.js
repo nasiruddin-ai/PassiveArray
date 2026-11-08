@@ -393,8 +393,19 @@ function accountPage() {
         </div>
         <div style="display:flex;gap:8px;margin-top:18px;flex-wrap:wrap">
           <button type="button" class="btn ghost" data-logout>Sign out</button>
-          <a class="btn ghost" href="../creator-tools/">Open the tools</a>
+          <a class="btn ghost" href="../app/">Open dashboard</a>
         </div>
+
+        <h3 style="margin:24px 0 6px">My YouTube channel</h3>
+        <p class="muted" style="font-size:.92rem;margin-bottom:12px">Your own channel, used for your dashboard and your weekly growth email. Public @handle or link only.</p>
+        <form data-mychannel-form novalidate>
+          <input type="text" name="channel" placeholder="@yourhandle or channel link" autocomplete="off" aria-label="My YouTube channel">
+          <div style="display:flex;gap:8px;margin-top:10px;align-items:center;flex-wrap:wrap">
+            <button type="submit" class="btn ghost">Save channel</button>
+            <a href="../app/#channel" class="muted" style="font-size:.88rem">View channel insights →</a>
+          </div>
+          <span class="fmsg" data-mychannel-msg></span>
+        </form>
 
         <div data-setpw-wrap hidden>
           <h3 style="margin:24px 0 6px" data-setpw-title>Add a password</h3>
@@ -428,11 +439,11 @@ function accountPage() {
         </div>
 
         <h3 style="margin:24px 0 6px">Weekly email</h3>
-        <p class="muted" style="font-size:.92rem;margin-bottom:14px">Your watchlist movers every Monday (Pro), plus benchmark changes and new tools.</p>
+        <p class="muted" style="font-size:.92rem;margin-bottom:14px">Your own channel's weekly growth report (free), plus your watchlist movers every Monday (Pro).</p>
         <label class="pref"><input type="checkbox" data-pref-weekly><span>Send me the weekly email</span></label>
         <span class="fmsg" data-pref-msg></span>
         <h3 style="margin:24px 0 6px">Your data</h3>
-        <p class="muted" style="font-size:.92rem;margin-bottom:14px">We hold your email address, your watchlist and the preference above. Nothing you type into a tool is stored. See the <a href="../privacy/">privacy policy</a>.</p>
+        <p class="muted" style="font-size:.92rem;margin-bottom:14px">We hold your email address, your saved channel, your watchlist and the preference above. Nothing you type into a tool is stored. See the <a href="../privacy/">privacy policy</a>.</p>
         <button type="button" class="btn ghost danger" data-delete>Delete my data</button>
         <span class="fmsg" data-delete-msg></span>
       </div>
