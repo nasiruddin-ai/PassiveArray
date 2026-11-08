@@ -190,7 +190,9 @@ module.exports = async (req, res) => {
       pro: require("../lib/pro.js").isPro(profile),
       plan: require("../lib/pro.js").planName(profile),
       watch: profile && Array.isArray(profile.watch) ? profile.watch.length : 0,
-      channel: profile && profile.channel ? String(profile.channel) : "",
+      channel: profile && profile.channel && profile.channelVerified ? String(profile.channel) : "",
+      channelVerified: !!(profile && profile.channelVerified),
+      googleClientId: google.clientId(),
     });
   }
 
@@ -435,20 +437,12 @@ module.exports = async (req, res) => {
 
   if (action === "preferences") {
     const weekly = body.weekly === undefined ? undefined : (body.weekly === true || body.weekly === "true");
-    const channel = body.channel === undefined ? undefined : String(body.channel || "").trim().slice(0, 80);
-    if (store.enabled()) {
-      const patch = {};
-      if (weekly !== undefined) patch.weekly = weekly;
-      if (channel !== undefined) patch.channel = channel;
-      try { await users.upsert(session.e, patch); } catch (e) { console.error("auth preferences store: " + e.message); }
+    if (store.enabled() && weekly !== undefined) {
+      try { await users.upsert(session.e, { weekly }); } catch (e) { console.error("auth preferences store: " + e.message); }
     }
-    if (weekly === undefined) {
-      if (channel) await tell({ kind: "channel_set", email: session.e, channel, source: "account_preferences", receivedAt: new Date().toISOString() });
-      return send(res, 200, { ok: true, channel });
-    }
-    const saved = await tell({ kind: "preferences", email: session.e, channel: channel || "", weekly: weekly ? "yes" : "no", receivedAt: new Date().toISOString() });
+    const saved = await tell({ kind: "preferences", email: session.e, weekly: weekly ? "yes" : "no", receivedAt: new Date().toISOString() });
     if (!saved && !store.enabled()) return send(res, 502, { ok: false, error: "Could not save that right now. Please try again in a minute." });
-    return send(res, 200, { ok: true, weekly, channel });
+    return send(res, 200, { ok: true, weekly });
   }
 
   if (action === "delete") {

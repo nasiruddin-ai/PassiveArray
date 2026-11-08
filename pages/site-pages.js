@@ -397,15 +397,16 @@ function accountPage() {
         </div>
 
         <h3 style="margin:24px 0 6px">My YouTube channel</h3>
-        <p class="muted" style="font-size:.92rem;margin-bottom:12px">Your own channel, used for your dashboard and your weekly growth email. Public @handle or link only.</p>
-        <form data-mychannel-form novalidate>
-          <input type="text" name="channel" placeholder="@yourhandle or channel link" autocomplete="off" aria-label="My YouTube channel">
-          <div style="display:flex;gap:8px;margin-top:10px;align-items:center;flex-wrap:wrap">
-            <button type="submit" class="btn ghost">Save channel</button>
-            <a href="../app/#channel" class="muted" style="font-size:.88rem">View channel insights →</a>
-          </div>
-          <span class="fmsg" data-mychannel-msg></span>
-        </form>
+        <p class="muted" style="font-size:.92rem;margin-bottom:12px">Verified with Google so only the owner can connect a channel. Used for your dashboard and your weekly growth email. To track competitors, add them to your watchlist above.</p>
+        <div class="pa-rows" style="margin-bottom:10px">
+          <div class="arow"><span>Verified channel</span><b data-mychannel-current>Not connected</b></div>
+        </div>
+        <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+          <button type="button" class="btn ghost" data-mychannel-verify>Verify with Google</button>
+          <button type="button" class="btn ghost" data-mychannel-clear hidden>Disconnect</button>
+          <a href="../app/#channel" class="muted" style="font-size:.88rem">View channel insights →</a>
+        </div>
+        <span class="fmsg" data-mychannel-msg></span>
 
         <div data-setpw-wrap hidden>
           <h3 style="margin:24px 0 6px" data-setpw-title>Add a password</h3>

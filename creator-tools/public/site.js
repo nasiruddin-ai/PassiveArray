@@ -587,13 +587,22 @@
     var signedOut = document.querySelector("[data-account-out]");
     var prefBox = account.querySelector("[data-pref-weekly]");
     var prefMsg = account.querySelector("[data-pref-msg]");
-    var myChForm = account.querySelector("[data-mychannel-form]");
+    var myChCur = account.querySelector("[data-mychannel-current]");
+    var myChVerify = account.querySelector("[data-mychannel-verify]");
+    var myChClear = account.querySelector("[data-mychannel-clear]");
     var myChMsg = account.querySelector("[data-mychannel-msg]");
+    var googleCid = "";
     var delMsg = account.querySelector("[data-delete-msg]");
     var setpwWrap = account.querySelector("[data-setpw-wrap]");
     var setpwForm = account.querySelector("[data-setpw-form]");
     var setpwMsg = account.querySelector("[data-setpw-msg]");
     var setpwTitle = account.querySelector("[data-setpw-title]");
+
+    function paintMyChannel(ch) {
+      if (myChCur) myChCur.textContent = ch || "Not connected";
+      if (myChVerify) myChVerify.textContent = ch ? "Change channel with Google" : "Verify with Google";
+      if (myChClear) myChClear.hidden = !ch;
+    }
 
     function showAccount(state) {
       if (loading) loading.hidden = state !== "loading";
@@ -615,7 +624,8 @@
       marker(res.email);
       paintHeader();
       account.querySelector("[data-account-email]").textContent = res.email;
-      if (myChForm && res.channel) myChForm.elements.channel.value = res.channel;
+      googleCid = res.googleClientId || "";
+      paintMyChannel(res.channel);
       account.querySelector("[data-account-since]").textContent = res.since
         ? new Date(res.since).toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" })
         : "–";
@@ -672,24 +682,77 @@
       });
     }
 
-    if (myChForm) {
-      myChForm.addEventListener("submit", function (e) {
-        e.preventDefault();
-        var value = (myChForm.elements.channel.value || "").trim();
-        myChMsg.textContent = value ? "Finding and saving your channel…" : "Clearing…";
+    if (myChVerify) {
+      myChVerify.addEventListener("click", function () {
+        if (!googleCid) {
+          myChMsg.textContent = "Google verification is not configured on this site yet.";
+          myChMsg.className = "fmsg bad";
+          return;
+        }
+        myChVerify.disabled = true;
+        myChMsg.textContent = "Opening Google to verify your YouTube channel…";
         myChMsg.className = "fmsg";
-        var url = "/api/channel?action=" + (value ? "set" : "clear");
-        fetch(url, { method: "POST", credentials: "same-origin", cache: "no-store", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ channel: value, source: "account_page" }) })
+        loadGsi(function () {
+          if (!window.google || !window.google.accounts || !window.google.accounts.oauth2) {
+            myChVerify.disabled = false;
+            myChMsg.textContent = "Could not load Google sign-in. Disable any blocker for accounts.google.com and try again.";
+            myChMsg.className = "fmsg bad";
+            return;
+          }
+          var tc = window.google.accounts.oauth2.initTokenClient({
+            client_id: googleCid,
+            scope: "https://www.googleapis.com/auth/youtube.readonly",
+            prompt: "select_account",
+            callback: function (resp) {
+              if (!resp || resp.error || !resp.access_token) {
+                myChVerify.disabled = false;
+                myChMsg.textContent = resp && resp.error === "access_denied" ? "Cancelled. We need read-only YouTube permission to verify you own the channel." : "Google verification did not complete.";
+                myChMsg.className = "fmsg bad";
+                return;
+              }
+              myChMsg.textContent = "Checking your YouTube channel…";
+              fetch("/api/channel?action=verify", { method: "POST", credentials: "same-origin", cache: "no-store", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ accessToken: resp.access_token, source: "account_page_oauth" }) })
+                .then(function (r) { return r.json(); })
+                .catch(function () { return { ok: false, error: "Could not reach the server." }; })
+                .then(function (res) {
+                  myChVerify.disabled = false;
+                  if (res && res.ok && res.channel) {
+                    paintMyChannel(res.channel.handle || res.channel.title);
+                    myChMsg.textContent = "Verified: " + res.channel.title + (res.reportSent ? ". Check your inbox for your free channel snapshot." : ".");
+                    myChMsg.className = "fmsg good";
+                  } else {
+                    myChMsg.textContent = (res && res.error) || "Could not verify your YouTube channel.";
+                    myChMsg.className = "fmsg bad";
+                  }
+                });
+            },
+            error_callback: function () {
+              myChVerify.disabled = false;
+              myChMsg.textContent = "The Google popup was closed before verification finished.";
+              myChMsg.className = "fmsg bad";
+            },
+          });
+          tc.requestAccessToken();
+        });
+      });
+    }
+
+    if (myChClear) {
+      myChClear.addEventListener("click", function () {
+        myChClear.disabled = true;
+        myChMsg.textContent = "Disconnecting…";
+        myChMsg.className = "fmsg";
+        fetch("/api/channel?action=clear", { method: "POST", credentials: "same-origin", cache: "no-store", headers: { "Content-Type": "application/json" }, body: "{}" })
           .then(function (r) { return r.json(); })
-          .catch(function () { return { ok: false, error: "Could not reach the server." }; })
+          .catch(function () { return { ok: false }; })
           .then(function (res) {
+            myChClear.disabled = false;
             if (res && res.ok) {
-              var ch = res.channel;
-              if (ch && ch.handle) myChForm.elements.channel.value = ch.handle;
-              myChMsg.textContent = ch ? "Saved: " + ch.title + (res.reportSent ? ". Check your inbox for your free channel snapshot." : ".") : "Removed.";
+              paintMyChannel("");
+              myChMsg.textContent = "Disconnected.";
               myChMsg.className = "fmsg good";
             } else {
-              myChMsg.textContent = (res && res.error) || "Could not save that channel.";
+              myChMsg.textContent = "Could not disconnect right now.";
               myChMsg.className = "fmsg bad";
             }
           });
