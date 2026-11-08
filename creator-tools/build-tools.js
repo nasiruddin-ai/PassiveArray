@@ -712,77 +712,39 @@ ${HEAD}
 <body data-root="${root}" class="home lp">${GTM_BODY}
 ${header(root, "home", false)}
 
-<!-- 1. Hero: 2-Column High-Converting SaaS Layout -->
+<!-- 1. Hero -->
 <section class="lp-hero">
-  <div class="wrap lp-hero-grid">
-    <div class="lp-hero-copy">
-      <div class="lp-kicker">YOUTUBE SEO, MONETIZATION &amp; CHANNEL INTELLIGENCE</div>
-      <h1>Audit any YouTube channel or keyword in <em>one click</em></h1>
-      <p class="lp-lead">Check monetization eligibility, uncover 10x outlier videos, score keywords against real top-10 search results, and estimate real RPM earnings — powered by official APIs with the formula on every page.</p>
+  <div class="wrap lp-hero-simple">
+    <h1>Free YouTube SEO &amp; Creator Tools</h1>
+    <p class="lp-lead">Check monetization, research keywords, score titles and estimate channel earnings — live from official APIs with no sign-up required.</p>
 
-      <form class="lp-audit-bar" action="${root}creator-tools/youtube-monetization-checker/" method="get" data-hero-form>
-        <div class="lp-audit-tabs" role="tablist" aria-label="Quick audit mode">
-          <button type="button" class="on" data-hero-mode="monet" data-action="${root}creator-tools/youtube-monetization-checker/" data-param="channel" data-ph="Paste @handle or YouTube channel link (e.g. @mkbhd)">Monetization Check</button>
-          <button type="button" data-hero-mode="audit" data-action="${root}creator-tools/youtube-channel-quality-checker/" data-param="channel" data-ph="Paste @handle or channel URL for a 0-100 quality audit">Channel Audit</button>
-          <button type="button" data-hero-mode="kw" data-action="${root}research/" data-param="q" data-ph="Enter a YouTube keyword or topic (e.g. youtube seo)">Keyword Score</button>
-          <button type="button" data-hero-mode="money" data-action="${root}creator-tools/youtube-money-calculator/" data-param="channel" data-ph="Paste @handle to estimate monthly &amp; yearly ad revenue">Earnings</button>
-        </div>
-        <div class="lp-audit-row">
-          ${ICON.search}
-          <label for="lp-hero-input" class="sr">Channel or keyword</label>
-          <input id="lp-hero-input" name="channel" type="text" placeholder="Paste @handle or YouTube channel link (e.g. @mkbhd)" autocomplete="off" required>
-          <button type="submit" class="btn lp-primary">Analyze free</button>
-        </div>
-        <div class="lp-audit-samples">
-          <span>Try instant check:</span>
-          <button type="button" class="lp-try" data-hero-fill="@mkbhd">@mkbhd</button>
-          <button type="button" class="lp-try" data-hero-fill="@veritasium">@veritasium</button>
-          <button type="button" class="lp-try" data-hero-fill="@mrbeast">@mrbeast</button>
-        </div>
-      </form>
+    <form class="lp-bar" action="${root}creator-tools/youtube-monetization-checker/" method="get" data-hero-form>
+      ${ICON.search}
+      <label for="lp-hero-input" class="sr">YouTube channel @handle or link</label>
+      <input id="lp-hero-input" name="channel" type="text" placeholder="Paste a YouTube @handle or channel link (e.g. @mkbhd)" autocomplete="off" required>
+      <button type="submit" class="btn lp-primary">Check channel</button>
+    </form>
 
-      <div class="lp-ctas">
-        <a class="btn ghost" href="${root}app/">Open Creator Dashboard</a>
-        <a class="btn ghost" href="${root}youtube-extension/">Free Chrome Extension</a>
-        <a class="btn ghost" href="${root}youtube-seo-service/">Done-For-You YouTube SEO &rarr;</a>
-      </div>
-    </div>
-
-    <div class="lp-hero-preview" aria-label="Live product telemetry preview">
-      <div class="lp-telemetry">
-        <div class="lp-tel-head">
-          <div class="lp-tel-ch">
-            <span class="pbadge yt" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 24 24"><path fill="#fff" d="M9.5 8.5v7l6-3.5z"/></svg></span>
-            <div><b>Channel Intelligence Snapshot</b><span>Official YouTube Data API v3 · Real-Time</span></div>
-          </div>
-          <span class="lp-tel-badge">MONETIZED · 94% CONFIDENCE</span>
-        </div>
-        <div class="lp-tel-metrics">
-          <div><span>Quality Score</span><b>92<small>/100</small></b><i class="up">Top 5% engagement</i></div>
-          <div><span>Outlier Multiplier</span><b>14.8x</b><i class="up">vs channel median</i></div>
-          <div><span>Keyword Opportunity</span><b>84<small>/100</small></b><i class="up">Low small-channel gap</i></div>
-          <div><span>Est. Monthly RPM</span><b>$3.40–$8.20</b><i>Long-form + Premium</i></div>
-        </div>
-        <div class="lp-tel-bars">
-          <div class="lp-tel-bar-row"><span>YPP Watch-Time &amp; Subscriber Gate</span><b>Passed (1,000+ subs · active uploads)</b></div>
-          <div class="art-bar"><i style="width:100%"></i></div>
-          <div class="lp-tel-bar-row" style="margin-top:10px"><span>Studio Tag &amp; Title Alignment</span><b>468 / 500 chars used</b></div>
-          <div class="art-bar"><i style="width:93%"></i></div>
-        </div>
-        <div class="lp-tel-foot">
-          <a href="${root}creator-tools/youtube-monetization-checker/?channel=%40mkbhd">Run live check &rarr;</a>
-          <a href="${root}research/outliers/">Explore today's 10x outlier videos &rarr;</a>
-        </div>
-      </div>
+    <div class="lp-quick">
+      <span>Try:</span>
+      <button type="button" class="lp-try" data-hero-fill="@mkbhd">@mkbhd</button>
+      <button type="button" class="lp-try" data-hero-fill="@veritasium">@veritasium</button>
+      <button type="button" class="lp-try" data-hero-fill="@mrbeast">@mrbeast</button>
+      <span class="lp-sep">·</span>
+      <a href="${root}youtube-extension/">Free Chrome Extension</a>
+      <span class="lp-sep">·</span>
+      <a href="${root}app/">Creator Dashboard</a>
+      <span class="lp-sep">·</span>
+      <a href="${root}youtube-seo-service/">Done-For-You YouTube SEO</a>
     </div>
   </div>
 
   <div class="wrap lp-statwrap">
     <div class="lp-stats">
       <div><b>${tools.length}</b><span>Free Creator Tools</span></div>
-      <div><b>${liveCount}</b><span>Live Official API Tools</span></div>
-      <div><b>100%</b><span>Transparent Formulas</span></div>
-      <div><b>0</b><span>Paywalls on Free Tools</span></div>
+      <div><b>${liveCount}</b><span>On Live API Data</span></div>
+      <div><b>100%</b><span>Free to Use</span></div>
+      <div><b>0</b><span>Ads, Ever</span></div>
     </div>
   </div>
 </section>
