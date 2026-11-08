@@ -171,6 +171,18 @@ const CSS = `
 .uploads small { color: var(--muted); font-size: .78rem; }
 .uploads .up { color: var(--good); font-weight: 700; } .uploads .down { color: var(--bad); font-weight: 700; } .uploads .flat { color: var(--muted); }
 .kpi .up { color: var(--good); } .kpi .down { color: var(--bad); } .kpi .flat { color: var(--muted); }
+.app-gate { position: fixed; inset: 0; z-index: 100; display: flex; align-items: center; justify-content: center; padding: 20px; background: rgba(15, 22, 38, .78); backdrop-filter: blur(8px); }
+.app-gate[hidden] { display: none; }
+.app-gate-card { width: 100%; max-width: 520px; background: var(--card); border: 1px solid var(--line); border-radius: 22px; padding: 32px 28px; box-shadow: 0 28px 80px -20px rgba(0, 0, 0, .55); }
+.app-gate-card .k { display: inline-block; font-size: .72rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--deep); background: var(--soft); padding: 5px 11px; border-radius: 999px; margin-bottom: 12px; }
+:root[data-theme="dark"] .app-gate-card .k { color: var(--mint); }
+.app-gate-card h2 { font-size: 1.5rem; letter-spacing: -.02em; margin: 0 0 8px; }
+.app-gate-card p { color: var(--muted); font-size: .94rem; line-height: 1.55; margin: 0 0 18px; }
+.app-gate-card .aform { margin-top: 10px; }
+.app-gate-card .aform input { width: 100%; flex: 1 1 100%; }
+.app-gate-card .aform .btn { width: 100%; justify-content: center; margin-top: 4px; }
+.app-gate-foot { margin-top: 18px; padding-top: 14px; border-top: 1px solid var(--line); display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; font-size: .84rem; color: var(--muted); }
+.app.gated .rail, .app.gated .main { filter: blur(4px); pointer-events: none; user-select: none; }
 @media (max-width: 900px) { .onboard-in { grid-template-columns: 1fr; } .onboard-art { display: none; } }
 .scrim { display: none; }
 @media (max-width: 1100px) { .span6, .span4, .span8, .span3 { grid-column: span 12 !important; } }
@@ -216,7 +228,7 @@ ${site.VERIFY_TAG}
 <script>window.PA_TOOLS=${JSON.stringify(tools)};window.PA_POSTS=${JSON.stringify(latest)};</script>
 </head>
 <body data-root="${root}" class="app-body">
-<div class="app" data-app>
+<div class="app gated" data-app>
   <aside class="rail" aria-label="Dashboard navigation">
     <div class="rail-brand">
       <a href="${root}">${MARK}<span>Passive <b style="color:var(--teal)">Array</b></span></a>
@@ -248,6 +260,13 @@ ${site.VERIFY_TAG}
     ${panels}
     <section class="panel" data-panel="upgrade" hidden><div class="pgrid" data-panel-body="upgrade"></div></section>
   </main>
+</div>
+<div class="app-gate" data-app-gate>
+  <div class="app-gate-card" data-app-gate-body>
+    <span class="k">Dashboard Access</span>
+    <h2>Checking your account…</h2>
+    <p>Verifying your session and linked YouTube channel.</p>
+  </div>
 </div>
 <script defer src="${root}creator-tools/site.js"></script>
 <script defer src="${root}creator-tools/app.js"></script>

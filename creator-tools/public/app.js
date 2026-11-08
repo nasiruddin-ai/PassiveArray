@@ -337,7 +337,85 @@
     });
   }
 
-  /* ------------------------------------------------------------- rail */
+  /* ------------------------------------------------------------- rail & gate */
+  var gate = document.querySelector("[data-app-gate]");
+  var gateBody = document.querySelector("[data-app-gate-body]");
+
+  function updateGate() {
+    if (!gate || !gateBody) return;
+    if (!me) {
+      app.classList.add("gated");
+      gate.hidden = false;
+      return;
+    }
+    if (!me.ok) {
+      app.classList.add("gated");
+      gate.hidden = false;
+      gateBody.innerHTML =
+        "<span class=\"k\">Dashboard Locked</span>" +
+        "<h2>Sign in &amp; link your channel to access the dashboard</h2>" +
+        "<p>The creator dashboard is personalized to your YouTube channel. Create a free account with your email and channel, or sign in to continue. All public tools work without an account.</p>" +
+        "<div style=\"display:flex;gap:10px;flex-wrap:wrap;margin-top:16px\">" +
+          "<a class=\"btn\" href=\"" + ROOT + "signup/?next=%2Fapp%2F\" style=\"flex:1;justify-content:center\">Create free account</a>" +
+          "<a class=\"btn ghost\" href=\"" + ROOT + "login/?next=%2Fapp%2F\" style=\"flex:1;justify-content:center\">Sign in</a>" +
+        "</div>" +
+        "<div class=\"app-gate-foot\"><span>Want to check competitors without signing in?</span><a href=\"" + ROOT + "creator-tools/\">Browse free tools →</a></div>";
+      return;
+    }
+    if (!me.channel) {
+      app.classList.add("gated");
+      gate.hidden = false;
+      gateBody.innerHTML =
+        "<span class=\"k\">Step Required · 1 Channel Per Account</span>" +
+        "<h2>Add your YouTube channel to unlock the dashboard</h2>" +
+        "<p>Signed in as <b>" + esc(me.email) + "</b>. You must link your YouTube channel before accessing the dashboard. We will track your monetization progress, daily ideas and weekly growth report.</p>" +
+        "<form class=\"aform\" data-gate-channel novalidate>" +
+          "<input type=\"text\" name=\"channel\" placeholder=\"@yourhandle or youtube.com/@yourhandle\" required autocomplete=\"off\">" +
+          "<button class=\"btn\" type=\"submit\">Add my channel &amp; enter dashboard</button>" +
+        "</form>" +
+        "<span class=\"fmsg\" data-gate-channel-msg style=\"display:block;margin-top:8px\"></span>" +
+        "<div class=\"app-gate-foot\"><a href=\"" + ROOT + "creator-tools/\">← Back to public tools</a><a href=\"#\" data-gate-logout>Sign out</a></div>";
+      var gf = gateBody.querySelector("[data-gate-channel]");
+      var gmsg = gateBody.querySelector("[data-gate-channel-msg]");
+      if (gf) {
+        var inp = gf.querySelector("input");
+        if (inp) setTimeout(function () { inp.focus(); }, 50);
+        gf.addEventListener("submit", function (e) {
+          e.preventDefault();
+          var v = gf.elements.channel.value.trim();
+          if (!v) {
+            if (gmsg) { gmsg.textContent = "Enter your YouTube @handle or channel link."; gmsg.className = "fmsg bad"; }
+            return;
+          }
+          var btn = gf.querySelector("button[type=\"submit\"]");
+          if (btn) btn.disabled = true;
+          if (gmsg) { gmsg.textContent = "Verifying your YouTube channel…"; gmsg.className = "fmsg"; }
+          post("/api/channel?action=set", { channel: v, source: "dashboard_gate" }).then(function (r) {
+            if (btn) btn.disabled = false;
+            if (!r || !r.ok) {
+              if (gmsg) { gmsg.textContent = (r && r.error) || "Could not find that YouTube channel. Check your @handle or link."; gmsg.className = "fmsg bad"; }
+              return;
+            }
+            me.channel = (r.channel && (r.channel.handle || r.channel.id)) || v;
+            mine = r; monet = null; ideas = null;
+            updateGate();
+            rerender();
+            loadMonet();
+            loadIdeas();
+          });
+        });
+      }
+      var glo = gateBody.querySelector("[data-gate-logout]");
+      if (glo) glo.addEventListener("click", function (e) {
+        e.preventDefault();
+        post("/api/auth?action=logout").then(function () { try { localStorage.removeItem("pa-user"); } catch (x) {} location.href = ROOT; });
+      });
+      return;
+    }
+    app.classList.remove("gated");
+    gate.hidden = true;
+  }
+
   function paintRail() {
     var email = document.querySelector("[data-who-email]"), sub = document.querySelector("[data-who-sub]"), plan = document.querySelector("[data-who-plan]");
     var up = document.querySelector("[data-upgrade-link]");
@@ -349,7 +427,7 @@
       var lo = sub.querySelector("[data-logout]");
       if (lo) lo.addEventListener("click", function (e) { e.preventDefault(); post("/api/auth?action=logout").then(function () { try { localStorage.removeItem("pa-user"); } catch (x) {} location.href = ROOT; }); });
     }
-    document.querySelector("[data-signed-out]").hidden = !!(me && me.ok);
+    document.querySelector("[data-signed-out]").hidden = true;
     var rw = document.querySelector("[data-rail-watch]");
     if (watch && watch.ok && watch.channels.length) rw.innerHTML = watch.channels.slice(0, 8).map(function (c) { return "<a href=\"" + toolUrl("youtube-channel-quality-checker") + "?channel=" + encodeURIComponent(c.handle || c.id) + "\">" + (c.thumbnail ? "<img src=\"" + esc(c.thumbnail) + "\" alt=\"\">" : "") + "<span>" + esc(c.title) + "</span></a>"; }).join("") + "<a href=\"#watchlist\">" + (watch.channels.length > 8 ? "All " + watch.channels.length : "Manage") + "</a>";
     else if (me && me.ok) rw.innerHTML = "<div class=\"rail-empty\">No channels yet. <a href=\"#watchlist\">Add one</a>.</div>";
@@ -378,16 +456,16 @@
   show(location.hash.replace("#", "") || "feed");
   get("/api/auth?action=me").then(function (r) {
     me = r;
+    updateGate();
     paintRail();
     render(current);
     if (me && me.ok) {
       get("/api/watch?action=list").then(function (w) { watch = w; paintRail(); render(current); });
-      loadMonet();
       if (me.channel) {
+        loadMonet();
         get("/api/channel").then(function (r) { mine = r; if (current === "channel" || current === "feed") render(current); });
         loadIdeas();
       }
-      else if (!location.hash || location.hash === "#feed") { /* first visit after sign-in: the feed shows the add-channel step */ }
     }
   });
   get(ROOT + "research/api/outliers?type=videos&days=7&sort=multiplier&limit=12").then(function (r) { outliers = r && r.ok ? r : { ok: true, items: [] }; render(current); });
