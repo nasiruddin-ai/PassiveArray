@@ -65,18 +65,11 @@
   var P = {};
   function body(id) { return document.querySelector("[data-panel-body=\"" + id + "\"]"); }
 
-  var gIcon = "<svg width=\"18\" height=\"18\" viewBox=\"0 0 18 18\" aria-hidden=\"true\" style=\"vertical-align:-3px;margin-right:8px\"><path fill=\"#4285F4\" d=\"M17.64 9.2c0-.64-.06-1.25-.16-1.84H9v3.48h4.84a4.14 4.14 0 0 1-1.8 2.72v2.26h2.92c1.7-1.57 2.68-3.88 2.68-6.62z\"/><path fill=\"#34A853\" d=\"M9 18c2.43 0 4.47-.8 5.96-2.18l-2.92-2.26c-.8.54-1.83.86-3.04.86-2.34 0-4.33-1.58-5.04-3.71H.96v2.33A9 9 0 0 0 9 18z\"/><path fill=\"#FBBC05\" d=\"M3.96 10.71A5.41 5.41 0 0 1 3.68 9c0-.6.1-1.17.28-1.71V4.96H.96A9 9 0 0 0 0 9c0 1.45.35 2.82.96 4.04l3-2.33z\"/><path fill=\"#EA4335\" d=\"M9 3.58c1.32 0 2.5.45 3.44 1.35l2.58-2.59C13.46.89 11.43 0 9 0A9 9 0 0 0 .96 4.96l3 2.33C4.67 5.16 6.66 3.58 9 3.58z\"/></svg>";
-  function onboardingCard() {
-    return "<div class=\"acard onboard\" style=\"grid-column:span 12\"><div class=\"onboard-in\"><div><span class=\"k\">VERIFY OWNERSHIP</span><h2>Verify your YouTube channel with Google</h2><p class=\"sub\">Your dashboard and your weekly growth report are only for a channel you actually own. Sign in with the Google account that owns your channel so we can verify it (read-only) and email your free channel snapshot.</p>" +
-      "<div style=\"margin-top:14px;display:flex;gap:10px;align-items:center;flex-wrap:wrap\"><button class=\"btn\" type=\"button\" data-verify-youtube>" + gIcon + "Verify my YouTube channel</button><a class=\"btn ghost\" href=\"#watchlist\">Track competitors instead</a></div><span class=\"fmsg\" data-set-channel-msg></span>" +
-      "<p class=\"sub\" style=\"margin-top:10px\">Checking another channel or a competitor? Use <a href=\"#watchlist\">Watchlist</a>, <a href=\"#competitors\">Competitors</a> or the <a href=\"" + ROOT + "creator-tools/\">public tools</a>. Those work for any channel without verification.</p></div>" +
-      "<div class=\"onboard-art\" aria-hidden=\"true\"><div class=\"kpis\"><div class=\"kpi\"><b>Verified</b><span>owner only</span></div><div class=\"kpi\"><b>Free</b><span>snapshot email</span></div><div class=\"kpi\"><b>Subs</b><span>7-day change</span></div><div class=\"kpi\"><b>x avg</b><span>per upload</span></div></div></div></div></div>";
-  }
   function channelCard(full) {
-    if (!me || !me.ok) return card("Your channel", "Sign in to verify your channel and track progress to monetization.", "<a class=\"btn\" href=\"" + ROOT + "login/?next=%2Fapp%2F\">Sign in free</a>", { span: full ? 12 : 6 });
-    if (!me.channel) return onboardingCard();
+    if (!me || !me.ok) return card("Your channel", "Sign in with your email and channel to track progress to monetization.", "<a class=\"btn\" href=\"" + ROOT + "signup/?next=%2Fapp%2F\">Create free account</a>", { span: full ? 12 : 6 });
+    if (!me.channel) return card("Your channel", "Link your single YouTube channel to see your monetization progress and weekly growth report.", "<form class=\"aform\" data-set-channel><input type=\"text\" name=\"channel\" placeholder=\"@yourhandle or channel link\" required><button class=\"btn\" type=\"submit\">Save my channel</button></form><span class=\"fmsg\" data-set-channel-msg></span>", { span: full ? 12 : 6 });
     if (!monet) return card("Your channel", esc(me.channel), "<p class=\"empty\">Checking the public signals…</p>", { span: full ? 12 : 6 });
-    if (!monet.ok) return card("Your channel", esc(me.channel), "<p class=\"empty\">" + esc(monet.error || "Could not read that channel.") + "</p><button class=\"btn ghost\" type=\"button\" data-verify-youtube>" + gIcon + "Re-verify with Google</button><span class=\"fmsg\" data-set-channel-msg></span>", { span: full ? 12 : 6 });
+    if (!monet.ok) return card("Your channel", esc(me.channel), "<p class=\"empty\">" + esc(monet.error || "Could not read that channel right now.") + "</p>", { span: full ? 12 : 6 });
     var ch = monet.channel, subs = ch.subscribers || 0, v = monet.verdict || {};
     var target = subs >= 1000 ? 1000 : 1000, pctSubs = Math.min(100, Math.round((subs / target) * 100));
     var uploads90 = (monet.signals || []).filter(function (s) { return /90 days/i.test(s.label || s.name || ""); })[0];
@@ -88,9 +81,9 @@
     var prog = "<div class=\"prog\"><i style=\"width:" + pctSubs + "%\"></i></div><div class=\"prog-row\"><span>" + (subs >= 1000 ? "Subscriber threshold reached" : compact(1000 - subs) + " subscribers to go") + "</span><b>" + pctSubs + "%</b></div>";
     var SIG = { pass: "good", mixed: "warn", fail: "bad" };
     var sigs = "<ul class=\"sigs\">" + (monet.signals || []).map(function (s) { return "<li class=\"" + (SIG[s.status] || s.cls || "") + "\"><i></i><div><b>" + esc(s.label || s.name) + "</b> <span>" + esc(s.detail || s.value || "") + "</span></div></li>"; }).join("") + "</ul>";
-    var head = "<div style=\"display:flex;align-items:center;gap:12px;margin-bottom:12px\">" + (ch.thumbnail ? "<img src=\"" + esc(ch.thumbnail) + "\" alt=\"\" style=\"width:44px;height:44px;border-radius:50%\">" : "") + "<div><b>" + esc(ch.title) + "</b><div class=\"sub\">" + esc(ch.handle || "") + " · Verified owner</div></div><span class=\"verdict " + esc(v.cls || "") + "\" style=\"margin-left:auto\">" + esc(v.label || "") + (v.confidence != null ? " · " + v.confidence + "%" : "") + "</span></div>";
-    var foot = "<p class=\"sub\" style=\"margin-top:12px\">Watch hours are not public, so this tracks the public half of the rules: subscribers, uploads in 90 days, made-for-kids and ad placements. <a href=\"" + toolUrl("youtube-monetization-checker") + "?channel=" + encodeURIComponent(me.channel) + "\">Full check</a> · <a href=\"#\" data-change-channel>Disconnect channel</a></p>";
-    return card("Race to monetization", "Public signals for your verified channel.", head + kpis + prog + (full ? sigs : "") + foot, { span: full ? 12 : 6 });
+    var head = "<div style=\"display:flex;align-items:center;gap:12px;margin-bottom:12px\">" + (ch.thumbnail ? "<img src=\"" + esc(ch.thumbnail) + "\" alt=\"\" style=\"width:44px;height:44px;border-radius:50%\">" : "") + "<div><b>" + esc(ch.title) + "</b><div class=\"sub\">" + esc(ch.handle || "") + "</div></div><span class=\"verdict " + esc(v.cls || "") + "\" style=\"margin-left:auto\">" + esc(v.label || "") + (v.confidence != null ? " · " + v.confidence + "%" : "") + "</span></div>";
+    var foot = "<p class=\"sub\" style=\"margin-top:12px\">Watch hours are not public, so this tracks the public half of the rules: subscribers, uploads in 90 days, made-for-kids and ad placements. <a href=\"" + toolUrl("youtube-monetization-checker") + "?channel=" + encodeURIComponent(me.channel) + "\">Full check</a></p>";
+    return card("Race to monetization", "Public signals for your channel.", head + kpis + prog + (full ? sigs : "") + foot, { span: full ? 12 : 6 });
   }
 
   function moversCard() {
@@ -114,10 +107,10 @@
   P.feed = function () {
     var quick = [["youtube-monetization-checker", "Monetization check"], ["youtube-keyword-generator", "Keyword ideas"], ["youtube-title-analyzer", "Score a title"], ["youtube-tag-generator", "Tags for a video"], ["youtube-channel-quality-checker", "Channel quality"], ["youtube-money-calculator", "Earnings estimate"]];
     var quickHtml = "<div class=\"chips-row\">" + quick.map(function (q) { return "<a href=\"" + toolUrl(q[0]) + "\" data-recent=\"" + q[0] + "\">" + esc(q[1]) + "</a>"; }).join("") + "</div>";
-    var needsChannel = me && me.ok && !me.channel;
-    return (needsChannel ? onboardingCard() : channelCard(false)) + (needsChannel ? "" : moversCard()) +
-      card("Quick actions", "The tools most people open first.", quickHtml) +
-      (me && me.ok && me.channel ? nicheCard(6) : outliersCard(outliers && outliers.items, "Breaking out this week", [ROOT + "research/outliers/", "Full feed"], 6));
+    var hasChannel = !!(me && me.ok && me.channel);
+    return (hasChannel ? channelCard(false) : "") + moversCard() +
+      card("Quick actions", "The tools most people open first.", quickHtml, { span: hasChannel ? 12 : 6 }) +
+      (hasChannel ? nicheCard(6) : outliersCard(outliers && outliers.items, "Breaking out this week", [ROOT + "research/outliers/", "Full feed"], 6));
   };
   function delta(d, key, base) {
     if (!d || d[key] == null) return "<span class=\"flat\" title=\"Snapshots started today; change appears after a few days\">–</span>";
@@ -125,14 +118,14 @@
     return "<span class=\"" + (v > 0 ? "up" : v < 0 ? "down" : "flat") + "\">" + signed(v) + pct + "</span>";
   }
   P.channel = function () {
-    if (!me || !me.ok) return card("My channel", "Sign in, add your channel, and this page fills with insights.", "<a class=\"btn\" href=\"" + ROOT + "login/?next=%2Fapp%2F%23channel\">Sign in free</a>");
-    if (!me.channel) return onboardingCard();
+    if (!me || !me.ok) return card("My channel", "Sign up with your email and channel, and this page fills with insights.", "<a class=\"btn\" href=\"" + ROOT + "signup/?next=%2Fapp%2F%23channel\">Create free account</a>");
+    if (!me.channel) return card("My channel", "Each account links one YouTube channel for your insights and weekly report. To check competitors, use Watchlist or the public tools.", "<form class=\"aform\" data-set-channel><input type=\"text\" name=\"channel\" placeholder=\"@yourhandle or channel link\" required><button class=\"btn\" type=\"submit\">Save my channel</button></form><span class=\"fmsg\" data-set-channel-msg></span>");
     if (!mine) return card("My channel", esc(me.channel), "<p class=\"empty\">Loading your channel…</p>");
-    if (!mine.ok) return card("My channel", esc(me.channel), "<p class=\"empty\">" + esc(mine.error || "Could not read that channel.") + "</p><form class=\"aform\" data-set-channel><input type=\"text\" name=\"channel\" placeholder=\"@yourhandle or channel link\" required><button class=\"btn ghost\" type=\"submit\">Change channel</button></form><span class=\"fmsg\" data-set-channel-msg></span>");
+    if (!mine.ok) return card("My channel", esc(me.channel), "<p class=\"empty\">" + esc(mine.error || "Could not read that channel right now.") + "</p>");
     var c = mine.channel, sm = mine.summary, v = monet && monet.ok ? monet.verdict : null;
     var head = "<div class=\"chan-head\">" + (c.thumbnail ? "<img src=\"" + esc(c.thumbnail) + "\" alt=\"\">" : "") + "<div class=\"t\"><h2>" + esc(c.title) + "</h2><div class=\"sub\">" + esc(c.handle || "") + (c.country ? " · " + esc(c.country) : "") + (c.publishedAt ? " · since " + new Date(c.publishedAt).getFullYear() : "") + " · tracked since " + esc(mine.since) + "</div></div>" +
       (v ? "<a class=\"verdict " + esc(v.cls || "") + "\" href=\"#race\">" + esc(v.label) + (v.confidence != null ? " · " + v.confidence + "%" : "") + "</a>" : "") +
-      "<div class=\"chan-acts\"><a class=\"btn ghost\" href=\"" + esc(c.url) + "\" target=\"_blank\" rel=\"noopener\">Open on YouTube</a><a class=\"btn ghost\" href=\"" + toolUrl("youtube-channel-quality-checker") + "?channel=" + encodeURIComponent(me.channel) + "\" data-recent=\"youtube-channel-quality-checker\">Quality score</a><button type=\"button\" class=\"btn ghost\" data-change-channel>Change</button></div></div>";
+      "<div class=\"chan-acts\"><a class=\"btn ghost\" href=\"" + esc(c.url) + "\" target=\"_blank\" rel=\"noopener\">Open on YouTube</a><a class=\"btn ghost\" href=\"" + toolUrl("youtube-channel-quality-checker") + "?channel=" + encodeURIComponent(me.channel) + "\" data-recent=\"youtube-channel-quality-checker\">Quality score</a></div></div>";
     function growth(key, base) {
       if (mine.d7) return "7d " + delta(mine.d7, key, base);
       var st = mine.sinceStart;
@@ -279,57 +272,24 @@
   window.addEventListener("hashchange", function () { show(location.hash.replace("#", "") || "feed"); });
 
   /* ---------------------------------------------------------- wiring */
-  function loadGsiClient(cb) {
-    if (window.google && window.google.accounts && window.google.accounts.oauth2) { cb(); return; }
-    var s = document.createElement("script");
-    s.src = "https://accounts.google.com/gsi/client?hl=en";
-    s.async = true;
-    s.onload = cb;
-    document.head.appendChild(s);
-  }
   function wire(el) {
-    var vbtn = el.querySelector("[data-verify-youtube]");
-    if (vbtn) vbtn.addEventListener("click", function () {
+    var sc = el.querySelector("[data-set-channel]");
+    if (sc) sc.addEventListener("submit", function (e) {
+      e.preventDefault();
+      var v = sc.elements.channel.value.trim();
       var msg = el.querySelector("[data-set-channel-msg]");
-      var cid = me && me.googleClientId;
-      if (!cid) { if (msg) { msg.textContent = "Google verification is not configured on this site yet."; msg.className = "fmsg bad"; } return; }
-      vbtn.disabled = true;
-      if (msg) { msg.textContent = "Opening Google to verify your YouTube channel…"; msg.className = "fmsg"; }
-      loadGsiClient(function () {
-        if (!window.google || !window.google.accounts || !window.google.accounts.oauth2) {
-          vbtn.disabled = false;
-          if (msg) { msg.textContent = "Could not load Google sign-in. Disable any blocker for accounts.google.com and try again."; msg.className = "fmsg bad"; }
+      if (!v) return;
+      var btn = sc.querySelector('button[type="submit"]');
+      if (btn) btn.disabled = true;
+      if (msg) { msg.textContent = "Looking up your channel…"; msg.className = "fmsg"; }
+      post("/api/channel?action=set", { channel: v, source: "dashboard" }).then(function (r) {
+        if (btn) btn.disabled = false;
+        if (!r || !r.ok) {
+          if (msg) { msg.textContent = (r && r.error) || "Could not find that YouTube channel."; msg.className = "fmsg bad"; }
           return;
         }
-        var tc = window.google.accounts.oauth2.initTokenClient({
-          client_id: cid,
-          scope: "https://www.googleapis.com/auth/youtube.readonly",
-          prompt: "select_account",
-          callback: function (resp) {
-            if (!resp || resp.error || !resp.access_token) {
-              vbtn.disabled = false;
-              if (msg) { msg.textContent = resp && resp.error === "access_denied" ? "Cancelled. We need read-only YouTube permission to verify you own the channel." : "Google verification did not complete. Please try again."; msg.className = "fmsg bad"; }
-              return;
-            }
-            if (msg) { msg.textContent = "Checking your YouTube channel…"; msg.className = "fmsg"; }
-            post("/api/channel?action=verify", { accessToken: resp.access_token, source: "dashboard_oauth" }).then(function (r) {
-              if (!r || !r.ok) {
-                vbtn.disabled = false;
-                if (msg) { msg.textContent = (r && r.error) || "Could not verify your YouTube channel."; msg.className = "fmsg bad"; }
-                return;
-              }
-              me.channel = (r.channel && (r.channel.handle || r.channel.id)) || "";
-              me.channelVerified = true;
-              mine = r; monet = null; ideas = null; rerender(); loadMonet(); loadIdeas();
-              if (current === "feed") location.hash = "channel";
-            });
-          },
-          error_callback: function () {
-            vbtn.disabled = false;
-            if (msg) { msg.textContent = "The Google popup was closed before verification finished."; msg.className = "fmsg bad"; }
-          },
-        });
-        tc.requestAccessToken();
+        me.channel = (r.channel && (r.channel.handle || r.channel.id)) || v;
+        mine = r; monet = null; ideas = null; rerender(); loadMonet(); loadIdeas();
       });
     });
     var ff = el.querySelector("[data-focus-form]");
@@ -344,8 +304,6 @@
     });
     var ef = el.querySelector("[data-edit-focus]");
     if (ef) ef.addEventListener("click", function () { setTimeout(function () { var i = document.querySelector("[data-focus-form] input"); if (i) i.focus(); }, 400); });
-    var chg = el.querySelector("[data-change-channel]");
-    if (chg) chg.addEventListener("click", function (e) { e.preventDefault(); post("/api/channel?action=clear").then(function () { me.channel = ""; mine = null; monet = null; ideas = null; rerender(); }); });
     var add = el.querySelector("[data-watch-add]");
     if (add) add.addEventListener("submit", function (e) {
       e.preventDefault();

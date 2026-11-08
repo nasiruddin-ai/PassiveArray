@@ -33,10 +33,30 @@ const crypto = require("crypto");
 const store = require("../lib/store.js");
 const users = require("../lib/users.js");
 const google = require("../lib/google.js");
+const youtube = require("../creator-tools/lib/youtube.js");
+const report = require("../lib/channel-report.js");
 
 const SECRET = process.env.AUTH_SECRET || "";
 const WEBHOOK = process.env.SUBSCRIBE_WEBHOOK_URL || "";
 const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+
+// Common disposable / throwaway email domains blocked at sign-up so fake mails cannot register.
+const DISPOSABLE = new Set([
+  "mailinator.com", "guerrillamail.com", "guerrillamail.net", "sharklasers.com", "grr.la",
+  "10minutemail.com", "10minutemail.net", "tempmail.com", "temp-mail.org", "temp-mail.io",
+  "yopmail.com", "yopmail.fr", "yopmail.net", "trashmail.com", "trashmail.net", "getnada.com",
+  "maildrop.cc", "dispostable.com", "fakeinbox.com", "mohmal.com", "throwawaymail.com",
+  "EmailOnDeck.com".toLowerCase(), "mintemail.com", "mytemp.email", "burnermail.io",
+  "guerrillamailblock.com", "pokemail.net", "spam4.me", "tmpmail.net", "tmpmail.org",
+]);
+
+function isDisposableEmail(email) {
+  const at = String(email || "").lastIndexOf("@");
+  if (at < 0) return true;
+  const dom = String(email).slice(at + 1).toLowerCase();
+  if (!dom || dom.endsWith(".test") || dom.endsWith(".invalid") || dom.endsWith(".example") || dom === "example.com") return true;
+  return DISPOSABLE.has(dom);
+}
 
 // A link stays valid for its whole window rather than being consumed on first
 // use: single-use would need a store of spent tokens. Everything the site says
@@ -138,6 +158,59 @@ async function tell(record) {
   }
 }
 
+/* Resolves a single YouTube @handle / URL / channel ID using the YouTube Data API. */
+async function resolveSignupChannel(raw) {
+  const input = String(raw || "").trim().slice(0, 120);
+  if (!input) return null;
+  const apiKey = process.env.YOUTUBE_API_KEY || process.env.GOOGLE_API_KEY || "";
+  if (!apiKey) return { handle: input, id: "", title: input };
+  youtube.configure({ apiKey, timeoutMs: 8000 });
+  const r = await youtube.handleRequest("channel", { channel: input });
+  if (!r || !r.body || !r.body.ok || !r.body.channel) {
+    const err = new Error((r && r.body && r.body.error) || "Could not find that YouTube channel. Check your @handle or channel link.");
+    err.code = "channel";
+    throw err;
+  }
+  const ch = r.body.channel;
+  return { handle: ch.handle || input, id: ch.id || "", title: ch.title || "" };
+}
+
+/* Sends the one-time welcome greeting email (with Chrome extension install link
+   and, if the user has a channel, their channel snapshot) once their email is verified. */
+async function sendWelcomeIfNeeded(user, req) {
+  if (!user || !user.verified || user.welcomeSentAt || user.weekly === false || !WEBHOOK) return false;
+  const site = siteUrl(req);
+  const unsubToken = sign({ p: "unsub", e: user.email, exp: Date.now() + 365 * 86400000 });
+  const unsubscribeUrl = site + "/api/channel?action=unsubscribe&t=" + encodeURIComponent(unsubToken);
+  let channelReport = null;
+  if (user.channel) {
+    try {
+      const chan = require("../lib/api-channel.js");
+      const p = await chan.insights(user);
+      if (p && p.ok) channelReport = p;
+    } catch (_) {}
+  }
+  const mail = report.buildWelcome({ site, channelReport, unsubscribeUrl });
+  const ok = await tell({
+    kind: "digest",
+    email: user.email,
+    subject: mail.subject,
+    html: mail.html,
+    message: mail.text,
+    channel: user.channel || "",
+    channelId: user.channelId || "",
+    source: "welcome-signup",
+    receivedAt: new Date().toISOString(),
+  });
+  if (ok && store.enabled()) {
+    const now = new Date().toISOString();
+    user.welcomeSentAt = now;
+    if (channelReport) { user.reportSentAt = now; user.lastReportAt = now; }
+    try { await users.save(user); } catch (_) {}
+  }
+  return ok;
+}
+
 function parseBody(req) {
   let body = req.body;
   if (typeof body === "string") {
@@ -190,7 +263,7 @@ module.exports = async (req, res) => {
       pro: require("../lib/pro.js").isPro(profile),
       plan: require("../lib/pro.js").planName(profile),
       watch: profile && Array.isArray(profile.watch) ? profile.watch.length : 0,
-      channel: profile && profile.channel && profile.channelVerified ? String(profile.channel) : "",
+      channel: profile && profile.channel ? String(profile.channel) : "",
       channelVerified: !!(profile && profile.channelVerified),
       googleClientId: google.clientId(),
     });
@@ -281,21 +354,43 @@ module.exports = async (req, res) => {
       return send(res, 400, { ok: false, code: "bad_token", error: "That Google sign-in could not be verified. Try again." });
     }
 
+    let resolved = null;
+    if (body.channel && String(body.channel).trim()) {
+      try { resolved = await resolveSignupChannel(body.channel); } catch (_) { /* ignore bad channel on Google button */ }
+    }
+
     let since = new Date().toISOString().slice(0, 10);
     let isNew = false;
+    let user = null;
     if (store.enabled()) {
       try {
         const existing = await users.get(profile.email);
         isNew = !existing;
-        const user = await users.upsert(profile.email, { google: true, verified: true });
+        const patch = { google: true, verified: true };
+        if (resolved && !(existing && existing.channel)) {
+          patch.channel = resolved.handle;
+          patch.channelId = resolved.id;
+          patch.channelSince = since;
+        }
+        user = await users.upsert(profile.email, patch);
         since = user.created;
       } catch (e) {
         console.error("auth google store: " + e.message);
       }
     }
     if (isNew || !store.enabled()) {
-      await tell({ kind: "signup", email: profile.email, name: profile.name, platform: "Google sign-in", source: String(body.source || ""), receivedAt: new Date().toISOString() });
+      await tell({
+        kind: "signup",
+        email: profile.email,
+        name: profile.name,
+        channel: (user && user.channel) || (resolved && resolved.handle) || "",
+        channelId: (user && user.channelId) || (resolved && resolved.id) || "",
+        platform: "Google sign-in",
+        source: String(body.source || ""),
+        receivedAt: new Date().toISOString(),
+      });
     }
+    if (user) await sendWelcomeIfNeeded(user, req);
     return startSession(res, profile.email, since, { method: "google", isNew });
   }
 
@@ -308,9 +403,21 @@ module.exports = async (req, res) => {
 
     const email = String(body.email || "").trim().toLowerCase();
     if (!EMAIL.test(email) || email.length > 200) return send(res, 400, { ok: false, code: "email", error: "Enter a valid email address." });
+    if (isDisposableEmail(email)) return send(res, 400, { ok: false, code: "email", error: "Use a real email address (disposable mail addresses cannot sign up)." });
 
     const complaint = users.checkPassword(body.password, email);
     if (complaint) return send(res, 400, { ok: false, code: "password", error: complaint });
+
+    const rawChannel = String(body.channel || "").trim();
+    if (!rawChannel) {
+      return send(res, 400, { ok: false, code: "channel", error: "Enter your YouTube channel @handle or channel link." });
+    }
+    let resolved;
+    try {
+      resolved = await resolveSignupChannel(rawChannel);
+    } catch (e) {
+      return send(res, 400, { ok: false, code: "channel", error: e.message || "Could not find that YouTube channel." });
+    }
 
     const limit = await store.hitLimit("rl:reg:" + ip, 5, 3600);
     if (limit.limited) return tooMany(res, "new accounts from this connection");
@@ -320,19 +427,39 @@ module.exports = async (req, res) => {
       console.error("auth register store: " + e.message);
       return send(res, 502, { ok: false, error: "Could not create the account right now. Please try again in a minute." });
     }
-    if (existing && existing.pw) {
-      return send(res, 409, { ok: false, code: "exists", error: "That address already has a password. Sign in instead, or use the email link if you have forgotten it." });
+    if (existing && existing.pw && existing.verified) {
+      return send(res, 409, { ok: false, code: "exists", error: "That address already has an account. Sign in instead, or use the email link if you have forgotten your password." });
     }
 
     let user;
     try {
       user = await users.setPassword(email, String(body.password));
+      user.channel = resolved.handle;
+      user.channelId = resolved.id;
+      user.channelSince = user.channelSince || new Date().toISOString().slice(0, 10);
+      await users.save(user);
     } catch (e) {
       console.error("auth register: " + e.message);
       return send(res, 502, { ok: false, error: "Could not create the account right now. Please try again in a minute." });
     }
 
-    await tell({ kind: "signup", email, platform: String(body.platform || "Password account").slice(0, 40), source: String(body.source || ""), receivedAt: new Date().toISOString() });
+    // Require email verification before starting a session so fake emails cannot access the account.
+    if (WEBHOOK) {
+      const token = sign({ p: "login", e: email, c: resolved.handle, cid: resolved.id, exp: Date.now() + LINK_MINUTES * 60000 });
+      await tell({
+        kind: "login",
+        email,
+        channel: resolved.handle,
+        channelId: resolved.id,
+        link: siteUrl(req) + "/login/?token=" + encodeURIComponent(token) + (safeNext(body.next) ? "&next=" + encodeURIComponent(body.next) : ""),
+        minutes: LINK_MINUTES,
+        source: String(body.source || "").slice(0, 300),
+        receivedAt: new Date().toISOString(),
+      });
+      return send(res, 200, { ok: true, needsVerification: true });
+    }
+
+    await tell({ kind: "signup", email, name: resolved.title, channel: resolved.handle, channelId: resolved.id, platform: String(body.platform || "Password account").slice(0, 40), source: String(body.source || ""), receivedAt: new Date().toISOString() });
     return startSession(res, email, user.created, { method: "password", isNew: true });
   }
 
@@ -358,7 +485,22 @@ module.exports = async (req, res) => {
     }
     if (!user) return send(res, 401, { ok: false, code: "bad_login", error: BAD_LOGIN });
 
+    // Block unverified email accounts from signing in with a password until they click the link sent to their inbox.
+    if (user.verified === false && WEBHOOK) {
+      const token = sign({ p: "login", e: user.email, exp: Date.now() + LINK_MINUTES * 60000 });
+      await tell({
+        kind: "login",
+        email: user.email,
+        link: siteUrl(req) + "/login/?token=" + encodeURIComponent(token),
+        minutes: LINK_MINUTES,
+        source: "password-verify",
+        receivedAt: new Date().toISOString(),
+      });
+      return send(res, 403, { ok: false, code: "unverified", error: "Please verify your email first. We just sent a verification link to your inbox." });
+    }
+
     await store.clearLimit(attemptKey);
+    await sendWelcomeIfNeeded(user, req);
     return startSession(res, user.email, user.created, { method: "password" });
   }
 
@@ -371,18 +513,48 @@ module.exports = async (req, res) => {
     if (!EMAIL.test(email) || email.length > 200) {
       return send(res, 400, { ok: false, code: "email", error: "Enter a valid email address." });
     }
+    if (isDisposableEmail(email)) {
+      return send(res, 400, { ok: false, code: "email", error: "Use a real email address (disposable mail addresses cannot sign up)." });
+    }
     if (!WEBHOOK) {
       return send(res, 200, { ok: false, code: "disabled", error: "Email sign-in links are not set up on this site yet." });
+    }
+
+    const isSignup = String(body.source || "").indexOf("signup") >= 0;
+    const rawChannel = String(body.channel || "").trim();
+    if (isSignup && !rawChannel) {
+      return send(res, 400, { ok: false, code: "channel", error: "Enter your YouTube channel @handle or channel link." });
+    }
+    let resolved = null;
+    if (rawChannel) {
+      try {
+        resolved = await resolveSignupChannel(rawChannel);
+      } catch (e) {
+        return send(res, 400, { ok: false, code: "channel", error: e.message || "Could not find that YouTube channel." });
+      }
     }
 
     const byEmail = await store.hitLimit("rl:link:" + email, 5, 900);
     const byIp = await store.hitLimit("rl:linkip:" + ip, 20, 900);
     if (byEmail.limited || byIp.limited) return tooMany(res, "link requests");
 
-    const token = sign({ p: "login", e: email, exp: Date.now() + LINK_MINUTES * 60000 });
+    if (resolved && store.enabled()) {
+      try {
+        const existing = await users.get(email);
+        if (!existing || !existing.channel) {
+          await users.upsert(email, { channel: resolved.handle, channelId: resolved.id, channelSince: new Date().toISOString().slice(0, 10) });
+        }
+      } catch (_) {}
+    }
+
+    const tokenData = { p: "login", e: email, exp: Date.now() + LINK_MINUTES * 60000 };
+    if (resolved) { tokenData.c = resolved.handle; tokenData.cid = resolved.id; tokenData.ct = resolved.title; }
+    const token = sign(tokenData);
     await tell({
       kind: "login",
       email,
+      channel: resolved ? resolved.handle : "",
+      channelId: resolved ? resolved.id : "",
       link: siteUrl(req) + "/login/?token=" + encodeURIComponent(token) + (safeNext(body.next) ? "&next=" + encodeURIComponent(body.next) : ""),
       minutes: LINK_MINUTES,
       source: String(body.source || "").slice(0, 300),
@@ -390,7 +562,7 @@ module.exports = async (req, res) => {
     });
 
     // Always the same answer, so this cannot be used to discover who has an account.
-    return send(res, 200, { ok: true });
+    return send(res, 200, { ok: true, needsVerification: true });
   }
 
   /* --- exchange a link for a session ------------------------------------ */
@@ -401,13 +573,34 @@ module.exports = async (req, res) => {
     }
     let since = data.s || new Date().toISOString().slice(0, 10);
     let isNew = false;
+    let user = null;
     if (store.enabled()) {
       try {
-        isNew = !(await users.get(data.e));
-        const user = await users.upsert(data.e, { verified: true });
+        const existing = await users.get(data.e);
+        isNew = !existing || !existing.verified;
+        const patch = { verified: true };
+        if (data.c && !(existing && existing.channel)) {
+          patch.channel = String(data.c);
+          patch.channelId = String(data.cid || "");
+          patch.channelSince = since;
+        }
+        user = await users.upsert(data.e, patch);
         since = user.created;
       } catch (e) { console.error("auth verify store: " + e.message); }
     }
+    if (isNew) {
+      await tell({
+        kind: "signup",
+        email: data.e,
+        name: data.ct || "",
+        channel: (user && user.channel) || data.c || "",
+        channelId: (user && user.channelId) || data.cid || "",
+        platform: "Email verified",
+        source: "email_verify",
+        receivedAt: new Date().toISOString(),
+      });
+    }
+    if (user) await sendWelcomeIfNeeded(user, req);
     return startSession(res, data.e, since, { method: "link", isNew });
   }
 
