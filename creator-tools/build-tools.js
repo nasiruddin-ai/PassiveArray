@@ -191,27 +191,54 @@ const WEB_TOOLS = [
 
 function footer(root, note) {
   const col = (title, links) => `<div class="fcol"><h2 class="fh">${esc(title)}</h2>${links.map(([href, label]) => `<a href="${/^https?:/.test(href) ? href : root + href}">${esc(label)}</a>`).join("")}</div>`;
-  const popular = POPULAR_SLUGS.slice(0, 6).map((s) => tools.find((t) => t.slug === s)).filter(Boolean).map((t) => [`creator-tools/${t.slug}/`, t.name]);
   return `<footer class="site-footer"><div class="wrap">
   <div class="fgrid">
     <div class="fbrand">
       <a class="brand" href="${root}" aria-label="${BRAND} home">${MARK("f" + Math.random().toString(36).slice(2, 6))}<span>Passive <b>Array</b></span></a>
       <p>${TAGLINE}. Live data from official APIs, the formula on every page, nothing behind a wall.</p>
       <form class="fnews" data-subscribe data-kind="newsletter" novalidate>
-        <label for="fn-email">Stay tuned</label>
+        <label for="fn-email">Weekly creator report</label>
         <div class="row"><input id="fn-email" type="email" name="email" placeholder="you@example.com" required autocomplete="email"><button type="submit" class="btn">Subscribe</button></div>
         <input type="text" name="website" tabindex="-1" autocomplete="off" class="hp" aria-hidden="true">
-        <span class="fmsg" data-msg>One email a week: benchmarks, rate changes, new tools. Unsubscribe any time.</span>
+        <span class="fmsg" data-msg>Benchmarks, rate changes and new tools — one email a week.</span>
       </form>
     </div>
-    ${col("Tools", [["creator-tools/#rank", "YouTube SEO tools"], ["creator-tools/#create", "Generators"], ["creator-tools/youtube-channel-growth-tracker/", "Growth tracker"], ["research/", "Keyword research"], ["creator-tools/", `All ${tools.length} tools`]])}
-    ${col("Web tools", WEB_TOOLS.map(([href, name]) => [href, name]))}
-    ${col("Resources", [["blog/", "Blog"], ["youtube-extension/", "Chrome extension"], ["account/#mcp", "MCP for AI assistants"], ["compare/", "Compare"], ["faq/", "FAQ"]])}
-    ${col("Company", [["about/", "About"], ["pricing/", "Pricing"], ["youtube-seo-service/", "YouTube SEO service"], ["contact/", "Contact"], ["login/", "Sign in"]])}
+    ${col("YouTube & Creator", [
+      ["creator-tools/youtube-monetization-checker/", "Monetization Checker"],
+      ["creator-tools/youtube-money-calculator/", "YouTube Money Calculator"],
+      ["creator-tools/youtube-tag-generator/", "Tag & Keyword Generator"],
+      ["creator-tools/youtube-channel-growth-tracker/", "Channel Growth Tracker"],
+      ["creator-tools/youtube-comment-audit/", "Comment Health Audit"],
+      ["creator-tools/", `All ${tools.length} Creator Tools`],
+    ])}
+    ${col("Research & Platform", [
+      ["youtube-extension/", "Chrome Extension"],
+      ["research/", "Keyword Research"],
+      ["research/outliers/", "Outlier Video Finder"],
+      ["research/shorts/", "Viral Shorts Finder"],
+      ["compare/vidiq-alternative/", "Passive Array vs vidIQ"],
+      ["compare/tubebuddy-alternative/", "Passive Array vs TubeBuddy"],
+    ])}
+    ${col("SEO & Web Utilities", [
+      ["meta-tag-checker/", "Meta Tag Checker"],
+      ["serp-snippet-preview/", "SERP Snippet Preview"],
+      ["schema-markup-generator/", "Schema Markup Generator"],
+      ["domain-finder/", "Domain Name Finder"],
+      ["domain-age-checker/", "Domain Age Checker"],
+      ["seo-roi-calculator/", "SEO ROI Calculator"],
+    ])}
+    ${col("Company", [
+      ["about/", "About Us"],
+      ["founder/", "Founder"],
+      ["pricing/", "Pricing"],
+      ["blog/", "Creator Blog"],
+      ["youtube-seo-service/", "YouTube SEO Service"],
+      ["contact/", "Contact"],
+    ])}
   </div>
   <div class="fbottom">
     <span>&copy; ${new Date().getFullYear()} ${BRAND}. ${esc(note || "Estimates use public numbers and typical industry rates. A starting point, not a guarantee.")}</span>
-    <nav><a href="${root}privacy/">Privacy</a><a href="${root}terms/">Terms</a><a href="${root}contact/">Contact</a><button type="button" class="flink" data-consent-open hidden>Cookie choices</button></nav>
+    <nav><a href="${root}privacy/">Privacy Policy</a><a href="${root}terms/">Terms of Use</a><a href="${root}faq/">FAQ</a><a href="${root}account/#mcp">MCP API</a><button type="button" class="flink" data-consent-open hidden>Cookie choices</button></nav>
   </div>
 </div></footer>`;
 }
