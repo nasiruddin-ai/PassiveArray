@@ -409,17 +409,16 @@ module.exports = async (req, res) => {
     if (complaint) return send(res, 400, { ok: false, code: "password", error: complaint });
 
     const rawChannel = String(body.channel || "").trim();
-    if (!rawChannel) {
-      return send(res, 400, { ok: false, code: "channel", error: "Enter your YouTube channel @handle or channel link." });
-    }
-    let resolved;
-    try {
-      resolved = await resolveSignupChannel(rawChannel);
-    } catch (e) {
-      return send(res, 400, { ok: false, code: "channel", error: e.message || "Could not find that YouTube channel." });
+    let resolved = null;
+    if (rawChannel) {
+      try {
+        resolved = await resolveSignupChannel(rawChannel);
+      } catch (e) {
+        return send(res, 400, { ok: false, code: "channel", error: e.message || "Could not find that YouTube channel." });
+      }
     }
 
-    const limit = await store.hitLimit("rl:reg:" + ip, 5, 3600);
+    const limit = await store.hitLimit("rl:reg:" + ip, 10, 3600);
     if (limit.limited) return tooMany(res, "new accounts from this connection");
 
     let existing = null;
@@ -427,39 +426,50 @@ module.exports = async (req, res) => {
       console.error("auth register store: " + e.message);
       return send(res, 502, { ok: false, error: "Could not create the account right now. Please try again in a minute." });
     }
-    if (existing && existing.pw && existing.verified) {
+    if (existing && existing.pw) {
+      // If they entered their own password on the signup page, sign them right in instead of blocking!
+      try {
+        const match = await users.checkLogin(email, String(body.password));
+        if (match) {
+          if (resolved && !match.channel) {
+            match.channel = resolved.handle;
+            match.channelId = resolved.id;
+            match.channelSince = match.channelSince || new Date().toISOString().slice(0, 10);
+            await users.save(match);
+          }
+          await sendWelcomeIfNeeded(match, req);
+          return startSession(res, match.email, match.created, { method: "password" });
+        }
+      } catch (_) {}
       return send(res, 409, { ok: false, code: "exists", error: "That address already has an account. Sign in instead, or use the email link if you have forgotten your password." });
     }
 
     let user;
     try {
       user = await users.setPassword(email, String(body.password));
-      user.channel = resolved.handle;
-      user.channelId = resolved.id;
-      user.channelSince = user.channelSince || new Date().toISOString().slice(0, 10);
+      user.verified = true;
+      if (resolved) {
+        user.channel = resolved.handle;
+        user.channelId = resolved.id;
+        user.channelSince = user.channelSince || new Date().toISOString().slice(0, 10);
+      }
       await users.save(user);
     } catch (e) {
       console.error("auth register: " + e.message);
       return send(res, 502, { ok: false, error: "Could not create the account right now. Please try again in a minute." });
     }
 
-    // Require email verification before starting a session so fake emails cannot access the account.
-    if (WEBHOOK) {
-      const token = sign({ p: "login", e: email, c: resolved.handle, cid: resolved.id, exp: Date.now() + LINK_MINUTES * 60000 });
-      await tell({
-        kind: "login",
-        email,
-        channel: resolved.handle,
-        channelId: resolved.id,
-        link: siteUrl(req) + "/login/?token=" + encodeURIComponent(token) + (safeNext(body.next) ? "&next=" + encodeURIComponent(body.next) : ""),
-        minutes: LINK_MINUTES,
-        source: String(body.source || "").slice(0, 300),
-        receivedAt: new Date().toISOString(),
-      });
-      return send(res, 200, { ok: true, needsVerification: true });
-    }
-
-    await tell({ kind: "signup", email, name: resolved.title, channel: resolved.handle, channelId: resolved.id, platform: String(body.platform || "Password account").slice(0, 40), source: String(body.source || ""), receivedAt: new Date().toISOString() });
+    await tell({
+      kind: "signup",
+      email,
+      name: resolved ? resolved.title : "",
+      channel: resolved ? resolved.handle : (user.channel || ""),
+      channelId: resolved ? resolved.id : (user.channelId || ""),
+      platform: String(body.platform || "Password account").slice(0, 40),
+      source: String(body.source || ""),
+      receivedAt: new Date().toISOString(),
+    });
+    await sendWelcomeIfNeeded(user, req);
     return startSession(res, email, user.created, { method: "password", isNew: true });
   }
 
@@ -472,7 +482,7 @@ module.exports = async (req, res) => {
     if (!EMAIL.test(email)) return send(res, 400, { ok: false, code: "bad_login", error: BAD_LOGIN });
 
     const attemptKey = "rl:pw:" + email;
-    const byEmail = await store.hitLimit(attemptKey, 8, 900);
+    const byEmail = await store.hitLimit(attemptKey, 10, 900);
     const byIp = await store.hitLimit("rl:pwip:" + ip, 30, 900);
     if (byEmail.limited || byIp.limited) return tooMany(res, "sign-in attempts");
 
@@ -485,18 +495,9 @@ module.exports = async (req, res) => {
     }
     if (!user) return send(res, 401, { ok: false, code: "bad_login", error: BAD_LOGIN });
 
-    // Block unverified email accounts from signing in with a password until they click the link sent to their inbox.
-    if (user.verified === false && WEBHOOK) {
-      const token = sign({ p: "login", e: user.email, exp: Date.now() + LINK_MINUTES * 60000 });
-      await tell({
-        kind: "login",
-        email: user.email,
-        link: siteUrl(req) + "/login/?token=" + encodeURIComponent(token),
-        minutes: LINK_MINUTES,
-        source: "password-verify",
-        receivedAt: new Date().toISOString(),
-      });
-      return send(res, 403, { ok: false, code: "unverified", error: "Please verify your email first. We just sent a verification link to your inbox." });
+    if (!user.verified) {
+      user.verified = true;
+      try { await users.save(user); } catch (_) {}
     }
 
     await store.clearLimit(attemptKey);
@@ -520,11 +521,7 @@ module.exports = async (req, res) => {
       return send(res, 200, { ok: false, code: "disabled", error: "Email sign-in links are not set up on this site yet." });
     }
 
-    const isSignup = String(body.source || "").indexOf("signup") >= 0;
     const rawChannel = String(body.channel || "").trim();
-    if (isSignup && !rawChannel) {
-      return send(res, 400, { ok: false, code: "channel", error: "Enter your YouTube channel @handle or channel link." });
-    }
     let resolved = null;
     if (rawChannel) {
       try {

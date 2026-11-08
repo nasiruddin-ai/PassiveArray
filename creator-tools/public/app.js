@@ -125,7 +125,7 @@
     var c = mine.channel, sm = mine.summary, v = monet && monet.ok ? monet.verdict : null;
     var head = "<div class=\"chan-head\">" + (c.thumbnail ? "<img src=\"" + esc(c.thumbnail) + "\" alt=\"\">" : "") + "<div class=\"t\"><h2>" + esc(c.title) + "</h2><div class=\"sub\">" + esc(c.handle || "") + (c.country ? " · " + esc(c.country) : "") + (c.publishedAt ? " · since " + new Date(c.publishedAt).getFullYear() : "") + " · tracked since " + esc(mine.since) + "</div></div>" +
       (v ? "<a class=\"verdict " + esc(v.cls || "") + "\" href=\"#race\">" + esc(v.label) + (v.confidence != null ? " · " + v.confidence + "%" : "") + "</a>" : "") +
-      "<div class=\"chan-acts\"><a class=\"btn ghost\" href=\"" + esc(c.url) + "\" target=\"_blank\" rel=\"noopener\">Open on YouTube</a><a class=\"btn ghost\" href=\"" + toolUrl("youtube-channel-quality-checker") + "?channel=" + encodeURIComponent(me.channel) + "\" data-recent=\"youtube-channel-quality-checker\">Quality score</a></div></div>";
+      "<div class=\"chan-acts\"><a class=\"btn ghost\" href=\"" + esc(c.url) + "\" target=\"_blank\" rel=\"noopener\">Open on YouTube</a><a class=\"btn ghost\" href=\"" + toolUrl("youtube-channel-quality-checker") + "?channel=" + encodeURIComponent(me.channel) + "\" data-recent=\"youtube-channel-quality-checker\">Quality score</a><button type=\"button\" class=\"btn ghost\" data-change-channel>Switch channel</button></div></div>";
     function growth(key, base) {
       if (mine.d7) return "7d " + delta(mine.d7, key, base);
       var st = mine.sinceStart;
@@ -273,6 +273,9 @@
 
   /* ---------------------------------------------------------- wiring */
   function wire(el) {
+    el.querySelectorAll("[data-change-channel]").forEach(function (b) {
+      b.addEventListener("click", function (e) { e.preventDefault(); promptChangeChannel(); });
+    });
     var sc = el.querySelector("[data-set-channel]");
     if (sc) sc.addEventListener("submit", function (e) {
       e.preventDefault();
@@ -340,6 +343,27 @@
   /* ------------------------------------------------------------- rail & gate */
   var gate = document.querySelector("[data-app-gate]");
   var gateBody = document.querySelector("[data-app-gate-body]");
+  var gIcon = "<svg width=\"18\" height=\"18\" viewBox=\"0 0 24 24\" aria-hidden=\"true\" style=\"flex:none\"><path fill=\"#4285F4\" d=\"M23.5 12.3c0-.8-.1-1.6-.2-2.4H12v4.6h6.5c-.3 1.5-1.1 2.8-2.4 3.6v3h3.9c2.3-2.1 3.5-5.2 3.5-8.8z\"/><path fill=\"#34A853\" d=\"M12 24c3.2 0 6-1.1 8-2.9l-3.9-3c-1.1.7-2.5 1.2-4.1 1.2-3.1 0-5.8-2.1-6.7-5H1.3v3.1C3.3 21.4 7.3 24 12 24z\"/><path fill=\"#FBBC05\" d=\"M5.3 14.3c-.2-.7-.4-1.5-.4-2.3s.2-1.6.4-2.3V6.6H1.3C.5 8.2 0 10.1 0 12s.5 3.8 1.3 5.4l4-3.1z\"/><path fill=\"#EA4335\" d=\"M12 4.8c1.8 0 3.3.6 4.6 1.8l3.4-3.4C17.9 1.2 15.2 0 12 0 7.3 0 3.3 2.6 1.3 6.6l4 3.1c.9-2.9 3.6-4.9 6.7-4.9z\"/></svg>";
+
+  function loadGsiClient(cb) {
+    if (window.google && window.google.accounts && window.google.accounts.oauth2) { cb(); return; }
+    var s = document.createElement("script");
+    s.src = "https://accounts.google.com/gsi/client?hl=en";
+    s.async = true;
+    s.onload = cb;
+    s.onerror = cb;
+    document.head.appendChild(s);
+  }
+
+  function applyChannelSuccess(r, fallbackHandle) {
+    me.channel = (r.channel && (r.channel.handle || r.channel.id)) || fallbackHandle || "";
+    mine = r; monet = null; ideas = null;
+    updateGate();
+    paintRail();
+    render(current);
+    loadMonet();
+    loadIdeas();
+  }
 
   function updateGate() {
     if (!gate || !gateBody) return;
@@ -352,63 +376,105 @@
       app.classList.add("gated");
       gate.hidden = false;
       gateBody.innerHTML =
-        "<span class=\"k\">Dashboard Locked</span>" +
-        "<h2>Sign in &amp; link your channel to access the dashboard</h2>" +
-        "<p>The creator dashboard is personalized to your YouTube channel. Create a free account with your email and channel, or sign in to continue. All public tools work without an account.</p>" +
+        "<span class=\"k\">Welcome to Passive Array</span>" +
+        "<h2>Sign in to open your creator dashboard</h2>" +
+        "<p>Just like vidIQ: sign in with Google or your email first, then link your YouTube channel on the next step to track your monetization progress, daily ideas and weekly growth report.</p>" +
         "<div style=\"display:flex;gap:10px;flex-wrap:wrap;margin-top:16px\">" +
-          "<a class=\"btn\" href=\"" + ROOT + "signup/?next=%2Fapp%2F\" style=\"flex:1;justify-content:center\">Create free account</a>" +
-          "<a class=\"btn ghost\" href=\"" + ROOT + "login/?next=%2Fapp%2F\" style=\"flex:1;justify-content:center\">Sign in</a>" +
+          "<a class=\"btn\" href=\"" + ROOT + "login/?next=%2Fapp%2F\" style=\"flex:1;justify-content:center\">Sign in</a>" +
+          "<a class=\"btn ghost\" href=\"" + ROOT + "signup/?next=%2Fapp%2F\" style=\"flex:1;justify-content:center\">Create free account</a>" +
         "</div>" +
-        "<div class=\"app-gate-foot\"><span>Want to check competitors without signing in?</span><a href=\"" + ROOT + "creator-tools/\">Browse free tools →</a></div>";
+        "<div class=\"app-gate-foot\"><span>Want to use tools without signing in?</span><a href=\"" + ROOT + "creator-tools/\">Browse free tools →</a></div>";
       return;
     }
     if (!me.channel) {
       app.classList.add("gated");
       gate.hidden = false;
+      var hasGoogle = !!(me.googleClientId);
       gateBody.innerHTML =
-        "<span class=\"k\">Step Required · 1 Channel Per Account</span>" +
-        "<h2>Add your YouTube channel to unlock the dashboard</h2>" +
-        "<p>Signed in as <b>" + esc(me.email) + "</b>. You must link your YouTube channel before accessing the dashboard. We will track your monetization progress, daily ideas and weekly growth report.</p>" +
+        "<span class=\"k\">Step 2 of 2 · Connect Your Channel</span>" +
+        "<h2>Link your YouTube channel to enter the dashboard</h2>" +
+        "<p>Signed in as <b>" + esc(me.email) + "</b>. Connect your YouTube channel below to unlock your dashboard, monetization tracker, daily video ideas and weekly growth report.</p>" +
+        (hasGoogle
+          ? "<button type=\"button\" class=\"btn\" data-gate-oauth style=\"width:100%;justify-content:center;gap:10px;height:46px\">" + gIcon + "<span>Connect my YouTube channel with Google</span></button>" +
+            "<div class=\"app-gate-or\"><span>or enter your channel @handle</span></div>"
+          : "") +
         "<form class=\"aform\" data-gate-channel novalidate>" +
-          "<input type=\"text\" name=\"channel\" placeholder=\"@yourhandle or youtube.com/@yourhandle\" required autocomplete=\"off\">" +
-          "<button class=\"btn\" type=\"submit\">Add my channel &amp; enter dashboard</button>" +
+          "<input type=\"text\" name=\"channel\" placeholder=\"@yourhandle, channel name or youtube.com/@yourhandle\" required autocomplete=\"off\">" +
+          "<button class=\"btn" + (hasGoogle ? " ghost" : "") + "\" type=\"submit\">Link channel &amp; open dashboard</button>" +
         "</form>" +
         "<span class=\"fmsg\" data-gate-channel-msg style=\"display:block;margin-top:8px\"></span>" +
         "<div class=\"app-gate-foot\"><a href=\"" + ROOT + "creator-tools/\">← Back to public tools</a><a href=\"#\" data-gate-logout>Sign out</a></div>";
-      var gf = gateBody.querySelector("[data-gate-channel]");
+
       var gmsg = gateBody.querySelector("[data-gate-channel-msg]");
+      var obtn = gateBody.querySelector("[data-gate-oauth]");
+      if (obtn) {
+        obtn.addEventListener("click", function () {
+          obtn.disabled = true;
+          if (gmsg) { gmsg.textContent = "Opening Google to connect your YouTube channel…"; gmsg.className = "fmsg"; }
+          loadGsiClient(function () {
+            if (!window.google || !window.google.accounts || !window.google.accounts.oauth2) {
+              obtn.disabled = false;
+              if (gmsg) { gmsg.textContent = "Could not open Google popup. Type your @handle below instead."; gmsg.className = "fmsg bad"; }
+              return;
+            }
+            var tc = window.google.accounts.oauth2.initTokenClient({
+              client_id: me.googleClientId,
+              scope: "https://www.googleapis.com/auth/youtube.readonly",
+              prompt: "select_account",
+              callback: function (resp) {
+                if (!resp || resp.error || !resp.access_token) {
+                  obtn.disabled = false;
+                  if (gmsg) { gmsg.textContent = "Google connection cancelled — or type your @handle below."; gmsg.className = "fmsg bad"; }
+                  return;
+                }
+                if (gmsg) { gmsg.textContent = "Loading your YouTube channel…"; gmsg.className = "fmsg"; }
+                post("/api/channel?action=verify", { accessToken: resp.access_token, source: "dashboard_gate_oauth" }).then(function (r) {
+                  obtn.disabled = false;
+                  if (!r || !r.ok) {
+                    if (gmsg) { gmsg.textContent = ((r && r.error) || "Could not find a channel on that Google account.") + " You can also type your @handle below."; gmsg.className = "fmsg bad"; }
+                    return;
+                  }
+                  applyChannelSuccess(r, "");
+                });
+              },
+              error_callback: function () {
+                obtn.disabled = false;
+                if (gmsg) { gmsg.textContent = "Popup closed. You can also type your @handle below."; gmsg.className = "fmsg"; }
+              }
+            });
+            tc.requestAccessToken();
+          });
+        });
+      }
+
+      var gf = gateBody.querySelector("[data-gate-channel]");
       if (gf) {
         var inp = gf.querySelector("input");
-        if (inp) setTimeout(function () { inp.focus(); }, 50);
+        if (inp && !hasGoogle) setTimeout(function () { inp.focus(); }, 50);
         gf.addEventListener("submit", function (e) {
           e.preventDefault();
           var v = gf.elements.channel.value.trim();
           if (!v) {
-            if (gmsg) { gmsg.textContent = "Enter your YouTube @handle or channel link."; gmsg.className = "fmsg bad"; }
+            if (gmsg) { gmsg.textContent = "Enter your YouTube @handle, channel name or link."; gmsg.className = "fmsg bad"; }
             return;
           }
           var btn = gf.querySelector("button[type=\"submit\"]");
           if (btn) btn.disabled = true;
-          if (gmsg) { gmsg.textContent = "Verifying your YouTube channel…"; gmsg.className = "fmsg"; }
+          if (gmsg) { gmsg.textContent = "Looking up your YouTube channel…"; gmsg.className = "fmsg"; }
           post("/api/channel?action=set", { channel: v, source: "dashboard_gate" }).then(function (r) {
             if (btn) btn.disabled = false;
             if (!r || !r.ok) {
               if (gmsg) { gmsg.textContent = (r && r.error) || "Could not find that YouTube channel. Check your @handle or link."; gmsg.className = "fmsg bad"; }
               return;
             }
-            me.channel = (r.channel && (r.channel.handle || r.channel.id)) || v;
-            mine = r; monet = null; ideas = null;
-            updateGate();
-            rerender();
-            loadMonet();
-            loadIdeas();
+            applyChannelSuccess(r, v);
           });
         });
       }
       var glo = gateBody.querySelector("[data-gate-logout]");
       if (glo) glo.addEventListener("click", function (e) {
         e.preventDefault();
-        post("/api/auth?action=logout").then(function () { try { localStorage.removeItem("pa-user"); } catch (x) {} location.href = ROOT; });
+        post("/api/auth?action=logout").then(function () { try { localStorage.removeItem("pa-user"); } catch (x) {} location.href = ROOT + "login/"; });
       });
       return;
     }
@@ -416,9 +482,16 @@
     gate.hidden = true;
   }
 
+  function promptChangeChannel() {
+    if (!me || !me.ok) return;
+    me.channel = "";
+    updateGate();
+  }
+
   function paintRail() {
     var email = document.querySelector("[data-who-email]"), sub = document.querySelector("[data-who-sub]"), plan = document.querySelector("[data-who-plan]");
     var up = document.querySelector("[data-upgrade-link]");
+    var rchan = document.querySelector("[data-rail-chan]");
     if (me && me.ok) {
       email.textContent = me.email;
       sub.innerHTML = "<a href=\"" + ROOT + "account/\">Account</a> · <a href=\"#\" data-logout>Sign out</a>";
@@ -426,6 +499,23 @@
       up.querySelector("span").textContent = me.pro ? "Pro member" : "Upgrade to Pro"; up.classList.toggle("pro", !!me.pro);
       var lo = sub.querySelector("[data-logout]");
       if (lo) lo.addEventListener("click", function (e) { e.preventDefault(); post("/api/auth?action=logout").then(function () { try { localStorage.removeItem("pa-user"); } catch (x) {} location.href = ROOT; }); });
+    }
+    if (rchan) {
+      if (me && me.ok && me.channel) {
+        var chObj = (mine && mine.ok && mine.channel) || (monet && monet.ok && monet.channel) || null;
+        var chTitle = (chObj && chObj.title) || me.channel;
+        var chSub = chObj && chObj.subscribers != null && !chObj.hiddenSubscribers ? compact(chObj.subscribers) + " subscribers" : (chObj && chObj.handle) || me.channel;
+        var chThumb = (chObj && chObj.thumbnail) || "";
+        rchan.hidden = false;
+        rchan.innerHTML =
+          (chThumb ? "<img src=\"" + esc(chThumb) + "\" alt=\"\">" : "") +
+          "<a href=\"#channel\" class=\"rc-t\" style=\"color:inherit;text-decoration:none\"><b>" + esc(chTitle) + "</b><span>" + esc(chSub) + "</span></a>" +
+          "<button type=\"button\" class=\"rc-act\" data-rail-switch-chan title=\"Switch or change your linked YouTube channel\">Switch</button>";
+        var sw = rchan.querySelector("[data-rail-switch-chan]");
+        if (sw) sw.addEventListener("click", function (e) { e.preventDefault(); promptChangeChannel(); });
+      } else {
+        rchan.hidden = true;
+      }
     }
     document.querySelector("[data-signed-out]").hidden = true;
     var rw = document.querySelector("[data-rail-watch]");
@@ -451,7 +541,7 @@
   }
   function loadMonet() {
     if (!me || !me.ok || !me.channel) return;
-    get(ROOT + "creator-tools/api/youtube?action=monetization&channel=" + encodeURIComponent(me.channel)).then(function (r) { monet = r; if (current === "feed" || current === "race") render(current); });
+    get(ROOT + "creator-tools/api/youtube?action=monetization&channel=" + encodeURIComponent(me.channel)).then(function (r) { monet = r; paintRail(); if (current === "feed" || current === "race") render(current); });
   }
   show(location.hash.replace("#", "") || "feed");
   get("/api/auth?action=me").then(function (r) {
@@ -463,7 +553,7 @@
       get("/api/watch?action=list").then(function (w) { watch = w; paintRail(); render(current); });
       if (me.channel) {
         loadMonet();
-        get("/api/channel").then(function (r) { mine = r; if (current === "channel" || current === "feed") render(current); });
+        get("/api/channel").then(function (r) { mine = r; paintRail(); if (current === "channel" || current === "feed") render(current); });
         loadIdeas();
       }
     }

@@ -228,13 +228,6 @@ function authPage(mode) {
           <label for="a-email">Email</label>
           <input id="a-email" type="email" name="email" autocomplete="email" placeholder="you@example.com" required>
 
-          ${signup ? `
-          <div data-channel-wrap>
-            <label for="a-channel">Your YouTube channel</label>
-            <input id="a-channel" type="text" name="channel" autocomplete="off" placeholder="@yourhandle or youtube.com/@yourhandle" required>
-            <span class="fmsg">One channel per account — used for your welcome snapshot and weekly report.</span>
-          </div>` : ""}
-
           <div data-password-wrap hidden>
             <label for="a-password">Password</label>
             <div class="pwfield">
@@ -261,8 +254,8 @@ function authPage(mode) {
       </div>
 
       <div class="login-done" data-login-sent hidden>
-        <h3>Check your inbox to verify your email</h3>
-        <p class="muted">We sent a verification link to that address. Click it to verify your email, unlock your account and receive your welcome email with the Chrome extension. It expires in 20 minutes.</p>
+        <h3>Check your inbox for your sign-in link</h3>
+        <p class="muted">We sent a link to that address. Click it to sign in and open your dashboard. It stays valid for 20 minutes.</p>
         <button type="button" class="btn ghost" data-login-again>Use a different address</button>
       </div>
 
@@ -273,15 +266,15 @@ function authPage(mode) {
     </div>
 
     <div class="card">
-      <h3 style="margin-bottom:10px">You do not need an account</h3>
-      <p class="muted" style="font-size:.95rem;line-height:1.6">Every calculator, checker and generator on this site works without signing in, and always will. An account links your verified email and your single YouTube channel for your welcome greeting and weekly growth report.</p>
+      <h3 style="margin-bottom:10px">How your dashboard works</h3>
+      <p class="muted" style="font-size:.95rem;line-height:1.6">Sign in with Google or your email first. On the next screen, link your YouTube channel once to unlock your personalized dashboard, monetization tracker, daily ideas and weekly growth report.</p>
       <h3 style="margin:20px 0 10px">Three ways in</h3>
       <ul class="plain">
-        <li><b>Google.</b> Fastest. Verifies your email address right away without giving us access to your Google account.</li>
-        <li><b>Password.</b> Stored only as a scrypt hash, plus an inbox verification link so fake addresses cannot sign up.</li>
-        <li><b>Email link.</b> No password at all. The link verifies your email and signs you in for 20 minutes.</li>
+        <li><b>Google.</b> One click — signs you in right away and takes you to your dashboard.</li>
+        <li><b>Password.</b> Create an account with your email and password and sign in immediately.</li>
+        <li><b>Email link.</b> No password needed — click the link sent to your inbox.</li>
       </ul>
-      <p style="margin-top:16px"><a href="../creator-tools/">Go straight to the tools</a></p>
+      <p style="margin-top:16px"><a href="../creator-tools/">Or use the ${site.tools.length} public tools without an account →</a></p>
     </div>
   </div>`;
   return site.shell({
@@ -404,7 +397,7 @@ function accountPage() {
         </div>
 
         <h3 style="margin:24px 0 6px">My YouTube channel</h3>
-        <p class="muted" style="font-size:.92rem;margin-bottom:12px">Each account is tied to a single YouTube channel for your dashboard and weekly growth report. To track competitors, add them to your watchlist above or use the public tools.</p>
+        <p class="muted" style="font-size:.92rem;margin-bottom:12px">Your primary YouTube channel for your dashboard, monetization progress and weekly growth report. To track competitors, add them to your watchlist above.</p>
         <div class="pa-rows" style="margin-bottom:10px">
           <div class="arow"><span>Linked channel</span><b data-mychannel-current>Not set</b></div>
         </div>
@@ -412,8 +405,9 @@ function accountPage() {
           <input type="text" name="channel" placeholder="@yourhandle or channel link" autocomplete="off" aria-label="Your YouTube channel" style="flex:1;min-width:190px;margin:0">
           <button type="submit" class="btn ghost">Save my channel</button>
         </form>
-        <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+        <div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap">
           <a href="../app/#channel" class="muted" style="font-size:.88rem">View channel insights →</a>
+          <button type="button" class="link" data-mychannel-change hidden style="font-size:.88rem">Change channel</button>
         </div>
         <span class="fmsg" data-mychannel-msg></span>
 

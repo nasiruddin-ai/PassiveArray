@@ -171,18 +171,28 @@ const CSS = `
 .uploads small { color: var(--muted); font-size: .78rem; }
 .uploads .up { color: var(--good); font-weight: 700; } .uploads .down { color: var(--bad); font-weight: 700; } .uploads .flat { color: var(--muted); }
 .kpi .up { color: var(--good); } .kpi .down { color: var(--bad); } .kpi .flat { color: var(--muted); }
-.app-gate { position: fixed; inset: 0; z-index: 100; display: flex; align-items: center; justify-content: center; padding: 20px; background: rgba(15, 22, 38, .78); backdrop-filter: blur(8px); }
+.app-gate { position: fixed; inset: 0; z-index: 100; display: flex; align-items: center; justify-content: center; padding: 20px; background: rgba(15, 22, 38, .82); backdrop-filter: blur(10px); }
 .app-gate[hidden] { display: none; }
-.app-gate-card { width: 100%; max-width: 520px; background: var(--card); border: 1px solid var(--line); border-radius: 22px; padding: 32px 28px; box-shadow: 0 28px 80px -20px rgba(0, 0, 0, .55); }
+.app-gate-card { width: 100%; max-width: 500px; background: var(--card); border: 1px solid var(--line); border-radius: 22px; padding: 32px 28px; box-shadow: 0 28px 80px -20px rgba(0, 0, 0, .55); }
 .app-gate-card .k { display: inline-block; font-size: .72rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--deep); background: var(--soft); padding: 5px 11px; border-radius: 999px; margin-bottom: 12px; }
 :root[data-theme="dark"] .app-gate-card .k { color: var(--mint); }
-.app-gate-card h2 { font-size: 1.5rem; letter-spacing: -.02em; margin: 0 0 8px; }
-.app-gate-card p { color: var(--muted); font-size: .94rem; line-height: 1.55; margin: 0 0 18px; }
-.app-gate-card .aform { margin-top: 10px; }
+.app-gate-card h2 { font-size: 1.45rem; letter-spacing: -.02em; margin: 0 0 8px; }
+.app-gate-card p { color: var(--muted); font-size: .93rem; line-height: 1.55; margin: 0 0 18px; }
+.app-gate-card .aform { margin-top: 8px; }
 .app-gate-card .aform input { width: 100%; flex: 1 1 100%; }
 .app-gate-card .aform .btn { width: 100%; justify-content: center; margin-top: 4px; }
+.app-gate-or { display: flex; align-items: center; gap: 12px; margin: 16px 0; color: var(--muted); font-size: .8rem; text-transform: uppercase; letter-spacing: .06em; }
+.app-gate-or::before, .app-gate-or::after { content: ""; flex: 1; height: 1px; background: var(--line); }
 .app-gate-foot { margin-top: 18px; padding-top: 14px; border-top: 1px solid var(--line); display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; font-size: .84rem; color: var(--muted); }
 .app.gated .rail, .app.gated .main { filter: blur(4px); pointer-events: none; user-select: none; }
+.rail-chan { display: flex; align-items: center; gap: 10px; padding: 10px 12px; margin: 0 4px 6px; border-radius: 14px; background: var(--soft); border: 1px solid var(--line); color: var(--text); text-decoration: none; }
+.rail-chan[hidden] { display: none; }
+.rail-chan img { width: 34px; height: 34px; border-radius: 50%; flex: none; object-fit: cover; }
+.rail-chan .rc-t { min-width: 0; flex: 1; }
+.rail-chan .rc-t b { display: block; font-size: .88rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; line-height: 1.25; }
+.rail-chan .rc-t span { display: block; font-size: .75rem; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.rail-chan .rc-act { font-size: .74rem; font-weight: 600; color: var(--deep); background: var(--card); border: 1px solid var(--line); border-radius: 8px; padding: 4px 8px; cursor: pointer; flex: none; }
+:root[data-theme="dark"] .rail-chan .rc-act { color: var(--mint); }
 @media (max-width: 900px) { .onboard-in { grid-template-columns: 1fr; } .onboard-art { display: none; } }
 .scrim { display: none; }
 @media (max-width: 1100px) { .span6, .span4, .span8, .span3 { grid-column: span 12 !important; } }
@@ -234,6 +244,7 @@ ${site.VERIFY_TAG}
       <a href="${root}">${MARK}<span>Passive <b style="color:var(--teal)">Array</b></span></a>
       <button type="button" class="iconbtn" data-theme-toggle aria-label="Switch theme">${site.ICON.moon}</button>
     </div>
+    <div class="rail-chan" data-rail-chan hidden></div>
     <nav class="rail-nav">${nav}</nav>
     <a class="nav-item upgrade" href="#upgrade" data-nav="upgrade" data-upgrade-link>${ic("rocket")}<span>Upgrade to Pro</span></a>
     <a class="rail-btn" href="${root}youtube-extension/">${ic("chrome")} Install extension</a>

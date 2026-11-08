@@ -355,11 +355,10 @@
       var email = (emailInput.value || "").trim();
       var channel = channelInput ? (channelInput.value || "").trim() : "";
       if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)) { say("Enter a valid email address.", "bad"); return; }
-      if (signupMode && !channel) { say("Enter your YouTube channel @handle or link.", "bad"); if (channelInput) channelInput.focus(); return; }
       if (usePassword && (pwInput.value || "").length < 1) { say("Enter your password.", "bad"); return; }
 
       submit.disabled = true;
-      say(signupMode ? "Checking your YouTube channel…" : "Working…");
+      say("Working…");
 
       var action = usePassword ? (signupMode ? "register" : "password") : "request";
       var payload = { email: email, source: location.pathname, website: form.elements.website.value };
@@ -595,6 +594,7 @@
     var myChCur = account.querySelector("[data-mychannel-current]");
     var myChForm = account.querySelector("[data-mychannel-form]");
     var myChMsg = account.querySelector("[data-mychannel-msg]");
+    var myChChange = account.querySelector("[data-mychannel-change]");
     var delMsg = account.querySelector("[data-delete-msg]");
     var setpwWrap = account.querySelector("[data-setpw-wrap]");
     var setpwForm = account.querySelector("[data-setpw-form]");
@@ -604,6 +604,17 @@
     function paintMyChannel(ch) {
       if (myChCur) myChCur.textContent = ch || "Not set yet";
       if (myChForm) myChForm.hidden = !!ch;
+      if (myChChange) myChChange.hidden = !ch;
+    }
+    if (myChChange) {
+      myChChange.addEventListener("click", function () {
+        if (myChForm) {
+          myChForm.hidden = false;
+          var inp = myChForm.querySelector("input");
+          if (inp) { inp.value = ""; inp.focus(); }
+        }
+        myChChange.hidden = true;
+      });
     }
 
     function showAccount(state) {
