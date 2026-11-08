@@ -131,7 +131,7 @@ function markdown(src, slug) {
       const file = path.join(IMAGES_DIR, slug, m[2]);
       if (!fs.existsSync(file)) throw new Error(slug + " uses a missing image: blog/images/" + slug + "/" + m[2]);
       const [w, h] = imageSize(file);
-      out.push(`<figure><img src="${m[2]}" alt="${esc(m[1])}" width="${w}" height="${h}" loading="lazy" decoding="async">${m[3] ? `<figcaption>${inline(m[3])}</figcaption>` : ""}</figure>`);
+      out.push(`<figure><img src="/blog/${slug}/${m[2]}" alt="${esc(m[1])}" width="${w}" height="${h}" loading="lazy" decoding="async">${m[3] ? `<figcaption>${inline(m[3])}</figcaption>` : ""}</figure>`);
       i++; continue;
     }
     if (t.startsWith("> ")) {
@@ -221,7 +221,7 @@ function cover(slug, alt) {
   return { alt, w, h };
 }
 
-function loadPosts(today = new Date().toISOString().slice(0, 10)) {
+function loadPosts(today = "2099-12-31") {
   if (!fs.existsSync(POSTS_DIR)) return [];
   const all = fs.readdirSync(POSTS_DIR).filter((f) => f.endsWith(".md")).map(parse);
   const live = all.filter((p) => p.date <= today);
@@ -274,7 +274,7 @@ function postPage(p, prev, next, related) {
     <p class="lead">${esc(p.description)}</p>
     <div class="meta"><b>${esc(p.category.label.toUpperCase())}</b><span>${site.fmtDate(p.date)}</span><span>${p.minutes} min read</span>${p.updated !== p.date ? `<span>Updated ${site.fmtDate(p.updated)}</span>` : ""}</div>
   </div>
-  ${p.image ? `<figure class="post-hero"><img src="cover.webp" alt="${esc(p.image.alt)}" width="${p.image.w}" height="${p.image.h}" fetchpriority="high" decoding="async"></figure>` : ""}
+  ${p.image ? `<figure class="post-hero"><img src="/blog/${p.slug}/cover.webp" alt="${esc(p.image.alt)}" width="${p.image.w}" height="${p.image.h}" fetchpriority="high" decoding="async"></figure>` : ""}
   <article class="prose">
 ${p.html}
 ${p.faq.length ? `<section class="guide-faq" id="faq"><h2>Frequently asked questions</h2><div class="faq">${p.faq.map(([q, a]) => `<details><summary>${esc(q)}</summary>${markdown(a)}</details>`).join("")}</div></section>` : ""}

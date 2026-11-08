@@ -747,9 +747,9 @@ function landingPage() {
       <!-- Hero Visual Showcase -->
       <div class="pa-ext-hero-visual" data-ext-preview>
         <div class="pa-ext-ch-tabs" role="tablist" aria-label="Preview extension on 3 channels">
-          <button type="button" class="pa-ext-ch-tab on" data-ext-ch="ext-channel-1-tech.png" data-ext-er="6.48% Engagement" data-ext-ersub="4.6x Channel Average" data-ext-tags="16 Hidden Tags" data-ext-url="youtube.com/watch?v=k8Vx92LmQp0 · @nomadlenslab">📷 @nomadlenslab (Tech)</button>
-          <button type="button" class="pa-ext-ch-tab" data-ext-ch="ext-channel-2-creator.png" data-ext-er="7.12% Engagement" data-ext-ersub="9.2x Viral Outlier" data-ext-tags="18 Hidden Tags" data-ext-url="youtube.com/watch?v=m3Yp71KcWt9 · @mayachenstudio">📈 @mayachenstudio (Creator)</button>
-          <button type="button" class="pa-ext-ch-tab" data-ext-ch="ext-channel-3-science.png" data-ext-er="5.56% Engagement" data-ext-ersub="3.8x Channel Average" data-ext-tags="15 Hidden Tags" data-ext-url="youtube.com/watch?v=a9Tr44BnXz2 · @atomicfrontier">⚡ @atomicfrontier (Science)</button>
+          <button type="button" class="pa-ext-ch-tab on" data-ext-ch="/youtube-extension/ext-channel-1-tech.png" data-ext-er="6.48% Engagement" data-ext-ersub="4.6x Channel Average" data-ext-tags="16 Hidden Tags" data-ext-url="youtube.com/watch?v=k8Vx92LmQp0 · @nomadlenslab">📷 @nomadlenslab (Tech)</button>
+          <button type="button" class="pa-ext-ch-tab" data-ext-ch="/youtube-extension/ext-channel-2-creator.png" data-ext-er="7.12% Engagement" data-ext-ersub="9.2x Viral Outlier" data-ext-tags="18 Hidden Tags" data-ext-url="youtube.com/watch?v=m3Yp71KcWt9 · @mayachenstudio">📈 @mayachenstudio (Creator)</button>
+          <button type="button" class="pa-ext-ch-tab" data-ext-ch="/youtube-extension/ext-channel-3-science.png" data-ext-er="5.56% Engagement" data-ext-ersub="3.8x Channel Average" data-ext-tags="15 Hidden Tags" data-ext-url="youtube.com/watch?v=a9Tr44BnXz2 · @atomicfrontier">⚡ @atomicfrontier (Science)</button>
         </div>
 
         <div class="pa-ext-float pos-1" style="top:34px">
@@ -766,7 +766,7 @@ function landingPage() {
             <span class="pa-ext-dot r"></span><span class="pa-ext-dot y"></span><span class="pa-ext-dot g"></span>
             <div class="address" data-ext-address>youtube.com/watch?v=k8Vx92LmQp0 · @nomadlenslab</div>
           </div>
-          <img data-ext-hero-img src="ext-channel-1-tech.png" alt="Passive Array for YouTube video watch page panel" width="1280" height="800" loading="eager" />
+          <img data-ext-hero-img src="/youtube-extension/ext-channel-1-tech.png" alt="Passive Array for YouTube video watch page panel" width="1280" height="800" loading="eager" />
         </div>
       </div>
     </section>
@@ -837,7 +837,7 @@ function landingPage() {
               <span class="pa-ext-dot r"></span><span class="pa-ext-dot y"></span><span class="pa-ext-dot g"></span>
               <div class="address">Video Insights &amp; Tags Extractor · @mayachenstudio</div>
             </div>
-            <img src="ext-channel-2-creator.png" alt="Video intelligence sidebar in Passive Array" width="1280" height="800" loading="lazy" />
+            <img src="/youtube-extension/ext-channel-2-creator.png" alt="Video intelligence sidebar in Passive Array" width="1280" height="800" loading="lazy" />
           </div>
         </div>
       </section>
@@ -897,7 +897,7 @@ function landingPage() {
               <span class="pa-ext-dot r"></span><span class="pa-ext-dot y"></span><span class="pa-ext-dot g"></span>
               <div class="address">YouTube Search Results with Passive Array Scores</div>
             </div>
-            <img src="screenshot-4-search.png" alt="Search result scores overlay" width="1280" height="800" loading="lazy" />
+            <img src="/youtube-extension/screenshot-4-search.png" alt="Search result scores overlay" width="1280" height="800" loading="lazy" />
           </div>
         </div>
       </section>
@@ -920,7 +920,7 @@ function landingPage() {
               <span class="pa-ext-dot r"></span><span class="pa-ext-dot y"></span><span class="pa-ext-dot g"></span>
               <div class="address">Channel Monetization & Analytics Audit</div>
             </div>
-            <img src="screenshot-3-monetization.png" alt="Channel monetization checker screenshot" width="1280" height="800" loading="lazy" />
+            <img src="/youtube-extension/screenshot-3-monetization.png" alt="Channel monetization checker screenshot" width="1280" height="800" loading="lazy" />
           </div>
         </div>
       </section>

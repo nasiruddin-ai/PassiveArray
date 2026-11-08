@@ -22,6 +22,48 @@ const HANDLERS = {
   "channel": () => require("../lib/api-channel.js"),
   "mcp": () => require("../lib/api-mcp.js"),
   "mcp-account": () => require("../lib/api-mcp-account.js"),
+  "meta": () => require("../lib/api-meta.js"),
+  "domain-age": () => async (req, res) => {
+    const { configure, handleAgeRequest } = require("../domain-age-checker/lib/age.js");
+    configure({ timeoutMs: 4000 });
+    const { code, body } = await handleAgeRequest((req.query || {}).domain);
+    res.setHeader("Content-Type", "application/json; charset=utf-8");
+    res.setHeader("Cache-Control", "no-store");
+    return res.status(code).send(JSON.stringify(body));
+  },
+  "domain-finder-check": () => async (req, res) => {
+    const { configure, handleCheckRequest } = require("../domain-finder/lib/check.js");
+    configure({ timeoutMs: 4000 });
+    const { code, body } = await handleCheckRequest((req.query || {}).domain);
+    res.setHeader("Content-Type", "application/json; charset=utf-8");
+    res.setHeader("Cache-Control", "no-store");
+    return res.status(code).send(JSON.stringify(body));
+  },
+  "plagiarism": () => async (req, res) => {
+    const { configure, handleRequest } = require("../plagiarism-checker/lib/plagiarism.js");
+    const send = (code, body) => {
+      res.setHeader("Content-Type", "application/json; charset=utf-8");
+      res.setHeader("Cache-Control", "no-store");
+      return res.status(code).send(JSON.stringify(body));
+    };
+    configure({
+      googleApiKey: process.env.GOOGLE_API_KEY,
+      googleCx: process.env.GOOGLE_CX,
+      maxQueriesPerCheck: Number(process.env.MAX_QUERIES_PER_CHECK) || 20,
+    });
+    const action = (req.query || {}).action;
+    if (action === "status") {
+      const r = await handleRequest("status");
+      return send(r.code, r.body);
+    }
+    if (req.method !== "POST") return send(405, { ok: false, error: "Use POST." });
+    let body = req.body;
+    if (typeof body === "string") {
+      try { body = JSON.parse(body); } catch (_) { return send(400, { ok: false, error: "Body must be JSON" }); }
+    }
+    const { code, body: out } = await handleRequest(action, body || {});
+    return send(code, out);
+  },
 };
 
 function readRaw(req) {

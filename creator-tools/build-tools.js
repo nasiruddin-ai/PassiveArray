@@ -178,6 +178,17 @@ function header(root, active, withSearch) {
 
 const POPULAR_SLUGS = ["youtube-monetization-checker", "youtube-money-calculator", "youtube-tag-generator", "youtube-subscriber-count-checker", "youtube-engagement-rate-calculator", "youtube-keyword-generator", "youtube-title-generator", "youtube-sponsorship-price-calculator"];
 
+const WEB_TOOLS = [
+  ["meta-tag-checker/", "Meta Tag Checker", "Check any page's title, description, robots, canonical, headings, Open Graph and schema, with a fix for each."],
+  ["serp-snippet-preview/", "SERP Snippet Preview", "See how your title and meta description look in Google, measured in pixels on desktop and mobile."],
+  ["schema-markup-generator/", "Schema Markup Generator", "Build valid JSON-LD for FAQs, local businesses, articles, products, organisations and people."],
+  ["domain-finder/", "Domain Finder", "Type a name idea and see which domains are free to buy right now."],
+  ["domain-age-checker/", "Domain Age Checker", "Find out when a domain was first registered and how old it is."],
+  ["plagiarism-checker/", "Plagiarism Checker", "Paste text, upload a file or enter a URL. Each sentence is marked plagiarised or unique."],
+  ["jpg-to-pdf/", "JPG to PDF Converter", "Turn images into a PDF. Everything happens in your browser."],
+  ["seo-roi-calculator/", "SEO ROI Calculator", "Estimate the traffic, conversions and revenue first-page rankings could bring."],
+];
+
 function footer(root, note) {
   const col = (title, links) => `<div class="fcol"><h2 class="fh">${esc(title)}</h2>${links.map(([href, label]) => `<a href="${/^https?:/.test(href) ? href : root + href}">${esc(label)}</a>`).join("")}</div>`;
   const popular = POPULAR_SLUGS.slice(0, 6).map((s) => tools.find((t) => t.slug === s)).filter(Boolean).map((t) => [`creator-tools/${t.slug}/`, t.name]);
@@ -194,6 +205,7 @@ function footer(root, note) {
       </form>
     </div>
     ${col("Tools", [["creator-tools/#rank", "YouTube SEO tools"], ["creator-tools/#create", "Generators"], ["creator-tools/youtube-channel-growth-tracker/", "Growth tracker"], ["research/", "Keyword research"], ["creator-tools/", `All ${tools.length} tools`]])}
+    ${col("Web tools", WEB_TOOLS.map(([href, name]) => [href, name]))}
     ${col("Resources", [["blog/", "Blog"], ["youtube-extension/", "Chrome extension"], ["account/#mcp", "MCP for AI assistants"], ["compare/", "Compare"], ["faq/", "FAQ"]])}
     ${col("Company", [["about/", "About"], ["pricing/", "Pricing"], ["youtube-seo-service/", "YouTube SEO service"], ["contact/", "Contact"], ["login/", "Sign in"]])}
   </div>
@@ -745,7 +757,7 @@ function buildInto(outDir, posts) {
   if (posts) setPosts(posts);
   const template = fs.readFileSync(path.join(HERE, "template.html"), "utf8");
   fs.mkdirSync(outDir, { recursive: true });
-  for (const asset of ["shared.css", "shared.js", "site.js", "research.js", "app.js"]) fs.copyFileSync(path.join(HERE, "public", asset), path.join(outDir, asset));
+  for (const asset of ["shared.css", "shared.js", "site.js", "research.js", "app.js", "seo-tools.js"]) fs.copyFileSync(path.join(HERE, "public", asset), path.join(outDir, asset));
   fs.writeFileSync(path.join(outDir, "index.html"), directoryPage());
   const seen = new Set();
   for (const t of tools) {
@@ -805,7 +817,7 @@ ${scripts}
 </html>`;
 }
 
-module.exports = { authorBox, AUTHOR, ANALYTICS_HEAD, GTM_BODY, GTM_ID, GA4_ID, ANALYTICS, buildInto, homePage, tools, SITE, BRAND, TAGLINE, header, footer, shell, postCard, fmtDate, esc, ICON, VERIFY_TAG, intentOf, INTENTS, guideHtml, faqLd };
+module.exports = { authorBox, AUTHOR, ANALYTICS_HEAD, GTM_BODY, GTM_ID, GA4_ID, ANALYTICS, buildInto, homePage, tools, SITE, BRAND, TAGLINE, WEB_TOOLS, header, footer, shell, postCard, fmtDate, esc, ICON, VERIFY_TAG, intentOf, INTENTS, guideHtml, faqLd };
 
 if (require.main === module) {
   const out = path.join(HERE, ".out");
