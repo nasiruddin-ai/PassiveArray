@@ -146,11 +146,12 @@ function megaMenu(root) {
         <a href="${root}compare/">All comparisons</a>
         <a href="${root}pricing/">Pricing: free tools, optional Pro</a>
       </div>
-      <div class="mcol"><h4>Product</h4>
-        <a href="${root}youtube-extension/">Chrome extension</a>
+      <div class="mcol"><h4>Product &amp; Services</h4>
+        <a href="${root}app/">Creator Dashboard</a>
+        <a href="${root}youtube-seo-service/">Done-For-You YouTube SEO</a>
+        <a href="${root}youtube-extension/">Chrome Extension</a>
         <a href="${root}about/">About Passive Array</a>
         <a href="${root}contact/">Contact</a>
-        <a href="${root}signup/">Create a free account</a>
       </div>
     </div>
   </div>`;
@@ -164,8 +165,8 @@ function header(root, active, withSearch) {
   <nav class="nav" id="site-nav">
     <button type="button" class="navbtn${active === "tools" ? " active" : ""}" data-mega="mega-tools" aria-expanded="false" aria-controls="mega-tools">Tools ${ICON.chev}</button>
     <button type="button" class="navbtn${["blog", "compare", "extension"].includes(active) ? " active" : ""}" data-mega="mega-resources" aria-expanded="false" aria-controls="mega-resources">Resources ${ICON.chev}</button>
-    ${link("research/", "Research", "research")}${link("pricing/", "Pricing", "pricing")}${link("about/", "About", "about")}
-    <span class="gslot mob" data-google-slot data-google-size="large" data-google-width="260" hidden></span><a class="navmob" href="${root}youtube-extension/">Extension</a><a class="navmob" href="${root}blog/">Blog</a><a class="navmob" href="${root}compare/">Compare</a></nav>
+    ${link("research/", "Research", "research")}${link("youtube-seo-service/", "SEO Service", "service")}${link("pricing/", "Pricing", "pricing")}${link("about/", "About", "about")}
+    <span class="gslot mob" data-google-slot data-google-size="large" data-google-width="260" hidden></span><a class="navmob" href="${root}app/">Dashboard</a><a class="navmob" href="${root}youtube-seo-service/">SEO Service</a><a class="navmob" href="${root}youtube-extension/">Extension</a><a class="navmob" href="${root}blog/">Blog</a><a class="navmob" href="${root}compare/">Compare</a></nav>
   <div class="hactions">
     <button type="button" class="iconbtn" data-theme-toggle aria-label="Switch to dark mode">${ICON.moon}</button>
     <a class="hlogin" href="${root}login/" data-login-link>Log in</a>
@@ -212,12 +213,12 @@ function footer(root, note) {
       ["creator-tools/", `All ${tools.length} Creator Tools`],
     ])}
     ${col("Research & Platform", [
+      ["app/", "Creator Dashboard"],
       ["youtube-extension/", "Chrome Extension"],
       ["research/", "Keyword Research"],
       ["research/outliers/", "Outlier Video Finder"],
       ["research/shorts/", "Viral Shorts Finder"],
       ["compare/vidiq-alternative/", "Passive Array vs vidIQ"],
-      ["compare/tubebuddy-alternative/", "Passive Array vs TubeBuddy"],
     ])}
     ${col("SEO & Web Utilities", [
       ["meta-tag-checker/", "Meta Tag Checker"],
@@ -230,7 +231,7 @@ function footer(root, note) {
     ${col("Company", [
       ["about/", "About Us"],
       ["founder/", "Founder"],
-      ["pricing/", "Pricing"],
+      ["pricing/", "Pricing ($9/mo Pro)"],
       ["blog/", "Creator Blog"],
       ["youtube-seo-service/", "YouTube SEO Service"],
       ["contact/", "Contact"],
@@ -241,6 +242,18 @@ function footer(root, note) {
     <nav><a href="${root}privacy/">Privacy Policy</a><a href="${root}terms/">Terms of Use</a><a href="${root}faq/">FAQ</a><a href="${root}account/#mcp">MCP API</a><button type="button" class="flink" data-consent-open hidden>Cookie choices</button></nav>
   </div>
 </div></footer>`;
+}
+
+function trimMeta(s, max = 160) {
+  s = String(s || "").trim();
+  if (s.length <= max) return s;
+  const cut = s.slice(0, max);
+  const dot = Math.max(cut.lastIndexOf(". "), cut.lastIndexOf("; "), cut.lastIndexOf(": "));
+  if (dot >= max * 0.65) return cut.slice(0, dot + 1).trim();
+  const comma = cut.lastIndexOf(", ");
+  if (comma >= max * 0.72) return cut.slice(0, comma).trim() + ".";
+  const space = cut.lastIndexOf(" ");
+  return (space > 0 ? cut.slice(0, space) : cut).replace(/[,;:\s]+$/, "") + ".";
 }
 
 /* ------------------------------------------------------------------ tool metadata */
@@ -455,9 +468,28 @@ function toolPage(template, t) {
     compare: t.compare ? { labels: t.compare.labels, fields: t.compare.fields.map((f) => ({ id: f.id, label: f.label, type: f.type })) } : null,
     inputs: (t.inputs || []).map((f) => ({ id: f.id, label: f.label, type: f.type, optional: !!f.optional })),
   };
+  let seoTitle = t.seoTitle || t.name + " | " + BRAND;
+  if (seoTitle.length > 65 && seoTitle.endsWith(" | " + BRAND)) {
+    seoTitle = seoTitle.slice(0, -(" | " + BRAND).length);
+  }
+  const seoDesc = trimMeta(t.seoDescription || t.short, 160);
+  const convBanner = `<div class="tool-conv">
+    <div class="tool-conv-col">
+      <span class="tool-conv-k">CREATOR DASHBOARD &amp; WATCHLIST</span>
+      <h3>Track channels &amp; monetization daily</h3>
+      <p>Save up to 3 channels free — or upgrade to <b>Pro ($9/mo)</b> for 100 channels, Monday mover digests &amp; CSV exports.</p>
+      <a class="btn" href="${root}app/">Open Creator Dashboard</a>
+    </div>
+    <div class="tool-conv-col pro-srv">
+      <span class="tool-conv-k">DONE-FOR-YOU YOUTUBE SEO</span>
+      <h3>Want an expert to optimize your channel?</h3>
+      <p>Hire founder Nasir Uddin to audit your channel, research keywords, and write high-CTR titles, descriptions &amp; tags.</p>
+      <a class="btn ghost" href="${root}youtube-seo-service/">See YouTube SEO Packages &rarr;</a>
+    </div>
+  </div>`;
   return template
-    .replace(/{{title}}/g, esc(t.seoTitle || t.name + " | " + BRAND))
-    .replace(/{{description}}/g, esc(t.seoDescription || t.short))
+    .replace(/{{title}}/g, esc(seoTitle))
+    .replace(/{{description}}/g, esc(seoDesc))
     .replace(/{{root}}/g, root)
     .replace(/{{name}}/g, esc(t.name))
     .replace(/{{short}}/g, esc(t.short))
@@ -473,6 +505,7 @@ function toolPage(template, t) {
     .replace("{{form}}", formHtml(t))
     .replace("{{button}}", buttonLabel(t))
     .replace("{{siblings}}", siblings)
+    .replace("{{convBanner}}", convBanner)
     .replace("{{howTitle}}", esc(t.howTitle || "How this number is made"))
     .replace("{{how}}", (t.how || []).map((h) => `<li>${esc(h)}</li>`).join(""))
     .replace("{{next}}", nextList)
@@ -494,10 +527,10 @@ function directoryPage() {
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>All ${tools.length} Creator Tools | ${BRAND}</title>
+<title>All ${tools.length} Free YouTube &amp; Creator Tools | ${BRAND}</title>
 <meta name="description" content="${tools.length} free tools for creators and brands: engagement and money calculators, fake follower checks, audits, comparisons, influencer finders and generators.">
 <link rel="canonical" href="${SITE}/creator-tools/">
-<meta property="og:title" content="All ${tools.length} Creator Tools | ${BRAND}">
+<meta property="og:title" content="All ${tools.length} Free YouTube &amp; Creator Tools | ${BRAND}">
 <meta property="og:description" content="${TAGLINE}: YouTube, Instagram, TikTok, Twitch and X.">
 ${HEAD}
 <link rel="preload" href="/fonts/poppins-600.woff2" as="font" type="font/woff2" crossorigin>
@@ -576,7 +609,7 @@ const HOME_FAQ = [
   ["Is Passive Array really free?",
     "Yes, and there is no trial to expire. Every one of the tools works without an account, without a card, and without a credit limit. The site runs on free hosting and free API allowances, which is why it can stay that way."],
   ["Do I need an account?",
-    "No. Nothing on this site is behind a sign-in. An account is optional and holds one thing: your email address and whether you want the weekly report. Every tool works whether you have one or not."],
+    "No. Nothing on this site is behind a sign-in. An account is optional and lets you link your YouTube channel to your Creator Dashboard and watch up to 3 channels for free. Every tool works whether you have an account or not."],
   ["How is this different from vidIQ or TubeBuddy?",
     "Those are subscriptions with a free tier attached. The free tier is a sample: a limited number of AI credits a month, a sign-in with Google before you see anything, and the useful parts reserved for the paid plan. Here the result loads first and nothing is reserved."],
   ["Where do the numbers come from?",
@@ -621,7 +654,7 @@ function homePage(posts = []) {
     ["01", "Keyword research that is measured", "What the top results actually do for a keyword: views per day, channel sizes, freshness. Never a modelled search volume.", "research/", ICON.search, "teal"],
     ["02", "Outlier videos, refreshed daily", "Videos and Shorts doing 3x to 100x what their channel normally does, from the last 90 days. The biggest surprises, not the biggest channels.", "research/outliers/", ICON.compare, "indigo"],
     ["03", "Channel checks on live data", "Monetization signals, engagement rate, views per subscriber and a quality score, straight from the YouTube and Twitch APIs.", "creator-tools/youtube-channel-quality-checker/", '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l7 3v5c0 5-3.5 8.5-7 10-3.5-1.5-7-5-7-10V6z"/><path d="m9 12 2 2 4-4"/></svg>', "mint"],
-    ["04", "Watch channels over time", "Save channels to a watchlist and see 7-day and 30-day change. Pro adds a Monday email of who moved and CSV export.", "account/", ICON.money, "gold"],
+    ["04", "Watch channels over time", "Save channels to a watchlist and see 7-day and 30-day change. Pro adds a Monday email of who moved and CSV export.", "app/", ICON.money, "gold"],
   ];
   const numbered = NUMBERED.map(([n, title, text, href, icon, tone]) => `<a class="numcard ${tone}" href="${root}${href}">
       <div class="numcard-top"><span class="num">${n}</span><span class="numcard-ic">${icon}</span></div>
@@ -648,6 +681,9 @@ function homePage(posts = []) {
   const jsonld = [
     { "@context": "https://schema.org", "@type": "WebSite", name: BRAND, url: SITE + "/", description: TAGLINE,
       potentialAction: { "@type": "SearchAction", target: SITE + "/creator-tools/youtube-subscriber-count-checker/?channel={search_term_string}", "query-input": "required name=search_term_string" } },
+    { "@context": "https://schema.org", "@type": "Organization", name: BRAND, url: SITE + "/", logo: SITE + "/icon-512.png",
+      founder: { "@type": "Person", name: "Nasir Uddin", url: SITE + "/founder/" },
+      sameAs: ["https://www.linkedin.com/in/seoconsultantnasir/", "https://github.com/nasiruddin-ai"] },
     { "@context": "https://schema.org", "@type": "SoftwareApplication", name: BRAND, url: SITE + "/",
       applicationCategory: "BusinessApplication", operatingSystem: "Any",
       description: `${tools.length} free tools for YouTube, Instagram, TikTok and Twitch creators. No account required.`,
@@ -661,11 +697,11 @@ function homePage(posts = []) {
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>${tools.length} Free YouTube &amp; Creator Tools, No Sign-Up | ${BRAND}</title>
-<meta name="description" content="Free YouTube tools: keyword research, monetization checker, tag and title generators, engagement rate and channel checks. ${tools.length} tools, no account, no card.">
+<title>${tools.length} Free YouTube SEO &amp; Creator Tools (No Sign-Up) | ${BRAND}</title>
+<meta name="description" content="Audit any YouTube channel, check monetization status, research high-opportunity keywords, and calculate RPM earnings across ${tools.length} free creator tools.">
 <link rel="canonical" href="${SITE}/">
-<meta property="og:title" content="${tools.length} free YouTube and creator tools, no sign-up">
-<meta property="og:description" content="Keyword research, monetization checks, titles, tags, earnings and audience checks. Free, with the formula shown on every page.">
+<meta property="og:title" content="${tools.length} Free YouTube SEO &amp; Creator Tools | ${BRAND}">
+<meta property="og:description" content="Audit any YouTube channel, check monetization status, research keywords, and calculate earnings with live API data and transparent formulas.">
 ${HEAD}
 <link rel="preload" href="/fonts/poppins-600.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="/fonts/poppins-400.woff2" as="font" type="font/woff2" crossorigin>
@@ -676,27 +712,77 @@ ${HEAD}
 <body data-root="${root}" class="home lp">${GTM_BODY}
 ${header(root, "home", false)}
 
-<!-- 1. Hero -->
+<!-- 1. Hero: 2-Column High-Converting SaaS Layout -->
 <section class="lp-hero">
-  <div class="wrap">
-    <span class="lp-pill"><i>✦</i>${tools.length} FREE CREATOR TOOLS · NO SIGN-UP</span>
-    <h1>The simplest way to <mark>dominate YouTube</mark> research</h1>
-    <p class="lp-lead">Keywords, monetization, titles, tags, earnings and audience checks. The result loads first, the formula is on the page, and nothing is reserved for a paid plan.</p>
-    <div class="lp-ctas">
-      <a class="btn lp-primary" href="${root}youtube-extension/">Add to browser, free</a>
-      <a class="btn ghost" href="${root}creator-tools/">Browse all tools</a>
+  <div class="wrap lp-hero-grid">
+    <div class="lp-hero-copy">
+      <div class="lp-kicker">YOUTUBE SEO, MONETIZATION &amp; CHANNEL INTELLIGENCE</div>
+      <h1>Audit any YouTube channel or keyword in <em>one click</em></h1>
+      <p class="lp-lead">Check monetization eligibility, uncover 10x outlier videos, score keywords against real top-10 search results, and estimate real RPM earnings — powered by official APIs with the formula on every page.</p>
+
+      <form class="lp-audit-bar" action="${root}creator-tools/youtube-monetization-checker/" method="get" data-hero-form>
+        <div class="lp-audit-tabs" role="tablist" aria-label="Quick audit mode">
+          <button type="button" class="on" data-hero-mode="monet" data-action="${root}creator-tools/youtube-monetization-checker/" data-param="channel" data-ph="Paste @handle or YouTube channel link (e.g. @mkbhd)">Monetization Check</button>
+          <button type="button" data-hero-mode="audit" data-action="${root}creator-tools/youtube-channel-quality-checker/" data-param="channel" data-ph="Paste @handle or channel URL for a 0-100 quality audit">Channel Audit</button>
+          <button type="button" data-hero-mode="kw" data-action="${root}research/" data-param="q" data-ph="Enter a YouTube keyword or topic (e.g. youtube seo)">Keyword Score</button>
+          <button type="button" data-hero-mode="money" data-action="${root}creator-tools/youtube-money-calculator/" data-param="channel" data-ph="Paste @handle to estimate monthly &amp; yearly ad revenue">Earnings</button>
+        </div>
+        <div class="lp-audit-row">
+          ${ICON.search}
+          <label for="lp-hero-input" class="sr">Channel or keyword</label>
+          <input id="lp-hero-input" name="channel" type="text" placeholder="Paste @handle or YouTube channel link (e.g. @mkbhd)" autocomplete="off" required>
+          <button type="submit" class="btn lp-primary">Analyze free</button>
+        </div>
+        <div class="lp-audit-samples">
+          <span>Try instant check:</span>
+          <button type="button" class="lp-try" data-hero-fill="@mkbhd">@mkbhd</button>
+          <button type="button" class="lp-try" data-hero-fill="@veritasium">@veritasium</button>
+          <button type="button" class="lp-try" data-hero-fill="@mrbeast">@mrbeast</button>
+        </div>
+      </form>
+
+      <div class="lp-ctas">
+        <a class="btn ghost" href="${root}app/">Open Creator Dashboard</a>
+        <a class="btn ghost" href="${root}youtube-extension/">Free Chrome Extension</a>
+        <a class="btn ghost" href="${root}youtube-seo-service/">Done-For-You YouTube SEO &rarr;</a>
+      </div>
     </div>
-    <div class="lp-proof" aria-label="Platforms covered">
-      <span class="lp-stack">${PLAT_ICON.YouTube}${PLAT_ICON.Twitch}${PLAT_ICON.Instagram}${PLAT_ICON.TikTok}${PLAT_ICON.X}<span class="pbadge more">+5</span></span>
-      <span class="lp-proof-text">YouTube and Twitch on live API data. Instagram, TikTok and X from the numbers you type.</span>
+
+    <div class="lp-hero-preview" aria-label="Live product telemetry preview">
+      <div class="lp-telemetry">
+        <div class="lp-tel-head">
+          <div class="lp-tel-ch">
+            <span class="pbadge yt" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 24 24"><path fill="#fff" d="M9.5 8.5v7l6-3.5z"/></svg></span>
+            <div><b>Channel Intelligence Snapshot</b><span>Official YouTube Data API v3 · Real-Time</span></div>
+          </div>
+          <span class="lp-tel-badge">MONETIZED · 94% CONFIDENCE</span>
+        </div>
+        <div class="lp-tel-metrics">
+          <div><span>Quality Score</span><b>92<small>/100</small></b><i class="up">Top 5% engagement</i></div>
+          <div><span>Outlier Multiplier</span><b>14.8x</b><i class="up">vs channel median</i></div>
+          <div><span>Keyword Opportunity</span><b>84<small>/100</small></b><i class="up">Low small-channel gap</i></div>
+          <div><span>Est. Monthly RPM</span><b>$3.40–$8.20</b><i>Long-form + Premium</i></div>
+        </div>
+        <div class="lp-tel-bars">
+          <div class="lp-tel-bar-row"><span>YPP Watch-Time &amp; Subscriber Gate</span><b>Passed (1,000+ subs · active uploads)</b></div>
+          <div class="art-bar"><i style="width:100%"></i></div>
+          <div class="lp-tel-bar-row" style="margin-top:10px"><span>Studio Tag &amp; Title Alignment</span><b>468 / 500 chars used</b></div>
+          <div class="art-bar"><i style="width:93%"></i></div>
+        </div>
+        <div class="lp-tel-foot">
+          <a href="${root}creator-tools/youtube-monetization-checker/?channel=%40mkbhd">Run live check &rarr;</a>
+          <a href="${root}research/outliers/">Explore today's 10x outlier videos &rarr;</a>
+        </div>
+      </div>
     </div>
   </div>
+
   <div class="wrap lp-statwrap">
     <div class="lp-stats">
-      <div><b>${tools.length}</b><span>Tools</span></div>
-      <div><b>${liveCount}</b><span>On live API data</span></div>
-      <div><b>100%</b><span>Free to use</span></div>
-      <div><b>0</b><span>Ads, ever</span></div>
+      <div><b>${tools.length}</b><span>Free Creator Tools</span></div>
+      <div><b>${liveCount}</b><span>Live Official API Tools</span></div>
+      <div><b>100%</b><span>Transparent Formulas</span></div>
+      <div><b>0</b><span>Paywalls on Free Tools</span></div>
     </div>
   </div>
 </section>
@@ -741,6 +827,49 @@ ${header(root, "home", false)}
   <!-- 4. Numbered capabilities -->
   <section class="section lp-numbered" id="how">
     <div class="lp-numgrid">${numbered}</div>
+  </section>
+
+  <!-- 4b. Revenue & Growth Accelerators (Pro Watchlist + Done-For-You YouTube SEO) -->
+  <section class="section lp-growth" id="solutions">
+    <h2 class="center">Two ways to grow faster with Passive Array</h2>
+    <p class="center sub">Use our ${tools.length} tools free forever — or accelerate your channel with automated daily tracking and hands-on YouTube SEO.</p>
+    <div class="lp-growth-grid">
+      <div class="card lp-gcard">
+        <div class="lp-ghead">
+          <span class="lp-gk">AUTOMATED TRACKING · $9/MO OR FREE TIER</span>
+          <h3>Creator Dashboard &amp; Pro Watchlist</h3>
+          <p>Connect your channel in one click — no unverified OAuth permissions required. Track your monetization progress, benchmark against competitors, and get Monday mover digests.</p>
+        </div>
+        <ul class="plain">
+          <li><b>Track up to 100 channels daily</b> with 7-day and 30-day subscriber &amp; view deltas (3 channels free)</li>
+          <li><b>Automated Monday email</b> ranking which competitors grew fastest</li>
+          <li><b>One-click CSV exports</b> of watchlists, outlier feeds &amp; viral Shorts</li>
+          <li><b>1,000 MCP AI credits/day</b> for Claude, ChatGPT &amp; Cursor</li>
+        </ul>
+        <div class="lp-gactions">
+          <a class="btn" href="${root}app/">Open Creator Dashboard</a>
+          <a class="btn ghost" href="${root}pricing/">See Pro Pricing ($9/mo)</a>
+        </div>
+      </div>
+
+      <div class="card lp-gcard featured">
+        <div class="lp-ghead">
+          <span class="lp-gk">DONE-FOR-YOU SERVICE · BY NASIR UDDIN</span>
+          <h3>Done-For-You YouTube SEO Service</h3>
+          <p>Want an experienced SEO specialist to handle the research and optimization for every upload? Founder Nasir Uddin audits your channel and optimizes your videos for search and suggested reach.</p>
+        </div>
+        <ul class="plain">
+          <li><b>Full Channel Audit:</b> Deep review of your last 20 uploads, keyword gaps, and title/thumbnail fixes</li>
+          <li><b>Monthly Video SEO:</b> Custom keyword research, high-CTR titles, chapters &amp; 500-char tag sets</li>
+          <li><b>Channel Setup &amp; Relaunch:</b> Niche positioning, playlist architecture &amp; 30-day content roadmap</li>
+          <li><b>English &amp; Bengali channels:</b> Direct collaboration via YouTube Studio Editor role &amp; WhatsApp</li>
+        </ul>
+        <div class="lp-gactions">
+          <a class="btn" href="${root}youtube-seo-service/">View YouTube SEO Packages &rarr;</a>
+          <a class="btn ghost" href="${root}founder/">Meet Nasir Uddin</a>
+        </div>
+      </div>
+    </div>
   </section>
 </main>
 
@@ -811,16 +940,17 @@ function shell({ title, description, path, body, active = "", head = "", scripts
   const depth = path.split("/").filter(Boolean).length;
   const root = "../".repeat(depth);
   const canonical = SITE + path;
+  const metaDesc = trimMeta(description, 160);
   return `<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>${esc((title + " | " + BRAND).length > 65 ? title : title + " | " + BRAND)}</title>
-<meta name="description" content="${esc(description)}">
+<meta name="description" content="${esc(metaDesc)}">
 <link rel="canonical" href="${canonical}">
 <meta property="og:title" content="${esc(ogTitle || title)}">
-<meta property="og:description" content="${esc(description)}">
+<meta property="og:description" content="${esc(metaDesc)}">
 <meta property="og:type" content="website">
 <meta property="og:url" content="${canonical}">
 <meta property="og:image" content="${image || SITE + "/og-image-1200x630.png"}">
@@ -844,7 +974,7 @@ ${scripts}
 </html>`;
 }
 
-module.exports = { authorBox, AUTHOR, ANALYTICS_HEAD, GTM_BODY, GTM_ID, GA4_ID, ANALYTICS, buildInto, homePage, tools, SITE, BRAND, TAGLINE, WEB_TOOLS, header, footer, shell, postCard, fmtDate, esc, ICON, VERIFY_TAG, intentOf, INTENTS, guideHtml, faqLd };
+module.exports = { authorBox, AUTHOR, ANALYTICS_HEAD, GTM_BODY, GTM_ID, GA4_ID, ANALYTICS, buildInto, homePage, tools, SITE, BRAND, TAGLINE, WEB_TOOLS, header, footer, shell, postCard, fmtDate, esc, ICON, VERIFY_TAG, intentOf, INTENTS, guideHtml, faqLd, trimMeta };
 
 if (require.main === module) {
   const out = path.join(HERE, ".out");

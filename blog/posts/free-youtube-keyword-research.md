@@ -1,5 +1,5 @@
 ---
-title: Free YouTube keyword research: a method that does not need a subscription
+title: Free YouTube Keyword Research Without a Paid Subscription
 description: How to find topics people search for and judge whether you can rank, using autocomplete and the search results themselves rather than a paid tool.
 date: 2026-09-21
 keyword: youtube keyword research tool free

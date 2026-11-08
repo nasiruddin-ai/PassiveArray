@@ -1,5 +1,5 @@
 ---
-title: Views per subscriber: the number that shows whether your audience is awake
+title: Views Per Subscriber: How to Check If Your Audience Is Awake
 description: How to work it out, what a healthy figure looks like at each channel size, and why a growing subscriber count can hide a shrinking audience.
 date: 2026-09-02
 keyword: average views per subscriber

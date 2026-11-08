@@ -334,7 +334,7 @@ function categoryPage(cat, posts, counts) {
   ${toolCards(cat.tools, root, "The tools behind these articles")}
   ${signupBand("New " + cat.label.toLowerCase() + " articles, once a week", "One email a week with the new benchmarks and tools. Unsubscribe any time.")}`;
   return site.shell({
-    title: cat.label + " articles",
+    title: `${cat.label} Guides & Calculators for Creators`,
     ogTitle: cat.label + " guides for creators",
     description: cat.meta,
     path: `/blog/category/${cat.slug}/`,
@@ -360,7 +360,7 @@ function indexPage(posts, counts) {
   </section>
   ${signupBand("New articles land in the weekly report first", "One email a week. Unsubscribe any time.")}`;
   return site.shell({
-    title: "Blog",
+    title: "YouTube & Creator Growth Blog: SEO, RPM & Monetization Guides",
     ogTitle: "Passive Array blog: creator numbers, explained",
     description: "Benchmarks and formulas behind engagement rates, YouTube earnings, sponsorship prices and fake-follower checks, with the free tool for each.",
     path: "/blog/",

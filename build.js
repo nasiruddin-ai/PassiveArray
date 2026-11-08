@@ -285,16 +285,22 @@ function seoTags(html, file) {
   const ldTypes = [...html.matchAll(/<script[^>]*application\/ld\+json[^>]*>([\s\S]*?)<\/script>/gi)].map((m) => m[1]).join(" ");
 
   // Breadcrumbs: links in the trail (skipping in-page #anchors), then the current page.
-  const crumbs = html.match(/<div class="crumbs"[^>]*>([\s\S]*?)<\/div>/i);
-  if (crumbs && !/"BreadcrumbList"/.test(ldTypes)) {
+  const crumbs = html.match(/<div class="(?:crumbs|pa-ext-crumbs)"[^>]*>([\s\S]*?)<\/div>/i);
+  if (!/"BreadcrumbList"/.test(ldTypes)) {
     const items = [];
-    for (const a of crumbs[1].matchAll(/<a\s+href="([^"]+)"[^>]*>([\s\S]*?)<\/a>/gi)) {
-      if (a[1].includes("#")) continue;
-      items.push({ name: strip(a[2]), item: new URL(a[1].replace(/&amp;/g, "&"), url).toString() });
+    if (crumbs) {
+      for (const a of crumbs[1].matchAll(/<a\s+href="([^"]+)"[^>]*>([\s\S]*?)<\/a>/gi)) {
+        if (a[1].includes("#")) continue;
+        items.push({ name: strip(a[2]), item: new URL(a[1].replace(/&amp;/g, "&"), url).toString() });
+      }
+      const tail = strip(crumbs[1].replace(/<a[\s\S]*?<\/a>/gi, "")).split("/").map((s) => s.trim()).filter(Boolean).pop();
+      const here = tail || h1;
+      if (here && (!items.length || items[items.length - 1].item !== url)) items.push({ name: here, item: url });
+    } else if (rel !== "index.html") {
+      items.push({ name: "Home", item: site.SITE + "/" });
+      const here = h1 || title.split(" | ")[0];
+      if (here) items.push({ name: here, item: url });
     }
-    const tail = strip(crumbs[1].replace(/<a[\s\S]*?<\/a>/gi, "")).split("/").map((s) => s.trim()).filter(Boolean).pop();
-    const here = tail || h1;
-    if (here && (!items.length || items[items.length - 1].item !== url)) items.push({ name: here, item: url });
     if (items.length >= 2) add.push({ "@context": "https://schema.org", "@type": "BreadcrumbList", itemListElement: items.map((x, i) => ({ "@type": "ListItem", position: i + 1, name: x.name, item: x.item })) });
   }
 

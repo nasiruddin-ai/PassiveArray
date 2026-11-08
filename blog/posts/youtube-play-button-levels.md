@@ -1,5 +1,5 @@
 ---
-title: YouTube play button levels: every award and the subscribers you need
+title: YouTube Play Button Levels: Every Creator Award & Threshold
 description: Silver at 100,000, Gold at 1 million, Diamond at 10 million, and the rarer awards above them. How YouTube's Creator Awards work and how you claim one.
 date: 2026-10-29
 keyword: youtube play button levels

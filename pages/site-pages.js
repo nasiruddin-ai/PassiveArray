@@ -61,7 +61,7 @@ function aboutPage() {
       </div>
     </div>
   </div>`;
-  return site.shell({ title: "About", ogTitle: "About Passive Array", description: "Passive Array is an independent set of free creator tools: live data from official APIs, ranges instead of fake precision, nothing behind a sign-up.", path: "/about/", active: "about", body });
+  return site.shell({ title: "About Passive Array: Free Creator & YouTube SEO Tools", ogTitle: "About Passive Array", description: "Passive Array is an independent set of free creator tools: live data from official APIs, ranges instead of fake precision, nothing behind a sign-up.", path: "/about/", active: "about", body });
 }
 
 function contactPage() {
@@ -99,7 +99,7 @@ function contactPage() {
       <details><summary>Can I embed or link to a tool?</summary><p>Link freely. Every tool has a stable address and most accept the channel in the URL, for example <code>?channel=@handle</code>.</p></details>
     </div>
   </div>`;
-  return site.shell({ title: "Contact", ogTitle: "Contact Passive Array", description: "Ask a question, report a wrong number or suggest a tool. Replies by email, usually within two working days.", path: "/contact/", active: "", body });
+  return site.shell({ title: "Contact Passive Array: Support, Tool Ideas & Partnerships", ogTitle: "Contact Passive Array", description: "Ask a question, report a wrong number, inquire about our YouTube SEO service, or suggest a tool. Replies by email within two working days.", path: "/contact/", active: "", body });
 }
 
 function privacyPage() {
@@ -160,7 +160,7 @@ ${ANALYTICS_ON ? `
     <h2>Contact</h2>
     <p>Questions about privacy: use the <a href="../contact/">contact form</a>.</p>
   </div>`;
-  return site.shell({ title: "Privacy policy", ogTitle: "Passive Array privacy policy", description: "No accounts, no trackers. What you type into a tool is used for the result and not stored. Where sign-up emails go.", path: "/privacy/", active: "", narrow: true, body });
+  return site.shell({ title: "Privacy Policy & Data Protection", ogTitle: "Passive Array privacy policy", description: "No accounts required and no invasive trackers. What you type into a tool is used for the result and not stored. Where sign-up emails go.", path: "/privacy/", active: "", narrow: true, body });
 }
 
 function termsPage() {
@@ -198,7 +198,7 @@ function termsPage() {
     <h2>9. Contact</h2>
     <p>Questions about these terms: use the <a href="../contact/">contact form</a>.</p>
   </div>`;
-  return site.shell({ title: "Terms of use", ogTitle: "Passive Array terms of use", description: "Free tools, estimates are estimates, acceptable use, YouTube API terms, no warranty.", path: "/terms/", active: "", narrow: true, body });
+  return site.shell({ title: "Terms of Use & API Guidelines", ogTitle: "Passive Array terms of use", description: "Plain-language terms for using Passive Array's free creator tools, browser extension, estimates, acceptable use and YouTube API compliance.", path: "/terms/", active: "", narrow: true, body });
 }
 
 // One component, two entry points: /login/ and /signup/. The JS in site.js
@@ -695,7 +695,7 @@ function compareHubPage() {
     <a class="btn mint" href="../creator-tools/">Browse all ${n} tools</a>
   </div>`;
   return site.shell({
-    title: "Compare",
+    title: "Compare Passive Array vs vidIQ & TubeBuddy (Free Alternatives)",
     ogTitle: "Passive Array compared with vidIQ and TubeBuddy",
     description: "Honest comparisons of Passive Array with vidIQ and TubeBuddy, including what they do better. No account needed for any Passive Array tool.",
     path: "/compare/",
@@ -772,7 +772,7 @@ function pricingPage() {
     <p class="note">Checked ${CHECKED} from both companies' public pricing pages. Prices change; <a href="../contact/">tell us</a> if this is stale. Full detail on the <a href="../compare/">comparison pages</a>.</p>
   </div>`;
   return site.shell({
-    title: "Pricing",
+    title: `Pricing: ${n} Free Creator Tools & $9/mo Pro Watchlist`,
     ogTitle: "Passive Array pricing: every tool free, Pro for channel watching",
     description: `All ${n} Passive Array tools are free with no account. Pro, $9 a month, adds a 100-channel watchlist, daily snapshots, a Monday email and CSV export.`,
     path: "/pricing/",
@@ -831,7 +831,7 @@ function faqPage() {
     <a class="btn mint" href="../contact/">Ask a question</a>
   </div>`;
   return site.shell({
-    title: "FAQ",
+    title: "Frequently Asked Questions: Free YouTube & Creator Tools",
     ogTitle: "Passive Array FAQ",
     description: "Is it really free, where do the numbers come from, why is there no search volume, and how it compares with vidIQ and TubeBuddy.",
     path: "/faq/",

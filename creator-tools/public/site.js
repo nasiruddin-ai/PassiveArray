@@ -132,9 +132,32 @@
     if (fQ) fQ.addEventListener("input", function () { fState.q = fQ.value.trim().toLowerCase(); fApply(); });
     if (fMore) fMore.addEventListener("click", function () { fState.all = true; fApply(); });
   }
-  document.querySelectorAll(".lp-try").forEach(function (b) {
+  document.querySelectorAll(".lp-try[data-fill]").forEach(function (b) {
     b.addEventListener("click", function () { var i = document.getElementById("lp-monet-channel"); if (i) { i.value = b.dataset.fill; i.focus(); } });
   });
+  var heroForm = document.querySelector("[data-hero-form]");
+  if (heroForm) {
+    var heroInput = heroForm.querySelector("#lp-hero-input");
+    heroForm.querySelectorAll("[data-hero-mode]").forEach(function (btn) {
+      btn.addEventListener("click", function () {
+        heroForm.querySelectorAll("[data-hero-mode]").forEach(function (x) { x.classList.toggle("on", x === btn); });
+        heroForm.setAttribute("action", btn.getAttribute("data-action") || "");
+        if (heroInput) {
+          heroInput.setAttribute("name", btn.getAttribute("data-param") || "channel");
+          heroInput.setAttribute("placeholder", btn.getAttribute("data-ph") || "");
+          heroInput.focus();
+        }
+      });
+    });
+    heroForm.querySelectorAll("[data-hero-fill]").forEach(function (b) {
+      b.addEventListener("click", function () {
+        if (heroInput) {
+          heroInput.value = b.getAttribute("data-hero-fill") || "";
+          heroForm.submit();
+        }
+      });
+    });
+  }
 
   var dir = document.querySelector("[data-directory]");
   if (dir) {

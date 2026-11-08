@@ -1,5 +1,5 @@
 ---
-title: How to check any YouTube channel's stats (and what the public data cannot show)
+title: How to Check Any YouTube Channel's Public Stats for Free
 description: Which numbers are genuinely available for any channel, which are rounded or hidden, and how to read a channel you do not own.
 date: 2026-09-20
 updated: 2026-10-10

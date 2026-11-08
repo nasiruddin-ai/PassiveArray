@@ -1,5 +1,5 @@
 ---
-title: YouTube monetization requirements in 2026, and what changes in 2027
+title: YouTube Monetization Requirements in 2026 & 2027 Changes
 description: The exact thresholds for both Partner Program tiers, what counts as a public watch hour, the rules that are not numbers, how long review takes, and the higher bar that arrives on 1 February 2027.
 date: 2026-10-26
 keyword: youtube monetization requirements
