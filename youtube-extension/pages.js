@@ -224,6 +224,36 @@ const STYLE = `<style>
     height: auto;
     display: block;
   }
+  .pa-ext-ch-tabs {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 12px;
+    flex-wrap: wrap;
+  }
+  .pa-ext-ch-tab {
+    appearance: none;
+    background: var(--bg-surface);
+    color: var(--text-secondary);
+    border: 1px solid var(--border-color);
+    border-radius: 999px;
+    padding: 7px 14px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    transition: border-color 0.15s ease, background-color 0.15s ease, color 0.15s ease;
+  }
+  .pa-ext-ch-tab:hover {
+    border-color: var(--accent-teal);
+    color: var(--text-primary);
+  }
+  .pa-ext-ch-tab.on {
+    background: var(--accent-teal-soft);
+    color: var(--accent-teal);
+    border-color: var(--accent-teal);
+  }
 
   /* Floating Metric Callouts */
   .pa-ext-float {
@@ -715,25 +745,52 @@ function landingPage() {
       </div>
 
       <!-- Hero Visual Showcase -->
-      <div class="pa-ext-hero-visual">
-        <div class="pa-ext-float pos-1">
+      <div class="pa-ext-hero-visual" data-ext-preview>
+        <div class="pa-ext-ch-tabs" role="tablist" aria-label="Preview extension on 3 channels">
+          <button type="button" class="pa-ext-ch-tab on" data-ext-ch="ext-channel-1-tech.png" data-ext-er="6.48% Engagement" data-ext-ersub="4.6x Channel Average" data-ext-tags="16 Hidden Tags" data-ext-url="youtube.com/watch?v=k8Vx92LmQp0 · @nomadlenslab">📷 @nomadlenslab (Tech)</button>
+          <button type="button" class="pa-ext-ch-tab" data-ext-ch="ext-channel-2-creator.png" data-ext-er="7.12% Engagement" data-ext-ersub="9.2x Viral Outlier" data-ext-tags="18 Hidden Tags" data-ext-url="youtube.com/watch?v=m3Yp71KcWt9 · @mayachenstudio">📈 @mayachenstudio (Creator)</button>
+          <button type="button" class="pa-ext-ch-tab" data-ext-ch="ext-channel-3-science.png" data-ext-er="5.56% Engagement" data-ext-ersub="3.8x Channel Average" data-ext-tags="15 Hidden Tags" data-ext-url="youtube.com/watch?v=a9Tr44BnXz2 · @atomicfrontier">⚡ @atomicfrontier (Science)</button>
+        </div>
+
+        <div class="pa-ext-float pos-1" style="top:34px">
           <div class="icon-wrap">⚡</div>
-          <div><b>4.82% Engagement</b><span>Above YouTube Average</span></div>
+          <div><b data-ext-float-er>6.48% Engagement</b><span data-ext-float-ersub>4.6x Channel Average</span></div>
         </div>
         <div class="pa-ext-float pos-2">
           <div class="icon-wrap">🏷️</div>
-          <div><b>16 Hidden Tags</b><span>1-Click Copy Ready</span></div>
+          <div><b data-ext-float-tags>16 Hidden Tags</b><span>1-Click Copy Ready</span></div>
         </div>
 
         <div class="pa-ext-browser">
           <div class="pa-ext-browser-bar">
             <span class="pa-ext-dot r"></span><span class="pa-ext-dot y"></span><span class="pa-ext-dot g"></span>
-            <div class="address">youtube.com/watch?v=... · Passive Array Sidebar Overlay</div>
+            <div class="address" data-ext-address>youtube.com/watch?v=k8Vx92LmQp0 · @nomadlenslab</div>
           </div>
-          <img src="screenshot-1-video.png" alt="Passive Array for YouTube video watch page panel" width="1280" height="800" loading="eager" />
+          <img data-ext-hero-img src="ext-channel-1-tech.png" alt="Passive Array for YouTube video watch page panel" width="1280" height="800" loading="eager" />
         </div>
       </div>
     </section>
+    <script>
+      (function(){
+        var box = document.querySelector("[data-ext-preview]");
+        if (!box) return;
+        var img = box.querySelector("[data-ext-hero-img]");
+        var addr = box.querySelector("[data-ext-address]");
+        var er = box.querySelector("[data-ext-float-er]");
+        var ersub = box.querySelector("[data-ext-float-ersub]");
+        var tags = box.querySelector("[data-ext-float-tags]");
+        box.querySelectorAll("[data-ext-ch]").forEach(function(btn){
+          btn.addEventListener("click", function(){
+            box.querySelectorAll("[data-ext-ch]").forEach(function(b){ b.classList.toggle("on", b === btn); });
+            if (img) img.src = btn.getAttribute("data-ext-ch");
+            if (addr) addr.textContent = btn.getAttribute("data-ext-url");
+            if (er) er.textContent = btn.getAttribute("data-ext-er");
+            if (ersub) ersub.textContent = btn.getAttribute("data-ext-ersub");
+            if (tags) tags.textContent = btn.getAttribute("data-ext-tags");
+          });
+        });
+      })();
+    </script>
 
     <!-- 2. Value Pillars -->
     <div class="pa-ext-pillars">
@@ -778,9 +835,9 @@ function landingPage() {
           <div class="pa-ext-browser">
             <div class="pa-ext-browser-bar">
               <span class="pa-ext-dot r"></span><span class="pa-ext-dot y"></span><span class="pa-ext-dot g"></span>
-              <div class="address">Video Insights & Tags Extractor</div>
+              <div class="address">Video Insights &amp; Tags Extractor · @mayachenstudio</div>
             </div>
-            <img src="screenshot-1-video.png" alt="Video intelligence sidebar in Passive Array" width="1280" height="800" loading="lazy" />
+            <img src="ext-channel-2-creator.png" alt="Video intelligence sidebar in Passive Array" width="1280" height="800" loading="lazy" />
           </div>
         </div>
       </section>
