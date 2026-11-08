@@ -389,68 +389,22 @@
     if (!me.channel) {
       app.classList.add("gated");
       gate.hidden = false;
-      var hasGoogle = !!(me.googleClientId);
       gateBody.innerHTML =
         "<span class=\"k\">Step 2 of 2 · Connect Your Channel</span>" +
         "<h2>Link your YouTube channel to enter the dashboard</h2>" +
-        "<p>Signed in as <b>" + esc(me.email) + "</b>. Connect your YouTube channel below to unlock your dashboard, monetization tracker, daily video ideas and weekly growth report.</p>" +
-        (hasGoogle
-          ? "<button type=\"button\" class=\"btn\" data-gate-oauth style=\"width:100%;justify-content:center;gap:10px;height:46px\">" + gIcon + "<span>Connect my YouTube channel with Google</span></button>" +
-            "<div class=\"app-gate-or\"><span>or enter your channel @handle</span></div>"
-          : "") +
+        "<p>Signed in as <b>" + esc(me.email) + "</b>. Paste your YouTube <b>@handle</b>, channel link, or channel name below to unlock your dashboard, monetization tracker, daily video ideas and weekly growth report.</p>" +
         "<form class=\"aform\" data-gate-channel novalidate>" +
           "<input type=\"text\" name=\"channel\" placeholder=\"@yourhandle, channel name or youtube.com/@yourhandle\" required autocomplete=\"off\">" +
-          "<button class=\"btn" + (hasGoogle ? " ghost" : "") + "\" type=\"submit\">Link channel &amp; open dashboard</button>" +
+          "<button class=\"btn\" type=\"submit\">Link my channel &amp; enter dashboard</button>" +
         "</form>" +
         "<span class=\"fmsg\" data-gate-channel-msg style=\"display:block;margin-top:8px\"></span>" +
         "<div class=\"app-gate-foot\"><a href=\"" + ROOT + "creator-tools/\">← Back to public tools</a><a href=\"#\" data-gate-logout>Sign out</a></div>";
 
       var gmsg = gateBody.querySelector("[data-gate-channel-msg]");
-      var obtn = gateBody.querySelector("[data-gate-oauth]");
-      if (obtn) {
-        obtn.addEventListener("click", function () {
-          obtn.disabled = true;
-          if (gmsg) { gmsg.textContent = "Opening Google to connect your YouTube channel…"; gmsg.className = "fmsg"; }
-          loadGsiClient(function () {
-            if (!window.google || !window.google.accounts || !window.google.accounts.oauth2) {
-              obtn.disabled = false;
-              if (gmsg) { gmsg.textContent = "Could not open Google popup. Type your @handle below instead."; gmsg.className = "fmsg bad"; }
-              return;
-            }
-            var tc = window.google.accounts.oauth2.initTokenClient({
-              client_id: me.googleClientId,
-              scope: "https://www.googleapis.com/auth/youtube.readonly",
-              prompt: "select_account",
-              callback: function (resp) {
-                if (!resp || resp.error || !resp.access_token) {
-                  obtn.disabled = false;
-                  if (gmsg) { gmsg.textContent = "Google connection cancelled — or type your @handle below."; gmsg.className = "fmsg bad"; }
-                  return;
-                }
-                if (gmsg) { gmsg.textContent = "Loading your YouTube channel…"; gmsg.className = "fmsg"; }
-                post("/api/channel?action=verify", { accessToken: resp.access_token, source: "dashboard_gate_oauth" }).then(function (r) {
-                  obtn.disabled = false;
-                  if (!r || !r.ok) {
-                    if (gmsg) { gmsg.textContent = ((r && r.error) || "Could not find a channel on that Google account.") + " You can also type your @handle below."; gmsg.className = "fmsg bad"; }
-                    return;
-                  }
-                  applyChannelSuccess(r, "");
-                });
-              },
-              error_callback: function () {
-                obtn.disabled = false;
-                if (gmsg) { gmsg.textContent = "Popup closed. You can also type your @handle below."; gmsg.className = "fmsg"; }
-              }
-            });
-            tc.requestAccessToken();
-          });
-        });
-      }
-
       var gf = gateBody.querySelector("[data-gate-channel]");
       if (gf) {
         var inp = gf.querySelector("input");
-        if (inp && !hasGoogle) setTimeout(function () { inp.focus(); }, 50);
+        if (inp) setTimeout(function () { inp.focus(); }, 50);
         gf.addEventListener("submit", function (e) {
           e.preventDefault();
           var v = gf.elements.channel.value.trim();
