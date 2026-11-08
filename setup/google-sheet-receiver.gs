@@ -33,8 +33,16 @@ function doPost(e) {
     }
 
     if (body.kind === "digest" && body.email && body.html) {
-      // Growth reports and weekly watchlist emails, sent to the member, not to you.
-      MailApp.sendEmail({ to: body.email, subject: body.subject || "Your Passive Array watchlist this week", htmlBody: body.html, body: body.message || "" , name: "Passive Array" });
+      // Growth reports, welcome greetings and weekly watchlist emails, sent to the member.
+      var senderEmail = Session.getEffectiveUser().getEmail();
+      MailApp.sendEmail({
+        to: body.email,
+        subject: body.subject || "Your Passive Array update",
+        body: body.message || "Open your Passive Array dashboard: https://passivearray.com/app/",
+        htmlBody: body.html,
+        name: "Passive Array",
+        replyTo: senderEmail || undefined,
+      });
       logRow({ receivedAt: body.receivedAt, kind: "digest", email: body.email, channel: body.channel, channelId: body.channelId, message: body.subject, source: body.source });
       return json({ ok: true });
     }
@@ -86,35 +94,38 @@ function logRow(body) {
   sheet.appendRow(row);
 }
 
-/** Emails the visitor the one-time link that signs them in. */
+/** Emails the visitor the one-time link that verifies their email and signs them in. */
 function sendLoginLink(body) {
   if (!body.email || !body.link) return;
   var minutes = body.minutes || 20;
+  var chNote = body.channel ? " (" + body.channel + ")" : "";
+  var senderEmail = Session.getEffectiveUser().getEmail();
 
   var text =
-    "Here is your sign-in link for Passive Array.\n\n" +
+    "Hi,\n\n" +
+    "Confirm your email for Passive Array" + chNote + " by opening this link:\n\n" +
     body.link + "\n\n" +
-    "It expires in " + minutes + " minutes.\n\n" +
-    "If you did not ask to sign in, ignore this email. Nobody can use the link without it.\n\n" +
-    "Passive Array, free tools for creators and brands.";
+    "This link is valid for " + minutes + " minutes.\n\n" +
+    "If you did not request this, you can safely ignore this message.\n\n" +
+    "— Passive Array (https://passivearray.com)";
 
   var html =
     '<div style="font-family:Arial,Helvetica,sans-serif;font-size:15px;line-height:1.6;color:#1F2A44;max-width:520px">' +
-    '<p style="margin:0 0 18px">Here is your sign-in link for <strong>Passive Array</strong>.</p>' +
-    '<p style="margin:0 0 22px"><a href="' + body.link + '" style="display:inline-block;background:#1F7F73;color:#ffffff;' +
-    'text-decoration:none;font-weight:600;padding:13px 22px;border-radius:12px">Sign me in</a></p>' +
-    '<p style="margin:0 0 18px;color:#5A6478;font-size:13px">It expires in ' + minutes + ' minutes. ' +
-    'If the button does not work, paste this into your browser:<br>' +
-    '<span style="word-break:break-all">' + body.link + '</span></p>' +
-    '<p style="margin:0;color:#5A6478;font-size:13px">If you did not ask to sign in, ignore this email. ' +
-    'Nobody can use the link without it.</p></div>';
+    '<p style="margin:0 0 14px">Hi,</p>' +
+    '<p style="margin:0 0 18px">Click below to confirm your email and sign in to <strong>Passive Array</strong>' + chNote + ':</p>' +
+    '<p style="margin:0 0 20px"><a href="' + body.link + '" style="display:inline-block;background:#1F7F73;color:#ffffff;' +
+    'text-decoration:none;font-weight:600;padding:12px 22px;border-radius:8px">Verify email &amp; sign in</a></p>' +
+    '<p style="margin:0 0 14px;color:#5A6478;font-size:13px">This link is valid for ' + minutes + ' minutes. ' +
+    'If you did not request this email, you can safely ignore it.</p>' +
+    '<p style="margin:0;color:#5A6478;font-size:12px">— Passive Array · <a href="https://passivearray.com" style="color:#5A6478">passivearray.com</a></p></div>';
 
   MailApp.sendEmail({
     to: body.email,
-    subject: "Your Passive Array sign-in link",
+    subject: "Confirm your email for Passive Array",
     body: text,
     htmlBody: html,
     name: "Passive Array",
+    replyTo: senderEmail || undefined,
   });
 }
 
