@@ -754,7 +754,7 @@ ${header(root, "home", false)}
   </div>
 </section>
 
-<!-- 2. Monetization band -->
+<!-- 2. Monetization intelligence showcase -->
 <section class="lp-band lp-monet">
   <div class="wrap lp-two">
     <div class="lp-band-text">
@@ -765,17 +765,35 @@ ${header(root, "home", false)}
         <li>${tick}A verdict with a confidence score, and every signal listed</li>
         <li>${tick}The full check runs in your own browser with the free Chrome extension</li>
       </ul>
-      <a class="lp-link" href="${root}creator-tools/youtube-monetization-checker/">How the check works ${ICON.arrow}</a>
+      <div class="lp-band-actions">
+        <a class="lp-link" href="${root}creator-tools/youtube-monetization-checker/">Run a live check ${ICON.arrow}</a>
+        <a class="lp-link alt" href="${root}youtube-extension/">Install Chrome Extension ${ICON.arrow}</a>
+      </div>
     </div>
-    <form class="lp-widget" action="${root}creator-tools/youtube-monetization-checker/" method="get">
-      <div class="lp-widget-head"><span class="pbadge yt" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24"><path fill="#fff" d="M9.5 8.5v7l6-3.5z"/></svg></span><span>YouTube</span></div>
-      <h3>YouTube Monetization Checker</h3>
-      <p>Is a channel likely in the Partner Program? Paste a link, @handle or name.</p>
-      <label for="lp-monet-channel" class="sr">Channel</label>
-      <input id="lp-monet-channel" name="channel" type="text" placeholder="@handle or channel link" autocomplete="off" required>
-      <button type="submit" class="btn lp-primary wide">Check monetization</button>
-      <small>Free. No account. Try <button type="button" class="lp-try" data-fill="@mkbhd">@mkbhd</button> or <button type="button" class="lp-try" data-fill="@veritasium">@veritasium</button></small>
-    </form>
+    <div class="lp-preview" aria-label="Sample monetization check output">
+      <div class="lp-prev-top">
+        <div class="lp-prev-chan">
+          <span class="pbadge yt" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 24 24"><path fill="#fff" d="M9.5 8.5v7l6-3.5z"/></svg></span>
+          <div><b>@mkbhd</b><span>19.8M subscribers · Tech</span></div>
+        </div>
+        <span class="lp-prev-pill">95% confidence</span>
+      </div>
+      <div class="lp-prev-verdict">
+        <small>VERDICT FROM PUBLIC SIGNALS</small>
+        <strong>Likely monetized</strong>
+      </div>
+      <ul class="lp-prev-rows">
+        <li><span>1,000+ subscribers</span><b class="ok">Yes · 19.8M</b></li>
+        <li><span>3 uploads in last 90 days</span><b class="ok">Yes · 10 of 10</b></li>
+        <li><span>Ads on recent uploads</span><b class="ok">Yes · 5 of 5</b></li>
+        <li><span>Not made for kids</span><b class="ok">Yes</b></li>
+      </ul>
+      <div class="lp-prev-foot">
+        <span>Try live:</span>
+        <a href="${root}creator-tools/youtube-monetization-checker/?channel=@mkbhd">@mkbhd &rarr;</a>
+        <a href="${root}creator-tools/youtube-monetization-checker/?channel=@veritasium">@veritasium &rarr;</a>
+      </div>
+    </div>
   </div>
 </section>
 

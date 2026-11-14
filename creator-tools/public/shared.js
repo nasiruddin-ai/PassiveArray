@@ -172,6 +172,13 @@
         "<span class=\"note\">" + (gated ? "Free account needed to download. Takes a few seconds, and you come straight back here." : esc(out.download.hint || "")) + "</span></div>";
     }
     if (out.note) h += "<p class=\"note\">" + out.note + "</p>";
+    h += "<div class=\"result-cta\">" +
+      "<div class=\"result-cta-copy\"><b>Want daily tracking or hands-on YouTube SEO?</b><span>Track up to 100 channels in the Dashboard ($9/mo) or book a channel audit with Nasir Uddin.</span></div>" +
+      "<div class=\"result-cta-actions\">" +
+        "<a class=\"btn\" href=\"../../app/\">Open Dashboard</a>" +
+        "<a class=\"btn ghost\" href=\"../../youtube-seo-service/\">YouTube SEO Service &rarr;</a>" +
+      "</div>" +
+    "</div>";
     results.innerHTML = h;
     var dl = document.getElementById("dlbtn");
     function saveFile() {
