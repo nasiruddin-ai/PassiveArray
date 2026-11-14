@@ -1100,64 +1100,91 @@ const WHATSAPP = "8801770223898";
 const waLink = (text) => `https://wa.me/${WHATSAPP}?text=${encodeURIComponent(text)}`;
 
 function youtubeSeoServicePage() {
+  const f = FOUNDER;
   const n = site.tools.length;
+  const years = Math.max(4, new Date().getFullYear() - f.since);
   const ic = (d) => `<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${d}</svg>`;
   const chat = `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12a8.5 8.5 0 0 1-12.6 7.4L3 21l1.6-5.2A8.5 8.5 0 1 1 21 12z"/></svg>`;
+  const mailIc = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg>`;
   const check = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12 5 5L20 7"/></svg>`;
   const cross = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg>`;
   const services = [
-    [ic('<circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/>'), "Keyword research", "Topics and phrases taken from YouTube's own autocomplete and from what the top videos for a search actually use. No invented search volumes."],
-    [ic('<path d="M4 6h16M4 12h10M4 18h7"/>'), "Titles, descriptions and tags", "Every upload written around one clear search phrase: a title that fits on a phone, a description with chapters and links, tags ranked by real use."],
-    [ic('<rect x="3" y="5" width="18" height="14" rx="2"/><path d="m10 9 5 3-5 3z"/>'), "Thumbnail and hook review", "Notes on the thumbnail and the first 30 seconds of each video, the two things that decide whether a viewer clicks and stays."],
-    [ic('<path d="M4 6h16M4 10h16M4 14h10M4 18h10"/><path d="m17 15 3 2-3 2z"/>'), "Playlists and channel structure", "Playlists, channel sections, the trailer, the about text and links arranged so one video leads to the next."],
-    [ic('<path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/>'), "Monthly report", "Views, watch time, click-through rate and subscribers from YouTube Analytics each month, with what changed and what to do next."],
-    [ic('<circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"/>'), "Bengali and English channels", "Keyword research and copy in both languages, for channels in Bangladesh, India and anywhere Bengali or English speakers watch."],
+    [ic('<circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/>'), "Keyword & topic research", "Topics and search phrases pulled from YouTube autocomplete and live competitor velocity. No invented search volumes."],
+    [ic('<path d="M4 6h16M4 12h10M4 18h7"/>'), "Titles, descriptions & tags", "Every upload built around one clear search intent: mobile-friendly CTR titles, timestamped chapters, and ranked 500-char tag sets."],
+    [ic('<rect x="3" y="5" width="18" height="14" rx="2"/><path d="m10 9 5 3-5 3z"/>'), "Thumbnail & hook audit", "Actionable feedback on your thumbnail composition and first 30 seconds — the two levers that drive CTR and retention."],
+    [ic('<path d="M4 6h16M4 10h16M4 14h10M4 18h10"/><path d="m17 15 3 2-3 2z"/>'), "Playlists & channel architecture", "Playlists, homepage sections, channel trailer, and internal video linking structured to maximize session watch time."],
+    [ic('<path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/>'), "Monthly analytics report", "Clear breakdown of impressions, CTR, watch time, and subscriber growth from YouTube Studio with next month's priorities."],
+    [ic('<circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"/>'), "Global & multilingual SEO", "Research and metadata tailored to your target market — US, UK, EU, Middle East, South Asia, or worldwide in English, Bengali, Spanish, Hindi, and more."],
+  ];
+  const audiences = [
+    ["Creators & Educators", "Turn consistent uploads into compounding search and suggested views without guessing keywords."],
+    ["Faceless & Niche Channels", "Spot breakout outlier topics early and package videos with high-CTR titles and clean metadata."],
+    ["Brands & Businesses", "Build a high-intent YouTube funnel that ranks for buyer keywords and drives leads worldwide."],
   ];
   const packages = [
-    { name: "Channel audit", kind: "One-off", text: "A full review of your channel with a written action plan you can follow yourself.", items: ["Review of your last 20 uploads", "Keyword gaps and topic ideas for your niche", "Title, thumbnail and description fixes", "Monetization and eligibility check", "Prioritised to-do list"] },
-    { name: "Monthly video SEO", kind: "Ongoing", text: "I optimise your new uploads every month, so each one goes out with the research done.", items: ["Keyword research for each upload", "Title, description, tags and chapters written", "Thumbnail and hook notes before you publish", "Playlist and end-screen linking", "Monthly report from YouTube Analytics"], top: true },
-    { name: "Channel setup or relaunch", kind: "One-off", text: "For a new channel, or one changing direction, set up properly from the first video.", items: ["Niche and audience research", "Channel name, banner text, about and links", "Playlists and channel sections", "Optimisation of your existing videos", "A content plan for the first 30 days"] },
+    { name: "Channel audit", kind: "One-off · 48h delivery", text: "A deep-dive audit of your channel with a prioritized roadmap you can execute immediately.", items: ["Review of your last 20 uploads", "Keyword gaps & 15+ winning topic ideas", "Title, thumbnail & description rewrites", "Monetization & policy readiness check", "Prioritized 30-day action plan"] },
+    { name: "Monthly video SEO", kind: "Ongoing · Most chosen", text: "End-to-end optimization for every new upload so each video launches with full search & browse backing.", items: ["Custom keyword research per upload", "CTR titles, descriptions, tags & chapters", "Thumbnail & 30-sec hook notes pre-publish", "Playlist, card & end-screen linking", "Monthly YouTube Analytics report"], top: true },
+    { name: "Channel setup or relaunch", kind: "One-off · Full foundation", text: "Built for new channels or pivots that need clean niche positioning and structure from day one.", items: ["Niche & competitor gap research", "Channel positioning, bio, banner & links", "Keyword-rich playlists & home sections", "Optimization of existing core videos", "30-day launch content roadmap"] },
   ];
   const nots = [
     "Buy views, subscribers, likes or comments",
     "Use bots, sub-for-sub or engagement groups",
-    "Guarantee rankings, views or monetization",
-    "Ask for your Google password",
-    "Reupload or spin other people's content",
+    "Guarantee overnight viral views or monetization",
+    "Ask for your Google account password",
+    "Reupload or spin other creators' content",
   ];
   const steps = [
-    ["01", "Message on WhatsApp", "Send your channel link and what you want to fix. Bengali or English is fine."],
-    ["02", "Free quick check", `I run your channel through the Passive Array tools and tell you honestly what I see, whether or not you hire me.`],
-    ["03", "Plan and quote", "You get a clear scope and a fixed price for the package that fits. Nothing starts until you agree."],
-    ["04", "Work and report", "You add me in YouTube Studio with limited permissions, I do the work, and you get a report on what changed."],
+    ["01", "Share your channel", "Send your channel link via WhatsApp or email with your target audience and goals."],
+    ["02", "Free initial check", "I audit your channel using Passive Array's live tools and share honest feedback — free, no obligation."],
+    ["03", "Clear scope & quote", "You get a fixed price and deliverable timeline tailored to your upload schedule before anything starts."],
+    ["04", "Optimize & report", "You grant limited Editor access in YouTube Studio, I optimize your uploads, and you get monthly performance reports."],
   ];
   const faq = [
-    ["How much does it cost?", "It depends on the package and how many videos you publish. Message on WhatsApp with your channel link and you get a fixed price before anything starts."],
-    ["How long until I see results?", "Titles and descriptions on new uploads can change impressions within days. Search traffic to a channel usually builds over two to three months. Nobody can promise a number, and I will not."],
-    ["Do you guarantee views or monetization?", "No. YouTube decides what it recommends, and anyone who guarantees views is usually buying them, which can get a channel penalised. I guarantee the work: the research, the writing and the report."],
-    ["Do you need my Google password?", "No. YouTube Studio lets you invite people with limited permissions. You add me as an Editor or Viewer under Settings, Permissions, and you can remove me with one click."],
-    ["Do you work with Bengali channels?", "Yes. Keyword research and copy are done in Bengali or English, or both for channels that reach both audiences."],
-    ["What size of channel do you work with?", "Any size. The audit suits small channels that want a plan; the monthly package suits channels that upload every week."],
-    ["Do the free tools stay free?", `Yes. The ${n} tools on Passive Array stay free with no sign-up. This service is for people who would rather have the work done for them.`],
+    ["How much does it cost?", "Pricing depends on your upload frequency and package scope. Send your channel link on WhatsApp or via the contact form and you will receive a fixed quote before any work begins."],
+    ["Do you work with international channels outside Bangladesh?", "Yes. Clients work with me from the US, UK, Europe, Middle East, and South Asia. Keyword research is localized to your target country and language."],
+    ["What languages do you support?", "English and Bengali natively, plus localized YouTube keyword and metadata optimization for Spanish, Hindi, Arabic, and global English markets."],
+    ["How long until I see results?", "Title and metadata updates on new uploads can lift impressions within days. Sustainable search and suggested traffic typically compounds over 60 to 90 days."],
+    ["Do you need my Google password?", "Never. You invite me inside YouTube Studio under Settings → Permissions with a limited Editor role, which you can revoke in one click."],
+    ["Do you guarantee views or monetization?", "No ethical SEO specialist guarantees algorithm outcomes. Anyone promising guaranteed views is usually using bots, which risks channel termination. I guarantee thorough research, clean optimization, and transparent reporting."],
+    ["Do the free tools stay free?", `Yes. All ${n} tools on Passive Array remain 100% free with no sign-up. This service is for creators and brands who want hands-on execution.`],
   ];
+
+  const expHtml = f.experience.map((e) => `
+    <div class="ys-exp-item">
+      <span class="ys-exp-dot" aria-hidden="true"></span>
+      <div>
+        <div class="ys-exp-top"><b>${esc(e.title)}</b><span>${esc(e.dates)}</span></div>
+        <div class="ys-exp-place">${esc(e.place)} · ${esc(e.where)}</div>
+        <p>${esc(e.text)}</p>
+      </div>
+    </div>`).join("");
 
   const body = `
   <style>
     .ys{--r:22px}
     .ys-hero{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,.8fr);gap:44px;align-items:center;padding:28px 0 8px}
-    .ys-k{display:inline-flex;padding:7px 14px;border-radius:999px;background:var(--soft);color:var(--deep);font-size:.76rem;font-weight:700;letter-spacing:.07em}
+    .ys-k{display:inline-flex;align-items:center;gap:8px;padding:7px 14px;border-radius:999px;background:var(--soft);color:var(--deep);font-size:.76rem;font-weight:700;letter-spacing:.07em}
     :root[data-theme="dark"] .ys-k{color:var(--mint)}
-    .ys-hero h1{font-size:clamp(2.2rem,4.8vw,3.6rem);letter-spacing:-.035em;line-height:1.05;margin:18px 0 12px}
-    .ys-hero h1 span{background:linear-gradient(135deg,var(--teal),var(--indigo));-webkit-background-clip:text;background-clip:text;color:transparent}
-    .ys-lead{font-size:1.12rem;color:var(--muted);max-width:58ch;line-height:1.6}
+    .ys-hero h1{font-size:clamp(2.2rem,4.6vw,3.45rem);letter-spacing:-.035em;line-height:1.08;margin:18px 0 14px}
+    .ys-hero h1 span{color:var(--deep)}
+    :root[data-theme="dark"] .ys-hero h1 span{color:var(--mint)}
+    .ys-lead{font-size:1.1rem;color:var(--muted);max-width:58ch;line-height:1.65}
     .ys-ctas{display:flex;gap:12px;flex-wrap:wrap;margin-top:24px}
     .ys-ctas .btn{height:48px;padding:0 22px;display:inline-flex;align-items:center;gap:8px}
-    .ys-panel{background:linear-gradient(135deg,var(--ink),#2B3A6B);color:#fff;border-radius:26px;padding:28px}
-    .ys-panel h2{font-size:1.15rem;color:#fff}
-    .ys-panel ul{list-style:none;padding:0;margin:14px 0 0;display:grid;gap:12px}
-    .ys-panel li{display:flex;gap:10px;align-items:flex-start;line-height:1.45}
-    .ys-panel li svg{flex:none;color:var(--mint);margin-top:3px}
-    .ys-panel a{color:var(--mint)}
+    .ys-trust{display:flex;flex-wrap:wrap;gap:10px 22px;margin-top:22px;font-size:.86rem;color:var(--muted);font-weight:500}
+    .ys-trust span{display:inline-flex;align-items:center;gap:6px}
+    .ys-trust svg{color:var(--teal);flex:none}
+    .ys-panel{background:var(--card);border:1px solid var(--line);border-radius:24px;padding:26px;box-shadow:var(--shadow)}
+    :root[data-theme="dark"] .ys-panel{background:linear-gradient(160deg,#162038,#1B2847);border-color:rgba(143,211,199,.22)}
+    .ys-panel-head{display:flex;align-items:center;gap:14px;padding-bottom:18px;border-bottom:1px solid var(--line);margin-bottom:18px}
+    .ys-panel-head img{width:64px;height:64px;border-radius:50%;object-fit:cover;border:2px solid var(--teal);flex:none}
+    .ys-panel-head b{display:block;font-size:1.05rem;color:var(--text)}
+    .ys-panel-head span{display:block;font-size:.82rem;color:var(--muted)}
+    .ys-panel h2{font-size:1.05rem;color:var(--text);margin-bottom:12px}
+    .ys-panel ul{list-style:none;padding:0;margin:0;display:grid;gap:11px;font-size:.93rem}
+    .ys-panel li{display:flex;gap:10px;align-items:flex-start;line-height:1.45;color:var(--muted)}
+    .ys-panel li svg{flex:none;color:var(--teal);margin-top:3px}
+    :root[data-theme="dark"] .ys-panel li svg{color:var(--mint)}
     .ys-sec{padding:56px 0 0}
     .ys-sec>h2{font-size:clamp(1.6rem,3vw,2.2rem);letter-spacing:-.03em}
     .ys-sec>.sub{color:var(--muted);margin:8px 0 22px;max-width:62ch}
@@ -1165,7 +1192,33 @@ function youtubeSeoServicePage() {
     .ys-card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:24px;display:flex;flex-direction:column;gap:10px}
     .ys-card h3{font-size:1.1rem}
     .ys-card p{color:var(--muted);font-size:.93rem;line-height:1.6}
-    .ys-ic{width:44px;height:44px;border-radius:13px;display:flex;align-items:center;justify-content:center;color:#fff;background:linear-gradient(135deg,var(--teal),var(--indigo))}
+    .ys-ic{width:44px;height:44px;border-radius:13px;display:flex;align-items:center;justify-content:center;color:#fff;background:var(--teal)}
+    .ys-founder{display:grid;grid-template-columns:minmax(0,.85fr) minmax(0,1.15fr);gap:28px;align-items:start;background:var(--card);border:1px solid var(--line);border-radius:26px;padding:32px}
+    .ys-fprofile{display:flex;flex-direction:column;gap:16px}
+    .ys-fphoto{display:flex;align-items:center;gap:18px}
+    .ys-fphoto img{width:112px;height:112px;border-radius:20px;object-fit:cover;border:2px solid var(--teal);box-shadow:0 12px 30px -12px rgba(42,157,143,.45);flex:none}
+    .ys-fphoto h3{font-size:1.35rem;margin-bottom:2px}
+    .ys-fphoto .frole{font-size:.92rem;color:var(--deep);font-weight:600}
+    :root[data-theme="dark"] .ys-fphoto .frole{color:var(--mint)}
+    .ys-fphoto .floc{font-size:.82rem;color:var(--muted);margin-top:4px}
+    .ys-fstats{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+    .ys-fstats div{background:var(--bg);border:1px solid var(--line);border-radius:14px;padding:12px 14px}
+    .ys-fstats b{display:block;font-size:1.35rem;color:var(--deep);line-height:1.1}
+    :root[data-theme="dark"] .ys-fstats b{color:var(--mint)}
+    .ys-fstats span{font-size:.78rem;color:var(--muted)}
+    .ys-flinks{display:flex;flex-wrap:wrap;gap:10px}
+    .ys-flinks a{font-size:.86rem;font-weight:600;padding:7px 13px;border-radius:10px;border:1px solid var(--line);color:var(--text)}
+    .ys-flinks a:hover{border-color:var(--teal);color:var(--deep)}
+    :root[data-theme="dark"] .ys-flinks a:hover{color:var(--mint)}
+    .ys-exp{display:grid;gap:18px;border-left:2px solid var(--line);padding-left:20px;margin-left:6px}
+    .ys-exp-item{position:relative}
+    .ys-exp-dot{position:absolute;left:-27px;top:6px;width:12px;height:12px;border-radius:50%;background:var(--teal);border:2px solid var(--card)}
+    .ys-exp-top{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;align-items:baseline}
+    .ys-exp-top b{font-size:1rem;color:var(--text)}
+    .ys-exp-top span{font-size:.78rem;font-weight:600;color:var(--deep);background:var(--soft);padding:2px 9px;border-radius:999px}
+    :root[data-theme="dark"] .ys-exp-top span{color:var(--mint)}
+    .ys-exp-place{font-size:.84rem;color:var(--muted);font-weight:500;margin:2px 0 4px}
+    .ys-exp-item p{font-size:.88rem;color:var(--muted);line-height:1.55;margin:0}
     .ys-pk.top{border:2px solid var(--teal);box-shadow:0 24px 50px -30px rgba(42,157,143,.6)}
     .ys-pk .kind{font-size:.75rem;font-weight:700;letter-spacing:.08em;color:var(--deep);text-transform:uppercase}
     :root[data-theme="dark"] .ys-pk .kind{color:var(--mint)}
@@ -1186,104 +1239,167 @@ function youtubeSeoServicePage() {
     .ys-cta{margin:56px 0 0;background:linear-gradient(135deg,var(--teal),var(--indigo));color:#fff;border-radius:26px;padding:40px;display:flex;align-items:center;justify-content:space-between;gap:24px;flex-wrap:wrap}
     .ys-cta h2{font-size:clamp(1.5rem,3vw,2rem);letter-spacing:-.02em;color:#fff}
     .ys-cta p{opacity:.92;margin-top:6px;max-width:52ch}
+    .ys-cta-btns{display:flex;flex-wrap:wrap;gap:12px}
     .ys .ys-cta a.btn{background:#fff;color:#1F2A44;display:inline-flex;align-items:center;gap:8px}
     .ys .ys-cta a.btn:hover{color:#1F2A44}
-    @media(max-width:960px){.ys-hero{grid-template-columns:1fr}.ys-grid3{grid-template-columns:1fr 1fr}.ys-steps{grid-template-columns:1fr 1fr}.ys-two{grid-template-columns:1fr}}
-    @media(max-width:600px){.ys-grid3,.ys-steps{grid-template-columns:1fr}.ys-cta{padding:28px}}
+    .ys .ys-cta a.btn.sec{background:rgba(255,255,255,.16);color:#fff;border:1px solid rgba(255,255,255,.35)}
+    @media(max-width:960px){.ys-hero,.ys-founder{grid-template-columns:1fr}.ys-grid3{grid-template-columns:1fr 1fr}.ys-steps{grid-template-columns:1fr 1fr}.ys-two{grid-template-columns:1fr}}
+    @media(max-width:600px){.ys-grid3,.ys-steps{grid-template-columns:1fr}.ys-cta,.ys-founder{padding:24px}}
   </style>
   <div class="ys">
   <div class="crumbs" style="padding-top:24px"><a href="../">Home</a> / YouTube SEO service</div>
 
   <section class="ys-hero">
     <div>
-      <span class="ys-k">YOUTUBE SEO SERVICE · DONE FOR YOU</span>
-      <h1>YouTube SEO, done for you. <span>By the person who built the tools.</span></h1>
-      <p class="ys-lead">I research the keywords, write the titles, descriptions and tags, review your thumbnails and structure your channel so YouTube understands what each video is about. Clean methods only: no bought views, no bots, no guarantees nobody can keep.</p>
+      <span class="ys-k">WORLDWIDE YOUTUBE SEO · DONE FOR YOU</span>
+      <h1>YouTube SEO that brings real viewers — <span>by the founder who built the tools.</span></h1>
+      <p class="ys-lead">I research winning topics, write high-CTR titles, descriptions and tags, audit your thumbnails, and structure your channel for global search and suggested reach. Clean, white-hat SEO only — trusted by creators and brands worldwide.</p>
       <div class="ys-ctas">
-        <a class="btn" href="${waLink("Hi Nasir, I'd like help with YouTube SEO for my channel: ")}" target="_blank" rel="noopener">${chat}Message on WhatsApp</a>
-        <a class="btn ghost" href="../creator-tools/youtube-monetization-checker/">Check your channel free first</a>
+        <a class="btn" href="${waLink("Hi Nasir, I'd like a free first look at my YouTube channel: ")}" target="_blank" rel="noopener">${chat}Get Free Channel Look (WhatsApp)</a>
+        <a class="btn ghost" href="../contact/">${mailIc}Request Quote via Email</a>
+      </div>
+      <div class="ys-trust">
+        <span>${check}Worldwide &amp; multilingual</span>
+        <span>${check}No Google password needed</span>
+        <span>${check}100% white-hat SEO</span>
       </div>
     </div>
     <div class="ys-panel">
-      <h2>What you get</h2>
+      <div class="ys-panel-head">
+        <img src="${f.photo}" alt="${esc(f.name)}, ${esc(f.role)}" width="64" height="64">
+        <div>
+          <b>${esc(f.name)}</b>
+          <span>SEO Specialist since ${f.since} · Founder of Passive Array</span>
+        </div>
+      </div>
+      <h2>Included in every optimization</h2>
       <ul>
-        <li>${check}<span>Keyword research from what actually ranks on YouTube</span></li>
-        <li>${check}<span>Titles, descriptions, tags and chapters for every upload</span></li>
-        <li>${check}<span>Thumbnail and hook notes before you publish</span></li>
-        <li>${check}<span>A monthly report from your own YouTube Analytics</span></li>
-        <li>${check}<span>Work in Bengali or English, by <a href="../founder/">Nasir Uddin</a>, SEO specialist since 2022</span></li>
+        <li>${check}<span>Keyword research from live YouTube search &amp; outlier data</span></li>
+        <li>${check}<span>CTR-focused titles, descriptions, chapters &amp; 500-char tags</span></li>
+        <li>${check}<span>Thumbnail &amp; first-30-second hook review pre-publish</span></li>
+        <li>${check}<span>Monthly YouTube Studio analytics &amp; growth report</span></li>
+        <li>${check}<span>Localized for US, UK, EU, South Asia &amp; global markets</span></li>
       </ul>
     </div>
   </section>
 
   <section class="ys-sec">
+    <h2>Who this is built for</h2>
+    <p class="sub">Whether you are growing a personal channel or scaling a business funnel, every strategy is tailored to your niche and target country.</p>
+    <div class="ys-grid3">${audiences.map(([h, p]) => `<div class="ys-card"><h3>${esc(h)}</h3><p>${esc(p)}</p></div>`).join("")}</div>
+  </section>
+
+  <section class="ys-sec">
     <h2>What the service covers</h2>
-    <p class="sub">Everything that decides whether a video gets found, clicked and watched, apart from making the video itself.</p>
+    <p class="sub">Everything that decides whether your video gets discovered, clicked, and watched across search and suggested feeds.</p>
     <div class="ys-grid3">${services.map(([i, h, p]) => `<div class="ys-card"><span class="ys-ic">${i}</span><h3>${esc(h)}</h3><p>${esc(p)}</p></div>`).join("")}</div>
+  </section>
+
+  <section class="ys-sec" id="strategist">
+    <h2>Meet your strategist &amp; experience</h2>
+    <p class="sub">Your channel is handled directly by me — never outsourced to junior freelancers or automated spam scripts.</p>
+    <div class="ys-founder">
+      <div class="ys-fprofile">
+        <div class="ys-fphoto">
+          <img src="${f.photo}" alt="${esc(f.name)}, ${esc(f.short)}" width="112" height="112">
+          <div>
+            <h3>${esc(f.name)}</h3>
+            <div class="frole">${esc(f.role)}</div>
+            <div class="floc">${esc(f.location)} · Serving clients worldwide</div>
+          </div>
+        </div>
+        <div class="ys-fstats">
+          <div><b>${years}+ yrs</b><span>Hands-on SEO experience</span></div>
+          <div><b>${n} tools</b><span>Built at Passive Array</span></div>
+          <div><b>3+ roles</b><span>Agency &amp; e-commerce SEO</span></div>
+          <div><b>100%</b><span>White-hat YouTube policy</span></div>
+        </div>
+        <p class="muted" style="font-size:.92rem;line-height:1.6">I combine 4+ years of agency, e-commerce, and technical SEO experience with the exact live YouTube data pipelines and Chrome extension I engineered for Passive Array.</p>
+        <div class="ys-flinks">
+          <a href="../founder/">Full Bio &amp; Stack &rarr;</a>
+          <a href="${f.linkedin}" target="_blank" rel="noopener">LinkedIn</a>
+          <a href="${f.github}" target="_blank" rel="noopener">GitHub</a>
+        </div>
+      </div>
+      <div class="ys-exp">
+        <div class="ys-exp-item">
+          <span class="ys-exp-dot" aria-hidden="true"></span>
+          <div>
+            <div class="ys-exp-top"><b>Founder &amp; Creator Tool Builder — Passive Array</b><span>2026 to present</span></div>
+            <div class="ys-exp-place">passivearray.com · Global</div>
+            <p>Engineered ${n} free creator tools, a Chrome extension for YouTube Studio tag &amp; monetization intelligence, and daily outlier research pipelines.</p>
+          </div>
+        </div>
+        ${expHtml}
+      </div>
+    </div>
   </section>
 
   <section class="ys-sec">
     <h2>Packages</h2>
-    <p class="sub">Every channel is different, so each package is priced after a free look at yours. You get a fixed price before any work starts.</p>
+    <p class="sub">Every channel has different upload volume and competition. You get a transparent fixed quote after a free quick audit.</p>
     <div class="ys-grid3">${packages.map((p) => `<div class="ys-card ys-pk${p.top ? " top" : ""}">
-      <span class="kind">${esc(p.kind)}${p.top ? " · Most chosen" : ""}</span>
+      <span class="kind">${esc(p.kind)}</span>
       <h3>${esc(p.name)}</h3>
       <p>${esc(p.text)}</p>
       <ul>${p.items.map((x) => `<li>${check}<span>${esc(x)}</span></li>`).join("")}</ul>
-      <span class="price">Price on request</span>
-      <a class="btn${p.top ? "" : " ghost"}" href="${waLink(`Hi Nasir, I'm interested in the ${p.name} package for my channel: `)}" target="_blank" rel="noopener">${chat}Get a quote on WhatsApp</a>
+      <span class="price">Custom fixed quote</span>
+      <a class="btn${p.top ? "" : " ghost"}" href="${waLink(`Hi Nasir, I'm interested in the ${p.name} package for my channel: `)}" target="_blank" rel="noopener">${chat}Get Quote on WhatsApp</a>
     </div>`).join("")}</div>
   </section>
 
   <section class="ys-sec ys-two">
     <div class="ys-card">
-      <h2 style="font-size:1.4rem">What I will not do</h2>
-      <p>Shortcuts that break YouTube's rules can get a channel demonetised or removed. None of them are part of this service.</p>
+      <h2 style="font-size:1.4rem">What I will never do</h2>
+      <p>Shortcuts that violate YouTube's Terms of Service can destroy monetization or terminate a channel. None of these are ever used.</p>
       <ul class="ys-no">${nots.map((x) => `<li>${cross}<span>${esc(x)}</span></li>`).join("")}</ul>
     </div>
     <div class="ys-card">
-      <h2 style="font-size:1.4rem">Why work with me</h2>
-      <p>I have done SEO since 2022 for e-commerce, affiliate and agency clients, and I built Passive Array: ${n} free creator tools, a Chrome extension that suggests tags inside YouTube Studio, and daily research on what is breaking out on YouTube.</p>
-      <p>The same research tools that power this site are the ones I use on your channel, so you can check my working at any time.</p>
-      <p><a href="../founder/">More about me</a> · <a href="../research/outliers/">See the daily outlier research</a></p>
+      <h2 style="font-size:1.4rem">Tools that power your channel</h2>
+      <p>Every optimization uses the same live YouTube Data API research, outlier detection, and competitor tag intelligence that power Passive Array.</p>
+      <p>You can inspect any keyword score, monetization signal, or competitor tag yourself at any time — zero black-box guesswork.</p>
+      <p style="margin-top:auto"><a href="../research/outliers/">Explore daily outlier videos &rarr;</a> · <a href="../youtube-extension/">See the Chrome extension &rarr;</a></p>
     </div>
   </section>
 
   <section class="ys-sec">
     <h2>How it works</h2>
-    <p class="sub">Four steps, and you can stop after the second one at no cost.</p>
+    <p class="sub">Four simple steps — you get an honest channel check before paying anything.</p>
     <div class="ys-steps">${steps.map(([k, h, p]) => `<div class="ys-card"><span class="num">${k}</span><h3>${esc(h)}</h3><p>${esc(p)}</p></div>`).join("")}</div>
   </section>
 
   <section class="ys-sec">
-    <h2>Questions</h2>
+    <h2>Frequently asked questions</h2>
     <div class="card faq" style="margin-top:18px">${faq.map(([q, a]) => `<details><summary>${esc(q)}</summary><p>${esc(a)}</p></details>`).join("")}</div>
   </section>
 
   <section class="ys-cta">
     <div>
-      <h2>Send your channel link</h2>
-      <p>Get an honest first look at your channel on WhatsApp, free, whether or not you go ahead.</p>
+      <h2>Ready to grow your channel?</h2>
+      <p>Send your YouTube channel link for a free, honest first look — available worldwide via WhatsApp or email.</p>
     </div>
-    <a class="btn" href="${waLink("Hi Nasir, here is my channel link for a free first look: ")}" target="_blank" rel="noopener">${chat}WhatsApp +880 1770-223898</a>
+    <div class="ys-cta-btns">
+      <a class="btn" href="${waLink("Hi Nasir, here is my YouTube channel link for a free first look: ")}" target="_blank" rel="noopener">${chat}WhatsApp +880 1770-223898</a>
+      <a class="btn sec" href="../contact/">${mailIc}Send via Email</a>
+    </div>
   </section>
   </div>`;
 
   const service = {
     "@context": "https://schema.org", "@type": "Service",
-    name: "YouTube SEO service", serviceType: "YouTube SEO",
+    name: "YouTube SEO Service", serviceType: "YouTube SEO & Channel Optimization",
     url: SITE + "/youtube-seo-service/",
-    description: "Done-for-you YouTube SEO: keyword research, titles, descriptions, tags, thumbnail review, channel structure and monthly reporting, in Bengali or English.",
-    provider: { "@type": "Person", name: FOUNDER.name, url: SITE + "/founder/", worksFor: { "@type": "Organization", name: BRAND, url: SITE } },
-    areaServed: "Worldwide", availableChannel: { "@type": "ServiceChannel", availableLanguage: ["en", "bn"], serviceUrl: "https://passivearray.com/contact/" },
+    description: "Global done-for-you YouTube SEO: keyword research, CTR titles, descriptions, tags, thumbnail review, channel architecture and monthly reporting.",
+    provider: { "@type": "Person", name: FOUNDER.name, image: SITE + FOUNDER.photo, url: SITE + "/founder/", worksFor: { "@type": "Organization", name: BRAND, url: SITE } },
+    areaServed: "Worldwide", availableChannel: { "@type": "ServiceChannel", availableLanguage: ["en", "bn", "es", "hi", "ar"], serviceUrl: "https://passivearray.com/contact/" },
     hasOfferCatalog: { "@type": "OfferCatalog", name: "YouTube SEO packages", itemListElement: packages.map((p) => ({ "@type": "Offer", itemOffered: { "@type": "Service", name: p.name, description: p.text } })) },
   };
   return site.shell({
-    title: "YouTube SEO Service: Keywords, Titles & Tags Done for You",
-    ogTitle: "YouTube SEO service by the founder of Passive Array",
-    description: "Done-for-you YouTube SEO: keyword research, titles, descriptions, tags, thumbnail review and monthly reports, in Bengali or English. No bots, no bought views.",
+    title: "YouTube SEO Service: Global Channel & Video Optimization",
+    ogTitle: "Global YouTube SEO Service by Nasir Uddin | Passive Array",
+    description: "Done-for-you YouTube SEO for global creators & brands: keyword research, CTR titles, tags, thumbnail review and monthly analytics by Nasir Uddin.",
     path: "/youtube-seo-service/",
-    active: "",
+    active: "seo-service",
     body,
     jsonld: [service, site.faqLd(faq)],
   });
