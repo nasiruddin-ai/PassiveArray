@@ -576,6 +576,13 @@ async function handleRequest(action, params = {}) {
     }
     if (action === "lookalike") return { code: 200, body: { ok: true, ...(await lookalike(params.channel)) } };
     if (action === "videos") return { code: 200, body: { ok: true, videos: await getVideos(params.ids) } };
+    if (action === "video") {
+      const vid = parseVideoId(params.video);
+      if (!vid) throw Object.assign(new Error("Paste a valid YouTube video or Shorts link, or an 11-character video ID."), { code: "input", status: 400 });
+      const list = await getVideos(vid);
+      if (!list.length) throw Object.assign(new Error("Video not found or is private."), { code: "not_found", status: 404 });
+      return { code: 200, body: { ok: true, video: list[0] } };
+    }
     if (action === "comments") return { code: 200, body: { ok: true, ...(await getComments(params.video, { max: params.max, order: params.order })) } };
     if (action === "audit") return { code: 200, body: { ok: true, ...(await getChannelComments(params.channel, { videos: params.videos, per: params.per, order: params.order })) } };
     if (action === "top") return { code: 200, body: { ok: true, ...(await topChannels()) } };

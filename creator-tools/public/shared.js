@@ -323,6 +323,54 @@
     };
   };
 
+  COMPUTE["youtube-tag-extractor"] = function (v, d) {
+    var vd = d.video;
+    var tags = vd.tagList || [];
+    var joined = tags.join(", ");
+    return {
+      hero: {
+        label: "Video tags extracted",
+        value: tags.length ? tags.length + " tags" : "No tags on this video",
+        note: tags.length ? joined.length + " / 500 YouTube Studio characters used" : "The creator did not add tags to this video.",
+      },
+      rows: [
+        { name: "Video title", value: vd.title || "n/a" },
+        { name: "Channel", value: vd.channelTitle || "n/a" },
+        { name: "Views", value: fmt(vd.views) },
+        { name: "Likes", value: fmt(vd.likes) },
+        { name: "Comments", value: fmt(vd.comments) },
+        { name: "Published", value: dateStr(vd.publishedAt) },
+      ],
+      copy: tags.length ? joined : undefined,
+      table: tags.length ? {
+        head: ["#", "Tag", "Characters"],
+        rows: tags.map(function (t, i) { return [String(i + 1), esc(t), String(t.length)]; }),
+      } : null,
+      note: "Fetched live from the YouTube Data API. Use relevant tags as inspiration rather than copying unrelated brand names.",
+    };
+  };
+
+  COMPUTE["youtube-channel-id-finder"] = function (v, d) {
+    var ch = d.channel;
+    var uploadsId = ch.id && ch.id.indexOf("UC") === 0 ? "UU" + ch.id.slice(2) : "n/a";
+    var rssUrl = ch.id ? "https://www.youtube.com/feeds/videos.xml?channel_id=" + ch.id : "n/a";
+    return {
+      profile: ytProfile(ch),
+      hero: { label: "Channel ID (UC...)", value: ch.id || "n/a", note: ch.handle ? "Handle: " + ch.handle : "" },
+      rows: [
+        { name: "Permanent Channel URL", value: "https://www.youtube.com/channel/" + ch.id },
+        { name: "Handle", value: ch.handle || "Not set" },
+        { name: "Uploads Playlist ID", value: uploadsId },
+        { name: "RSS Feed URL", value: rssUrl },
+        { name: "Country", value: ch.country || "Not listed" },
+        { name: "Subscribers", value: ch.hiddenSubscribers ? "Hidden" : fmt(ch.subscribers) },
+        { name: "Channel created", value: dateStr(ch.publishedAt) },
+      ],
+      copy: ch.id || "",
+      note: "Unlike @handles or custom URLs, a YouTube Channel ID (starting with UC) never changes.",
+    };
+  };
+
   COMPUTE["youtube-monetization-checker"] = function (v, d) {
     var ch = d.channel, r = ch.recent, vd = d.verdict;
     var statusPill = function (s) {
