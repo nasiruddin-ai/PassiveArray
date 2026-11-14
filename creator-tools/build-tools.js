@@ -644,7 +644,14 @@ function homePage(posts = []) {
       <p>${esc(t.short)}</p>
     </a>`;
   const intentCounts = {};
-  tools.forEach((t) => { const k = intentOf(t); intentCounts[k] = (intentCounts[k] || 0) + 1; });
+  const platCounts = {};
+  tools.forEach((t) => {
+    const k = intentOf(t); intentCounts[k] = (intentCounts[k] || 0) + 1;
+    platCounts[t.platform] = (platCounts[t.platform] || 0) + 1;
+  });
+  const PLAT_ORDER = ["YouTube", "Instagram", "TikTok", "Twitch", "X (Twitter)"];
+  const platChips = `<button type="button" class="fbtn on" data-platform-filter="all">All Platforms <small>${tools.length}</small></button>` +
+    PLAT_ORDER.filter((p) => platCounts[p]).map((p) => `<button type="button" class="fbtn" data-platform-filter="${esc(p)}">${esc(p === "X (Twitter)" ? "X" : p)} <small>${platCounts[p]}</small></button>`).join("");
   const CHIP_ORDER = ["rank", "check", "estimate", "create", "fake", "compare", "find"];
   const chips = `<button type="button" class="fbtn on" data-intent-filter="all">All</button>` +
     CHIP_ORDER.filter((k) => intentCounts[k]).map((k) => `<button type="button" class="fbtn" data-intent-filter="${k}">${esc(INTENTS[k].label)} <small>${intentCounts[k]}</small></button>`).join("");
@@ -803,6 +810,7 @@ ${header(root, "home", false)}
     <h2 class="center">Every tool a YouTube creator needs</h2>
     <p class="center sub">All ${tools.length}, free, no account. Type to search or pick what you want to do.</p>
     <div class="lp-search">${ICON.search}<label for="lp-q" class="sr">Search tools</label><input id="lp-q" type="search" placeholder="Search tools: tags, money, engagement, fake followers…" autocomplete="off" data-tool-search></div>
+    <div class="lp-chips lp-platchips" data-platform-chips>${platChips}</div>
     <div class="lp-chips" data-intent-chips>${chips}</div>
     <div class="tgrid lp-tgrid" data-tool-grid>${ordered.map(finderCard).join("")}</div>
     <p class="lp-empty" data-tool-empty hidden>Nothing matches. Try another word, or <a href="${root}creator-tools/">see every tool</a>.</p>
@@ -812,6 +820,29 @@ ${header(root, "home", false)}
   <!-- 4. Numbered capabilities -->
   <section class="section lp-numbered" id="how">
     <div class="lp-numgrid">${numbered}</div>
+  </section>
+
+  <!-- 4a. Chrome Extension UI spotlight -->
+  <section class="section lp-ext" id="extension">
+    <div class="card lp-ext-card">
+      <div class="lp-ext-copy">
+        <span class="lp-gk">FREE CHROME EXTENSION · NO SIGN-UP</span>
+        <h2>See engagement, monetization &amp; hidden tags right inside YouTube</h2>
+        <p>Stop switching tabs while researching competitors. The Passive Array extension adds a live intelligence sidebar to every YouTube video, channel, and search page — and suggests tags inside YouTube Studio.</p>
+        <ul class="plain">
+          <li><b>Engagement rate &amp; velocity:</b> Compare any video against the channel's usual views</li>
+          <li><b>Monetization &amp; SEO audit:</b> Spot active ad signals, title score, and description structure</li>
+          <li><b>Hidden competitor tags:</b> Inspect and copy tags from top-ranking videos in one click</li>
+        </ul>
+        <div class="lp-gactions">
+          <a class="btn" href="${root}youtube-extension/">Install Free Chrome Extension &rarr;</a>
+          <a class="btn ghost" href="${root}creator-tools/youtube-tag-generator/">Try Tag Generator Online</a>
+        </div>
+      </div>
+      <div class="lp-ext-shot">
+        <img src="${root}youtube-extension/screenshot-1-video.png" alt="Passive Array Chrome extension sidebar on a YouTube video showing engagement rate, monetization signals, and hidden competitor tags" width="1280" height="800" loading="lazy">
+      </div>
+    </div>
   </section>
 
   <!-- 4b. Revenue & Growth Accelerators (Pro Watchlist + Done-For-You YouTube SEO) -->
@@ -847,7 +878,7 @@ ${header(root, "home", false)}
           <li><b>Full Channel Audit:</b> Deep review of your last 20 uploads, keyword gaps, and title/thumbnail fixes</li>
           <li><b>Monthly Video SEO:</b> Custom keyword research, high-CTR titles, chapters &amp; 500-char tag sets</li>
           <li><b>Channel Setup &amp; Relaunch:</b> Niche positioning, playlist architecture &amp; 30-day content roadmap</li>
-          <li><b>English &amp; Bengali channels:</b> Direct collaboration via YouTube Studio Editor role &amp; WhatsApp</li>
+          <li><b>Global &amp; multilingual:</b> Optimized for US, UK, EU, South Asia &amp; worldwide markets via YouTube Studio Editor role</li>
         </ul>
         <div class="lp-gactions">
           <a class="btn" href="${root}youtube-seo-service/">View YouTube SEO Packages &rarr;</a>
@@ -883,6 +914,19 @@ ${posts.length ? `
   <section class="section" id="faq">
     <div class="section-head"><h2>Questions people ask first</h2><a href="faq/">All YouTube tool questions</a></div>
     <div class="card faq">${faqHtml}</div>
+  </section>
+
+  <section class="section">
+    <div class="lp-final-cta">
+      <div>
+        <h2>Start growing your YouTube channel today</h2>
+        <p>Use all ${tools.length} creator tools 100% free with no sign-up — or partner with Nasir Uddin for hands-on YouTube SEO.</p>
+      </div>
+      <div class="lp-final-actions">
+        <a class="btn" href="${root}creator-tools/youtube-monetization-checker/">Try Free Tools</a>
+        <a class="btn sec" href="${root}youtube-seo-service/">Done-For-You YouTube SEO &rarr;</a>
+      </div>
+    </div>
   </section>
 </main>
 ${footer(root)}

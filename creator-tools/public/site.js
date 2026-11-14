@@ -109,11 +109,13 @@
     var fCards = Array.prototype.slice.call(finder.querySelectorAll("[data-tool-grid] .tcard"));
     var fEmpty = finder.querySelector("[data-tool-empty]");
     var fMore = finder.querySelector("[data-tool-more]");
-    var fState = { intent: "all", q: "", all: false };
+    var fState = { platform: "all", intent: "all", q: "", all: false };
     function fApply() {
-      var shown = 0, filtering = fState.intent !== "all" || !!fState.q;
+      var shown = 0, filtering = fState.platform !== "all" || fState.intent !== "all" || !!fState.q;
       fCards.forEach(function (c, i) {
-        var ok = (fState.intent === "all" || c.dataset.intent === fState.intent) && (!fState.q || c.dataset.text.indexOf(fState.q) !== -1);
+        var ok = (fState.platform === "all" || c.dataset.platform === fState.platform) &&
+          (fState.intent === "all" || c.dataset.intent === fState.intent) &&
+          (!fState.q || c.dataset.text.indexOf(fState.q) !== -1);
         if (ok && !filtering && !fState.all && i >= 12) ok = false;
         c.hidden = !ok;
         if (ok) shown++;
@@ -121,6 +123,13 @@
       if (fEmpty) fEmpty.hidden = shown > 0;
       if (fMore) fMore.parentNode.hidden = filtering || fState.all;
     }
+    finder.querySelectorAll("[data-platform-filter]").forEach(function (b) {
+      b.addEventListener("click", function () {
+        fState.platform = b.dataset.platformFilter;
+        finder.querySelectorAll("[data-platform-filter]").forEach(function (x) { x.classList.toggle("on", x === b); });
+        fApply();
+      });
+    });
     finder.querySelectorAll("[data-intent-filter]").forEach(function (b) {
       b.addEventListener("click", function () {
         fState.intent = b.dataset.intentFilter;
