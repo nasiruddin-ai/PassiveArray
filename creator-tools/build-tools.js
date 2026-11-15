@@ -685,7 +685,7 @@ function homePage(posts = []) {
     ["Instagram, TikTok and Twitch", "Included", "Instagram only", "No"],
     ["Works without an account", "Yes", "No", "No"],
     ["Formula shown on the page", "Always", "No", "No"],
-    ["Paid plan", "$9/mo, watchlist and exports only", "From about $17/mo", "Paid plans"],
+    ["Paid plan", "$9/mo, watchlist and exports only", "From $16.58/mo billed yearly", "Paid plans"],
   ];
   const cmpCell = (v, us) => {
     const good = /^(free|yes|included|always)/i.test(v);
@@ -725,6 +725,7 @@ ${HEAD}
 <script type="application/ld+json">${JSON.stringify(jsonld)}</script>
 </head>
 <body data-root="${root}" class="home lp">${GTM_BODY}
+<a class="lp-announce" href="${root}creator-tools/youtube-comment-audit/"><span class="lp-new">New</span><span>Comment Audit: score any channel's comment section out of 100, free</span><i aria-hidden="true">&rarr;</i></a>
 ${header(root, "home", false)}
 
 <!-- 1. Hero -->
@@ -757,6 +758,12 @@ ${header(root, "home", false)}
         <i class="lp-qarr">&rarr;</i>
       </a>
     </div>
+    <ul class="lp-trust" aria-label="Why Passive Array">
+      <li>${tick}No sign-up</li>
+      <li>${tick}Free Chrome extension</li>
+      <li>${tick}Works in Claude &amp; ChatGPT</li>
+      <li>${tick}Every formula shown</li>
+    </ul>
   </div>
 
   <div class="wrap lp-statwrap">
@@ -813,6 +820,42 @@ ${header(root, "home", false)}
 </section>
 
 <main class="wrap">
+  <!-- 2a. MCP for AI assistants, with a real comment audit result -->
+  <section class="section lp-mcp" id="mcp">
+    <div class="card lp-mcp-card">
+      <div class="lp-mcp-copy">
+        <span class="lp-gk">NEW · PASSIVE ARRAY MCP</span>
+        <h2>Ask your AI assistant about any YouTube channel</h2>
+        <p>Connect Claude, ChatGPT, Cursor or VS Code to Passive Array, then just ask. Your assistant pulls live channel stats, growth history, comment analysis and keyword research while you chat.</p>
+        <ul class="plain">
+          <li><b>13 tools</b> your assistant can call, from channel stats to the full comment audit</li>
+          <li><b>50 free credits a day</b> with a free account, 1,000 on Pro</li>
+          <li><b>Same data and rules</b> as the tools on this site, so the answers match</li>
+        </ul>
+        <div class="lp-gactions">
+          <a class="btn" href="${root}account/#mcp">Get your free MCP key &rarr;</a>
+          <a class="btn ghost" href="${root}creator-tools/youtube-comment-audit/">Try the comment audit</a>
+        </div>
+      </div>
+      <figure class="lp-chat" aria-label="Example: an AI assistant running the Passive Array comment audit">
+        <div class="lp-chat-q">Audit the comment section of @YouTubeCreators</div>
+        <div class="lp-chat-tool"><span></span>audit_channel_comments · Passive Array</div>
+        <div class="lp-chat-a">
+          <div class="lp-chat-score"><b>38</b><span>/100</span><em>Neglected</em></div>
+          <ul>
+            <li><span>Comments read</span><b>956 across 10 videos</b></li>
+            <li><span>Channel reply rate</span><b class="bad">0%</b></li>
+            <li><span>Questions with no reply</span><b class="bad">34</b></li>
+            <li><span>Comments per 1,000 views</span><b class="ok">5.7, full marks</b></li>
+            <li><span>Scam spam visible</span><b class="ok">None</b></li>
+          </ul>
+          <p>Big audience, healthy conversation, but nobody from the channel is answering. Start with the 34 open questions, most liked first.</p>
+        </div>
+        <figcaption>A real audit of @YouTubeCreators, run on 2 November 2026. The score changes as new comments come in.</figcaption>
+      </figure>
+    </div>
+  </section>
+
   <!-- 3. Tool finder -->
   <section class="section lp-finder" id="tools" data-home-tools>
     <h2 class="center">Every tool a YouTube creator needs</h2>
@@ -938,6 +981,11 @@ ${posts.length ? `
   </section>
 </main>
 ${footer(root)}
+<div class="lp-sticky" data-sticky hidden>
+  <span><b>${tools.length} free YouTube tools</b> No sign-up</span>
+  <a class="btn" href="${root}creator-tools/">Try free</a>
+  <button type="button" class="lp-sticky-x" data-sticky-close aria-label="Close">&times;</button>
+</div>
 <script defer src="creator-tools/site.js"></script>
 </body>
 </html>`;

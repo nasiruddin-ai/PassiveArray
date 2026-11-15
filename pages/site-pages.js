@@ -583,7 +583,7 @@ function vidiqPage() {
       ["Browser extension", "Free", "Free, with paid features inside it"],
       ["Instagram, TikTok and Twitch tools", "Included", "YouTube and Instagram"],
       ["See the formula behind a number", "On every page", "No"],
-      ["Cost to lift the limits", "There are no limits to lift", "From roughly $17 a month"],
+      ["Cost to lift the limits", "There are no limits to lift", "From $16.58 a month, billed yearly"],
     ],
     shortAnswer: `<p>If you want keyword ideas, a title scored properly, tags inside the character limit, a description laid out for the two lines that matter, and an honest earnings range, everything here does that for nothing and asks for no email address.</p>
       <p>If you want vidIQ's coaching, its publishing and scheduling, or its daily personalised ideas tuned to your own channel's analytics, you need vidIQ. Those depend on a connection to your YouTube account that we deliberately do not ask for.</p>`,
@@ -684,7 +684,7 @@ function compareHubPage() {
         <tr><td>Edits your channel</td><td class="us">No, by design</td><td>Yes</td><td>Yes</td></tr>
         <tr><td>Platforms covered</td><td class="us">YouTube, Instagram, TikTok, Twitch, X</td><td>YouTube, Instagram</td><td>YouTube</td></tr>
         <tr><td>Shows the formula</td><td class="us">Always</td><td>No</td><td>No</td></tr>
-        <tr><td>Price</td><td class="us">Free</td><td>Free tier, paid from about $17/mo</td><td>Free tier, paid plans</td></tr>
+        <tr><td>Price</td><td class="us">Free</td><td>Free tier, paid from $16.58/mo billed yearly</td><td>Free tier, paid plans</td></tr>
       </tbody>
     </table></div>
     <p class="note">Both are capable products and neither is a scam. The honest summary is that they are subscriptions with a sample attached, and we are a free toolset with a narrower job. If you need software that watches and edits your own channel, pay them. If you need answers before you publish, you do not need to pay anyone.</p>
@@ -763,9 +763,9 @@ function pricingPage() {
     <div class="tablewrap"><table class="cmp">
       <thead><tr><th></th><th class="us">Passive Array</th><th><a href="../compare/vidiq-alternative/">vidIQ</a></th><th><a href="../compare/tubebuddy-alternative/">TubeBuddy</a></th></tr></thead>
       <tbody>
-        <tr><td>Entry price</td><td class="us">Free</td><td>Free tier, then about $17/mo</td><td>Free tier, then paid plans</td></tr>
+        <tr><td>Entry price</td><td class="us">Free</td><td>Free tier, then $16.58/mo billed yearly ($19 monthly)</td><td>Free tier, then paid plans</td></tr>
         <tr><td>Free tier limits</td><td class="us">None on the tools</td><td>Monthly AI credit allowance</td><td>Feature limits</td></tr>
-        <tr><td>Paid plan</td><td class="us">$9/mo or $79/yr, for channel watching and exports only</td><td>From about $17/mo</td><td>Paid plans</td></tr>
+        <tr><td>Paid plan</td><td class="us">$9/mo or $79/yr, for channel watching and exports only</td><td>From $16.58/mo billed yearly</td><td>Paid plans</td></tr>
         <tr><td>Account required to start</td><td class="us">No</td><td>Yes</td><td>Yes</td></tr>
       </tbody>
     </table></div>

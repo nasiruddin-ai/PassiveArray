@@ -18,6 +18,22 @@
     if (done) { p.event_callback = finish; setTimeout(finish, 800); }
     window.gtag("event", name, p);
   };
+  /* Home page: a small "try free" bar on phones, shown after the hero, gone for good once closed. */
+  var sticky = document.querySelector("[data-sticky]");
+  if (sticky) {
+    var stickyOff = false;
+    try { stickyOff = localStorage.getItem("pa-sticky") === "closed"; } catch (e) { /* private mode */ }
+    if (!stickyOff) {
+      var onScroll = function () { sticky.hidden = window.scrollY < 700; };
+      window.addEventListener("scroll", onScroll, { passive: true });
+      sticky.querySelector("[data-sticky-close]").addEventListener("click", function () {
+        window.removeEventListener("scroll", onScroll);
+        sticky.hidden = true;
+        try { localStorage.setItem("pa-sticky", "closed"); } catch (e) { /* private mode */ }
+      });
+    }
+  }
+
   document.addEventListener("click", function (e) {
     var a = e.target.closest && e.target.closest('a[href*="chromewebstore.google.com"]');
     if (a) window.paTrack("extension_click", { link_url: a.href, page_path: location.pathname });
