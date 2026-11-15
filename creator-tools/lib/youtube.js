@@ -516,6 +516,45 @@ async function getChannelComments(channelInput, opts = {}) {
   return { channel, videos, per, order, fetchedAt: new Date().toISOString() };
 }
 
+/* ------------------------------------------------------------------ trending chart by country
+   YouTube's "mostPopular" chart for one country, optionally one category. 1 quota unit per 50
+   videos, up to 200 videos (4 pages). Cached 6 hours. Tags are what uploaders typed in; hashtags
+   are read from the title and description. The description itself is not returned. */
+async function getTrending(regionInput, opts = {}) {
+  const region = String(regionInput || "US").trim().toUpperCase();
+  if (!/^[A-Z]{2}$/.test(region)) throw Object.assign(new Error("Pick a country."), { code: "input", status: 400 });
+  const category = /^\d{1,3}$/.test(String(opts.category || "")) ? String(opts.category) : "";
+  const pages = Math.max(1, Math.min(4, Math.round(n(opts.pages) || 4)));
+  return cached("trending:" + region + ":" + category + ":" + pages, async () => {
+    const videos = [];
+    let pageToken = "";
+    for (let i = 0; i < pages; i++) {
+      let d;
+      try {
+        d = await yt("videos", { part: "snippet,statistics,contentDetails", chart: "mostPopular", regionCode: region, videoCategoryId: category, maxResults: 50, pageToken });
+      } catch (e) {
+        if (i === 0 && (e.status === 400 || e.status === 404)) throw Object.assign(new Error("YouTube has no chart for that country and category. Try All categories."), { code: "no_chart", status: 404 });
+        throw e;
+      }
+      for (const it of d.items || []) {
+        const sn = it.snippet || {}, st = it.statistics || {};
+        const tagText = (sn.title || "") + " " + (sn.description || "");
+        const hashtags = [...new Set((tagText.match(/#[\p{L}\p{N}_]+/gu) || []).map((h) => h.toLowerCase()))].slice(0, 15);
+        videos.push({
+          id: it.id, title: sn.title, channelId: sn.channelId, channelTitle: sn.channelTitle, publishedAt: sn.publishedAt,
+          categoryId: sn.categoryId, tags: (sn.tags || []).slice(0, 40), hashtags,
+          views: n(st.viewCount), likes: n(st.likeCount), comments: n(st.commentCount),
+          seconds: isoDurationToSeconds(it.contentDetails && it.contentDetails.duration),
+          thumbnail: (sn.thumbnails && (sn.thumbnails.medium || sn.thumbnails.default) || {}).url || "",
+        });
+      }
+      pageToken = d.nextPageToken;
+      if (!pageToken) break;
+    }
+    return { region, category, videos, fetchedAt: new Date().toISOString() };
+  });
+}
+
 function errorBody(e) {
   const code = e.code || "api";
   const messages = {
@@ -585,6 +624,7 @@ async function handleRequest(action, params = {}) {
     }
     if (action === "comments") return { code: 200, body: { ok: true, ...(await getComments(params.video, { max: params.max, order: params.order })) } };
     if (action === "audit") return { code: 200, body: { ok: true, ...(await getChannelComments(params.channel, { videos: params.videos, per: params.per, order: params.order })) } };
+    if (action === "trending") return { code: 200, body: { ok: true, ...(await getTrending(params.country, { category: params.category })) } };
     if (action === "top") return { code: 200, body: { ok: true, ...(await topChannels()) } };
     if (action === "monetization") return { code: 200, body: { ok: true, ...(await monetizationCheck(params.channel)) } };
     return { code: 404, body: { ok: false, code: "action", error: "Unknown action." } };
@@ -593,4 +633,4 @@ async function handleRequest(action, params = {}) {
   }
 }
 
-module.exports = { configure, handleRequest, parseChannelInput, parseVideoId, getChannel, getComments, getChannelComments, errorBody, yt, statsForIds, n, isoDurationToSeconds, cached, monetizationCheck, probeAds, watchEstimate };
+module.exports = { configure, handleRequest, parseChannelInput, parseVideoId, getChannel, getComments, getChannelComments, getTrending, statsForIds, errorBody, yt, statsForIds, n, isoDurationToSeconds, cached, monetizationCheck, probeAds, watchEstimate };

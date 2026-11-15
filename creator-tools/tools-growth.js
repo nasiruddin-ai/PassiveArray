@@ -5,6 +5,15 @@
 //   youtube comments  -> creator-tools/lib/youtube.js getComments (commentThreads.list)
 //   youtube channel   -> creator-tools/lib/youtube.js getChannel (same as the money calculator)
 
+const COUNTRY_OPTIONS = [
+  ["US", "United States"], ["IN", "India"], ["BR", "Brazil"], ["ID", "Indonesia"], ["MX", "Mexico"], ["JP", "Japan"], ["GB", "United Kingdom"],
+  ["DE", "Germany"], ["FR", "France"], ["KR", "South Korea"], ["PH", "Philippines"], ["VN", "Vietnam"], ["TH", "Thailand"], ["TR", "Turkey"],
+  ["RU", "Russia"], ["PK", "Pakistan"], ["BD", "Bangladesh"], ["EG", "Egypt"], ["SA", "Saudi Arabia"], ["AE", "United Arab Emirates"],
+  ["NG", "Nigeria"], ["ES", "Spain"], ["IT", "Italy"], ["CA", "Canada"], ["AU", "Australia"], ["AR", "Argentina"], ["CO", "Colombia"],
+  ["PL", "Poland"], ["NL", "Netherlands"], ["UA", "Ukraine"], ["MY", "Malaysia"], ["KE", "Kenya"], ["ZA", "South Africa"], ["CL", "Chile"],
+  ["PE", "Peru"], ["TW", "Taiwan"], ["HK", "Hong Kong"], ["SG", "Singapore"], ["SE", "Sweden"], ["NZ", "New Zealand"],
+];
+
 module.exports = [
   {
     slug: "youtube-channel-growth-tracker",
@@ -240,6 +249,109 @@ module.exports = [
       "Monthly views = views on videos uploaded in the last 30 days, or average views times uploads a month when fewer than 2 went up.",
       "Yearly ad earnings = monthly views / 1,000 x RPM x 12. Value = yearly earnings x the years you set.",
       "Sponsorships, memberships and products are not included. This is a planning estimate, not an appraisal.",
+    ],
+  },
+  {
+    slug: "youtube-trending-tags-by-country",
+    howTitle: "Where the data comes from",
+    name: "YouTube Trending Tags by Country",
+    platform: "YouTube",
+    api: "youtube",
+    action: "trending",
+    intent: "rank",
+    buttonLabel: "Show trending tags",
+    short: "The tags and hashtags used by the videos on YouTube's trending chart in any country, counted live.",
+    intro: "Pick a country and, if you like, a category. We read YouTube's own most popular chart for it and count which tags and hashtags those videos use, with the views behind each one and the full video list.",
+    inputs: [
+      { id: "country", label: "Country", type: "select", value: "US", options: COUNTRY_OPTIONS },
+      { id: "category", label: "Category", type: "select", value: "", optional: true, options: [["", "All categories"], ["10", "Music"], ["20", "Gaming"], ["24", "Entertainment"], ["17", "Sports"], ["22", "People & Blogs"], ["23", "Comedy"], ["27", "Education"], ["28", "Science & Technology"], ["26", "Howto & Style"], ["25", "News & Politics"], ["1", "Film & Animation"], ["2", "Autos & Vehicles"], ["15", "Pets & Animals"]] },
+    ],
+    how: [
+      "The videos come from the official YouTube Data API's most popular chart for the country you pick, up to 200 for all categories. Refreshed every six hours.",
+      "Tags are the ones uploaders typed into YouTube Studio. Hashtags are read from titles and descriptions. Each is counted once per video, with the views of the videos that use it.",
+      "Not every category has a chart in every country. If one is missing, try All categories.",
+    ],
+  },
+  {
+    slug: "top-youtube-channels-by-country",
+    howTitle: "How the ranking is built",
+    name: "Top YouTube Channels by Country",
+    platform: "YouTube",
+    api: "youtube",
+    action: "topcountry",
+    intent: "rank",
+    buttonLabel: "Show top channels",
+    short: "The biggest YouTube channels in any of 40 countries, ranked by live subscriber count.",
+    intro: "Pick a country to see its largest YouTube channels by subscribers, with total views and videos, read live from the YouTube Data API. Only channels that list that country on their About page are counted.",
+    inputs: [
+      { id: "country", label: "Country", type: "select", value: "US", options: COUNTRY_OPTIONS },
+      { id: "sort", label: "Rank by", type: "select", value: "subscribers", optional: true, options: [["subscribers", "Subscribers"], ["views", "Total views"], ["videos", "Videos uploaded"]] },
+    ],
+    how: [
+      "YouTube publishes no country ranking. We gather candidate channels from the country's trending charts, a channel search and every channel found for that country before, then keep those whose About page names the country.",
+      "The pool grows each day the ranking is refreshed, so a big channel we have not found yet can be missing. The page says how many channels it ranked.",
+      "Subscriber counts are the rounded public figures from the YouTube Data API. Channels that hide their count are left out.",
+    ],
+  },
+  {
+    slug: "youtube-emv-calculator",
+    howTitle: "How the value is worked out",
+    name: "YouTube Earned Media Value Calculator",
+    platform: "YouTube",
+    intent: "estimate",
+    short: "Put a dollar value on the views, likes, comments and shares a YouTube video or campaign earned.",
+    intro: "Earned media value (EMV) turns organic attention into what similar reach would cost in paid ads. Enter the totals from one video or a whole campaign. Every rate is shown, and you can set your own view rate.",
+    inputs: [
+      { id: "views", label: "Views", type: "number", placeholder: "e.g. 120,000", min: 0 },
+      { id: "likes", label: "Likes", type: "number", placeholder: "e.g. 4,800", min: 0 },
+      { id: "comments", label: "Comments", type: "number", placeholder: "e.g. 350", min: 0 },
+      { id: "shares", label: "Shares (optional)", type: "number", placeholder: "From YouTube Studio, if you have it", min: 0, optional: true },
+      { id: "cpm", label: "Your value per 1,000 views (optional)", type: "number", placeholder: "Leave blank to use $10", min: 0, optional: true, hint: "Use your own ad cost if you know it" },
+    ],
+    how: [
+      "Views are valued at $10 per 1,000 unless you enter your own rate, with a $5 to $20 range. Likes are $0.10, comments $0.50 and shares $1.50.",
+      "These rates are Passive Array's editorial assumptions, not YouTube prices. Keep them the same across campaigns so the comparison is fair.",
+      "EMV compares campaigns. It is not revenue, and it is not what a creator should be paid.",
+    ],
+  },
+  {
+    slug: "tiktok-emv-calculator",
+    howTitle: "How the value is worked out",
+    name: "TikTok Earned Media Value Calculator",
+    platform: "TikTok",
+    intent: "estimate",
+    short: "Put a dollar value on the views, likes, comments, shares and saves a TikTok video or campaign earned.",
+    intro: "Earned media value (EMV) turns organic attention into what similar reach would cost in paid ads. Enter the totals from one TikTok or a whole campaign. Every rate is shown, and you can set your own view rate.",
+    inputs: [
+      { id: "views", label: "Views", type: "number", placeholder: "e.g. 300,000", min: 0 },
+      { id: "likes", label: "Likes", type: "number", placeholder: "e.g. 21,000", min: 0 },
+      { id: "comments", label: "Comments", type: "number", placeholder: "e.g. 640", min: 0 },
+      { id: "shares", label: "Shares", type: "number", placeholder: "e.g. 900", min: 0 },
+      { id: "saves", label: "Saves (optional)", type: "number", placeholder: "e.g. 1,500", min: 0, optional: true },
+      { id: "cpm", label: "Your value per 1,000 views (optional)", type: "number", placeholder: "Leave blank to use $6", min: 0, optional: true, hint: "Use your own ad cost if you know it" },
+    ],
+    how: [
+      "Views are valued at $6 per 1,000 unless you enter your own rate, with a $3 to $12 range. Likes are $0.05, comments $0.50, shares $1.50 and saves $0.40.",
+      "These rates are Passive Array's editorial assumptions, not TikTok prices. Keep them the same across campaigns so the comparison is fair.",
+      "EMV compares campaigns. It is not revenue, and it is not what a creator should be paid.",
+    ],
+  },
+  {
+    slug: "tiktok-average-views-calculator",
+    howTitle: "How it is calculated",
+    name: "TikTok Average Views Calculator",
+    platform: "TikTok",
+    intent: "estimate",
+    short: "Average and median views for a TikTok account from its recent videos, with view rate and viral outliers.",
+    intro: "Paste the view counts of an account's recent TikToks, newest first. You get the average and the more honest median, views as a share of followers, the videos that went viral and how steady the account is.",
+    inputs: [
+      { id: "followers", label: "Followers", type: "number", placeholder: "e.g. 85,000", min: 0 },
+      { id: "views", label: "Views of recent videos, newest first", type: "textarea", rows: 4, placeholder: "One per line or comma separated, e.g. 12.4K, 9,800, 1.2M, 15000" },
+    ],
+    how: [
+      "Use 10 to 30 recent videos, skipping pinned ones. Numbers like 12.4K and 1.2M are understood.",
+      "The median is the middle video, so one viral hit cannot inflate it. Brands pricing a sponsored post should look at the median, not the average.",
+      "A video counts as an outlier when it has more than three times the median views.",
     ],
   },
 ];

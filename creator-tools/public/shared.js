@@ -475,8 +475,13 @@
       { name: "Average comments", get: function (i) { return i.ch.recent.avgComments; } },
       { name: "Uploads per month", get: function (i) { return i.ch.recent.uploadsPerMonth; }, fmt: function (x) { return fmt(x, 1); } },
       { name: "Channel age (years)", get: function (i) { return years(i.ch.publishedAt); }, fmt: function (x) { return fmt(x, 1); }, lead: false },
+      { name: "Subscribers gained, 30 days", get: function (i) { var g = i.ch.growth && i.ch.growth.subs30; return g ? g.delta : null; }, fmt: function (x) { return x == null ? "<span class=\"muted\">tracking</span>" : (x > 0 ? "+" : "") + compact(x); } },
+      { name: "Subscriber growth, 30 days", get: function (i) { var g = i.ch.growth && i.ch.growth.subs30; return g && i.ch.subscribers - g.delta > 0 ? g.delta / (i.ch.subscribers - g.delta) * 100 : null; }, fmt: function (x) { return x == null ? "<span class=\"muted\">tracking</span>" : (x > 0 ? "+" : "") + pct(x, 1); } },
+      { name: "Views gained, 30 days", get: function (i) { var g = i.ch.growth && i.ch.growth.views30; return g ? g.delta : null; }, fmt: function (x) { return x == null ? "<span class=\"muted\">tracking</span>" : (x > 0 ? "+" : "") + compact(x); } },
     ]);
-    return { table: table, note: (errs.length ? "Not loaded: " + errs.map(function (e) { return esc(e.input); }).join(", ") + ". " : "") + "The leader on each row is shown in green." };
+    var waiting = chans.filter(function (c) { return !(c.growth && c.growth.subs30); });
+    var growthNote = waiting.length ? " 30-day growth comes from our daily records: " + waiting.map(function (c) { return esc(c.title) + (c.growth ? " is tracked since " + esc(dateStr(c.growth.since)) : " is not tracked yet"); }).join(", ") + ". Comparing a channel starts tracking it, and its 30-day change appears once a month of daily points exists. Nothing is estimated." : " 30-day growth is measured from our daily records of each channel's public counts.";
+    return { table: table, note: (errs.length ? "Not loaded: " + errs.map(function (e) { return esc(e.input); }).join(", ") + ". " : "") + "The leader on each row is shown in green." + growthNote };
   };
 
   COMPUTE["youtube-channel-quality-checker"] = function (v, d) {
@@ -2460,6 +2465,162 @@
         }),
       },
       note: "YouTube publishes no official ranking. This is the list of channels known to sit at the top, sorted by their current public counts. YouTube rounds the subscriber counts it makes public, so small gaps are not exact. Topic channels YouTube generates automatically, such as Music or Gaming, are left out.",
+    };
+  };
+
+  /* ---------------------------------------------- shared card for the tools below */
+  function infoCard(title, sub, inner) {
+    return "<div class=\"card chartcard\"><div class=\"charthead\"><b>" + esc(title) + "</b>" + (sub ? "<span>" + esc(sub) + "</span>" : "") + "</div>" + inner + "</div>";
+  }
+  function plainTable(head, rows) {
+    return "<div class=\"tablewrap\"><table><thead><tr>" + head.map(function (h) { return "<th>" + esc(h) + "</th>"; }).join("") + "</tr></thead><tbody>" +
+      rows.map(function (r) { return "<tr>" + r.map(function (c) { return "<td>" + (c && typeof c === "object" ? c.html : esc(c)) + "</td>"; }).join("") + "</tr>"; }).join("") + "</tbody></table></div>";
+  }
+  function median(list) {
+    if (!list.length) return 0;
+    var s = list.slice().sort(function (a, b) { return a - b; }), m = Math.floor(s.length / 2);
+    return s.length % 2 ? s[m] : (s[m - 1] + s[m]) / 2;
+  }
+  function selectedText(id) {
+    var el = form.elements[id];
+    return el && el.selectedOptions && el.selectedOptions[0] ? el.selectedOptions[0].text : "";
+  }
+
+  /* ---------------------------------------------- trending tags by country */
+  var YT_CATEGORY = { "1": "Film & Animation", "2": "Autos & Vehicles", "10": "Music", "15": "Pets & Animals", "17": "Sports", "19": "Travel & Events", "20": "Gaming", "22": "People & Blogs", "23": "Comedy", "24": "Entertainment", "25": "News & Politics", "26": "Howto & Style", "27": "Education", "28": "Science & Technology", "29": "Nonprofits & Activism" };
+  COMPUTE["youtube-trending-tags-by-country"] = function (v, d) {
+    var vids = d.videos || [];
+    var where = selectedText("country") || d.region, cat = d.category ? (YT_CATEGORY[d.category] || selectedText("category")) : "";
+    if (!vids.length) return { error: "YouTube returned no trending videos for " + where + (cat ? " in " + cat : "") + ". Try All categories." };
+    function tally(get) {
+      var m = {};
+      vids.forEach(function (x) {
+        var seen = {};
+        get(x).forEach(function (t) {
+          var k = String(t).trim().toLowerCase();
+          if (!k || seen[k]) return; seen[k] = 1;
+          var e = (m[k] = m[k] || { tag: k, n: 0, views: 0 }); e.n++; e.views += x.views;
+        });
+      });
+      return Object.keys(m).map(function (k) { return m[k]; }).sort(function (a, b) { return b.n - a.n || b.views - a.views; });
+    }
+    var tags = tally(function (x) { return x.tags || []; }).filter(function (t) { return t.n > 1; });
+    var hashtags = tally(function (x) { return x.hashtags || []; }).filter(function (t) { return t.n > 1; });
+    var withTags = vids.filter(function (x) { return x.tags && x.tags.length; }).length;
+    var short = vids.filter(function (x) { return x.seconds && x.seconds <= 180; }).length;
+    var channels = {}; vids.forEach(function (x) { channels[x.channelId] = (channels[x.channelId] || 0) + 1; });
+    var cats = {}; vids.forEach(function (x) { cats[x.categoryId] = (cats[x.categoryId] || 0) + 1; });
+    var catList = Object.keys(cats).sort(function (a, b) { return cats[b] - cats[a]; });
+    var age = function (iso) { var h = (Date.now() - new Date(iso).getTime()) / 3600000; return h < 48 ? Math.max(1, Math.round(h)) + " h" : Math.round(h / 24) + " d"; };
+    var tiles = [
+      { name: "Trending videos read", value: fmt(vids.length) },
+      { name: "Videos with tags", sub: "the rest left the tag box empty", value: pct(withTags / vids.length * 100, 0) },
+      { name: "Median views", value: compact(median(vids.map(function (x) { return x.views; }))) },
+      { name: "Different channels", value: fmt(Object.keys(channels).length) },
+      { name: "3 minutes or shorter", sub: "Shorts-length videos", value: pct(short / vids.length * 100, 0) },
+    ];
+    var tagRows = function (list) { return list.slice(0, 30).map(function (t, i) { return [String(i + 1), { html: "<b>" + esc(t.tag) + "</b>" }, fmt(t.n), compact(t.views)]; }); };
+    var blocks = ["<div class=\"tiles\">" + tiles.map(function (r) { return "<div class=\"tile\"><span class=\"name\">" + esc(r.name) + (r.sub ? "<small>" + esc(r.sub) + "</small>" : "") + "</span><span class=\"val\">" + r.value + "</span></div>"; }).join("") + "</div>"];
+    blocks.push(infoCard("Top tags on trending videos", tags.length ? "tags used by 2 or more trending videos · most used first" : "", tags.length ? plainTable(["#", "Tag", "Videos using it", "Views on those videos"], tagRows(tags)) : "<p class=\"note\">No tag is shared by two or more of these videos.</p>"));
+    blocks.push(infoCard("Top hashtags in titles and descriptions", hashtags.length ? "hashtags used by 2 or more trending videos" : "", hashtags.length ? plainTable(["#", "Hashtag", "Videos using it", "Views on those videos"], tagRows(hashtags)) : "<p class=\"note\">No hashtag is shared by two or more of these videos.</p>"));
+    if (!d.category && catList.length > 1) blocks.push(infoCard("Categories on the chart", "number of trending videos in each", "<div class=\"bars\">" + catList.map(function (c) {
+      return "<div class=\"barrow\"><div class=\"top\"><span class=\"name\">" + esc(YT_CATEGORY[c] || "Category " + c) + "</span><span class=\"val\">" + cats[c] + "</span></div><div class=\"bar\"><i style=\"width:" + clamp(cats[c] / cats[catList[0]] * 100, 0, 100) + "%\"></i></div></div>";
+    }).join("") + "</div>"));
+    blocks.push(infoCard("The trending videos", "in chart order", plainTable(["#", "Video", "Channel", "Views", "Age"], vids.slice(0, 50).map(function (x, i) {
+      return [String(i + 1), { html: "<a href=\"https://www.youtube.com/watch?v=" + esc(x.id) + "\" target=\"_blank\" rel=\"noopener\">" + esc(x.title) + "</a>" }, x.channelTitle, compact(x.views), age(x.publishedAt)];
+    }))));
+    var top10 = tags.slice(0, 15).map(function (t) { return t.tag; });
+    return {
+      hero: { label: "Trending in " + where + (cat ? " · " + cat : ""), value: tags.length ? esc(tags[0].tag) : esc(hashtags.length ? hashtags[0].tag : vids[0].title), note: (tags.length ? "The most used tag, on " + tags[0].n + " of " + vids.length + " trending videos. " : "") + "Read from YouTube's most popular chart on " + esc(dateStr(d.fetchedAt)) + "." },
+      blocks: blocks,
+      copy: top10.length ? top10.join(", ") : undefined,
+      download: { label: "Download the chart (CSV)", hint: "Every video with its tags, hashtags and views", filename: "youtube-trending-" + fileSafe(d.region + (cat ? "-" + cat : "")) + ".csv", text: csv(["rank", "video_id", "title", "channel", "category", "views", "likes", "comments", "seconds", "published", "tags", "hashtags"], vids.map(function (x, i) { return [i + 1, x.id, x.title, x.channelTitle, YT_CATEGORY[x.categoryId] || x.categoryId, x.views, x.likes, x.comments, x.seconds, x.publishedAt, (x.tags || []).join("; "), (x.hashtags || []).join(" ")]; })) },
+      note: "Tags are copied from what uploaders typed into YouTube Studio, so they show what trending creators target, not why the videos trend. YouTube says tags play a minimal role in discovery and matter most for common misspellings (<a href=\"https://support.google.com/youtube/answer/146402\" target=\"_blank\" rel=\"noopener\">YouTube Help</a>). Titles, thumbnails and the first seconds of the video matter far more." + (top10.length ? " The copy box holds the 15 most used tags." : ""),
+    };
+  };
+
+  /* ---------------------------------------------- top channels by country */
+  COMPUTE["top-youtube-channels-by-country"] = function (v, d) {
+    var list = (d.channels || []).slice();
+    var key = v.sort || "subscribers";
+    list.sort(function (a, b) { return b[key] - a[key]; });
+    if (!list.length) return { error: "We have not found channels that list " + esc(d.countryName) + " as their country yet. Try again tomorrow, as the pool grows every day." };
+    var word = key === "subscribers" ? "subscribers" : key === "views" ? "total views" : "videos";
+    return {
+      hero: { label: "Top YouTube channel in " + d.countryName, value: esc(list[0].title), note: compact(list[0][key]) + " " + word + ". Ranked from " + fmt(d.pool) + " channels that list " + esc(d.countryName) + " on their About page, read live on " + esc(dateStr(d.checkedAt)) + "." },
+      table: {
+        head: ["#", "Channel", "Subscribers", "Total views", "Videos"],
+        rows: list.map(function (c, i) {
+          var url = c.url || "https://www.youtube.com/channel/" + c.id;
+          return [
+            String(i + 1),
+            { html: "<span style=\"display:flex;align-items:center;gap:10px\">" + (c.thumb ? "<img src=\"" + esc(c.thumb) + "\" alt=\"\" width=\"32\" height=\"32\" loading=\"lazy\" style=\"border-radius:50%\">" : "") + "<span><a href=\"" + esc(url) + "\" target=\"_blank\" rel=\"noopener\">" + esc(c.title) + "</a>" + (c.handle ? "<br><small class=\"muted\">" + esc(c.handle) + "</small>" : "") + "</span></span>" },
+            compact(c.subscribers), compact(c.views), fmt(c.videos),
+          ];
+        }),
+      },
+      download: { label: "Download the ranking (CSV)", hint: list.length + " channels", filename: "top-youtube-channels-" + fileSafe(d.countryName) + ".csv", text: csv(["rank", "channel", "handle", "channel_id", "subscribers", "views", "videos", "created"], list.map(function (c, i) { return [i + 1, c.title, c.handle, c.id, c.subscribers, c.views, c.videos, c.since]; })) },
+      note: "YouTube publishes no country ranking. This list ranks the channels we have found that name " + esc(d.countryName) + " on their About page, gathered from the country's trending charts, a channel search and earlier lookups. A large channel that sets no country, or one we have not found yet, will be missing, and the pool grows with every daily refresh. Subscriber counts are YouTube's rounded public figures; channels that hide them are left out. See also the <a href=\"../youtube-most-subscribed-channels/\">most subscribed channels worldwide</a>.",
+    };
+  };
+
+  /* ---------------------------------------------- EMV calculators for YouTube and TikTok */
+  function emvOut(platform, lines, cpm, own, lo, hi, views) {
+    var eng = lines.reduce(function (t, l) { return t + l.n * l.rate; }, 0);
+    var mid = views / 1000 * cpm + eng;
+    return {
+      hero: { label: "Earned media value", value: money(mid), note: own ? "Using your rate of " + money(cpm) + " per 1,000 views." : "Range " + range(views / 1000 * lo + eng, views / 1000 * hi + eng) + " with views valued at " + money(lo) + " to " + money(hi) + " per 1,000." },
+      rows: [{ name: "Views", sub: money(cpm) + " per 1,000", value: money(views / 1000 * cpm) }].concat(lines.map(function (l) { return { name: l.name, sub: "$" + l.rate.toFixed(2) + " each", value: money(l.n * l.rate) }; })),
+      note: "The rates are Passive Array's editorial assumptions for comparing " + platform + " campaigns, not prices " + platform + " charges. Use the same rates every time so campaigns can be compared, and enter your own view rate if you know your ad costs. EMV is not revenue and not a creator fee.",
+    };
+  }
+  COMPUTE["youtube-emv-calculator"] = function (v) {
+    var views = num(v.views), own = num(v.cpm) > 0, cpm = own ? num(v.cpm) : 10;
+    return emvOut("YouTube", [
+      { name: "Likes", n: num(v.likes), rate: 0.1 },
+      { name: "Comments", n: num(v.comments), rate: 0.5 },
+      { name: "Shares", n: num(v.shares), rate: 1.5 },
+    ], cpm, own, 5, 20, views);
+  };
+  COMPUTE["tiktok-emv-calculator"] = function (v) {
+    var views = num(v.views), own = num(v.cpm) > 0, cpm = own ? num(v.cpm) : 6;
+    return emvOut("TikTok", [
+      { name: "Likes", n: num(v.likes), rate: 0.05 },
+      { name: "Comments", n: num(v.comments), rate: 0.5 },
+      { name: "Shares", n: num(v.shares), rate: 1.5 },
+      { name: "Saves", n: num(v.saves), rate: 0.4 },
+    ], cpm, own, 3, 12, views);
+  };
+
+  /* ---------------------------------------------- TikTok average views */
+  function parseCount(s) {
+    var m = String(s).trim().toLowerCase().replace(/,/g, "").match(/^(\d+(?:\.\d+)?)\s*([kmb])?$/);
+    if (!m) return null;
+    return Math.round(parseFloat(m[1]) * (m[2] === "k" ? 1e3 : m[2] === "m" ? 1e6 : m[2] === "b" ? 1e9 : 1));
+  }
+  COMPUTE["tiktok-average-views-calculator"] = function (v) {
+    var raw = String(v.views || "").split(/[\n;]+|,(?!\d{3}\b)/).map(function (s) { return s.trim(); }).filter(Boolean);
+    var bad = raw.filter(function (s) { return parseCount(s) == null; });
+    var list = raw.map(parseCount).filter(function (x) { return x != null; });
+    if (list.length < 3) return { error: "Enter the views of at least 3 videos." + (bad.length ? " Could not read: " + bad.slice(0, 3).map(esc).join(", ") : "") };
+    var f = num(v.followers), avg = list.reduce(function (a, b) { return a + b; }, 0) / list.length, med = median(list);
+    var outliers = list.map(function (x, i) { return { x: x, i: i }; }).filter(function (o) { return med > 0 && o.x > med * 3; });
+    var sd = Math.sqrt(list.reduce(function (t, x) { return t + (x - avg) * (x - avg); }, 0) / list.length), cv = avg ? sd / avg : 0;
+    var steady = cv < 0.5 ? { label: "Steady", cls: "good" } : cv < 1 ? { label: "Up and down", cls: "warn" } : { label: "Hit-driven", cls: "bad" };
+    var rate = f ? med / f * 100 : NaN;
+    var max = Math.max.apply(null, list);
+    return {
+      hero: { label: "Median views per video", value: compact(med), note: "Average " + compact(Math.round(avg)) + " across " + list.length + " videos" + (avg > med * 1.5 ? ". The average is pulled up by viral videos, so price sponsorships on the median." : ".") },
+      rows: [
+        { name: "Median views", sub: "the middle video", value: compact(med) },
+        { name: "Average views", sub: "all videos added up, divided by " + list.length, value: compact(Math.round(avg)) },
+        { name: "Median views ÷ followers", sub: f ? "share of followers a typical video reaches" : "add followers to see this", value: f ? pct(rate, 1) : "n/a" },
+        { name: "Best video", value: compact(max) },
+        { name: "Viral outliers", sub: "more than 3× the median", value: fmt(outliers.length) },
+        { name: "Consistency", sub: "how much views swing between videos", value: pill(steady) },
+      ],
+      bars: list.map(function (x, i) { return { label: "Video " + (i + 1) + (i === 0 ? " (newest)" : "") + (med > 0 && x > med * 3 ? " · outlier" : ""), value: max ? x / max * 100 : 0, text: compact(x) }; }),
+      note: (bad.length ? "Skipped what we could not read: " + bad.slice(0, 5).map(esc).join(", ") + ". " : "") + "On TikTok most views come from the For You feed rather than followers, so views above 100% of followers are normal for a growing account. Consistency compares the spread of views to the average; hit-driven accounts depend on a few viral videos.",
     };
   };
 

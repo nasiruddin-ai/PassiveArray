@@ -435,6 +435,10 @@ const CLUSTERS = [
   ["youtube-comment-audit", "youtube-comment-analyzer", "youtube-comment-exporter", "youtube-comment-search", "youtube-first-comment-finder", "youtube-comment-picker", "youtube-blocked-words-list"],
   ["youtube-channel-value-calculator", "youtube-money-calculator", "youtube-monetization-checker", "youtube-sponsorship-price-calculator"],
   ["x-follower-to-following-ratio", "x-account-comparison", "instagram-follower-to-following-ratio"],
+  ["top-youtube-channels-by-country", "youtube-most-subscribed-channels", "youtube-trending-tags-by-country", "search-youtube-influencers-by-location", "youtube-channel-comparison"],
+  ["youtube-trending-tags-by-country", "youtube-tag-generator", "youtube-hashtag-generator", "youtube-tag-extractor", "youtube-keyword-generator"],
+  ["youtube-emv-calculator", "tiktok-emv-calculator", "instagram-emv-calculator", "youtube-sponsorship-price-calculator", "tiktok-pricing-calculator"],
+  ["tiktok-average-views-calculator", "tiktok-engagement-rate-calculator", "tiktok-pricing-calculator", "tiktok-money-calculator", "tiktok-emv-calculator"],
 ];
 function clusterMates(slug) {
   const out = [];

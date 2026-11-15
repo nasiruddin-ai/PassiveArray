@@ -14,7 +14,11 @@ module.exports = async (req, res) => {
   // Without a key the tools library answers with its usual "no_key" message.
   const { code, body } = params.action === "history" && apiKey
     ? await require("../lib/growth.js").youtubeHistory(params)
-    : await handleRequest(params.action, params);
+    : params.action === "compare" && apiKey
+      ? await require("../lib/growth.js").youtubeCompareWithGrowth(params)
+      : params.action === "topcountry" && apiKey
+        ? await require("../lib/top-country.js").topByCountry(params)
+        : await handleRequest(params.action, params);
   res.setHeader("Content-Type", "application/json; charset=utf-8");
   res.setHeader("Cache-Control", code === 200 ? "public, max-age=600" : "no-store");
   // Public read-only data; lets the Passive Array browser extension call this from youtube.com.
