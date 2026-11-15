@@ -288,7 +288,7 @@ module.exports = [
       { id: "sort", label: "Rank by", type: "select", value: "subscribers", optional: true, options: [["subscribers", "Subscribers"], ["views", "Total views"], ["videos", "Videos uploaded"]] },
     ],
     how: [
-      "YouTube publishes no country ranking. We gather candidate channels from the country's trending charts, a channel search and every channel found for that country before, then keep those whose About page names the country.",
+      "YouTube publishes no country ranking. We gather candidate channels from the country's trending charts, a hand-checked list of large channels and every channel found for that country before, then keep those whose About page names the country.",
       "The pool grows each day the ranking is refreshed, so a big channel we have not found yet can be missing. The page says how many channels it ranked.",
       "Subscriber counts are the rounded public figures from the YouTube Data API. Channels that hide their count are left out.",
     ],

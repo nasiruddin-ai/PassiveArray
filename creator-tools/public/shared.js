@@ -2560,7 +2560,7 @@
         }),
       },
       download: { label: "Download the ranking (CSV)", hint: list.length + " channels", filename: "top-youtube-channels-" + fileSafe(d.countryName) + ".csv", text: csv(["rank", "channel", "handle", "channel_id", "subscribers", "views", "videos", "created"], list.map(function (c, i) { return [i + 1, c.title, c.handle, c.id, c.subscribers, c.views, c.videos, c.since]; })) },
-      note: "YouTube publishes no country ranking. This list ranks the channels we have found that name " + esc(d.countryName) + " on their About page, gathered from the country's trending charts, a channel search and earlier lookups. A large channel that sets no country, or one we have not found yet, will be missing, and the pool grows with every daily refresh. Subscriber counts are YouTube's rounded public figures; channels that hide them are left out. See also the <a href=\"../youtube-most-subscribed-channels/\">most subscribed channels worldwide</a>.",
+      note: "YouTube publishes no country ranking. This list ranks the channels we have found that name " + esc(d.countryName) + " on their About page, gathered from the country's trending charts, a hand-checked list of large channels and earlier lookups. A large channel that sets no country, or one we have not found yet, will be missing, and the pool grows with every daily refresh. Subscriber counts are YouTube's rounded public figures; channels that hide them are left out. See also the <a href=\"../youtube-most-subscribed-channels/\">most subscribed channels worldwide</a>.",
     };
   };
 

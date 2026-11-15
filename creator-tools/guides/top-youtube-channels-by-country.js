@@ -1,6 +1,6 @@
 // Guide and FAQ for /creator-tools/top-youtube-channels-by-country/. Merged into tools.js by build-tools.js.
 // Matches lib/top-country.js: candidates from the stored pool (topcset:<CC>), the country's trending charts
-// (overall + 8 categories), one channel search and the worldwide top list; only channels whose About page
+// (overall + 8 categories), the hand-checked SEEDS list and the worldwide top list; only channels whose About page
 // names the country count; cached a day. COMPUTE["top-youtube-channels-by-country"] in public/shared.js.
 module.exports = {
   seoTitle: "Top YouTube Channels by Country: Live Subscriber Ranking | Passive Array",
@@ -18,7 +18,7 @@ module.exports = {
       ordered: true,
       list: [
         "The channels behind the country's trending chart, overall and in eight big categories.",
-        "A channel search for the country's name, sorted by views.",
+        "A hand-checked list of well-known large channels in each country.",
         "The largest channels worldwide.",
         "Every channel found for that country on earlier days. The pool grows each time the ranking refreshes.",
       ],
@@ -32,7 +32,7 @@ module.exports = {
       list: [
         "<b>No country set.</b> Many channels leave the country blank, so they cannot be placed in any country ranking.",
         "<b>A different country.</b> A creator living in one country may list another on their channel.",
-        "<b>Not found yet.</b> A big channel that has not appeared on the trending charts or in search recently may not be in the pool yet.",
+        "<b>Not found yet.</b> A big channel that has not appeared on the trending charts recently, and is not on our checked list, may not be in the pool yet.",
         "<b>Hidden subscriber count.</b> Channels that hide their count are left out, because they cannot be ranked.",
       ],
       after: ["For the biggest channels worldwide, see the <a href=\"../youtube-most-subscribed-channels/\">most subscribed YouTube channels</a>. To find smaller creators in a country, use <a href=\"../search-youtube-influencers-by-location/\">search YouTube influencers by location</a>."],
