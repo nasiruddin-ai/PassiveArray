@@ -256,8 +256,9 @@ for (const f of fs.readdirSync(path.join(ROOT, "assets", "fonts"))) if (f.endsWi
 
 // Official MCP Registry domain proof for the com.passivearray/* namespace (public key only;
 // the private key never enters the repo). Served at /.well-known/mcp-registry-auth.
+// Every file in assets/well-known is copied, e.g. directory verification files (mcptry-verify.txt).
 fs.mkdirSync(path.join(DIST, ".well-known"), { recursive: true });
-fs.copyFileSync(path.join(ROOT, "assets", "well-known", "mcp-registry-auth"), path.join(DIST, ".well-known", "mcp-registry-auth"));
+for (const f of fs.readdirSync(path.join(ROOT, "assets", "well-known"))) fs.copyFileSync(path.join(ROOT, "assets", "well-known", f), path.join(DIST, ".well-known", f));
 
 // IndexNow (Bing, Yandex, Seznam, Naver): the key file must be served at the site root.
 // The key is public by design; scripts/indexnow.js submits URLs with it.
