@@ -257,7 +257,8 @@ fs.writeFileSync(path.join(DIST, INDEXNOW_KEY + ".txt"), INDEXNOW_KEY);
 // with a stylesheet a browser or the CDN cached from the previous one.
 const crypto = require("crypto");
 const assetVersion = crypto.createHash("md5").update(
-  ["shared.css", "site.js", "shared.js", "research.js", "app.js", "seo-tools.js"].map((f) => fs.readFileSync(path.join(ROOT, "creator-tools", "public", f))).join("")
+  ["shared.css", "site.js", "shared.js", "research.js", "app.js", "seo-tools.js", "home.js"].map((f) => fs.readFileSync(path.join(ROOT, "creator-tools", "public", f))).join("") +
+  fs.readFileSync(path.join(ROOT, "creator-tools", "home-v2.css"))
 ).digest("hex").slice(0, 10);
 let stamped = 0;
 (function walk(dir) {
@@ -266,7 +267,7 @@ let stamped = 0;
     if (entry.isDirectory()) { walk(p); continue; }
     if (!entry.name.endsWith(".html")) continue;
     const html = fs.readFileSync(p, "utf8");
-    let out = html.replace(/creator-tools\/(shared\.css|site\.js|shared\.js|research\.js|app\.js|seo-tools\.js)"/g, (m, f) => "creator-tools/" + f + "?v=" + assetVersion + "\"");
+    let out = html.replace(/creator-tools\/(shared\.css|site\.js|shared\.js|research\.js|app\.js|seo-tools\.js|home\.css|home\.js)"/g, (m, f) => "creator-tools/" + f + "?v=" + assetVersion + "\"");
     // Accessibility: comparison tables get a labelled corner cell and row headers, so every
     // data cell has a header (Lighthouse td-has-header).
     out = out.replace(/<table class="cmp">[\s\S]*?<\/table>/g, (t) => t
