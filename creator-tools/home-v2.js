@@ -196,7 +196,7 @@ function main({ tools, posts, esc, intentOf, INTENTS, isLive, faq, guides, root 
       </ul>
       <div class="cta-row">
         <a class="btn" href="${root}account/#mcp">Get your free MCP key</a>
-        <a class="btn ghost" href="${turl("youtube-comment-audit")}">Try the comment audit</a>
+        <a class="btn ghost" href="${root}mcp">How to connect</a>
       </div>
     </div>
   </div>

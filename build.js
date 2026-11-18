@@ -140,6 +140,13 @@ console.log("blog/posts/ -> dist/blog/ (" + built.posts + " articles, " + built.
 const pages = require("./pages/site-pages.js");
 const pagePaths = pages.buildInto(DIST);
 
+// MCP server docs: browsers opening https://passivearray.com/mcp get this page (see vercel.json);
+// MCP clients still reach the server function.
+const mcpPage = require("./pages/mcp-page.js");
+fs.mkdirSync(path.join(DIST, "mcp-docs"), { recursive: true });
+fs.writeFileSync(path.join(DIST, "mcp-docs", "index.html"), mcpPage.page());
+console.log("pages/mcp-page.js -> dist/mcp-docs/ (served at /mcp)");
+
 // Research: keyword research page (pages/research-pages.js).
 const research = require("./pages/research-pages.js");
 const researchPaths = research.buildInto(DIST);
@@ -167,6 +174,7 @@ const urls = [
   ["/research/shorts/", "0.7", "daily"],
   ["/youtube-extension/", "0.8", "monthly"],
   ["/youtube-extension/privacy/", "0.3", "yearly"],
+  ["/mcp", "0.8", "monthly", mcpPage.UPDATED],
   ["/blog/", "0.8", "weekly"],
   ...blog.CATEGORIES.map((c) => ["/blog/category/" + c.slug + "/", "0.7", "weekly"]),
   ...posts.map((p) => ["/blog/" + p.slug + "/", "0.7", "monthly", p.updated]),
