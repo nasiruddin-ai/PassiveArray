@@ -3,8 +3,8 @@
   "name": "com.passivearray/mcp",
   "title": "Passive Array",
   "description": "Live YouTube and Twitch data: channel stats, growth history, monetization, comments and keywords",
-  "version": "1.0.0",
-  "websiteUrl": "https://passivearray.com/",
+  "version": "1.0.1",
+  "websiteUrl": "https://passivearray.com/mcp",
   "repository": {
     "url": "https://github.com/nasiruddin-ai/passivearray",
     "source": "github"
