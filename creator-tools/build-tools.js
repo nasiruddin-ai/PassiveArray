@@ -642,6 +642,7 @@ const HOME_GUIDES = [
   "how-youtube-seo-works", "youtube-algorithm-explained", "how-to-tell-if-a-youtube-channel-is-monetized",
 ];
 
+const homeV2 = require("./home-v2.js");
 function homePage(posts = []) {
   const root = "";
   const liveCount = tools.filter(isLive).length;
@@ -732,270 +733,18 @@ function homePage(posts = []) {
 ${HEAD}
 <link rel="preload" href="/fonts/poppins-600.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="/fonts/poppins-400.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fonts/geist-var.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="creator-tools/shared.css">
-<script>try{var t=localStorage.getItem("pa-theme");document.documentElement.setAttribute("data-theme",t||"dark");}catch(e){}</script>
+<link rel="stylesheet" href="creator-tools/home.css">
+<script>try{var t=localStorage.getItem("pa-theme");document.documentElement.setAttribute("data-theme",t||"light");}catch(e){document.documentElement.setAttribute("data-theme","light");}</script>
 <script type="application/ld+json">${JSON.stringify(jsonld)}</script>
 </head>
 <body data-root="${root}" class="home lp">${GTM_BODY}
 <a class="lp-announce" href="${root}creator-tools/youtube-comment-audit/"><span class="lp-new">New</span><span>Comment Audit: score any channel's comment section out of 100, free</span><i aria-hidden="true">&rarr;</i></a>
 ${header(root, "home", false)}
 
-<!-- 1. Hero -->
-<section class="lp-hero">
-  <div class="wrap lp-hero-simple">
-    <h1>Free YouTube SEO &amp; Creator Tools</h1>
-    <p class="lp-lead">Check monetization, research keywords, score titles and estimate channel earnings — live from official APIs with no sign-up required.</p>
-
-    <form class="lp-bar" action="${root}creator-tools/youtube-monetization-checker/" method="get" data-hero-form>
-      ${ICON.search}
-      <label for="lp-hero-input" class="sr">YouTube channel @handle or link</label>
-      <input id="lp-hero-input" name="channel" type="text" placeholder="Paste a YouTube @handle or channel link (e.g. @mkbhd)" autocomplete="off" required>
-      <button type="submit" class="btn lp-primary">Check channel</button>
-    </form>
-
-    <div class="lp-quick" aria-label="Quick actions">
-      <a class="lp-qbtn" href="${root}youtube-extension/">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="3.5"/><path d="M12 8.5h8.2M8.9 13.7 4.8 6.6M15.1 13.8l-4.2 7.1"/></svg>
-        <span>Free Chrome Extension</span>
-        <i class="lp-qarr">&rarr;</i>
-      </a>
-      <a class="lp-qbtn" href="${root}app/">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="10" width="5" height="10" rx="1"/><rect x="10" y="4" width="5" height="16" rx="1"/><rect x="17" y="13" width="4" height="7" rx="1"/></svg>
-        <span>Creator Dashboard</span>
-        <i class="lp-qarr">&rarr;</i>
-      </a>
-      <a class="lp-qbtn accent" href="${root}youtube-seo-service/">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M13 2 4 14h7l-1 8 9-12h-7z"/></svg>
-        <span>Done-For-You YouTube SEO</span>
-        <i class="lp-qarr">&rarr;</i>
-      </a>
-    </div>
-    <ul class="lp-trust" aria-label="Why Passive Array">
-      <li>${tick}No sign-up</li>
-      <li>${tick}Free Chrome extension</li>
-      <li>${tick}Works in Claude &amp; ChatGPT</li>
-      <li>${tick}Every formula shown</li>
-    </ul>
-  </div>
-
-  <div class="wrap lp-statwrap">
-    <div class="lp-stats">
-      <div><b>${tools.length}</b><span>Free Creator Tools</span></div>
-      <div><b>${liveCount}</b><span>On Live API Data</span></div>
-      <div><b>100%</b><span>Free to Use</span></div>
-      <div><b>0</b><span>Ads, Ever</span></div>
-    </div>
-  </div>
-</section>
-
-<!-- 2. Monetization intelligence showcase -->
-<section class="lp-band lp-monet">
-  <div class="wrap lp-two">
-    <div class="lp-band-text">
-      <h2>Monetization intelligence at every click</h2>
-      <ul class="lp-ticks">
-        <li>${tick}Eligibility signals from public data: subscribers, uploads in 90 days, made for kids</li>
-        <li>${tick}Ad placements read from the channel's recent uploads</li>
-        <li>${tick}A verdict with a confidence score, and every signal listed</li>
-        <li>${tick}The full check runs in your own browser with the free Chrome extension</li>
-      </ul>
-      <div class="lp-band-actions">
-        <a class="lp-link" href="${root}creator-tools/youtube-monetization-checker/">Run a live check ${ICON.arrow}</a>
-        <a class="lp-link alt" href="${root}youtube-extension/">Install Chrome Extension ${ICON.arrow}</a>
-      </div>
-    </div>
-    <div class="lp-preview" aria-label="Sample monetization check output">
-      <div class="lp-prev-top">
-        <div class="lp-prev-chan">
-          <span class="pbadge yt" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 24 24"><path fill="#fff" d="M9.5 8.5v7l6-3.5z"/></svg></span>
-          <div><b>@mkbhd</b><span>19.8M subscribers · Tech</span></div>
-        </div>
-        <span class="lp-prev-pill">95% confidence</span>
-      </div>
-      <div class="lp-prev-verdict">
-        <small>VERDICT FROM PUBLIC SIGNALS</small>
-        <strong>Likely monetized</strong>
-      </div>
-      <ul class="lp-prev-rows">
-        <li><span>1,000+ subscribers</span><b class="ok">Yes · 19.8M</b></li>
-        <li><span>3 uploads in last 90 days</span><b class="ok">Yes · 10 of 10</b></li>
-        <li><span>Ads on recent uploads</span><b class="ok">Yes · 5 of 5</b></li>
-        <li><span>Not made for kids</span><b class="ok">Yes</b></li>
-      </ul>
-      <div class="lp-prev-foot">
-        <span>Try live:</span>
-        <a href="${root}creator-tools/youtube-monetization-checker/?channel=@mkbhd">@mkbhd &rarr;</a>
-        <a href="${root}creator-tools/youtube-monetization-checker/?channel=@veritasium">@veritasium &rarr;</a>
-      </div>
-    </div>
-  </div>
-</section>
-
-<main class="wrap">
-  <!-- 2a. MCP for AI assistants, with a real comment audit result -->
-  <section class="section lp-mcp" id="mcp">
-    <div class="card lp-mcp-card">
-      <div class="lp-mcp-copy">
-        <span class="lp-gk">NEW · PASSIVE ARRAY MCP</span>
-        <h2>Ask your AI assistant about any YouTube channel</h2>
-        <p>Connect Claude, ChatGPT, Cursor or VS Code to Passive Array, then just ask. Your assistant pulls live channel stats, growth history, comment analysis and keyword research while you chat.</p>
-        <ul class="plain">
-          <li><b>13 tools</b> your assistant can call, from channel stats to the full comment audit</li>
-          <li><b>50 free credits a day</b> with a free account, 1,000 on Pro</li>
-          <li><b>Same data and rules</b> as the tools on this site, so the answers match</li>
-        </ul>
-        <div class="lp-gactions">
-          <a class="btn" href="${root}account/#mcp">Get your free MCP key &rarr;</a>
-          <a class="btn ghost" href="${root}creator-tools/youtube-comment-audit/">Try the comment audit</a>
-        </div>
-      </div>
-      <figure class="lp-chat" aria-label="Example: an AI assistant running the Passive Array comment audit">
-        <div class="lp-chat-q">Audit the comment section of @YouTubeCreators</div>
-        <div class="lp-chat-tool"><span></span>audit_channel_comments · Passive Array</div>
-        <div class="lp-chat-a">
-          <div class="lp-chat-score"><b>38</b><span>/100</span><em>Neglected</em></div>
-          <ul>
-            <li><span>Comments read</span><b>956 across 10 videos</b></li>
-            <li><span>Channel reply rate</span><b class="bad">0%</b></li>
-            <li><span>Questions with no reply</span><b class="bad">34</b></li>
-            <li><span>Comments per 1,000 views</span><b class="ok">5.7, full marks</b></li>
-            <li><span>Scam spam visible</span><b class="ok">None</b></li>
-          </ul>
-          <p>Big audience, healthy conversation, but nobody from the channel is answering. Start with the 34 open questions, most liked first.</p>
-        </div>
-        <figcaption>A real audit of @YouTubeCreators, run on 2 November 2026. The score changes as new comments come in.</figcaption>
-      </figure>
-    </div>
-  </section>
-
-  <!-- 3. Tool finder -->
-  <section class="section lp-finder" id="tools" data-home-tools>
-    <h2 class="center">Every tool a YouTube creator needs</h2>
-    <p class="center sub">All ${tools.length}, free, no account. Type to search or pick what you want to do.</p>
-    <div class="lp-search">${ICON.search}<label for="lp-q" class="sr">Search tools</label><input id="lp-q" type="search" placeholder="Search tools: tags, money, engagement, fake followers…" autocomplete="off" data-tool-search></div>
-    <div class="lp-chips lp-platchips" data-platform-chips>${platChips}</div>
-    <div class="lp-chips" data-intent-chips>${chips}</div>
-    <div class="tgrid lp-tgrid" data-tool-grid>${ordered.map(finderCard).join("")}</div>
-    <p class="lp-empty" data-tool-empty hidden>Nothing matches. Try another word, or <a href="${root}creator-tools/">see every tool</a>.</p>
-    <div class="center lp-more"><button type="button" class="btn ghost" data-tool-more>Show all ${tools.length} tools</button></div>
-  </section>
-
-  <!-- 4. Numbered capabilities -->
-  <section class="section lp-numbered" id="how">
-    <div class="lp-numgrid">${numbered}</div>
-  </section>
-
-  <!-- 4a. Chrome Extension UI spotlight -->
-  <section class="section lp-ext" id="extension">
-    <div class="card lp-ext-card">
-      <div class="lp-ext-copy">
-        <span class="lp-gk">FREE CHROME EXTENSION · NO SIGN-UP</span>
-        <h2>See engagement, monetization &amp; hidden tags right inside YouTube</h2>
-        <p>Stop switching tabs while researching competitors. The Passive Array extension adds a live intelligence sidebar to every YouTube video, channel, and search page — and suggests tags inside YouTube Studio.</p>
-        <ul class="plain">
-          <li><b>Engagement rate &amp; velocity:</b> Compare any video against the channel's usual views</li>
-          <li><b>Monetization &amp; SEO audit:</b> Spot active ad signals, title score, and description structure</li>
-          <li><b>Hidden competitor tags:</b> Inspect and copy tags from top-ranking videos in one click</li>
-        </ul>
-        <div class="lp-gactions">
-          <a class="btn" href="${root}youtube-extension/">Install Free Chrome Extension &rarr;</a>
-          <a class="btn ghost" href="${root}creator-tools/youtube-tag-generator/">Try Tag Generator Online</a>
-        </div>
-      </div>
-      <div class="lp-ext-shot">
-        <img src="${root}youtube-extension/screenshot-1-video.png" alt="Passive Array Chrome extension sidebar on a YouTube video showing engagement rate, monetization signals, and hidden competitor tags" width="1280" height="800" loading="lazy">
-      </div>
-    </div>
-  </section>
-
-  <!-- 4b. Revenue & Growth Accelerators (Pro Watchlist + Done-For-You YouTube SEO) -->
-  <section class="section lp-growth" id="solutions">
-    <h2 class="center">Two ways to grow faster with Passive Array</h2>
-    <p class="center sub">Use our ${tools.length} tools free forever — or accelerate your channel with automated daily tracking and hands-on YouTube SEO.</p>
-    <div class="lp-growth-grid">
-      <div class="card lp-gcard">
-        <div class="lp-ghead">
-          <span class="lp-gk">AUTOMATED TRACKING · $9/MO OR FREE TIER</span>
-          <h3>Creator Dashboard &amp; Pro Watchlist</h3>
-          <p>Connect your channel in one click — no unverified OAuth permissions required. Track your monetization progress, benchmark against competitors, and get Monday mover digests.</p>
-        </div>
-        <ul class="plain">
-          <li><b>Track up to 100 channels daily</b> with 7-day and 30-day subscriber &amp; view deltas (3 channels free)</li>
-          <li><b>Automated Monday email</b> ranking which competitors grew fastest</li>
-          <li><b>One-click CSV exports</b> of watchlists, outlier feeds &amp; viral Shorts</li>
-          <li><b>1,000 MCP AI credits/day</b> for Claude, ChatGPT &amp; Cursor</li>
-        </ul>
-        <div class="lp-gactions">
-          <a class="btn" href="${root}app/">Open Creator Dashboard</a>
-          <a class="btn ghost" href="${root}pricing/">See Pro Pricing ($9/mo)</a>
-        </div>
-      </div>
-
-      <div class="card lp-gcard featured">
-        <div class="lp-ghead">
-          <span class="lp-gk">DONE-FOR-YOU SERVICE · BY NASIR UDDIN</span>
-          <h3>Done-For-You YouTube SEO Service</h3>
-          <p>Want an experienced SEO specialist to handle the research and optimization for every upload? Founder Nasir Uddin audits your channel and optimizes your videos for search and suggested reach.</p>
-        </div>
-        <ul class="plain">
-          <li><b>Full Channel Audit:</b> Deep review of your last 20 uploads, keyword gaps, and title/thumbnail fixes</li>
-          <li><b>Monthly Video SEO:</b> Custom keyword research, high-CTR titles, chapters &amp; 500-char tag sets</li>
-          <li><b>Channel Setup &amp; Relaunch:</b> Niche positioning, playlist architecture &amp; 30-day content roadmap</li>
-          <li><b>Global &amp; multilingual:</b> Optimized for US, UK, EU, South Asia &amp; worldwide markets via YouTube Studio Editor role</li>
-        </ul>
-        <div class="lp-gactions">
-          <a class="btn" href="${root}youtube-seo-service/">View YouTube SEO Packages &rarr;</a>
-          <a class="btn ghost" href="${root}founder/">Meet Nasir Uddin</a>
-        </div>
-      </div>
-    </div>
-  </section>
-</main>
-
-<!-- 5. Comparison band -->
-<section class="lp-band lp-compare" id="why">
-  <div class="wrap">
-    <h2 class="center">Compared with the paid options</h2>
-    <p class="center sub">What you can do without paying anyone. Checked ${new Date().toLocaleDateString("en-GB", { month: "long", year: "numeric" })} from their own public pages.</p>
-    <div class="card compare-strip cmp2 lp-cmp">
-      <div class="tablewrap"><table class="cmp">
-        <thead><tr><th></th><th class="us">Passive Array<small>Free, Pro optional</small></th><th><a href="${root}compare/vidiq-alternative/">vidIQ alternative</a><small>Free tier, then paid</small></th><th><a href="${root}compare/tubebuddy-alternative/">TubeBuddy alternative</a><small>Free tier, then paid</small></th></tr></thead>
-        <tbody>${CMP.map((r) => `<tr><td>${esc(r[0])}</td>${cmpCell(r[1], true)}${cmpCell(r[2], false)}${cmpCell(r[3], false)}</tr>`).join("")}</tbody>
-      </table></div>
-      <p class="note">Both are capable products with real depth on their paid tiers, and both do things we cannot: read your private analytics, publish for you, and test thumbnails on live traffic. <a href="${root}compare/">The full comparison says where they win.</a></p>
-    </div>
-  </div>
-</section>
-
-<main class="wrap">
-${posts.length ? `
-  <section class="section">
-    <div class="section-head"><h2>From the blog</h2><a href="blog/">All articles</a></div>
-    <div class="grid c3">${posts.slice(0, 3).map((p) => postCard(p, root)).join("")}</div>
-    ${(() => {
-      // Hand-picked guides, so the home page links straight to the posts we most want crawled.
-      const picks = HOME_GUIDES.map((s) => posts.find((p) => p.slug === s)).filter(Boolean);
-      return picks.length ? `<h3 class="home-guides-h">Popular guides</h3><div class="rp-list home-guides">${picks.map((p) => `<a href="${root}blog/${p.slug}/">${esc(p.title)}</a>`).join("")}</div>` : "";
-    })()}
-  </section>` : ""}
-
-  <section class="section" id="faq">
-    <div class="section-head"><h2>Questions people ask first</h2><a href="faq/">All YouTube tool questions</a></div>
-    <div class="card faq">${faqHtml}</div>
-  </section>
-
-  <section class="section">
-    <div class="lp-final-cta">
-      <div>
-        <h2>Start growing your YouTube channel today</h2>
-        <p>Use all ${tools.length} creator tools 100% free with no sign-up — or partner with Nasir Uddin for hands-on YouTube SEO.</p>
-      </div>
-      <div class="lp-final-actions">
-        <a class="btn" href="${root}creator-tools/youtube-monetization-checker/">Try Free Tools</a>
-        <a class="btn sec" href="${root}youtube-seo-service/">Done-For-You YouTube SEO &rarr;</a>
-      </div>
-    </div>
-  </section>
+<main>
+${homeV2.main({ tools, posts, esc, intentOf, INTENTS, isLive, faq: HOME_FAQ, guides: HOME_GUIDES, root })}
 </main>
 ${footer(root)}
 <div class="lp-sticky" data-sticky hidden>
@@ -1004,6 +753,7 @@ ${footer(root)}
   <button type="button" class="lp-sticky-x" data-sticky-close aria-label="Close">&times;</button>
 </div>
 <script defer src="creator-tools/site.js"></script>
+<script defer src="creator-tools/home.js"></script>
 </body>
 </html>`;
 }
@@ -1015,7 +765,8 @@ function buildInto(outDir, posts) {
   if (posts) setPosts(posts);
   const template = fs.readFileSync(path.join(HERE, "template.html"), "utf8");
   fs.mkdirSync(outDir, { recursive: true });
-  for (const asset of ["shared.css", "shared.js", "site.js", "research.js", "app.js", "seo-tools.js"]) fs.copyFileSync(path.join(HERE, "public", asset), path.join(outDir, asset));
+  for (const asset of ["shared.css", "shared.js", "site.js", "research.js", "app.js", "seo-tools.js", "home.js"]) fs.copyFileSync(path.join(HERE, "public", asset), path.join(outDir, asset));
+  fs.writeFileSync(path.join(outDir, "home.css"), homeV2.css());
   fs.writeFileSync(path.join(outDir, "index.html"), directoryPage());
   const seen = new Set();
   for (const t of tools) {
