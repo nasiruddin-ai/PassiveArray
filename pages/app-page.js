@@ -234,7 +234,7 @@ ${site.VERIFY_TAG}
 <link rel="preload" href="/fonts/poppins-400.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="${root}creator-tools/shared.css">
 <style>${CSS}</style>
-<script>try{var t=localStorage.getItem("pa-theme");document.documentElement.setAttribute("data-theme",t||"dark");}catch(e){}</script>
+<script>try{var t=localStorage.getItem("pa-theme-v2");document.documentElement.setAttribute("data-theme",t==="dark"?"dark":"light");}catch(e){document.documentElement.setAttribute("data-theme","light");}</script>
 <script>window.PA_TOOLS=${JSON.stringify(tools)};window.PA_POSTS=${JSON.stringify(latest)};</script>
 </head>
 <body data-root="${root}" class="app-body">

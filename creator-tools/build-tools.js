@@ -548,7 +548,7 @@ ${HEAD}
 <link rel="preload" href="/fonts/poppins-600.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="/fonts/poppins-400.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="shared.css">
-<script>try{var t=localStorage.getItem("pa-theme");document.documentElement.setAttribute("data-theme",t||"dark");}catch(e){}</script>
+<script>try{var t=localStorage.getItem("pa-theme-v2");document.documentElement.setAttribute("data-theme",t==="dark"?"dark":"light");}catch(e){document.documentElement.setAttribute("data-theme","light");}</script>
 </head>
 <body data-root="${root}">${GTM_BODY}
 ${header(root, "tools", true)}
@@ -736,7 +736,7 @@ ${HEAD}
 <link rel="preload" href="/fonts/geist-var.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="creator-tools/shared.css">
 <link rel="stylesheet" href="creator-tools/home.css">
-<script>try{var t=localStorage.getItem("pa-theme");document.documentElement.setAttribute("data-theme",t||"light");}catch(e){document.documentElement.setAttribute("data-theme","light");}</script>
+<script>try{var t=localStorage.getItem("pa-theme-v2");document.documentElement.setAttribute("data-theme",t==="dark"?"dark":"light");}catch(e){document.documentElement.setAttribute("data-theme","light");}</script>
 <script type="application/ld+json">${JSON.stringify(jsonld)}</script>
 </head>
 <body data-root="${root}" class="home lp">${GTM_BODY}
@@ -812,7 +812,7 @@ ${head}
 <link rel="preload" href="/fonts/poppins-600.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="/fonts/poppins-400.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="${root}creator-tools/shared.css">
-<script>try{var t=localStorage.getItem("pa-theme");document.documentElement.setAttribute("data-theme",t||"dark");}catch(e){}</script>
+<script>try{var t=localStorage.getItem("pa-theme-v2");document.documentElement.setAttribute("data-theme",t==="dark"?"dark":"light");}catch(e){document.documentElement.setAttribute("data-theme","light");}</script>
 ${jsonld ? `<script type="application/ld+json">${JSON.stringify(jsonld)}</script>` : ""}
 </head>
 <body data-root="${root}">${GTM_BODY}

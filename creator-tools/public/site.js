@@ -43,7 +43,7 @@
   function setTheme(t) {
     t = t === "light" ? "light" : "dark";
     root.setAttribute("data-theme", t);
-    try { localStorage.setItem("pa-theme", t); } catch (e) { /* private mode */ }
+    try { localStorage.setItem("pa-theme-v2", t); } catch (e) { /* private mode */ }
     document.querySelectorAll("[data-theme-toggle]").forEach(function (b) {
       b.setAttribute("aria-label", t === "dark" ? "Switch to light mode" : "Switch to dark mode");
     });
@@ -51,7 +51,7 @@
   document.querySelectorAll("[data-theme-toggle]").forEach(function (b) {
     b.addEventListener("click", function () { setTheme(root.getAttribute("data-theme") === "dark" ? "light" : "dark"); });
   });
-  setTheme(root.getAttribute("data-theme") || "dark"); // dark is the default; the head script sets it before paint
+  setTheme(root.getAttribute("data-theme") || "light"); // light is the default; the head script sets it before paint
 
   /* Mobile menu */
   var menuBtn = document.querySelector("[data-menu]");
