@@ -104,7 +104,7 @@ function withWebGuide(html, folder) {
   const sec = (s) => `<section><h2>${esc(s.h)}</h2>${(s.p || []).map((p) => `<p>${p}</p>`).join("")}${s.list ? `<${s.ordered ? "ol" : "ul"}>${s.list.map((li) => `<li>${li}</li>`).join("")}</${s.ordered ? "ol" : "ul"}>` : ""}${s.table ? `<div class="tw"><table><thead><tr>${s.table.head.map((h) => `<th>${esc(h)}</th>`).join("")}</tr></thead><tbody>${s.table.rows.map((r) => `<tr>${r.map((c) => `<td>${c}</td>`).join("")}</tr>`).join("")}</tbody></table></div>` : ""}${(s.after || []).map((p) => `<p>${p}</p>`).join("")}</section>`;
   const faq = g.faq && g.faq.length ? `<section><h2>Frequently asked questions</h2>${g.faq.map(([q, a]) => `<details><summary>${esc(q)}</summary><p>${a}</p></details>`).join("")}</section>` : "";
   const others = site.WEB_TOOLS.filter(([href]) => href !== folder + "/").map(([href, name]) => `<a href="/${href}">${esc(name)}</a>`).join(" · ");
-  const more = `<section><h2>More free web tools</h2><p>${others}. For creators: <a href="/creator-tools/youtube-monetization-checker/">YouTube monetization checker</a> · <a href="/research/">YouTube keyword research</a>.</p></section>`;
+  const more = `<section><h2>More free web tools</h2><p>${others}. For creators: <a href="/creator-tools/youtube-monetization-checker/">YouTube monetization checker</a> · <a href="/research/">YouTube keyword research</a>.</p><p>Guides: <a href="/blog/how-to-rank-youtube-videos-on-google/">How to rank YouTube videos on Google</a> · <a href="/blog/how-youtube-seo-works/">How YouTube SEO works</a> · <a href="/blog/youtube-for-small-business/">YouTube for small business</a> · <a href="/blog/best-free-youtube-seo-tools/">Best free YouTube SEO tools</a>.</p></section>`;
   const block = `${style}<article class="pa-guide">${(g.guide || []).map(sec).join("")}${faq}${more}${g.guideUpdated ? `<p class="note">Checked ${esc(g.guideUpdated)}.</p>` : ""}</article>`;
   return html.replace(/<div class="pa-foot">/, block + "<div class=\"pa-foot\">");
 }
@@ -176,6 +176,10 @@ const today = new Date().toISOString().slice(0, 10);
 // lastmod only moves when a page's own text changes. Each page's main-content text is
 // hashed (header, footer, scripts and asset version stamps excluded) and compared with
 // sitemap-dates.json, which is committed so Vercel builds see the same dates.
+// Links and site-wide counts are left out of the hash: related-tool and related-post lists
+// and "67 tools" change on every page whenever a tool or post is added, which is not an edit
+// to that page. Vercel cannot write the file, so run a local build and commit
+// sitemap-dates.json with any change that edits page text.
 const DATES_FILE = path.join(ROOT, "sitemap-dates.json");
 const knownDates = fs.existsSync(DATES_FILE) ? JSON.parse(fs.readFileSync(DATES_FILE, "utf8")) : {};
 const nextDates = {};
@@ -184,7 +188,11 @@ function contentHash(loc) {
   if (!fs.existsSync(f)) return null;
   let h = fs.readFileSync(f, "utf8");
   h = h.replace(/<script[\s\S]*?<\/script>/gi, " ").replace(/<style[\s\S]*?<\/style>/gi, " ").replace(/<header[\s\S]*?<\/header>/gi, " ").replace(/<footer[\s\S]*?<\/footer>/gi, " ").replace(/<div class="pa-(bar|foot)"[\s\S]*?<\/div>/gi, " ");
-  const text = h.replace(/<[^>]+>/g, " ").replace(/\s+/g, " ").trim();
+  h = h.replace(/<a\b[\s\S]*?<\/a>/gi, " ").replace(/<button\b[\s\S]*?<\/button>/gi, " ").replace(/<title>[\s\S]*?<\/title>/gi, " ");
+  const text = h.replace(/<[^>]+>/g, "\n").split("\n").map((s) => s.trim())
+    .filter((s) => s && !/^\d+$/.test(s))                                  // stat tiles that are only a count
+    .join(" ").replace(/\b\d+ (?=(free |creator |live |youtube )*tool)/gi, "") // "67 tools", "67 free creator tools"
+    .replace(/\s+/g, " ").trim();
   return require("crypto").createHash("sha1").update(text).digest("hex").slice(0, 16);
 }
 function lastmodFor(loc, mod) {

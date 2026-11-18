@@ -123,6 +123,11 @@
       "statusCode": 301
     },
     {
+      "source": "/:path((?!api/|creator-tools/api/|research/api/|plagiarism-checker/api/|domain-age-checker/api/|domain-finder/api/|mcp)(?:[^/.]+/)*[^/.]+)",
+      "destination": "/:path/",
+      "permanent": true
+    },
+    {
       "source": "/creator-tools/:tool/privacy{/}?",
       "destination": "/privacy/",
       "statusCode": 301

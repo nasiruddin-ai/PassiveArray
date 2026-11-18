@@ -634,6 +634,14 @@ const HOME_FAQ = [
     "Yes, and it is free too. It puts engagement rate, hidden tags, views per day and a keyword score directly on YouTube's video, channel and search pages."],
 ];
 
+// Guides linked by name from the home page (after the three newest posts). Order is display order.
+const HOME_GUIDES = [
+  "youtube-monetization-requirements", "how-much-does-youtube-pay-per-view", "what-is-cpm-on-youtube",
+  "youtube-click-through-rate", "how-to-avoid-copyright-on-youtube", "youtube-content-id",
+  "ways-to-make-money-on-youtube", "how-long-can-youtube-shorts-be", "youtube-shorts-thumbnail",
+  "how-youtube-seo-works", "youtube-algorithm-explained", "how-to-tell-if-a-youtube-channel-is-monetized",
+];
+
 function homePage(posts = []) {
   const root = "";
   const liveCount = tools.filter(isLive).length;
@@ -964,6 +972,11 @@ ${posts.length ? `
   <section class="section">
     <div class="section-head"><h2>From the blog</h2><a href="blog/">All articles</a></div>
     <div class="grid c3">${posts.slice(0, 3).map((p) => postCard(p, root)).join("")}</div>
+    ${(() => {
+      // Hand-picked guides, so the home page links straight to the posts we most want crawled.
+      const picks = HOME_GUIDES.map((s) => posts.find((p) => p.slug === s)).filter(Boolean);
+      return picks.length ? `<h3 class="home-guides-h">Popular guides</h3><div class="rp-list home-guides">${picks.map((p) => `<a href="${root}blog/${p.slug}/">${esc(p.title)}</a>`).join("")}</div>` : "";
+    })()}
   </section>` : ""}
 
   <section class="section" id="faq">
