@@ -1,0 +1,42 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "name": "com.passivearray/mcp",
+  "title": "Passive Array",
+  "description": "Live YouTube and Twitch data: channel stats, growth history, monetization, comments and keywords",
+  "version": "1.0.0",
+  "websiteUrl": "https://passivearray.com/",
+  "repository": {
+    "url": "https://github.com/nasiruddin-ai/passivearray",
+    "source": "github"
+  },
+  "icons": [
+    {
+      "src": "https://passivearray.com/icon-512.png",
+      "mimeType": "image/png",
+      "sizes": ["512x512"]
+    }
+  ],
+  "remotes": [
+    {
+      "type": "streamable-http",
+      "url": "https://passivearray.com/mcp",
+      "headers": [
+        {
+          "name": "Authorization",
+          "description": "Your free Passive Array API key, from https://passivearray.com/account/#mcp",
+          "value": "Bearer {api_key}",
+          "isRequired": true,
+          "isSecret": true,
+          "variables": {
+            "api_key": {
+              "description": "API key starting with pa_",
+              "placeholder": "pa_...",
+              "isRequired": true,
+              "isSecret": true
+            }
+          }
+        }
+      ]
+    }
+  ]
+}
