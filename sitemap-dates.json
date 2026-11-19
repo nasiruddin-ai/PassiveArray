@@ -1,6 +1,6 @@
 {
  "/": {
-  "hash": "6b76bd30a55dde88",
+  "hash": "eddca2f581e77ae1",
   "date": "2026-11-19"
  },
  "/creator-tools/": {
@@ -160,8 +160,8 @@
   "date": "2026-11-14"
  },
  "/creator-tools/youtube-thumbnail-tester/": {
-  "hash": "7796129f8b042cdb",
-  "date": "2026-11-14"
+  "hash": "2f45f23e1d33a3f8",
+  "date": "2026-11-19"
  },
  "/creator-tools/youtube-timestamp-link-generator/": {
   "hash": "15890fbf472180e7",
@@ -236,8 +236,8 @@
   "date": "2026-11-14"
  },
  "/creator-tools/youtube-comment-analyzer/": {
-  "hash": "71e6c4c0a6530ff5",
-  "date": "2026-11-14"
+  "hash": "cbbff7f1b620a3e5",
+  "date": "2026-11-19"
  },
  "/creator-tools/youtube-comment-search/": {
   "hash": "6dcbd739d331ecbe",
@@ -276,11 +276,11 @@
   "date": "2026-11-19"
  },
  "/creator-tools/youtube-video-seo-checker/": {
-  "hash": "6ccc57fcc4a2d4a1",
+  "hash": "e7fd2cc406bc6822",
   "date": "2026-11-19"
  },
  "/creator-tools/youtube-channel-keywords-finder/": {
-  "hash": "08c667b1b190a905",
+  "hash": "3a962b0673a0157b",
   "date": "2026-11-19"
  },
  "/creator-tools/youtube-playlist-length-calculator/": {
@@ -296,11 +296,43 @@
   "date": "2026-11-19"
  },
  "/creator-tools/youtube-subscribe-link-generator/": {
-  "hash": "3c4a347650b2ab3e",
+  "hash": "21f120bfd63120e4",
   "date": "2026-11-19"
  },
  "/creator-tools/youtube-embed-code-generator/": {
   "hash": "d1e7b736b77ba863",
+  "date": "2026-11-19"
+ },
+ "/creator-tools/youtube-cpm-calculator/": {
+  "hash": "a8cbcdfcf57a5a9d",
+  "date": "2026-11-19"
+ },
+ "/creator-tools/youtube-rpm-calculator/": {
+  "hash": "5633d7fa5d6add34",
+  "date": "2026-11-19"
+ },
+ "/creator-tools/youtube-chapters-checker/": {
+  "hash": "d86e8b3a660fd839",
+  "date": "2026-11-19"
+ },
+ "/creator-tools/video-bitrate-calculator/": {
+  "hash": "f609b7fc9c00f17e",
+  "date": "2026-11-19"
+ },
+ "/creator-tools/video-file-size-calculator/": {
+  "hash": "d4ff57adf6066632",
+  "date": "2026-11-19"
+ },
+ "/creator-tools/aspect-ratio-calculator/": {
+  "hash": "9d0bb89d9170119e",
+  "date": "2026-11-19"
+ },
+ "/creator-tools/instagram-username-generator/": {
+  "hash": "b66a4b237a95ac2d",
+  "date": "2026-11-19"
+ },
+ "/creator-tools/tiktok-username-generator/": {
+  "hash": "a5bb76abbeb1d3a3",
   "date": "2026-11-19"
  },
  "/meta-tag-checker/": {
