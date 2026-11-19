@@ -120,6 +120,8 @@ function summarizeChannel(item) {
     views: n(st.viewCount),
     videos: n(st.videoCount),
     keywords: keywords.slice(0, 15),
+    keywordsAll: keywords.slice(0, 100),
+    keywordsRaw: kw.slice(0, 1000),
     topics,
     uploadsPlaylist: item.contentDetails?.relatedPlaylists?.uploads || "",
   };
@@ -598,6 +600,102 @@ function topChannels() {
   }).then((channels) => ({ channels, checkedAt: new Date().toISOString() }));
 }
 
+
+/* ------------------------------------------------------------------ single video, in full
+   One videos.list call (1 unit): everything the video SEO checker and the stats checker show. */
+async function getVideoDetails(input) {
+  const id = parseVideoId(input);
+  if (!id) throw Object.assign(new Error("Paste a valid YouTube video or Shorts link, or an 11-character video ID."), { code: "input", status: 400 });
+  return cached("vdetail:" + id, async () => {
+    const d = await yt("videos", { part: "snippet,statistics,contentDetails,status,topicDetails,liveStreamingDetails", id });
+    const v = d.items && d.items[0];
+    if (!v) throw Object.assign(new Error("Video not found, or it is private."), { code: "not_found", status: 404 });
+    const sn = v.snippet || {}, st = v.statistics || {}, cd = v.contentDetails || {}, ss = v.status || {}, live = v.liveStreamingDetails || null;
+    const th = sn.thumbnails || {};
+    const best = th.maxres || th.standard || th.high || th.medium || th.default || {};
+    return {
+      id: v.id,
+      url: "https://www.youtube.com/watch?v=" + v.id,
+      title: sn.title || "",
+      description: (sn.description || "").slice(0, 5000),
+      tags: sn.tags || [],
+      categoryId: sn.categoryId || "",
+      defaultLanguage: sn.defaultLanguage || "",
+      defaultAudioLanguage: sn.defaultAudioLanguage || "",
+      channelId: sn.channelId, channelTitle: sn.channelTitle,
+      publishedAt: sn.publishedAt,
+      views: n(st.viewCount), likes: st.likeCount == null ? null : n(st.likeCount), comments: st.commentCount == null ? null : n(st.commentCount),
+      seconds: isoDurationToSeconds(cd.duration),
+      definition: cd.definition || "", captions: cd.caption === "true", licensed: !!cd.licensedContent, dimension: cd.dimension || "",
+      madeForKids: !!ss.madeForKids, embeddable: ss.embeddable !== false, privacy: ss.privacyStatus || "", license: ss.license || "",
+      thumbnail: best.url || "", thumbWidth: best.width || 0, thumbHeight: best.height || 0, hasMaxres: !!th.maxres,
+      topics: (v.topicDetails?.topicCategories || []).map((u) => decodeURIComponent(u.split("/").pop()).replace(/_/g, " ")),
+      liveStart: live ? live.actualStartTime || live.scheduledStartTime || null : null,
+      liveEnd: live ? live.actualEndTime || null : null,
+    };
+  });
+}
+
+/* ------------------------------------------------------------------ playlist length
+   playlists.list (1 unit) + playlistItems.list (1 unit per 50) + videos.list (1 unit per 50).
+   Capped at 500 videos, so a lookup costs at most 21 units and never uses search. */
+const PLAYLIST_CAP = 500;
+function parsePlaylistId(raw) {
+  const s = String(raw || "").trim();
+  if (/^(PL|UU|LL|FL|OL|RD|UL|PU)[\w-]{10,}$/.test(s)) return s;
+  try {
+    const u = new URL(s.includes("://") ? s : "https://" + s);
+    const list = u.searchParams.get("list");
+    if (list && /^[\w-]{12,}$/.test(list)) return list;
+  } catch (_) { /* not a url */ }
+  return null;
+}
+async function getPlaylist(input) {
+  const id = parsePlaylistId(input);
+  if (!id) throw Object.assign(new Error("Paste a playlist link (it contains list=...) or a playlist ID starting with PL."), { code: "input", status: 400 });
+  if (/^(RD|UL)/.test(id)) throw Object.assign(new Error("Mixes and auto-generated playlists change for every viewer, so they cannot be measured. Use a saved playlist."), { code: "input", status: 400 });
+  return cached("playlist:" + id, async () => {
+    const meta = await yt("playlists", { part: "snippet,contentDetails", id });
+    const pl = meta.items && meta.items[0];
+    if (!pl) throw Object.assign(new Error("Playlist not found. It may be private, or the link is incomplete."), { code: "not_found", status: 404 });
+    const ids = [];
+    let pageToken = "";
+    do {
+      const page = await yt("playlistItems", { part: "contentDetails", playlistId: id, maxResults: 50, pageToken });
+      for (const it of page.items || []) if (it.contentDetails?.videoId) ids.push(it.contentDetails.videoId);
+      pageToken = page.nextPageToken || "";
+    } while (pageToken && ids.length < PLAYLIST_CAP);
+    const take = ids.slice(0, PLAYLIST_CAP);
+    const videos = [];
+    for (let i = 0; i < take.length; i += 50) {
+      const d = await yt("videos", { part: "snippet,contentDetails", id: take.slice(i, i + 50).join(",") });
+      const byId = new Map((d.items || []).map((v) => [v.id, v]));
+      for (const vid of take.slice(i, i + 50)) {
+        const v = byId.get(vid);
+        if (v) videos.push({ id: vid, title: v.snippet?.title || "", seconds: isoDurationToSeconds(v.contentDetails?.duration), live: v.snippet?.liveBroadcastContent === "live" || v.snippet?.liveBroadcastContent === "upcoming" });
+      }
+    }
+    return {
+      id, url: "https://www.youtube.com/playlist?list=" + id,
+      title: pl.snippet?.title || "", channelTitle: pl.snippet?.channelTitle || "",
+      itemCount: n(pl.contentDetails?.itemCount), checked: take.length, truncated: ids.length >= PLAYLIST_CAP && !!pageToken,
+      unavailable: take.length - videos.length,
+      videos,
+    };
+  });
+}
+
+/* ------------------------------------------------------------------ watch hours estimate
+   The same estimate the monetization checker uses, without the slower ad probes. */
+async function watchHours(input) {
+  const ch = await getChannel(input);
+  let measured = null;
+  if (typeof settings.measuredViews === "function") {
+    try { measured = await settings.measuredViews(ch.id); } catch (_) { measured = null; }
+  }
+  return { channel: ch, watch: watchEstimate(ch, measured) };
+}
+
 // Same shape as the other tools' libs: returns { code, body } for the HTTP layer.
 async function handleRequest(action, params = {}) {
   if (!settings.apiKey) return { code: 503, body: errorBody({ code: "no_key" }) };
@@ -622,6 +720,9 @@ async function handleRequest(action, params = {}) {
       if (!list.length) throw Object.assign(new Error("Video not found or is private."), { code: "not_found", status: 404 });
       return { code: 200, body: { ok: true, video: list[0] } };
     }
+    if (action === "videodetails") return { code: 200, body: { ok: true, video: await getVideoDetails(params.video) } };
+    if (action === "playlist") return { code: 200, body: { ok: true, playlist: await getPlaylist(params.playlist) } };
+    if (action === "watchhours") return { code: 200, body: { ok: true, ...(await watchHours(params.channel)) } };
     if (action === "comments") return { code: 200, body: { ok: true, ...(await getComments(params.video, { max: params.max, order: params.order })) } };
     if (action === "audit") return { code: 200, body: { ok: true, ...(await getChannelComments(params.channel, { videos: params.videos, per: params.per, order: params.order })) } };
     if (action === "trending") return { code: 200, body: { ok: true, ...(await getTrending(params.country, { category: params.category })) } };
@@ -633,4 +734,4 @@ async function handleRequest(action, params = {}) {
   }
 }
 
-module.exports = { configure, handleRequest, parseChannelInput, parseVideoId, getChannel, getComments, getChannelComments, getTrending, statsForIds, errorBody, yt, statsForIds, n, isoDurationToSeconds, cached, monetizationCheck, probeAds, watchEstimate };
+module.exports = { getVideoDetails, getPlaylist, parsePlaylistId, watchHours, configure, handleRequest, parseChannelInput, parseVideoId, getChannel, getComments, getChannelComments, getTrending, statsForIds, errorBody, yt, statsForIds, n, isoDurationToSeconds, cached, monetizationCheck, probeAds, watchEstimate };

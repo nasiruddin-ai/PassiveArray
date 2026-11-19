@@ -2445,6 +2445,270 @@
     };
   };
 
+  /* ---------------------------------------------- tools added 19 Nov 2026 */
+  // Copy-table used by the link generators: [label, value] rows with a Copy button each.
+  function copyTable(rows) {
+    return {
+      table: {
+        head: ["Format", "Copy this", ""],
+        rows: rows.map(function (r, i) {
+          return [{ html: "<b>" + esc(r[0]) + "</b>" }, { html: "<code style=\"word-break:break-all;white-space:pre-wrap\">" + esc(r[1]) + "</code>" }, { html: "<button type=\"button\" class=\"btn ghost\" data-copy=\"" + i + "\">Copy</button>" }];
+        }),
+      },
+      after: function (root) {
+        Array.prototype.forEach.call(root.querySelectorAll("[data-copy]"), function (b) {
+          b.addEventListener("click", function () {
+            var text = rows[+b.getAttribute("data-copy")][1];
+            var done = function (m) { b.textContent = m; setTimeout(function () { b.textContent = "Copy"; }, 1500); };
+            if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(text).then(function () { done("Copied"); }, function () { done("Select and copy"); });
+            else done("Select and copy");
+          });
+        });
+      },
+    };
+  }
+  function hms(sec) {
+    sec = Math.round(sec || 0);
+    var h = Math.floor(sec / 3600), m = Math.floor((sec % 3600) / 60), s = sec % 60;
+    return (h ? h + "h " : "") + (h || m ? m + "m " : "") + s + "s";
+  }
+  // Chapters: lines that start with a timestamp. YouTube Help: the first must be 0:00, at least
+  // three, each at least 10 seconds long, listed in ascending order.
+  function chaptersFrom(desc) {
+    var stamps = [];
+    String(desc || "").split(/\n/).forEach(function (line) {
+      var m = /^\s*[\(\[]?((?:\d{1,2}:)?\d{1,2}:\d{2})[\)\]]?\s*[-–—:|]?\s*\S/.exec(line);
+      if (m) { var p = m[1].split(":").map(Number); stamps.push(p.length === 3 ? p[0] * 3600 + p[1] * 60 + p[2] : p[0] * 60 + p[1]); }
+    });
+    var ok = stamps.length >= 3 && stamps[0] === 0;
+    for (var i = 1; ok && i < stamps.length; i++) if (stamps[i] - stamps[i - 1] < 10) ok = false;
+    return { count: stamps.length, valid: ok, firstZero: stamps[0] === 0 };
+  }
+
+  COMPUTE["youtube-video-seo-checker"] = function (v, d) {
+    var vd = d.video;
+    var kw = String(v.keyword || "").trim().toLowerCase();
+    var title = vd.title || "", desc = vd.description || "", tags = vd.tags || [];
+    var t = analyzeTitle(title, kw);
+    var checks = [];
+    var add = function (label, score, weight, text) { checks.push({ label: label, value: score, weight: weight, text: text }); };
+    add("Title", t.score, 25, t.score + "/100 on the title analyzer" + (title.length > 100 ? ", and over YouTube's 100-character limit" : ""));
+    var dl = desc.length;
+    add("Description length", dl === 0 ? 0 : dl < 200 ? 30 : dl < 1000 ? 70 : 100, 15, dl ? fmt(dl) + " of 5,000 characters" : "No description");
+    if (kw) {
+      var top = desc.slice(0, 160).toLowerCase();
+      add("Keyword in description", top.indexOf(kw) >= 0 ? 100 : desc.toLowerCase().indexOf(kw) >= 0 ? 60 : 0, 10, top.indexOf(kw) >= 0 ? "In the first two lines, which show above \"...more\"" : desc.toLowerCase().indexOf(kw) >= 0 ? "In the description, but below the first two lines" : "Not in the description");
+      var inTags = tags.some(function (x) { return x.toLowerCase().indexOf(kw) >= 0; });
+      add("Keyword in tags", inTags ? 100 : 0, 5, inTags ? "Yes" : "Not in any tag");
+    }
+    var ch = chaptersFrom(desc);
+    add("Chapters", ch.valid ? 100 : ch.count ? 40 : 0, 10, ch.valid ? ch.count + " chapters, starting at 0:00" : ch.count ? ch.count + " timestamps, but " + (ch.firstZero ? "fewer than 3 or under 10 seconds apart" : "the first is not 0:00") + ", so YouTube will not show chapters" : (vd.seconds <= 180 ? "None (fine for a short video)" : "None"));
+    var hashtags = ((title + " " + desc).match(/(^|\s)#[\wÀ-￿]+/g) || []).length;
+    add("Hashtags", hashtags > 60 ? 0 : hashtags === 0 ? 40 : hashtags <= 15 ? 100 : 70, 5, hashtags > 60 ? hashtags + ": over 60, so YouTube ignores all of them" : hashtags ? hashtags + " hashtag" + (hashtags === 1 ? "" : "s") + "; the first three can show above the title" : "None");
+    var tagChars = tags.join(",").length;
+    add("Tags", tags.length ? (tagChars <= 500 ? 100 : 60) : 30, 5, tags.length ? tags.length + " tags, " + tagChars + " of 500 characters" : "No tags. They matter little, but cost nothing");
+    add("Uploaded captions", vd.captions ? 100 : 30, 10, vd.captions ? "Yes" : "None uploaded (automatic captions do not count here)");
+    add("Language set", vd.defaultLanguage || vd.defaultAudioLanguage ? 100 : 40, 5, vd.defaultLanguage || vd.defaultAudioLanguage ? "Yes (" + esc(vd.defaultLanguage || vd.defaultAudioLanguage) + ")" : "Not set in the video details");
+    var links = (desc.match(/https?:\/\/\S+/g) || []).length;
+    var wsum = 0, ssum = 0;
+    checks.forEach(function (c) { wsum += c.weight; ssum += c.weight * c.value; });
+    var score = Math.round(ssum / wsum);
+    var g = score >= 80 ? { label: "Strong", cls: "good" } : score >= 60 ? { label: "Good", cls: "good" } : score >= 40 ? { label: "Needs work", cls: "warn" } : { label: "Weak", cls: "bad" };
+    var tips = [];
+    var FIX = {
+      "Title": "Rework it with the title analyzer before changing anything else.",
+      "Description length": "Write a fuller description: what the video covers, who it is for, and the key terms viewers search.",
+      "Keyword in description": "Put the keyword in the first two lines, the part shown above \"...more\".",
+      "Keyword in tags": "Add the keyword as a tag. Tags matter little, but this one costs nothing.",
+      "Chapters": "Add timestamps to the description, starting at 0:00, at least three, each 10 seconds or longer.",
+      "Hashtags": "Use a few relevant hashtags, never more than 60.",
+      "Tags": "Add a handful of tags, mainly common misspellings of the topic.",
+      "Uploaded captions": "Upload or correct captions in YouTube Studio under Subtitles.",
+      "Language set": "Set the video language in YouTube Studio under the video's details.",
+    };
+    checks.forEach(function (c) { if (c.value < 70) tips.push(c.label + " (" + c.text + "): " + (FIX[c.label] || "")); });
+    t.tips.slice(0, 3).forEach(function (x) { tips.push("Title: " + x); });
+    return {
+      hero: { label: "Video SEO score", value: score + " / 100 " + pill(g), note: esc(title) + "<br><small>" + esc(vd.channelTitle || "") + " · " + fmt(vd.views) + " views</small>" },
+      bars: checks.map(function (c) { return { label: c.label, value: c.value, text: c.text }; }),
+      rows: [
+        { name: "Title length", sub: "60 shows in search, 100 is the limit", value: title.length },
+        { name: "Description", value: fmt(dl) + " chars" },
+        { name: "Links in description", value: links },
+        { name: "Length", value: esc(hms(vd.seconds)) },
+        { name: "Published", value: dateStr(vd.publishedAt) },
+        { name: "Views", value: fmt(vd.views) },
+      ],
+      list: tips.length ? tips.map(esc) : ["Every check passes. The next gains come from the thumbnail and from keeping viewers watching, which no metadata check can see."],
+      note: "Read live from the YouTube Data API. The score is Passive Array's checklist, not a YouTube ranking number: YouTube ranks on relevance, engagement and quality, and metadata is only the relevance part.",
+    };
+  };
+
+  COMPUTE["youtube-channel-keywords-finder"] = function (v, d) {
+    var ch = d.channel;
+    var kws = ch.keywordsAll || ch.keywords || [];
+    var joined = kws.join(", ");
+    return {
+      profile: ytProfile(ch),
+      hero: {
+        label: "Channel keywords",
+        value: kws.length ? kws.length + " keywords" : "None set",
+        note: kws.length ? "Set by the owner in YouTube Studio. Viewers do not see these on the channel page." : "This channel has not filled in channel keywords. One setting you can use and they did not.",
+      },
+      tags: kws.length ? kws.map(function (k) { return { tag: k }; }) : undefined,
+      copy: kws.length ? joined : undefined,
+      rows: [
+        { name: "Topics YouTube assigns", value: ch.topics && ch.topics.length ? esc(ch.topics.join(", ")) : "None listed" },
+        { name: "Subscribers", value: ch.hiddenSubscribers ? "Hidden" : fmt(ch.subscribers) },
+        { name: "Videos", value: fmt(ch.videos) },
+        { name: "Country", value: esc(ch.country || "Not listed") },
+      ],
+      table: kws.length ? { head: ["#", "Keyword", "Characters"], rows: kws.map(function (k, i) { return [String(i + 1), esc(k), String(k.length)]; }) } : null,
+      note: "Read live from the channel's public settings in the YouTube Data API. Use them to understand how a competitor describes itself, not to copy brand names that are not yours.",
+    };
+  };
+
+  COMPUTE["youtube-playlist-length-calculator"] = function (v, d) {
+    var pl = d.playlist, vids = pl.videos || [];
+    var total = vids.reduce(function (a, x) { return a + (x.seconds || 0); }, 0);
+    if (!vids.length) return { error: "No playable videos found in this playlist. They may all be private or deleted." };
+    var longest = vids.reduce(function (a, x) { return x.seconds > a.seconds ? x : a; }, vids[0]);
+    var shortest = vids.reduce(function (a, x) { return x.seconds < a.seconds ? x : a; }, vids[0]);
+    var speeds = [1.25, 1.5, 1.75, 2];
+    return {
+      hero: { label: "Total length", value: esc(hms(total)), note: esc(pl.title) + (pl.channelTitle ? " · " + esc(pl.channelTitle) : "") + "<br><small>" + vids.length + " video" + (vids.length === 1 ? "" : "s") + " counted" + (pl.unavailable ? ", " + pl.unavailable + " unavailable" : "") + (pl.truncated ? " (first 500 only)" : "") + "</small>" },
+      rows: speeds.map(function (s) { return { name: "At " + s + "x speed", value: esc(hms(total / s)) }; }).concat([
+        { name: "Average video", value: esc(hms(total / vids.length)) },
+        { name: "Longest video", sub: longest.title, value: esc(hms(longest.seconds)) },
+        { name: "Shortest video", sub: shortest.title, value: esc(hms(shortest.seconds)) },
+        { name: "Videos in playlist", sub: "as YouTube counts them", value: fmt(pl.itemCount) },
+      ]),
+      table: {
+        head: ["#", "Video", "Length", "Running total"],
+        rows: (function () { var run = 0; return vids.map(function (x, i) { run += x.seconds || 0; return [String(i + 1), "<a href=\"https://www.youtube.com/watch?v=" + esc(x.id) + "\" target=\"_blank\" rel=\"noopener\">" + esc(x.title) + "</a>", esc(hms(x.seconds)), esc(hms(run))]; }); })(),
+      },
+      note: (pl.unavailable ? pl.unavailable + " video" + (pl.unavailable === 1 ? " is" : "s are") + " private, deleted or blocked, so " + (pl.unavailable === 1 ? "it is" : "they are") + " not in the total. " : "") + "Live streams that are still running have no fixed length and count as 0. Lengths read live from the YouTube Data API.",
+    };
+  };
+
+  COMPUTE["youtube-video-stats-checker"] = function (v, d) {
+    var vd = d.video;
+    var pub = new Date(vd.publishedAt);
+    var tz = (Intl.DateTimeFormat().resolvedOptions().timeZone) || "your time zone";
+    var local = pub.toLocaleString("en-GB", { weekday: "long", day: "numeric", month: "long", year: "numeric", hour: "2-digit", minute: "2-digit", second: "2-digit" });
+    var utc = pub.toLocaleString("en-GB", { timeZone: "UTC", day: "numeric", month: "long", year: "numeric", hour: "2-digit", minute: "2-digit", second: "2-digit" }) + " UTC";
+    var days = Math.max(1 / 24, (Date.now() - pub.getTime()) / 86400000);
+    var ageText = days < 1 ? Math.round(days * 24) + " hours" : days < 60 ? Math.round(days) + " days" : days < 730 ? Math.round(days / 30.44) + " months" : (days / 365.25).toFixed(1) + " years";
+    var rows = [
+      { name: "Published (UTC)", value: esc(utc) },
+      { name: "Age", value: esc(ageText) },
+      { name: "Views", value: fmt(vd.views) },
+      { name: "Views per day", sub: "views / age in days", value: fmt(vd.views / days) },
+      { name: "Likes", value: vd.likes == null ? "Hidden" : fmt(vd.likes) },
+      { name: "Like rate", sub: "likes / views", value: vd.likes == null ? "n/a" : pct(safeDiv(vd.likes, vd.views) * 100, 2) },
+      { name: "Comments", value: vd.comments == null ? "Turned off" : fmt(vd.comments) },
+      { name: "Length", value: esc(hms(vd.seconds)) + (vd.seconds > 0 && vd.seconds <= 180 ? " <small>(may be a Short)</small>" : "") },
+      { name: "Quality", value: vd.definition === "hd" ? "HD" : "SD" },
+      { name: "Uploaded captions", value: vd.captions ? "Yes" : "No" },
+      { name: "Made for kids", value: vd.madeForKids ? "Yes" : "No" },
+      { name: "Embedding allowed", value: vd.embeddable ? "Yes" : "No" },
+    ];
+    if (vd.liveStart) rows.splice(2, 0, { name: "Live stream started", value: esc(new Date(vd.liveStart).toLocaleString("en-GB", { day: "numeric", month: "long", year: "numeric", hour: "2-digit", minute: "2-digit" })) });
+    return {
+      hero: { label: "Published", value: esc(local), note: "In your time zone (" + esc(tz) + ")<br><small>" + esc(vd.title) + " · " + esc(vd.channelTitle || "") + "</small>" },
+      rows: rows,
+      note: "Read live from the YouTube Data API. For a scheduled or premiered video, the publish time is when it went public, not when the file was uploaded.",
+    };
+  };
+
+  COMPUTE["youtube-watch-hours-calculator"] = function (v, d) {
+    var ch = d.channel, w = d.watch;
+    if (!w) return { profile: ytProfile(ch), error: "This channel has no recent long videos to estimate from. Shorts views do not count toward watch hours." };
+    var mid = (w.lowHours + w.highHours) / 2;
+    var pctOf = function (goal) { return Math.min(100, Math.round((mid / goal) * 100)); };
+    var status = w.lowHours >= 4000 ? { label: "Above 4,000", cls: "good" } : w.highHours < 3000 ? { label: "Below 3,000", cls: "bad" } : { label: "Near the line", cls: "warn" };
+    return {
+      profile: ytProfile(ch),
+      hero: {
+        label: "Estimated public watch hours a year",
+        value: (w.lowHours >= 40000 ? "Well over 40,000" : fmt(w.lowHours) + " to " + fmt(w.highHours)) + " " + pill(status),
+        note: (w.basis === "measured" ? "From " + w.days + " days of measured channel views" : "From views on recent uploads, plus an allowance for older videos") + ", with " + w.medianMinutes + "-minute videos watched 30 to 50 percent through.",
+      },
+      bars: [
+        { label: "Toward 4,000 hours (ads and full Partner Program)", value: pctOf(4000), text: pctOf(4000) + "%" },
+        { label: "Toward 3,000 hours (fan funding and Shopping tier)", value: pctOf(3000), text: pctOf(3000) + "%" },
+      ],
+      rows: [
+        { name: "Subscribers", sub: "1,000 needed with the 4,000 hours; 500 for the lower tier", value: ch.hiddenSubscribers ? "Hidden" : fmt(ch.subscribers) },
+        { name: "Typical long video", value: w.medianMinutes + " min" },
+        { name: "Shorts route", sub: "10M public Shorts views in 90 days instead", value: w.shortsRouteLikely ? "Possible" : "Not likely yet" },
+        { name: "Estimate based on", value: w.basis === "measured" ? "Measured daily views" : "Recent uploads" },
+      ],
+      note: "Watch hours are private: only the channel owner sees the real number, in YouTube Studio under Earn. This is an estimate from public data and can be well off for channels with very long or very short watch sessions. Thresholds from YouTube Help; new applicants need more from 1 February 2027.",
+    };
+  };
+
+  COMPUTE["youtube-subscribe-link-generator"] = function (v) {
+    var raw = String(v.channel || "").trim();
+    if (!raw) return { error: "Paste your channel link or @handle." };
+    var path = null;
+    if (/^@[\w.\-]{2,}$/.test(raw)) path = "/" + raw;
+    else if (/^UC[\w-]{22}$/.test(raw)) path = "/channel/" + raw;
+    else {
+      try {
+        var u = new URL(/:\/\//.test(raw) ? raw : "https://" + raw);
+        if (!/(^|\.)youtube\.com$/.test(u.hostname.replace(/^www\.|^m\./, ""))) throw 0;
+        var parts = u.pathname.split("/").filter(Boolean);
+        if (parts[0] && parts[0][0] === "@") path = "/" + parts[0];
+        else if (["channel", "c", "user"].indexOf(parts[0]) >= 0 && parts[1]) path = "/" + parts[0] + "/" + parts[1];
+      } catch (_) { path = null; }
+    }
+    if (!path) return { error: "Use your @handle (like @yourchannel) or a channel link. A video link will not work here." };
+    var link = "https://www.youtube.com" + path + "?sub_confirmation=1";
+    var rows = [
+      ["Subscribe link", link],
+      ["HTML link", "<a href=\"" + link + "\" target=\"_blank\" rel=\"noopener\">Subscribe on YouTube</a>"],
+      ["HTML button", "<a href=\"" + link + "\" target=\"_blank\" rel=\"noopener\" style=\"display:inline-block;padding:10px 18px;border-radius:6px;background:#CC0000;color:#fff;font:600 15px/1 Arial,sans-serif;text-decoration:none\">Subscribe on YouTube</a>"],
+      ["Markdown", "[Subscribe on YouTube](" + link + ")"],
+      ["Text for a description", "Subscribe: " + link],
+    ];
+    var out = copyTable(rows);
+    out.hero = { label: "Your subscribe link", value: "<code style=\"word-break:break-all\">" + esc(link) + "</code>", note: "<a href=\"" + esc(link) + "\" target=\"_blank\" rel=\"noopener\">Test it</a>. Signed-in viewers see the subscribe confirmation as soon as the channel opens." };
+    out.note = "The ?sub_confirmation=1 ending is what makes YouTube show the prompt. It works on any channel address: @handle, /channel/UC..., /c/ or /user/.";
+    return out;
+  };
+
+  COMPUTE["youtube-embed-code-generator"] = function (v) {
+    var id = videoIdFrom(v.video);
+    if (!id) return { error: "That does not look like a YouTube link or video ID. Paste a watch link, a youtu.be link, or the 11-character ID." };
+    var start = v.start ? secondsFrom(v.start) : null, end = v.end ? secondsFrom(v.end) : null;
+    if (v.start && start == null) return { error: "Write the start time as 90, 1:30 or 1:02:15." };
+    if (v.end && end == null) return { error: "Write the stop time as 90, 1:30 or 1:02:15." };
+    if (start != null && end != null && end <= start) return { error: "The stop time has to be after the start time." };
+    var p = [];
+    if (start) p.push("start=" + start);
+    if (end) p.push("end=" + end);
+    if (v.autoplay === "yes") p.push("autoplay=1");
+    if (v.mute === "yes") p.push("mute=1");
+    if (v.loop === "yes") p.push("loop=1", "playlist=" + id);
+    if (v.captions === "yes") p.push("cc_load_policy=1");
+    if (v.controls === "no") p.push("controls=0");
+    var host = v.privacy === "no" ? "https://www.youtube.com" : "https://www.youtube-nocookie.com";
+    var src = host + "/embed/" + id + (p.length ? "?" + p.join("&") : "");
+    var allow = "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share";
+    var iframeAttrs = "src=\"" + src + "\" title=\"YouTube video player\" frameborder=\"0\" allow=\"" + allow + "\" referrerpolicy=\"strict-origin-when-cross-origin\" allowfullscreen";
+    var sizes = { "560": [560, 315], "640": [640, 360], "853": [853, 480], "1280": [1280, 720] };
+    var code = v.width === "responsive" || !sizes[v.width]
+      ? "<div style=\"position:relative;width:100%;aspect-ratio:16/9\">\n  <iframe style=\"position:absolute;inset:0;width:100%;height:100%\" " + iframeAttrs + "></iframe>\n</div>"
+      : "<iframe width=\"" + sizes[v.width][0] + "\" height=\"" + sizes[v.width][1] + "\" " + iframeAttrs + "></iframe>";
+    var rows = [["Embed code", code], ["Player URL", src], ["Watch link", "https://www.youtube.com/watch?v=" + id + (start ? "&t=" + start + "s" : "")]];
+    var out = copyTable(rows);
+    out.hero = { label: "Embed code ready", value: esc(v.width === "responsive" ? "Responsive, 16:9" : sizes[v.width][0] + " x " + sizes[v.width][1]), note: (v.autoplay === "yes" && v.mute !== "yes" ? "Autoplay with sound is blocked by most browsers. Turn on Start muted for autoplay to work. " : "") + "Preview below plays exactly what the code will show." };
+    out.blocks = ["<div class=\"card\"><div style=\"position:relative;width:100%;max-width:640px;aspect-ratio:16/9\"><iframe style=\"position:absolute;inset:0;width:100%;height:100%;border:0\" src=\"" + esc(src) + "\" title=\"Preview\" allow=\"" + allow + "\" allowfullscreen></iframe></div></div>"];
+    out.note = "Parameters are YouTube's documented embedded-player options. Some videos have embedding turned off by their owner; those show an error in the preview.";
+    return out;
+  };
+
   /* ---------------------------------------------- most subscribed channels */
   COMPUTE["youtube-most-subscribed-channels"] = function (v, d) {
     var list = (d.channels || []).slice();
