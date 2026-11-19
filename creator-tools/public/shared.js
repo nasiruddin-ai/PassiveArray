@@ -2709,6 +2709,321 @@
     return out;
   };
 
+  /* ------------------------------------------ calculators added 19 Nov 2026 */
+  // Number fields left empty read as null so a mode can tell "missing" from zero.
+  function given(x) { var s = String(x == null ? "" : x).trim(); return s === "" ? null : num(s); }
+  // Money with cents always shown below $100, so $3.50 never reads as $3.5.
+  function cash(n) { return !isFinite(n) ? "n/a" : n >= 100 ? money(n) : "$" + Number(n).toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 }); }
+  function money4(n) { return !isFinite(n) ? "n/a" : n > 0 && n < 0.01 ? "$" + fmt(n, 4) : cash(n); }
+
+  COMPUTE["youtube-cpm-calculator"] = function (v) {
+    var cost = given(v.cost), imp = given(v.impressions), cpm = given(v.cpm), pb = given(v.playbacks);
+    var mode = v.mode || "cpm";
+    if (mode === "cpm") {
+      if (cost == null || !imp) return { error: "Enter the ad cost and the number of ad impressions." };
+      cpm = cost / imp * 1000;
+    } else if (mode === "cost") {
+      if (cpm == null || imp == null) return { error: "Enter the CPM and the number of ad impressions." };
+      cost = cpm * imp / 1000;
+    } else {
+      if (cost == null || !cpm) return { error: "Enter the budget and the CPM." };
+      imp = cost / cpm * 1000;
+    }
+    var heroes = { cpm: ["CPM", cash(cpm), "per 1,000 ad impressions"], cost: ["Ad cost", cash(cost), fmt(imp) + " impressions at " + cash(cpm) + " CPM"], impressions: ["Impressions", fmt(Math.floor(imp)), cash(cost) + " at " + cash(cpm) + " CPM"] };
+    var h = heroes[mode];
+    var rows = [
+      { name: "CPM", sub: "cost per 1,000 ad impressions", value: cash(cpm) },
+      { name: "Ad cost", value: cash(cost) },
+      { name: "Ad impressions", value: fmt(Math.floor(imp)) },
+      { name: "Cost per impression", value: imp ? money4(cost / imp) : "n/a" },
+    ];
+    if (pb && mode === "cpm") {
+      rows.push({ name: "Playback-based CPM", sub: "cost per 1,000 views that showed an ad", value: cash(cost / pb * 1000) });
+      if (pb <= imp) rows.push({ name: "Ads per monetized playback", value: fmt(imp / pb, 2) });
+    }
+    rows.push({ name: "Creator's share, long-form", sub: "55% of the ad cost, an upper estimate", value: cash(cost * 0.55) });
+    return {
+      hero: { label: h[0], value: esc(h[1]), note: esc(h[2]) },
+      rows: rows,
+      table: {
+        head: ["Ad impressions", "Cost at " + cash(cpm) + " CPM", "Creator's 55% share"],
+        rows: [1000, 10000, 100000, 1000000, 10000000].map(function (n) { return [fmt(n), cash(cpm * n / 1000), cash(cpm * n / 1000 * 0.55)]; }),
+      },
+      note: "CPM is what advertisers pay, before YouTube's share. YouTube Help says partners receive 55% of net revenue from ads on their long-form videos (45% of their Creator Pool allocation for Shorts), so the creator column is an upper estimate. What a creator earns per 1,000 views is RPM, which also counts views with no ad. Use the <a href=\"../youtube-rpm-calculator/\">RPM calculator</a> for that.",
+    };
+  };
+
+  COMPUTE["youtube-rpm-calculator"] = function (v) {
+    var rev = given(v.revenue), views = given(v.views), rpm = given(v.rpm);
+    var mode = v.mode || "rpm", hero;
+    if (mode === "rpm") {
+      if (rev == null || !views) return { error: "Enter your revenue and the views in the same period." };
+      rpm = rev / views * 1000;
+      hero = { label: "Your RPM", value: esc(cash(rpm)), note: "per 1,000 views: " + esc(cash(rev)) + " from " + fmt(views) + " views" };
+    } else if (mode === "earnings") {
+      if (rpm == null || views == null) return { error: "Enter your RPM and the number of views." };
+      rev = rpm * views / 1000;
+      hero = { label: "Estimated earnings", value: esc(cash(rev)), note: fmt(views) + " views at " + esc(cash(rpm)) + " RPM" };
+    } else {
+      if (rev == null || !rpm) return { error: "Enter the income you are aiming for and your RPM." };
+      views = rev / rpm * 1000;
+      hero = { label: "Views needed", value: fmt(Math.ceil(views)), note: "to earn " + esc(cash(rev)) + " at " + esc(cash(rpm)) + " RPM" };
+    }
+    var rows = [
+      { name: "RPM", sub: "revenue per 1,000 views", value: cash(rpm) },
+      { name: "Per single view", value: money4(rpm / 1000) },
+    ];
+    if (mode === "views") {
+      rows.push({ name: "If that is a monthly target", sub: "views a day", value: fmt(Math.ceil(views / 30)) });
+      rows.push({ name: "Yearly at that rate", value: cash(rev * 12) });
+    } else {
+      rows.push({ name: "Revenue", value: cash(rev) }, { name: "Views", value: fmt(views) });
+    }
+    return {
+      hero: hero,
+      rows: rows,
+      table: {
+        head: ["Views", "Earnings at " + cash(rpm) + " RPM"],
+        rows: [1000, 10000, 100000, 1000000, 10000000].map(function (n) { return [fmt(n), cash(rpm * n / 1000)]; }),
+      },
+      note: "RPM, as YouTube Help defines it, is your revenue per 1,000 views after YouTube's share. It counts every view, including views with no ad, and revenue from ads, channel memberships, YouTube Premium, Super Chat and Super Stickers. That is why it is lower than CPM. Your RPM moves with niche, audience country, video length and season, so use your own figure from YouTube Studio.",
+    };
+  };
+
+  // Chapters: YouTube Help (answer 9884579): first timestamp 00:00, at least three in ascending
+  // order, each chapter at least 10 seconds long.
+  function stampText(sec, withHours) {
+    var h = Math.floor(sec / 3600), m = Math.floor((sec % 3600) / 60), s = sec % 60;
+    var two = function (k) { return (k < 10 ? "0" : "") + k; };
+    return withHours ? h + ":" + two(m) + ":" + two(s) : two(m) + ":" + two(s);
+  }
+  COMPUTE["youtube-chapters-checker"] = function (v) {
+    var text = String(v.text || "");
+    if (!text.trim()) return { error: "Paste your description or a list of timestamps." };
+    var len = v.length ? secondsFrom(v.length) : null;
+    if (v.length && len == null) return { error: "Write the video length as 12:40 or 1:02:15." };
+    var TIME = "((?:\\d{1,2}:)?\\d{1,2}:\\d{2})";
+    var startRe = new RegExp("^\\s*[\\(\\[]?" + TIME + "[\\)\\]]?\\s*(?:[-–—:|•.]\\s*)?(.*)$");
+    var endRe = new RegExp("^(.*?)\\s*(?:[-–—:|•]\\s*)?[\\(\\[]?" + TIME + "[\\)\\]]?\\s*$");
+    var ch = [];
+    text.split(/\r?\n/).forEach(function (line, i) {
+      if (!line.trim()) return;
+      var m = startRe.exec(line), title, t;
+      if (m) { t = m[1]; title = m[2]; }
+      else if ((m = endRe.exec(line)) && m[1].trim()) { t = m[2]; title = m[1]; }
+      else return;
+      ch.push({ line: i + 1, raw: t, sec: secondsFrom(t), title: String(title || "").trim() });
+    });
+    if (!ch.length) return { error: "No timestamps found. Chapters are lines like \"00:00 Intro\" or \"1:30 Setup\", one per line." };
+
+    var problems = [];
+    var bad = ch.filter(function (c) { return c.sec == null; });
+    if (bad.length) problems.push("Line " + bad.map(function (c) { return c.line; }).join(", ") + ": a seconds or minutes value above 59, so the time is not valid.");
+    var ok = ch.filter(function (c) { return c.sec != null; });
+    if (ok.length && ok[0].sec !== 0) problems.push("The first timestamp is " + esc(ok[0].raw) + ". YouTube Help: the first timestamp you list must start with 00:00.");
+    if (ok.length < 3) problems.push("Only " + ok.length + " timestamp" + (ok.length === 1 ? "" : "s") + ". YouTube needs at least three.");
+    ok.forEach(function (c, i) {
+      var next = ok[i + 1];
+      c.dur = next ? (next.sec > c.sec ? next.sec - c.sec : null) : len != null ? len - c.sec : null;
+      c.issue = "";
+      if (i > 0 && c.sec <= ok[i - 1].sec) { c.issue = "Out of order"; problems.push("Line " + c.line + " (" + esc(c.raw) + ") is not later than the timestamp before it. Timestamps must be in ascending order."); }
+      else if (c.dur != null && c.dur < 10) { c.issue = "Under 10 seconds"; problems.push("The chapter at " + esc(c.raw) + " lasts " + Math.max(c.dur, 0) + " seconds. Every chapter must be at least 10 seconds long."); }
+      if (len != null && c.sec >= len) { c.issue = "Past the end"; problems.push(esc(c.raw) + " is at or after the end of the video (" + esc(v.length) + ")."); }
+      if (!c.title) { c.issue = c.issue || "No title"; problems.push("Line " + c.line + " has a time but no title. Add a short name for the chapter."); }
+    });
+    var valid = !problems.length;
+    var hours = ok.some(function (c) { return c.sec >= 3600; }) || (len != null && len >= 3600);
+    var sorted = ok.slice().sort(function (a, b) { return a.sec - b.sec; });
+    var clean = sorted.map(function (c) { return stampText(c.sec, hours) + " " + (c.title || "Chapter"); });
+    if (clean.length && sorted[0].sec !== 0) clean.unshift(stampText(0, hours) + " Intro");
+    return {
+      hero: {
+        label: valid ? "Chapters will work" : "Chapters will not show",
+        value: valid ? "<span class=\"pill good\">" + ok.length + " chapters</span>" : "<span class=\"pill warn\">" + problems.length + " problem" + (problems.length === 1 ? "" : "s") + "</span>",
+        note: valid ? "Paste this list into the description in YouTube Studio and save." : "Fix the problems listed below. The cleaned list puts the times in order and adds a 00:00 start if one is missing; check the times before you use it.",
+      },
+      table: {
+        head: ["#", "Starts", "Title", "Length", "Check"],
+        rows: ok.map(function (c, i) {
+          return [String(i + 1), { html: "<code>" + esc(c.raw) + "</code>" }, esc(c.title || "(no title)"), c.dur == null ? (ok[i + 1] ? "n/a" : "to the end") : hms(Math.max(c.dur, 0)), c.issue ? { html: "<span class=\"pill warn\">" + esc(c.issue) + "</span>" } : { html: "<span class=\"pill good\">OK</span>" }];
+        }),
+      },
+      list: problems.length ? problems : null,
+      copy: copyBlock(clean),
+      note: "Rules from YouTube Help: the first timestamp starts with 00:00, at least three timestamps in ascending order, and each chapter at least 10 seconds long. " + (len == null ? "Add the video length to check the last chapter too. " : "") + "If chapters are not available on your channel yet, YouTube Help says to apply for access to Advanced features.",
+    };
+  };
+
+  // YouTube Help, recommended upload encoding settings (answer 1722171). Mbps; [low, high].
+  var YT_BITRATE = {
+    sdr: { "8k": [[80, 160], [120, 240]], "2160p": [[35, 45], [53, 68]], "1440p": [[16, 16], [24, 24]], "1080p": [[8, 8], [12, 12]], "720p": [[5, 5], [7.5, 7.5]], "480p": [[2.5, 2.5], [4, 4]], "360p": [[1, 1], [1.5, 1.5]] },
+    hdr: { "8k": [[100, 200], [150, 300]], "2160p": [[44, 56], [66, 85]], "1440p": [[20, 20], [30, 30]], "1080p": [[10, 10], [15, 15]], "720p": [[6.5, 6.5], [9.5, 9.5]], "480p": null, "360p": null },
+  };
+  var RES_LABEL = { "8k": "8K", "2160p": "2160p (4K)", "1440p": "1440p (2K)", "1080p": "1080p", "720p": "720p", "480p": "480p", "360p": "360p" };
+  function mbpsText(r) { return r[0] === r[1] ? fmt(r[0], 1) + " Mbps" : fmt(r[0], 1) + " to " + fmt(r[1], 1) + " Mbps"; }
+  function sizeText(bytes) {
+    if (!isFinite(bytes)) return "n/a";
+    return bytes >= 1e9 ? fmt(bytes / 1e9, 2) + " GB" : fmt(bytes / 1e6, bytes >= 1e8 ? 0 : 1) + " MB";
+  }
+
+  COMPUTE["video-bitrate-calculator"] = function (v) {
+    var hi = v.fps === "high" ? 1 : 0, isHdr = v.range === "hdr", tbl = YT_BITRATE[isHdr ? "hdr" : "sdr"];
+    var rec = tbl[v.res] ? tbl[v.res][hi] : null;
+    var label = RES_LABEL[v.res] + " " + (hi ? "at 48 to 60 fps" : "at 24 to 30 fps") + ", " + (isHdr ? "HDR" : "SDR");
+    var size = given(v.size), dur = v.duration ? secondsFrom(v.duration) : null;
+    if (v.duration && dur == null) return { error: "Write the length as 10:30 or 1:02:15." };
+    var out = {
+      hero: rec ? { label: "YouTube's recommended bitrate", value: esc(mbpsText(rec)), note: esc(label) + ", from YouTube Help" } : { label: "Not supported", value: "HDR at " + esc(v.res), note: "YouTube Help lists HDR uploads at 480p and 360p as not supported. Use 720p or higher for HDR." },
+      rows: [],
+    };
+    if (rec) {
+      out.rows.push({ name: "Recommended video bitrate", sub: label, value: mbpsText(rec) });
+      out.rows.push({ name: "File size per minute", sub: "video only, at that bitrate", value: rec[0] === rec[1] ? sizeText(rec[0] * 1e6 * 60 / 8) : sizeText(rec[0] * 1e6 * 60 / 8) + " to " + sizeText(rec[1] * 1e6 * 60 / 8) });
+      out.rows.push({ name: "Recommended audio bitrate", sub: "stereo, YouTube Help", value: "384 kbps" });
+    }
+    if (size != null || dur != null) {
+      if (!size || !dur) return { error: "To check a file, enter both its size and its length." };
+      var bytes = size * (v.unit === "MB" ? 1e6 : 1e9);
+      var mbps = bytes * 8 / dur / 1e6;
+      out.hero = { label: "Your file's average bitrate", value: esc(fmt(mbps, 1) + " Mbps"), note: esc(fmt(size, 2) + " " + v.unit) + " over " + esc(hms(dur)) + (rec ? ". YouTube recommends " + esc(mbpsText(rec)) + " for " + esc(label) + "." : "") };
+      out.rows.unshift({ name: "Your file's average bitrate", sub: "video and audio together", value: fmt(mbps, 1) + " Mbps" });
+      if (rec) {
+        var verdict = mbps < rec[0] ? fmt((1 - mbps / rec[0]) * 100) + "% below it" : mbps > rec[1] ? fmt((mbps / rec[1] - 1) * 100) + "% above it" : rec[0] === rec[1] ? "Matches it" : "Within the range";
+        out.rows.splice(1, 0, { name: "Compared with YouTube's recommendation", value: verdict });
+      }
+    }
+    var keys = ["8k", "2160p", "1440p", "1080p", "720p", "480p", "360p"];
+    out.table = {
+      head: ["Resolution", "SDR, 24-30 fps", "SDR, 48-60 fps", "HDR, 24-30 fps", "HDR, 48-60 fps"],
+      rows: keys.map(function (k) {
+        var cell = function (r) { return r ? mbpsText(r) : "Not supported"; };
+        var row = [RES_LABEL[k], cell(YT_BITRATE.sdr[k][0]), cell(YT_BITRATE.sdr[k][1]), cell(YT_BITRATE.hdr[k] && YT_BITRATE.hdr[k][0]), cell(YT_BITRATE.hdr[k] && YT_BITRATE.hdr[k][1])];
+        return k === v.res ? row.map(function (c) { return { html: "<b>" + esc(c) + "</b>" }; }) : row;
+      }),
+    };
+    out.note = "Bitrates are YouTube Help's recommendations for uploads, from its recommended upload encoding settings, which also name an MP4 container and recommend uploading in the frame rate you recorded in.";
+    return out;
+  };
+
+  COMPUTE["video-file-size-calculator"] = function (v) {
+    var vbr = given(v.vbr), abr = num(v.abr), dur = secondsFrom(v.duration);
+    if (vbr == null) return { error: "Enter the video bitrate in Mbps." };
+    if (dur == null || dur <= 0) return { error: "Write the length as 10:00 or 1:02:15." };
+    var bps = vbr * 1e6 + abr * 1e3, bytes = bps * dur / 8;
+    var overSize = bytes > 256e9, overTime = dur > 12 * 3600;
+    var rows = [
+      { name: "File size", value: sizeText(bytes) },
+      { name: "As Windows shows it", sub: "binary units", value: bytes >= Math.pow(2, 30) ? fmt(bytes / Math.pow(2, 30), 2) + " GB" : fmt(bytes / Math.pow(2, 20), 1) + " MB" },
+      { name: "Per minute", value: sizeText(bps * 60 / 8) },
+      { name: "Per hour", value: sizeText(bps * 3600 / 8) },
+      { name: "Total bitrate", sub: "video plus audio", value: fmt(bps / 1e6, 2) + " Mbps" },
+      { name: "Fits YouTube's upload limit", sub: "256 GB or 12 hours", value: overTime ? "No, longer than 12 hours" : overSize ? "No, over 256 GB" : "Yes" },
+    ];
+    if (dur > 15 * 60) rows.push({ name: "Longer than 15 minutes", sub: "YouTube Help", value: "Needs a verified account" });
+    var keys = ["2160p", "1440p", "1080p", "720p"];
+    return {
+      hero: { label: "Estimated file size", value: esc(sizeText(bytes)), note: esc(fmt(vbr, 1)) + " Mbps video + " + (abr ? esc(fmt(abr)) + " kbps audio" : "no audio") + " for " + esc(hms(dur)) },
+      rows: rows,
+      table: {
+        head: ["Resolution, SDR at 24-30 fps", "YouTube's recommended bitrate", "Size for " + hms(dur)],
+        rows: keys.map(function (k) { var r = YT_BITRATE.sdr[k][0]; return [RES_LABEL[k], mbpsText(r), sizeText((r[1] * 1e6 + abr * 1e3) * dur / 8)]; }),
+      },
+      note: "Size = total bitrate x length / 8, so it is an estimate: real files vary with the encoder and the footage. YouTube Help: the maximum upload is 256 GB or 12 hours, whichever is less, and verified accounts can upload videos longer than 15 minutes." + (overSize ? " For files over 256 GB, YouTube Help suggests compressing the video with the H.264 codec." : ""),
+    };
+  };
+
+  function gcd(a, b) { while (b) { var t = b; b = a % b; a = t; } return a; }
+  var COMMON_RATIOS = [[16, 9], [9, 16], [1, 1], [4, 5], [4, 3], [3, 2], [21, 9], [2, 3]];
+  COMPUTE["aspect-ratio-calculator"] = function (v) {
+    var w = Math.round(num(v.w)), h = Math.round(num(v.h)), nw = given(v.nw), nh = given(v.nh);
+    if (!w || !h) return { error: "Enter a width and a height." };
+    var g = gcd(w, h), rw = w / g, rh = h / g, dec = w / h;
+    var near = COMMON_RATIOS.map(function (r) { return { r: r, d: Math.abs(r[0] / r[1] - dec) / dec }; }).sort(function (a, b) { return a.d - b.d; })[0];
+    var nearText = near.d < 0.01 ? near.r[0] + ":" + near.r[1] : null;
+    var ratioText = rw + ":" + rh;
+    var even = function (x) { var r = Math.round(x); return r % 2 ? r + 1 : r; };
+    var rows = [
+      { name: "Aspect ratio", value: ratioText + (nearText && nearText !== ratioText ? " (about " + nearText + ")" : "") },
+      { name: "As a decimal", sub: "width / height", value: fmt(dec, 4) + ":1" },
+      { name: "Orientation", value: dec > 1.01 ? "Landscape" : dec < 0.99 ? "Vertical" : "Square" },
+    ];
+    if (nw) rows.push({ name: "New size from width", sub: "height rounded to an even number", value: fmt(nw) + " x " + fmt(even(nw / dec)) });
+    if (nh) rows.push({ name: "New size from height", sub: "width rounded to an even number", value: fmt(even(nh * dec)) + " x " + fmt(nh) });
+    var is169 = Math.abs(dec - 16 / 9) < 0.01, is916 = Math.abs(dec - 9 / 16) < 0.005;
+    var fit = [];
+    fit.push(is169 ? "<b>YouTube:</b> 16:9 is the standard aspect ratio on a computer (YouTube Help), so it fills the player." : "<b>YouTube:</b> the player adapts itself to vertical and square videos. YouTube Help says not to add padding or black bars to the video yourself.");
+    fit.push(dec <= 1.91 + 0.005 && dec >= 9 / 16 - 0.005 ? "<b>Instagram Reels:</b> inside the 1.91:1 to 9:16 range Instagram Help gives for Reels." : "<b>Instagram Reels:</b> outside the 1.91:1 to 9:16 range Instagram Help gives for Reels.");
+    if (is916) fit.push("<b>Stories:</b> Meta's ads guide gives 9:16 for Stories, the full-screen vertical shape.");
+    var sizes = is169 ? [[7680, 4320], [3840, 2160], [2560, 1440], [1920, 1080], [1280, 720], [854, 480], [640, 360], [426, 240]] : null;
+    return {
+      hero: { label: "Aspect ratio", value: esc(ratioText), note: fmt(w) + " x " + fmt(h) + " pixels" + (nearText && nearText !== ratioText ? ", close to " + esc(nearText) : "") },
+      rows: rows,
+      list: fit,
+      table: sizes
+        ? { head: ["YouTube's 16:9 resolutions (YouTube Help)", "Width x height"], rows: sizes.map(function (s) { return [s[1] + "p", fmt(s[0]) + " x " + fmt(s[1])]; }) }
+        : { head: ["Width", "Height at " + ratioText], rows: [426, 640, 720, 1080, 1280, 1440, 1920, 2160, 3840].map(function (x) { return [fmt(x), fmt(even(x / dec))]; }) },
+      note: "Ratios are reduced by the greatest common divisor, so a size that is not exact, like 854 x 480, shows its exact ratio with the nearest common one beside it. Video sizes are rounded to even numbers because most video encoders need them.",
+    };
+  };
+
+  // Username ideas. Instagram Help suggests periods, numbers, underscores or abbreviations;
+  // TikTok Support: 2 to 24 characters, letters, numbers, underscores and periods, no period at the end.
+  var UN_PARTS = {
+    simple: { pre: ["its", "hey", "the", "real", "just", "im"], suf: ["official", "hq", "here", "online", "now", "page"] },
+    creator: { pre: ["the", "daily", "hey", "its"], suf: ["creates", "makes", "talks", "tries", "daily", "diaries", "life", "world", "club", "notes"] },
+    brand: { pre: ["the", "get", "try", "shop"], suf: ["hq", "co", "studio", "labs", "house", "works", "store", "official"] },
+    fun: { pre: ["lil", "hey", "oh", "big", "its", "the"], suf: ["vibes", "gang", "squad", "life", "land", "time", "world", "corner"] },
+  };
+  function unSlug(s) { return String(s || "").toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "").replace(/[^a-z0-9 ]+/g, " ").trim().split(/\s+/).filter(Boolean); }
+  function tiktokOk(u) { return u.length >= 2 && u.length <= 24 && /^[a-z0-9._]+$/.test(u) && !/\.$/.test(u); }
+  function usernameIdeas(v) {
+    var nameW = unSlug(v.name), topicW = unSlug(v.topic);
+    if (!nameW.length) return null;
+    var n = nameW.join(""), n1 = nameW[0], t = topicW.join(""), t1 = topicW[0] || "";
+    var p = UN_PARTS[v.style] || UN_PARTS.simple, seps = ["", ".", "_"];
+    var out = [n];
+    var add = function (a, b, sep) { if (a && b) out.push(a + sep + b); };
+    if (nameW.length > 1) out.push(nameW.join("."), nameW.join("_"), nameW.slice(0, -1).map(function (w) { return w[0]; }).join("") + "." + nameW[nameW.length - 1]);
+    if (t) { add(n, t, "."); add(n, t, "_"); add(n1, t1, ""); add(t1, n1, "."); add(t1, "with" + n1, "."); add(t1, "by" + n1, "_"); add(n1 + "s", t1, ""); add(t, n, ""); }
+    // A long full name leaves little room, so its first word gets the same patterns too.
+    (n.length > 14 && nameW.length > 1 ? [n, n1] : [n]).forEach(function (base) {
+      p.pre.forEach(function (x, i) { add(x, base, seps[i % 3]); });
+      p.suf.forEach(function (x, i) { add(base, x, seps[(i + 1) % 3]); });
+      p.pre.forEach(function (x, i) { add(x, base, seps[(i + 1) % 3]); });
+      p.suf.forEach(function (x, i) { add(base, x, seps[(i + 2) % 3]); });
+    });
+    if (nameW.length > 1) p.suf.slice(0, 4).forEach(function (x) { add(n1, x, "."); });
+    if (t) p.suf.slice(0, 4).forEach(function (x, i) { add(t1, x, seps[(i + 2) % 3]); });
+    [YEAR_NOW % 100, 1, 7, 99].forEach(function (k, i) { add(n, String(k), seps[i % 3]); });
+    out.push("x" + n + "x", n + "_");
+    var seen = {};
+    return out.map(function (u) { return u.replace(/^[._]+|\.+$/g, "").replace(/([._]){2,}/g, "$1"); })
+      .filter(function (u) { if (!u || seen[u] || !tiktokOk(u)) return false; seen[u] = 1; return true; })
+      .slice(0, 30);
+  }
+  function usernameResult(v, platform) {
+    var list = usernameIdeas(v);
+    if (!list) return { error: "Type your name or brand, using letters or numbers." };
+    if (!list.length) return { error: "That name is too long to fit in 24 characters. Try a shorter name or a nickname." };
+    var base = platform === "TikTok" ? "https://www.tiktok.com/@" : "https://www.instagram.com/";
+    var shown = platform === "TikTok" ? "tiktok.com/@" : "instagram.com/";
+    return {
+      hero: { label: "Username ideas", value: list.length, note: "Built from “" + esc(v.name) + "”" + (v.topic ? " and “" + esc(v.topic) + "”" : "") + ". Every one fits " + (platform === "TikTok" ? "TikTok's username rules" : "Instagram's characters and TikTok's rules") + "." },
+      table: {
+        head: ["Username", "Characters", "See if it is taken"],
+        rows: list.map(function (u) {
+          return [{ html: "<b>@" + esc(u) + "</b>" }, String(u.length), { html: "<a href=\"" + base + encodeURIComponent(u) + "\" target=\"_blank\" rel=\"noopener nofollow\">" + esc(shown + u) + "</a>" }];
+        }),
+      },
+      copy: copyBlock(list),
+      note: platform === "TikTok"
+        ? "TikTok Support: a username must contain 2 to 24 characters, can only contain letters, numbers, underscores and periods, and cannot end with a period. You can change it once every 30 days, and changing it also changes your profile link. We cannot see whether a name is taken: open its link, and if a profile loads, it is."
+        : "Instagram Help suggests adding periods, numbers, underscores or abbreviations when the username you want is taken. Instagram's Help Center does not publish a length limit, so every idea here is 24 characters or fewer, which also fits TikTok. We cannot see whether a name is taken: open its link, and if a profile loads, it is.",
+    };
+  }
+  COMPUTE["instagram-username-generator"] = function (v) { return usernameResult(v, "Instagram"); };
+  COMPUTE["tiktok-username-generator"] = function (v) { return usernameResult(v, "TikTok"); };
+
   /* ---------------------------------------------- most subscribed channels */
   COMPUTE["youtube-most-subscribed-channels"] = function (v, d) {
     var list = (d.channels || []).slice();

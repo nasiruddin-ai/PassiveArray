@@ -444,6 +444,11 @@ const CLUSTERS = [
   ["youtube-video-stats-checker", "youtube-playlist-length-calculator", "youtube-tag-extractor", "youtube-comment-analyzer", "youtube-video-seo-checker"],
   ["youtube-watch-hours-calculator", "youtube-monetization-checker", "youtube-money-calculator", "youtube-channel-growth-tracker"],
   ["youtube-subscribe-link-generator", "youtube-embed-code-generator", "youtube-timestamp-link-generator", "youtube-channel-id-finder", "youtube-thumbnail-downloader"],
+  ["youtube-cpm-calculator", "youtube-rpm-calculator", "youtube-money-calculator", "youtube-sponsorship-price-calculator", "youtube-channel-value-calculator"],
+  ["youtube-rpm-calculator", "youtube-cpm-calculator", "youtube-money-calculator", "youtube-monetization-checker", "youtube-watch-hours-calculator"],
+  ["youtube-chapters-checker", "youtube-video-seo-checker", "youtube-timestamp-link-generator", "youtube-description-generator", "youtube-title-analyzer"],
+  ["video-bitrate-calculator", "video-file-size-calculator", "aspect-ratio-calculator", "youtube-thumbnail-tester", "youtube-embed-code-generator"],
+  ["instagram-username-generator", "tiktok-username-generator", "youtube-channel-name-generator", "instagram-bio-generator"],
 ];
 function clusterMates(slug) {
   const out = [];
