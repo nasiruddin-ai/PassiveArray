@@ -59,7 +59,7 @@ function withSiteChrome(html) {
 @media(max-width:640px){.pa-bar nav{display:none}.pa-bar .pa-cta{margin-left:auto}}
 </style>`;
   const bar = `${style}<div class="pa-bar"><a class="pa-brand" href="/">${mark}<span>Passive <b>Array</b></span></a><nav><a href="/creator-tools/">Creator tools</a><a href="/meta-tag-checker/">Web tools</a><a href="/youtube-extension/">Extension</a><a href="/blog/">Blog</a></nav><a class="pa-cta" href="/creator-tools/">All free tools</a></div>`;
-  const foot = `<div class="pa-foot"><span>&copy; ${new Date().getFullYear()} Passive Array. Free tools for creators and brands.</span><nav><a href="/about/">About</a><a href="/blog/">Blog</a><a href="/contact/">Contact</a><a href="/privacy/">Privacy</a><a href="/terms/">Terms</a></nav></div>`;
+  const foot = `<div class="pa-foot"><span>&copy; ${new Date().getFullYear()} Passive Array. Free tools for creators and brands.</span><nav><a href="/about/">About</a><a href="/blog/">Blog</a><a href="/contact/">Contact</a><a href="/privacy/">Privacy</a><a href="/terms/">Terms</a><a href="/refund-policy/">Refunds</a></nav></div>`;
   if (!/<body[^>]*>/i.test(html) || !/<\/body>/i.test(html)) return html;
   let out = html.replace(/<body([^>]*)>/i, (m) => m + "\n" + (site.GTM_BODY || "") + bar + "<main>").replace(/<\/body>/i, "</main>" + foot + "\n</body>");
   if (site.VERIFY_TAG && !out.includes("google-site-verification")) {

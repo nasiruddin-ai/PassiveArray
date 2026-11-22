@@ -660,8 +660,7 @@
       paddleReady = new Promise(function (resolve, reject) {
         function init() {
           try {
-            if (res.env === "sandbox" && window.Paddle.Environment) window.Paddle.Environment.set("sandbox");
-            window.Paddle.Initialize({
+            var initOpts = {
               token: res.token,
               eventCallback: function (ev) {
                 var cb = paddleActiveOpts || {};
@@ -673,7 +672,12 @@
                   cb.onError(ev.detail || "Could not open checkout. Please try again.");
                 }
               },
-            });
+            };
+            // Paddle Retain: pass the signed-in customer's Paddle ctm_... ID (never email or internal ID).
+            if (res.customerId && String(res.customerId).indexOf("ctm_") === 0) {
+              initOpts.pwCustomer = { id: String(res.customerId) };
+            }
+            window.Paddle.Initialize(initOpts);
             resolve();
           } catch (e) { reject(e); }
         }

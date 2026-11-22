@@ -247,7 +247,7 @@ function footer(root, note) {
   </div>
   <div class="fbottom">
     <span>&copy; ${new Date().getFullYear()} ${BRAND}. ${esc(note || "Estimates use public numbers and typical industry rates. A starting point, not a guarantee.")}</span>
-    <nav><a href="${root}privacy/">Privacy Policy</a><a href="${root}terms/">Terms of Use</a><a href="${root}faq/">FAQ</a><a href="${root}mcp">MCP API</a><button type="button" class="flink" data-consent-open hidden>Cookie choices</button></nav>
+    <nav><a href="${root}privacy/">Privacy Policy</a><a href="${root}terms/">Terms of Use</a><a href="${root}refund-policy/">Refund Policy</a><a href="${root}faq/">FAQ</a><a href="${root}mcp">MCP API</a><button type="button" class="flink" data-consent-open hidden>Cookie choices</button></nav>
   </div>
 </div></footer>`;
 }

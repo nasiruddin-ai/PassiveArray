@@ -145,6 +145,9 @@ ${ANALYTICS_ON ? `
     <h2>Hosting and logs</h2>
     <p>The site and its server functions run on Vercel. Vercel keeps standard request logs (IP address, time, address requested) for a short period for security and debugging, under <a href="https://vercel.com/legal/privacy-policy" rel="noopener">Vercel's privacy policy</a>. We do not build profiles from these logs.</p>
 
+    <h2>Payments and billing (Paddle)</h2>
+    <p>Paid Pro subscriptions are processed by <strong>Paddle.com</strong>, our Merchant of Record. When you subscribe, Paddle collects your payment details, billing address, and tax information directly under <a href="https://www.paddle.com/legal/privacy" rel="noopener">Paddle's Privacy Policy</a>. We never see or store your card number. We store only your Paddle customer ID, subscription ID, plan status, and renewal date so we can keep your Pro features active and link you to Paddle's billing portal.</p>
+
     <h2>Third-party services</h2>
     <p>This site uses <strong>YouTube API Services</strong>. By using the YouTube tools you also agree to the <a href="https://www.youtube.com/t/terms" rel="noopener">YouTube Terms of Service</a>, and Google's handling of data is described in the <a href="https://policies.google.com/privacy" rel="noopener">Google Privacy Policy</a>. The tools read public statistics only and never access your Google account. Twitch data comes from the <a href="https://www.twitch.tv/p/legal/privacy-notice/" rel="noopener">Twitch API</a> on the same basis. Fonts are loaded from Google Fonts.</p>
 
@@ -160,45 +163,79 @@ ${ANALYTICS_ON ? `
     <h2>Contact</h2>
     <p>Questions about privacy: use the <a href="../contact/">contact form</a>.</p>
   </div>`;
-  return site.shell({ title: "Privacy Policy & Data Protection", ogTitle: "Passive Array privacy policy", description: "No accounts required and no invasive trackers. What you type into a tool is used for the result and not stored. Where sign-up emails go.", path: "/privacy/", active: "", narrow: true, body });
+  return site.shell({ title: "Privacy Policy & Data Protection", ogTitle: "Passive Array privacy policy", description: "No accounts required and no invasive trackers. What you type into a tool is used for the result and not stored. How Paddle billing and sign-up emails work.", path: "/privacy/", active: "", narrow: true, body });
 }
 
 function termsPage() {
   const body = `
-  ${head("Terms of use", "Terms of use", "Plain-language terms for using Passive Array. Effective " + EFFECTIVE + ".")}
+  ${head("Terms of use", "Terms of use", "Plain-language terms for using Passive Array and Passive Array Pro. Effective " + EFFECTIVE + ".")}
   <div class="card prose">
     <h2 style="margin-top:0">1. What you are agreeing to</h2>
-    <p>By using ${esc(BRAND)} (${esc(SITE)}) or the Passive Array for YouTube browser extension, you agree to these terms. If you do not agree, do not use them.</p>
+    <p>By using ${esc(BRAND)} (${esc(SITE)}), Passive Array Pro, or the Passive Array for YouTube browser extension, you agree to these terms. If you do not agree, do not use them.</p>
 
-    <h2>2. The tools are free, and estimates are estimates</h2>
-    <p>All tools on this site are free to use. Earnings, sponsorship prices, engagement grades, fake-follower estimates and keyword scores are calculated from public numbers and typical industry rates using the formulas shown on each page. They are a starting point for your own judgment, not a guarantee, a valuation or professional advice. Do not make financial, contractual or hiring decisions on these numbers alone.</p>
+    <h2>2. Free tools, Pro subscriptions, and estimates</h2>
+    <p>All standalone creator and SEO tools on this site are free to use. Optional <strong>Passive Array Pro</strong> subscriptions ($9/month or $79/year USD) add expanded channel watchlists (up to 100 channels), weekly mover reports, CSV exports, and higher daily MCP API credits, as listed on our <a href="../pricing/">pricing page</a>.</p>
+    <p>Earnings, sponsorship prices, engagement grades, fake-follower estimates and keyword scores are calculated from public numbers and typical industry rates using the formulas shown on each page. They are a starting point for your own judgment, not a guarantee, a valuation or professional advice. Do not make financial, contractual or hiring decisions on these numbers alone.</p>
 
-    <h2>3. Data sources</h2>
+    <h2>3. Billing, Merchant of Record, Cancellation &amp; Refunds</h2>
+    <p>Our order process is conducted by our online reseller <strong>Paddle.com</strong>. Paddle.com is the Merchant of Record for all Passive Array Pro orders, handles customer billing inquiries, invoices, sales tax/VAT, and returns. Subscriptions renew automatically unless canceled before the renewal date.</p>
+    <p>You can cancel your subscription at any time in two clicks from your <a href="../account/">account page</a> (<strong>Manage billing</strong>). Cancellation takes effect at the end of your current paid billing period. Refunds are governed by our <a href="../refund-policy/">Refund &amp; Cancellation Policy</a> (14-day refund window on Pro subscriptions).</p>
+
+    <h2>4. Data sources</h2>
     <p>Live figures come from the official YouTube Data API and Twitch API and can lag the platforms' own pages. Subscriber counts from YouTube are rounded by YouTube. Instagram, TikTok and X tools use numbers you enter, and the results are only as accurate as those inputs.</p>
 
-    <h2>4. Acceptable use</h2>
+    <h2>5. Acceptable use</h2>
     <ul>
       <li>Do not use the tools to harass, defame or make claims about a person or channel that the numbers do not support.</li>
       <li>Do not scrape, mirror or automate requests against the site or its API in a way that degrades it for others. Reasonable personal or business use, including linking to results, is welcome.</li>
       <li>Do not try to circumvent rate limits or access the underlying API keys.</li>
     </ul>
 
-    <h2>5. YouTube API Services</h2>
+    <h2>6. YouTube API Services</h2>
     <p>The YouTube tools and the browser extension use YouTube API Services. Your use of them is also subject to the <a href="https://www.youtube.com/t/terms" rel="noopener">YouTube Terms of Service</a> and the <a href="https://policies.google.com/privacy" rel="noopener">Google Privacy Policy</a>.</p>
 
-    <h2>6. AI-generated text</h2>
+    <h2>7. AI-generated text</h2>
     <p>Hashtags, bios, ideas, titles, descriptions and tags produced by the generators are suggestions. Check them before you publish. You own what you publish and are responsible for it.</p>
 
-    <h2>7. No warranty, limited liability</h2>
+    <h2>8. No warranty, limited liability</h2>
     <p>The site and extension are provided as they are, without warranties of any kind. To the extent the law allows, ${esc(BRAND)} is not liable for any loss arising from use of, or reliance on, the tools or their output.</p>
 
-    <h2>8. Changes and availability</h2>
+    <h2>9. Changes and availability</h2>
     <p>Tools may change, be removed or be unavailable at times, for example when a free API allowance is used up for the day. These terms may be updated; the current version is always at this address.</p>
 
-    <h2>9. Contact</h2>
-    <p>Questions about these terms: use the <a href="../contact/">contact form</a>.</p>
+    <h2>10. Contact</h2>
+    <p>Questions about these terms or billing: use the <a href="../contact/">contact form</a>.</p>
   </div>`;
-  return site.shell({ title: "Terms of Use & API Guidelines", ogTitle: "Passive Array terms of use", description: "Plain-language terms for using Passive Array's free creator tools, browser extension, estimates, acceptable use and YouTube API compliance.", path: "/terms/", active: "", narrow: true, body });
+  return site.shell({ title: "Terms of Use & Billing Terms", ogTitle: "Passive Array terms of use", description: "Plain-language terms for using Passive Array's free creator tools, Passive Array Pro subscriptions via Paddle, cancellation, refunds, and YouTube API compliance.", path: "/terms/", active: "", narrow: true, body });
+}
+
+function refundPolicyPage() {
+  const body = `
+  ${head("Refund policy", "Refund & Cancellation Policy", "Clear, fair refund and cancellation terms for Passive Array Pro subscriptions. Effective " + EFFECTIVE + ".")}
+  <div class="card prose">
+    <h2 style="margin-top:0">14-day refund window</h2>
+    <p>If you subscribe to <strong>Passive Array Pro</strong> ($9/month or $79/year) and are not satisfied for any reason, you may request a full refund within <strong>14 calendar days</strong> of your purchase date.</p>
+    <p>All payments, invoices, and refunds are processed by our Merchant of Record, <strong>Paddle.com</strong>, in line with <a href="https://www.paddle.com/legal/checkout-buyer-terms" rel="noopener">Paddle's Buyer Terms</a>.</p>
+
+    <h2>How to cancel your subscription</h2>
+    <ul>
+      <li>Sign in to your <a href="../account/">Passive Array account page</a> and click <strong>Manage billing</strong> to open the Paddle Customer Portal.</li>
+      <li>Select <strong>Cancel subscription</strong>. Your Pro access continues through the end of your current paid billing period, and you will not be charged again.</li>
+      <li>Canceling stops future renewals automatically; you do not need to email support to cancel.</li>
+    </ul>
+
+    <h2>How to request a refund</h2>
+    <p>To request a refund within 14 days of payment, either:</p>
+    <ul>
+      <li>Use the receipt or support link emailed to you by <strong>Paddle.com</strong> (including your order number), or</li>
+      <li>Message us via our <a href="../contact/">contact page</a> with your account email and Paddle order ID.</li>
+    </ul>
+    <p>Approved refunds are returned to your original payment method by Paddle, typically appearing within 5 to 10 business days depending on your bank or card issuer.</p>
+
+    <h2>Custom YouTube SEO services</h2>
+    <p>One-off channel audits and monthly hands-on YouTube SEO engagements are quoted separately with agreed deliverables before work begins; refund terms for custom services are confirmed in writing prior to invoicing.</p>
+  </div>`;
+  return site.shell({ title: "Refund & Cancellation Policy", ogTitle: "Passive Array Refund & Cancellation Policy", description: "14-day refund window and 2-click cancellation policy for Passive Array Pro subscriptions processed by Paddle.com.", path: "/refund-policy/", active: "", narrow: true, body });
 }
 
 // One component, two entry points: /login/ and /signup/. The JS in site.js
@@ -1418,6 +1455,7 @@ const PAGES = {
   "compare/tubebuddy-alternative": tubebuddyPage,
   privacy: privacyPage,
   terms: termsPage,
+  "refund-policy": refundPolicyPage,
   login: loginPage,
   signup: signupPage,
   account: accountPage,
