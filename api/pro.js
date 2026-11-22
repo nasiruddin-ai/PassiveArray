@@ -4,7 +4,7 @@
 //   /api/watch          -> /api/pro?fn=watch            lib/api-watch.js
 //   /api/watch-cron     -> /api/pro?fn=watch-cron       lib/api-watch-cron.js   (daily cron)
 //   /api/billing        -> /api/pro?fn=billing          lib/api-billing.js
-//   /api/billing-webhook -> /api/pro?fn=billing-webhook lib/api-billing-webhook.js (Lemon Squeezy)
+//   /api/billing-webhook -> /api/pro?fn=billing-webhook lib/api-billing-webhook.js (Paddle Billing)
 //   /api/channel        -> /api/pro?fn=channel          lib/api-channel.js      (your own channel)
 //   /mcp                -> /api/pro?fn=mcp              lib/api-mcp.js          (MCP server for AI assistants)
 //   /api/mcp-account    -> /api/pro?fn=mcp-account      lib/api-mcp-account.js  (MCP keys, credits, activity)
