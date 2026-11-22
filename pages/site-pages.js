@@ -145,8 +145,8 @@ ${ANALYTICS_ON ? `
     <h2>Hosting and logs</h2>
     <p>The site and its server functions run on Vercel. Vercel keeps standard request logs (IP address, time, address requested) for a short period for security and debugging, under <a href="https://vercel.com/legal/privacy-policy" rel="noopener">Vercel's privacy policy</a>. We do not build profiles from these logs.</p>
 
-    <h2>Payments and billing (Paddle)</h2>
-    <p>Paid Pro subscriptions are processed by <strong>Paddle.com</strong>, our Merchant of Record. When you subscribe, Paddle collects your payment details, billing address, and tax information directly under <a href="https://www.paddle.com/legal/privacy" rel="noopener">Paddle's Privacy Policy</a>. We never see or store your card number. We store only your Paddle customer ID, subscription ID, plan status, and renewal date so we can keep your Pro features active and link you to Paddle's billing portal.</p>
+    <h2>Payments and billing (Polar)</h2>
+    <p>Paid Pro subscriptions are processed by <strong>Polar (polar.sh)</strong>, our Merchant of Record. When you subscribe, Polar collects your payment details, billing address, and tax information directly under <a href="https://polar.sh/legal/privacy" rel="noopener">Polar's Privacy Policy</a>. We never see or store your card number. We store only your Polar customer ID, subscription ID, plan status, and renewal date so we can keep your Pro features active and link you to Polar's Customer Portal.</p>
 
     <h2>Third-party services</h2>
     <p>This site uses <strong>YouTube API Services</strong>. By using the YouTube tools you also agree to the <a href="https://www.youtube.com/t/terms" rel="noopener">YouTube Terms of Service</a>, and Google's handling of data is described in the <a href="https://policies.google.com/privacy" rel="noopener">Google Privacy Policy</a>. The tools read public statistics only and never access your Google account. Twitch data comes from the <a href="https://www.twitch.tv/p/legal/privacy-notice/" rel="noopener">Twitch API</a> on the same basis. Fonts are loaded from Google Fonts.</p>
@@ -163,7 +163,7 @@ ${ANALYTICS_ON ? `
     <h2>Contact</h2>
     <p>Questions about privacy: use the <a href="../contact/">contact form</a>.</p>
   </div>`;
-  return site.shell({ title: "Privacy Policy & Data Protection", ogTitle: "Passive Array privacy policy", description: "No accounts required and no invasive trackers. What you type into a tool is used for the result and not stored. How Paddle billing and sign-up emails work.", path: "/privacy/", active: "", narrow: true, body });
+  return site.shell({ title: "Privacy Policy & Data Protection", ogTitle: "Passive Array privacy policy", description: "No accounts required and no invasive trackers. What you type into a tool is used for the result and not stored. How Polar billing and sign-up emails work.", path: "/privacy/", active: "", narrow: true, body });
 }
 
 function termsPage() {
@@ -178,7 +178,7 @@ function termsPage() {
     <p>Earnings, sponsorship prices, engagement grades, fake-follower estimates and keyword scores are calculated from public numbers and typical industry rates using the formulas shown on each page. They are a starting point for your own judgment, not a guarantee, a valuation or professional advice. Do not make financial, contractual or hiring decisions on these numbers alone.</p>
 
     <h2>3. Billing, Merchant of Record, Cancellation &amp; Refunds</h2>
-    <p>Our order process is conducted by our online reseller <strong>Paddle.com</strong>. Paddle.com is the Merchant of Record for all Passive Array Pro orders, handles customer billing inquiries, invoices, sales tax/VAT, and returns. Subscriptions renew automatically unless canceled before the renewal date.</p>
+    <p>Our order process is conducted by our online reseller <strong>Polar (polar.sh)</strong>. Polar is the Merchant of Record for all Passive Array Pro orders, handles customer billing inquiries, invoices, sales tax/VAT, and returns. Subscriptions renew automatically unless canceled before the renewal date.</p>
     <p>You can cancel your subscription at any time in two clicks from your <a href="../account/">account page</a> (<strong>Manage billing</strong>). Cancellation takes effect at the end of your current paid billing period. Refunds are governed by our <a href="../refund-policy/">Refund &amp; Cancellation Policy</a> (14-day refund window on Pro subscriptions).</p>
 
     <h2>4. Data sources</h2>
@@ -206,7 +206,7 @@ function termsPage() {
     <h2>10. Contact</h2>
     <p>Questions about these terms or billing: use the <a href="../contact/">contact form</a>.</p>
   </div>`;
-  return site.shell({ title: "Terms of Use & Billing Terms", ogTitle: "Passive Array terms of use", description: "Plain-language terms for using Passive Array's free creator tools, Passive Array Pro subscriptions via Paddle, cancellation, refunds, and YouTube API compliance.", path: "/terms/", active: "", narrow: true, body });
+  return site.shell({ title: "Terms of Use & Billing Terms", ogTitle: "Passive Array terms of use", description: "Plain-language terms for using Passive Array's free creator tools, Passive Array Pro subscriptions via Polar, cancellation, refunds, and YouTube API compliance.", path: "/terms/", active: "", narrow: true, body });
 }
 
 function refundPolicyPage() {
@@ -215,27 +215,20 @@ function refundPolicyPage() {
   <div class="card prose">
     <h2 style="margin-top:0">14-day refund window</h2>
     <p>If you subscribe to <strong>Passive Array Pro</strong> ($9/month or $79/year) and are not satisfied for any reason, you may request a full refund within <strong>14 calendar days</strong> of your purchase date.</p>
-    <p>All payments, invoices, and refunds are processed by our Merchant of Record, <strong>Paddle.com</strong>, in line with <a href="https://www.paddle.com/legal/checkout-buyer-terms" rel="noopener">Paddle's Buyer Terms</a>.</p>
+    <p>All payments, invoices, and refunds are processed by our Merchant of Record, <strong>Polar (polar.sh)</strong>, in line with <a href="https://polar.sh/legal/terms" rel="noopener">Polar's Terms of Service</a>.</p>
 
     <h2>How to cancel your subscription</h2>
     <ul>
-      <li>Sign in to your <a href="../account/">Passive Array account page</a> and click <strong>Manage billing</strong> to open the Paddle Customer Portal.</li>
+      <li>Sign in to your <a href="../account/">Passive Array account page</a> and click <strong>Manage billing</strong> to open the Polar Customer Portal.</li>
       <li>Select <strong>Cancel subscription</strong>. Your Pro access continues through the end of your current paid billing period, and you will not be charged again.</li>
       <li>Canceling stops future renewals automatically; you do not need to email support to cancel.</li>
     </ul>
 
     <h2>How to request a refund</h2>
-    <p>To request a refund within 14 days of payment, either:</p>
-    <ul>
-      <li>Use the receipt or support link emailed to you by <strong>Paddle.com</strong> (including your order number), or</li>
-      <li>Message us via our <a href="../contact/">contact page</a> with your account email and Paddle order ID.</li>
-    </ul>
-    <p>Approved refunds are returned to your original payment method by Paddle, typically appearing within 5 to 10 business days depending on your bank or card issuer.</p>
-
-    <h2>Custom YouTube SEO services</h2>
-    <p>One-off channel audits and monthly hands-on YouTube SEO engagements are quoted separately with agreed deliverables before work begins; refund terms for custom services are confirmed in writing prior to invoicing.</p>
+    <p>To request a refund within 14 days of payment, message us via our <a href="../contact/">contact page</a> with your account email and order receipt ID from Polar.</p>
+    <p>Approved refunds are returned to your original payment method by Polar, typically appearing within 5 to 10 business days depending on your bank or card issuer.</p>
   </div>`;
-  return site.shell({ title: "Refund & Cancellation Policy", ogTitle: "Passive Array Refund & Cancellation Policy", description: "14-day refund window and 2-click cancellation policy for Passive Array Pro subscriptions processed by Paddle.com.", path: "/refund-policy/", active: "", narrow: true, body });
+  return site.shell({ title: "Refund & Cancellation Policy", ogTitle: "Passive Array Refund & Cancellation Policy", description: "14-day refund window and 2-click cancellation policy for Passive Array Pro subscriptions processed by Polar.", path: "/refund-policy/", active: "", narrow: true, body });
 }
 
 // One component, two entry points: /login/ and /signup/. The JS in site.js
@@ -778,7 +771,7 @@ function pricingPage() {
         <li><b>You keep the site ad-free</b> for everyone else</li>
       </ul>
       <a class="btn wide" href="../account/" style="margin-top:auto" data-pro-cta>Go Pro from your account</a>
-      <p class="note" style="margin:10px 0 0" data-pro-note>Payments by Paddle, our Merchant of Record, which accepts global cards, PayPal, and Apple/Google Pay and handles sales tax. We never see your card number.</p>
+      <p class="note" style="margin:10px 0 0" data-pro-note>Payments by Polar (polar.sh), our Merchant of Record, which accepts global cards, Apple Pay, and Google Pay and handles sales tax. We never see your card number.</p>
     </div>
   </div>
 

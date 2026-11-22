@@ -633,69 +633,6 @@
   });
 
   /* ------------------------------------------------------------- account */
-  /* ---- Paddle Billing overlay checkout (shared by /account/ and /app/) ---- */
-  var paddleReady = null;
-  var paddleActiveOpts = null;
-  window.paOpenPaddleCheckout = function (res, opts) {
-    opts = opts || {};
-    paddleActiveOpts = opts;
-    function open() {
-      if (!window.Paddle) { if (opts.onError) opts.onError("Could not load Paddle Checkout."); return; }
-      var isDark = document.documentElement.getAttribute("data-theme") === "dark";
-      var openOpts = {
-        items: [{ priceId: res.priceId, quantity: 1 }],
-        customData: { email: res.email },
-        settings: {
-          variant: "one-page",
-          theme: isDark ? "dark" : "light",
-          allowLogout: false,
-          successUrl: res.successUrl || (location.origin + "/account/?upgraded=1"),
-        },
-      };
-      if (res.customerId) openOpts.customer = { id: res.customerId };
-      else if (res.email) openOpts.customer = { email: res.email };
-      window.Paddle.Checkout.open(openOpts);
-    }
-    if (!paddleReady) {
-      paddleReady = new Promise(function (resolve, reject) {
-        function init() {
-          try {
-            var initOpts = {
-              token: res.token,
-              eventCallback: function (ev) {
-                var cb = paddleActiveOpts || {};
-                if (!ev) return;
-                if (ev.name === "checkout.loaded" && cb.onLoaded) cb.onLoaded();
-                else if (ev.name === "checkout.closed" && cb.onClose) cb.onClose();
-                else if (ev.name === "checkout.completed" && cb.onComplete) cb.onComplete(ev.data);
-                else if ((ev.name === "checkout.error" || ev.name === "checkout.payment.error") && cb.onError) {
-                  cb.onError(ev.detail || "Could not open checkout. Please try again.");
-                }
-              },
-            };
-            // Paddle Retain: pass the signed-in customer's Paddle ctm_... ID (never email or internal ID).
-            if (res.customerId && String(res.customerId).indexOf("ctm_") === 0) {
-              initOpts.pwCustomer = { id: String(res.customerId) };
-            }
-            window.Paddle.Initialize(initOpts);
-            resolve();
-          } catch (e) { reject(e); }
-        }
-        if (window.Paddle) { init(); return; }
-        var s = document.createElement("script");
-        s.src = "https://cdn.paddle.com/paddle/v2/paddle.js";
-        s.async = true;
-        s.onload = init;
-        s.onerror = function () { reject(new Error("Could not load Paddle.js")); };
-        document.head.appendChild(s);
-      });
-    }
-    paddleReady.then(open).catch(function (err) {
-      paddleReady = null;
-      if (opts.onError) opts.onError((err && err.message) || "Could not open checkout.");
-    });
-  };
-
   var account = document.querySelector("[data-account]");
   if (account) {
     var loading = document.querySelector("[data-account-loading]");
@@ -852,7 +789,7 @@
       });
     }
 
-    /* ---- plan: upgrade / portal (Paddle Billing) ---- */
+    /* ---- plan: upgrade / portal (Polar) ---- */
     var isPro = false;
     function billingCall(action, body) {
       return fetch("/api/billing?action=" + action, { method: "POST", credentials: "same-origin", cache: "no-store", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body || {}) })
@@ -867,15 +804,6 @@
         msg.className = "fmsg";
         window.paTrack("begin_checkout", { plan: b.getAttribute("data-upgrade"), currency: "USD" });
         billingCall("checkout", { plan: b.getAttribute("data-upgrade") }).then(function (res) {
-          if (res && res.ok && res.mode === "paddle" && window.paOpenPaddleCheckout) {
-            window.paOpenPaddleCheckout(res, {
-              onLoaded: function () { msg.textContent = ""; },
-              onClose: function () { b.disabled = false; msg.textContent = ""; },
-              onComplete: function () { msg.textContent = "Payment received! Activating Pro…"; msg.className = "fmsg good"; },
-              onError: function (err) { b.disabled = false; msg.textContent = err || "Could not open checkout."; msg.className = "fmsg bad"; },
-            });
-            return;
-          }
           if (res && res.ok && res.url) { location.href = res.url; return; }
           b.disabled = false;
           msg.textContent = (res && res.error) || "Could not open checkout.";

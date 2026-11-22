@@ -16,7 +16,7 @@ Free tools for creators and brands. One repository, one Netlify site.
 |---|---|---|
 | `YOUTUBE_API_KEY` | The 9 live YouTube tools | Google Cloud, YouTube Data API v3, free. Steps in `creator-tools/README.md` |
 | `TWITCH_CLIENT_ID`, `TWITCH_CLIENT_SECRET` | The 2 live Twitch tools | dev.twitch.tv/console, free |
-| `LEMONSQUEEZY_API_KEY`, `LEMONSQUEEZY_STORE_ID`, `LEMONSQUEEZY_VARIANT_ID`, `LEMONSQUEEZY_WEBHOOK_SECRET` | The Pro plan | Lemon Squeezy, see the Pro plan section below |
+| `POLAR_ACCESS_TOKEN`, `POLAR_PRODUCT_ID_MONTHLY`, `POLAR_PRODUCT_ID_YEARLY`, `POLAR_WEBHOOK_SECRET` | The Pro plan | Polar (polar.sh), see the Pro plan section below |
 | `ANTHROPIC_API_KEY` | Optional. AI-written hashtags, bios, ideas, growth plan | console.anthropic.com, paid. Without it the generators use built-in templates |
 
 5. Trigger a deploy after adding variables. Every later push to `main` redeploys automatically.
@@ -337,8 +337,8 @@ behind Pro later.
 | `lib/session.js` | Reads the `pa_session` cookie so other functions know who is calling |
 | `lib/api-watch.js` | `/api/watch?action=list|add|remove` (signed-in only) |
 | `lib/api-watch-cron.js` | Daily at 05:45 UTC: snapshots every watched channel; Mondays sends the digest via the Apps Script (`kind: "digest"`) |
-| `lib/api-billing.js` | Lemon Squeezy checkout and customer portal, plain REST, no SDK |
-| `lib/api-billing-webhook.js` | Verifies Lemon Squeezy's signature and sets `pro` on the user record |
+| `lib/api-billing.js` | Polar checkout and customer portal, plain REST, no SDK |
+| `lib/api-billing-webhook.js` | Verifies Polar Standard Webhooks signatures and sets `pro` on the user record |
 | `api/pro.js` | The one Vercel Function that serves all four, through rewrites in `vercel.json`. The Hobby plan allows 12 functions per deployment, so new endpoints should be added here rather than as new files under `api/` |
 
 Data lives in the same Upstash store as the research section: the user record
@@ -347,50 +347,49 @@ every watched channel id; `chan:<id>` and `snap:<id>:<date>` are shared with
 the outlier job. One `channels.list` call covers 50 channels, so 100 Pro users
 each watching 100 channels costs about 200 quota units a day.
 
-### Turning Pro on (about 20 minutes)
+### Turning Pro on (about 15 minutes)
 
 Until these are set, the account page shows "Pro is not open for purchase yet"
 and nothing else changes. Watchlists already work for free accounts as soon as
 `AUTH_SECRET` and the Upstash store are configured.
 
-Payments go through **Lemon Squeezy**, which is the merchant of record: it
-charges the card, collects sales tax and VAT worldwide, and pays out to a bank
-account in Bangladesh (Stripe does not open accounts there).
+Payments go through **Polar (polar.sh)**, which is the merchant of record: it
+charges global cards, Apple Pay, and Google Pay, collects sales tax and VAT
+worldwide, and pays out to a bank account in Bangladesh via Stripe Connect
+Express (no standalone Stripe account required).
 
-1. Create a store at app.lemonsqueezy.com and stay in **Test mode** first
-   (toggle at the bottom left).
-2. **Products, New product**: name "Passive Array Pro", pricing
-   **Subscription**, $9 every month. Add a second variant, $79 every year.
-   Publish. Open each variant and copy its **variant id** (the number in the
-   URL, or in the share menu).
-3. **Settings, Stores**: copy the numeric **store id**.
-4. **Settings, API**: create an API key and copy it. It is shown once.
-5. **Settings, Webhooks, add**: URL
-   `https://passivearray.com/api/billing-webhook`, make up a signing secret
-   (any long random string), tick `subscription_created`,
-   `subscription_updated`, `subscription_cancelled`, `subscription_resumed`,
-   `subscription_expired`, `subscription_payment_failed`.
-6. In Vercel, **Settings, Environment variables**, add and apply to Production:
+1. Create an organization at [polar.sh](https://polar.sh) (or
+   [sandbox.polar.sh](https://sandbox.polar.sh) for testing first).
+2. **Products → + Create Product**: create two recurring subscription products:
+   - **Passive Array Pro Monthly** — `$9` billed monthly
+   - **Passive Array Pro Yearly** — `$79` billed yearly
+   Copy each product's UUID.
+3. **Settings → Developers → Tokens**: create an **Organization Access Token**
+   (`polar_oat_...`) with checkout, customer session, customer, and subscription
+   scopes.
+4. **Settings → Webhooks → Add Endpoint**: URL
+   `https://passivearray.com/api/billing-webhook`, format **Raw**, copy the
+   signing secret (`whsec_...`), and subscribe to `subscription.created`,
+   `subscription.active`, `subscription.updated`, `subscription.canceled`,
+   `subscription.uncanceled`, `subscription.revoked`, `customer.created`,
+   `customer.updated`, `customer.state_changed`, and `order.paid`.
+5. In Vercel, **Settings → Environment Variables**, add and apply to Production:
 
 | Variable | Value |
 |---|---|
-| `LEMONSQUEEZY_API_KEY` | the API key |
-| `LEMONSQUEEZY_STORE_ID` | the store id |
-| `LEMONSQUEEZY_VARIANT_ID` | the monthly variant id |
-| `LEMONSQUEEZY_VARIANT_ID_YEARLY` | the yearly variant id (optional) |
-| `LEMONSQUEEZY_WEBHOOK_SECRET` | the signing secret from step 5 |
+| `POLAR_ENV` | `production` (or `sandbox` when testing with sandbox.polar.sh) |
+| `POLAR_ACCESS_TOKEN` | the Organization Access Token (`polar_oat_...`) |
+| `POLAR_PRODUCT_ID_MONTHLY` | the monthly Pro product UUID |
+| `POLAR_PRODUCT_ID_YEARLY` | the yearly Pro product UUID (optional) |
+| `POLAR_WEBHOOK_SECRET` | the webhook signing secret (`whsec_...`) from step 4 |
 
-7. **Redeploy**. Check `https://passivearray.com/api/billing?action=status`
-   answers `"configured": true`.
-8. Sign in on the site, open `/account/`, press **$9 a month**, and pay with
-   the test card `4242 4242 4242 4242`, any future date, any CVC. You land
-   back on the account page as Pro within a few seconds.
-9. Activate the store (identity check and payout bank details), switch off test
-   mode, create a live API key and webhook, recreate the product if needed,
-   update the variables, redeploy.
+6. **Redeploy**. Check `https://passivearray.com/api/billing?action=status`
+   answers `"provider": "polar"` and `"configured": true`.
+7. In Polar **Finance → Payout Account**, connect your bank account via Stripe
+   Connect Express and complete account verification so live checkouts can be
+   activated.
 
-Lemon Squeezy takes 5% + 50 cents per payment, tax included; there is no
-monthly fee. Payouts are in USD to your bank, twice a month.
+Polar takes 4% + 40 cents per payment, tax included; there is no monthly fee.
 
 ### The Monday email
 

@@ -328,15 +328,6 @@
         if (!me || !me.ok) { location.href = ROOT + "login/?next=%2Fapp%2F%23upgrade"; return; }
         b.disabled = true; if (msg) msg.textContent = "Opening checkout…";
         post("/api/billing?action=checkout", { plan: b.getAttribute("data-upgrade") }).then(function (r) {
-          if (r && r.ok && r.mode === "paddle" && window.paOpenPaddleCheckout) {
-            window.paOpenPaddleCheckout(r, {
-              onLoaded: function () { if (msg) msg.textContent = ""; },
-              onClose: function () { b.disabled = false; if (msg) msg.textContent = ""; },
-              onComplete: function () { if (msg) { msg.textContent = "Payment received! Activating Pro…"; msg.className = "fmsg good"; } },
-              onError: function (err) { b.disabled = false; if (msg) { msg.textContent = err || "Could not open checkout."; msg.className = "fmsg bad"; } },
-            });
-            return;
-          }
           if (r.ok && r.url) { location.href = r.url; return; }
           b.disabled = false; if (msg) msg.textContent = r.error || "Could not open checkout.";
         });
