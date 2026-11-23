@@ -324,10 +324,22 @@
     });
     el.querySelectorAll("[data-upgrade]").forEach(function (b) {
       b.addEventListener("click", function () {
+        var plan = b.getAttribute("data-upgrade");
         var msg = el.querySelector("[data-plan-msg]");
-        if (!me || !me.ok) { location.href = ROOT + "login/?next=%2Fapp%2F%23upgrade"; return; }
+        if (!me || !me.ok) {
+          var loginUrl = ROOT + "login/?next=%2Fapp%2F%23upgrade";
+          if (window.paTrackCheckout) {
+            window.paTrackCheckout({ plan: plan, sourcePage: "dashboard", signedIn: false, nextStep: "login_required", buttonText: b.textContent }, function () { location.href = loginUrl; });
+          } else {
+            location.href = loginUrl;
+          }
+          return;
+        }
         b.disabled = true; if (msg) msg.textContent = "Opening checkout…";
-        post("/api/billing?action=checkout", { plan: b.getAttribute("data-upgrade") }).then(function (r) {
+        if (window.paTrackCheckout) {
+          window.paTrackCheckout({ plan: plan, sourcePage: "dashboard", signedIn: true, nextStep: "polar_checkout", buttonText: b.textContent });
+        }
+        post("/api/billing?action=checkout", { plan: plan }).then(function (r) {
           if (r.ok && r.url) { location.href = r.url; return; }
           b.disabled = false; if (msg) msg.textContent = r.error || "Could not open checkout.";
         });

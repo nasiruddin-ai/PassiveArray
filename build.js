@@ -163,22 +163,27 @@ appPage.buildInto(DIST, posts);
 pagePaths.noindex.push("/app/");
 console.log("pages/app-page.js -> dist/app/");
 
-// sitemap.xml and robots.txt for search engines.
-const urls = [
-  ["/", "1.0", "weekly"],
-  ["/creator-tools/", "0.9", "weekly"],
-  ...site.tools.map((t) => ["/creator-tools/" + t.slug + "/", "0.8", "monthly"]),
-  ...site.WEB_TOOLS.map(([href]) => ["/" + href, "0.7", "monthly"]),
-  ["/research/", "0.8", "weekly"],
-  ["/research/outliers/", "0.8", "daily"],
-  ["/research/shorts/", "0.7", "daily"],
-  ["/youtube-extension/", "0.8", "monthly"],
-  ["/youtube-extension/privacy/", "0.3", "yearly"],
-  ["/mcp", "0.8", "monthly", mcpPage.UPDATED],
-  ["/blog/", "0.8", "weekly"],
-  ...blog.CATEGORIES.map((c) => ["/blog/category/" + c.slug + "/", "0.7", "weekly"]),
-  ...posts.map((p) => ["/blog/" + p.slug + "/", "0.7", "monthly", p.updated]),
-  ...pagePaths.indexable.map((p) => [p, p === "/about/" ? "0.5" : "0.3", "yearly"]),
+// Sitemap index (sitemap.xml -> sitemap-core.xml, sitemap-tools.xml, sitemap-blog.xml),
+// RSS feed (rss.xml), and robots.txt for search engines.
+const coreUrls = [
+  ["/"],
+  ["/creator-tools/"],
+  ["/research/"],
+  ["/research/outliers/"],
+  ["/research/shorts/"],
+  ["/youtube-extension/"],
+  ["/youtube-extension/privacy/"],
+  ["/mcp", mcpPage.UPDATED],
+  ...pagePaths.indexable.map((p) => [p]),
+];
+const toolUrls = [
+  ...site.tools.map((t) => ["/creator-tools/" + t.slug + "/"]),
+  ...site.WEB_TOOLS.map(([href]) => ["/" + href]),
+];
+const blogUrls = [
+  ["/blog/"],
+  ...blog.CATEGORIES.map((c) => ["/blog/category/" + c.slug + "/"]),
+  ...posts.map((p) => ["/blog/" + p.slug + "/", p.updated || p.date]),
 ];
 const today = new Date().toISOString().slice(0, 10);
 // lastmod only moves when a page's own text changes. Each page's main-content text is
@@ -211,16 +216,76 @@ function lastmodFor(loc, mod) {
   nextDates[loc] = { hash, date };
   return date;
 }
-const sitemap = '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n' +
-  urls.map(([loc, pri, freq, mod]) => `  <url><loc>${site.SITE}${loc}</loc><lastmod>${lastmodFor(loc, mod)}</lastmod><changefreq>${freq}</changefreq><priority>${pri}</priority></url>`).join("\n") +
-  "\n</urlset>\n";
-fs.writeFileSync(path.join(DIST, "sitemap.xml"), sitemap);
+function writeUrlset(file, list) {
+  const rows = list.map(([loc, mod]) => ({ loc, lastmod: lastmodFor(loc, mod) }));
+  const xml = '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n' +
+    rows.map((r) => `  <url><loc>${site.SITE}${r.loc}</loc><lastmod>${r.lastmod}</lastmod></url>`).join("\n") +
+    "\n</urlset>\n";
+  fs.writeFileSync(path.join(DIST, file), xml);
+  const latest = rows.reduce((m, r) => (r.lastmod > m ? r.lastmod : m), "2026-01-01");
+  return { file, count: rows.length, latest };
+}
+const childSitemaps = [
+  writeUrlset("sitemap-core.xml", coreUrls),
+  writeUrlset("sitemap-tools.xml", toolUrls),
+  writeUrlset("sitemap-blog.xml", blogUrls),
+];
+const sitemapIndex = '<?xml version="1.0" encoding="UTF-8"?>\n<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n' +
+  childSitemaps.map((s) => `  <sitemap><loc>${site.SITE}/${s.file}</loc><lastmod>${s.latest}</lastmod></sitemap>`).join("\n") +
+  "\n</sitemapindex>\n";
+fs.writeFileSync(path.join(DIST, "sitemap.xml"), sitemapIndex);
 try { fs.writeFileSync(DATES_FILE, JSON.stringify(nextDates, null, 1) + "\n"); } catch (_) { /* read-only build host */ }
+
+// RSS 2.0 feed (/rss.xml) of the newest blog posts and newest tools for Google Search Console
+// and feed readers (Google uses submitted RSS feeds alongside sitemaps for fast discovery).
+const xmlEsc = (s) => String(s || "").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+const rfcDate = (iso) => new Date((iso || today) + "T12:00:00Z").toUTCString();
+const rssBlogItems = posts.slice(0, 40).map((p) => ({
+  title: p.title,
+  link: `${site.SITE}/blog/${p.slug}/`,
+  desc: p.description || p.title,
+  date: p.updated || p.date || today,
+  category: (p.category && (p.category.label || p.category)) || "Blog",
+}));
+const rssToolItems = site.tools
+  .map((t, i) => {
+    const loc = `/creator-tools/${t.slug}/`;
+    const date = (nextDates[loc] && nextDates[loc].date) || today;
+    return { title: t.name, link: `${site.SITE}${loc}`, desc: t.short || t.name, date, idx: i, category: `${t.platform} Tools` };
+  })
+  .sort((a, b) => (a.date < b.date ? 1 : a.date > b.date ? -1 : b.idx - a.idx))
+  .slice(0, 20);
+const rssItems = [...rssBlogItems, ...rssToolItems]
+  .sort((a, b) => (a.date < b.date ? 1 : a.date > b.date ? -1 : 0))
+  .slice(0, 60);
+const rssXml = `<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+<channel>
+  <title>${xmlEsc(site.BRAND)}</title>
+  <link>${site.SITE}/</link>
+  <description>Free YouTube SEO, creator tools, monetization calculators, and research guides from Passive Array.</description>
+  <language>en-us</language>
+  <lastBuildDate>${rfcDate(rssItems[0] ? rssItems[0].date : today)}</lastBuildDate>
+  <atom:link href="${site.SITE}/rss.xml" rel="self" type="application/rss+xml"/>
+${rssItems.map((it) => `  <item>
+    <title>${xmlEsc(it.title)}</title>
+    <link>${it.link}</link>
+    <guid isPermaLink="true">${it.link}</guid>
+    <pubDate>${rfcDate(it.date)}</pubDate>
+    <category>${xmlEsc(it.category)}</category>
+    <description>${xmlEsc(it.desc)}</description>
+  </item>`).join("\n")}
+</channel>
+</rss>
+`;
+fs.writeFileSync(path.join(DIST, "rss.xml"), rssXml);
+
 // Only the API is blocked. Login, sign-up, account and dashboard carry noindex tags,
 // which Google can only see if it may crawl them, so they are not disallowed here.
 const disallow = ["/api/"].map((p) => "Disallow: " + p).join("\n");
 fs.writeFileSync(path.join(DIST, "robots.txt"), "User-agent: *\nAllow: /\n" + disallow + "\n\nSitemap: " + site.SITE + "/sitemap.xml\n");
-console.log("sitemap.xml (" + urls.length + " urls) and robots.txt -> dist/");
+const totalUrls = childSitemaps.reduce((sum, s) => sum + s.count, 0);
+console.log("sitemap.xml index (" + childSitemaps.map((s) => s.file + "=" + s.count).join(", ") + "; total=" + totalUrls + "), rss.xml (" + rssItems.length + " items) and robots.txt -> dist/");
 
 // llms.txt: a plain-text site map for AI assistants, built from the same lists as the sitemap.
 const llms = require("./pages/llms-txt.js");

@@ -94,6 +94,7 @@ const HEAD = `${VERIFY_TAG}
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="manifest" href="/site.webmanifest">
+<link rel="alternate" type="application/rss+xml" title="${BRAND} RSS Feed" href="${SITE}/rss.xml">
 <meta name="theme-color" content="#1F2A44">
 <meta name="twitter:card" content="summary_large_image">
 <!-- Prefetch a same-site page when a visitor starts to hover or tap its link, so it opens with no wait for the first byte. Prefetch only, so analytics never counts a page nobody opened. -->
@@ -449,10 +450,28 @@ const CLUSTERS = [
   ["youtube-chapters-checker", "youtube-video-seo-checker", "youtube-timestamp-link-generator", "youtube-description-generator", "youtube-title-analyzer"],
   ["video-bitrate-calculator", "video-file-size-calculator", "aspect-ratio-calculator", "youtube-thumbnail-tester", "youtube-embed-code-generator"],
   ["instagram-username-generator", "tiktok-username-generator", "youtube-channel-name-generator", "instagram-bio-generator"],
+  ["tiktok-username-generator", "tiktok-account-comparison", "tiktok-engagement-rate-calculator", "tiktok-money-calculator"],
+  ["x-account-comparison", "x-follower-to-following-ratio", "youtube-channel-comparison", "tiktok-account-comparison"],
 ];
 function clusterMates(slug) {
   const out = [];
   for (const c of CLUSTERS) if (c.includes(slug)) for (const s of c) if (s !== slug && !out.includes(s)) out.push(s);
+  return out.map((s) => tools.find((o) => o.slug === s)).filter(Boolean);
+}
+function siblingMates(slug) {
+  const primaries = [];
+  const mates = [];
+  for (const c of CLUSTERS) {
+    if (!c.includes(slug)) continue;
+    if (c[0] !== slug && !primaries.includes(c[0])) primaries.push(c[0]);
+    for (const s of c) if (s !== slug && !mates.includes(s)) mates.push(s);
+  }
+  const out = [];
+  const max = Math.max(primaries.length, mates.length);
+  for (let i = 0; i < max; i++) {
+    if (i < primaries.length && !out.includes(primaries[i])) out.push(primaries[i]);
+    if (i < mates.length && !out.includes(mates[i])) out.push(mates[i]);
+  }
   return out.map((s) => tools.find((o) => o.slug === s)).filter(Boolean);
 }
 // Short keyword anchor: the tool's name, which is its main search phrase.
@@ -465,7 +484,7 @@ function toolPage(template, t) {
   const root = "../../";
   const url = `${SITE}/creator-tools/${t.slug}/`;
   const same = tools.filter((o) => o.platform === t.platform && o.slug !== t.slug);
-  const sibs = clusterMates(t.slug).filter((o) => o.platform === t.platform).concat(same).filter((o, i, a) => a.indexOf(o) === i).slice(0, 3);
+  const sibs = siblingMates(t.slug).filter((o) => o.platform === t.platform).concat(same).filter((o, i, a) => a.indexOf(o) === i).slice(0, 4);
   const siblings = sibs.map((o) => `<a href="../${o.slug}/">${esc(anchorName(o))}</a>`).join("");
   // A tool can name its own follow-ups with "next"; otherwise pick nearby ones.
   const picked = (t.next || []).map((s) => tools.find((o) => o.slug === s)).filter(Boolean);

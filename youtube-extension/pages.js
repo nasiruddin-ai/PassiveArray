@@ -1073,6 +1073,28 @@ function landingPage() {
       </div>
     </section>
 
+    <!-- 6b. Companion Web Tools -->
+    <section class="pa-ext-faq" style="padding-top:12px">
+      <div class="pa-ext-center-head">
+        <div class="pa-ext-pill">Companion Web Tools</div>
+        <h2>Use the same YouTube tools without installing anything</h2>
+        <p>Every calculation inside the extension also runs free on the web, with formulas and API sources shown.</p>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;margin-top:20px">
+        ${[
+          ["youtube-monetization-checker", "YouTube Monetization Checker", "Check Partner Program signals and ad placements."],
+          ["youtube-video-stats-checker", "YouTube Video Stats Checker", "Inspect live views, likes, engagement and tags on any video."],
+          ["youtube-cpm-calculator", "YouTube CPM Calculator", "Estimate advertiser cost per 1,000 monetized impressions."],
+          ["youtube-rpm-calculator", "YouTube RPM Calculator", "Calculate creator revenue per 1,000 total views."],
+          ["youtube-chapters-checker", "YouTube Chapters Checker", "Validate timestamp syntax and chapter structure before upload."],
+          ["youtube-watch-hours-calculator", "YouTube Watch Hours Calculator", "See how many views and uploads reach 4,000 watch hours."],
+          ["youtube-channel-keywords-finder", "YouTube Channel Keywords Finder", "Extract hidden channel-level tags from any competitor."],
+          ["youtube-tag-extractor", "YouTube Tag Extractor", "Copy tags from any public YouTube video in one click."],
+        ].map(([slug, name, desc]) => `<a href="../creator-tools/${slug}/" style="display:block;padding:16px 18px;border:1px solid var(--border-color);border-radius:14px;background:var(--bg-surface);text-decoration:none;color:inherit"><strong style="display:block;font-size:.95rem;margin-bottom:4px;color:var(--text-primary)">${esc(name)}</strong><span style="font-size:.84rem;color:var(--text-muted);line-height:1.45;display:block">${esc(desc)}</span></a>`).join("")}
+      </div>
+      <p style="text-align:center;margin-top:16px;font-size:.9rem"><a href="../creator-tools/" style="font-weight:600;color:var(--accent-teal)">Browse all ${site.tools.length} free creator tools &rarr;</a></p>
+    </section>
+
     <!-- 7. Final High-Conversion CTA Banner -->
     <div class="pa-ext-cta-box">
       <h2>Take the guesswork out of YouTube SEO today</h2>

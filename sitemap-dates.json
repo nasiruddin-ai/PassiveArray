@@ -1,11 +1,79 @@
 {
  "/": {
-  "hash": "eddca2f581e77ae1",
-  "date": "2026-11-19"
+  "hash": "e6e3c504d64361d3",
+  "date": "2026-11-23"
  },
  "/creator-tools/": {
   "hash": "b80c8987cee58dd5",
   "date": "2026-11-14"
+ },
+ "/research/": {
+  "hash": "bade85cebcd3841b",
+  "date": "2026-10-11"
+ },
+ "/research/outliers/": {
+  "hash": "cfd4acf9d70c604b",
+  "date": "2026-10-11"
+ },
+ "/research/shorts/": {
+  "hash": "9490ad71ef16fcef",
+  "date": "2026-10-11"
+ },
+ "/youtube-extension/": {
+  "hash": "3abbb0f9e3eddb5b",
+  "date": "2026-11-23"
+ },
+ "/youtube-extension/privacy/": {
+  "hash": "34660f91e37e1d59",
+  "date": "2026-10-10"
+ },
+ "/youtube-seo-service/": {
+  "hash": "7b47f3333eab77ff",
+  "date": "2026-11-14"
+ },
+ "/founder/": {
+  "hash": "19bbe7dcb241a29b",
+  "date": "2026-11-14"
+ },
+ "/about/": {
+  "hash": "1980c9cb0e7ecf47",
+  "date": "2026-11-14"
+ },
+ "/contact/": {
+  "hash": "80b53f129dc19978",
+  "date": "2026-11-08"
+ },
+ "/pricing/": {
+  "hash": "04bc7230bec0a71c",
+  "date": "2026-11-23"
+ },
+ "/faq/": {
+  "hash": "e17e9e9b3ebeb96f",
+  "date": "2026-11-08"
+ },
+ "/compare/": {
+  "hash": "33e6c6dade072a4c",
+  "date": "2026-11-23"
+ },
+ "/compare/vidiq-alternative/": {
+  "hash": "8cf5b248f9a1f59c",
+  "date": "2026-11-23"
+ },
+ "/compare/tubebuddy-alternative/": {
+  "hash": "19048b07cc8bd10d",
+  "date": "2026-11-23"
+ },
+ "/privacy/": {
+  "hash": "452ad7bbe6b873bb",
+  "date": "2026-11-22"
+ },
+ "/terms/": {
+  "hash": "1fdf0d324eb66f5c",
+  "date": "2026-11-22"
+ },
+ "/refund-policy/": {
+  "hash": "06b2f6357871edd3",
+  "date": "2026-11-22"
  },
  "/creator-tools/youtube-subscriber-count-checker/": {
   "hash": "f7a4f147260949e4",
@@ -136,12 +204,12 @@
   "date": "2026-11-14"
  },
  "/creator-tools/x-follower-to-following-ratio/": {
-  "hash": "454acee22bc8c6af",
-  "date": "2026-11-14"
+  "hash": "dd813fcade8b1c87",
+  "date": "2026-11-23"
  },
  "/creator-tools/x-account-comparison/": {
-  "hash": "5d2a163f347d0a80",
-  "date": "2026-11-14"
+  "hash": "36fbac883f77ed86",
+  "date": "2026-11-23"
  },
  "/creator-tools/instagram-hashtag-generator/": {
   "hash": "82c80c35c4d37ef3",
@@ -399,26 +467,6 @@
   "hash": "7aef043a3088be72",
   "date": "2026-11-18"
  },
- "/research/": {
-  "hash": "bade85cebcd3841b",
-  "date": "2026-10-11"
- },
- "/research/outliers/": {
-  "hash": "cfd4acf9d70c604b",
-  "date": "2026-10-11"
- },
- "/research/shorts/": {
-  "hash": "9490ad71ef16fcef",
-  "date": "2026-10-11"
- },
- "/youtube-extension/": {
-  "hash": "5f77aec17a0c5465",
-  "date": "2026-11-08"
- },
- "/youtube-extension/privacy/": {
-  "hash": "34660f91e37e1d59",
-  "date": "2026-10-10"
- },
  "/blog/": {
   "hash": "722cef1beebac549",
   "date": "2026-11-08"
@@ -446,53 +494,5 @@
  "/blog/category/for-brands/": {
   "hash": "e21096d74756c0b9",
   "date": "2026-11-08"
- },
- "/youtube-seo-service/": {
-  "hash": "7b47f3333eab77ff",
-  "date": "2026-11-14"
- },
- "/founder/": {
-  "hash": "19bbe7dcb241a29b",
-  "date": "2026-11-14"
- },
- "/about/": {
-  "hash": "1980c9cb0e7ecf47",
-  "date": "2026-11-14"
- },
- "/contact/": {
-  "hash": "80b53f129dc19978",
-  "date": "2026-11-08"
- },
- "/pricing/": {
-  "hash": "eab0f824d54c1392",
-  "date": "2026-11-22"
- },
- "/faq/": {
-  "hash": "e17e9e9b3ebeb96f",
-  "date": "2026-11-08"
- },
- "/compare/": {
-  "hash": "6aea607261e187a4",
-  "date": "2026-11-15"
- },
- "/compare/vidiq-alternative/": {
-  "hash": "1b14d3da2ed955b2",
-  "date": "2026-11-15"
- },
- "/compare/tubebuddy-alternative/": {
-  "hash": "4e5a48d34fedaac1",
-  "date": "2026-11-14"
- },
- "/privacy/": {
-  "hash": "452ad7bbe6b873bb",
-  "date": "2026-11-22"
- },
- "/terms/": {
-  "hash": "1fdf0d324eb66f5c",
-  "date": "2026-11-22"
- },
- "/refund-policy/": {
-  "hash": "06b2f6357871edd3",
-  "date": "2026-11-22"
  }
 }

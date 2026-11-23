@@ -516,7 +516,7 @@ function accountPage() {
    comparison that only lists the competitor's faults is not persuasive and
    does not deserve to rank. */
 
-const CHECKED = "September 2026";
+const CHECKED = "November 2026";
 
 function cmpTable(rows, them) {
   return `<div class="tablewrap"><table class="cmp">
@@ -736,42 +736,102 @@ function compareHubPage() {
 
 /* ---------------------------------------------------------------- pricing */
 function pricingPage() {
+  const pro = require("../lib/pro.js");
   const n = site.tools.length;
   const live = site.tools.filter((t) => t.api === "youtube" || t.api === "twitch").length;
+  const mo = pro.PRICE_MONTHLY;
+  const yr = pro.PRICE_YEARLY;
+  const yrPerMo = (yr / 12).toFixed(2);
+  const yrSave = mo * 12 - yr;
+  const yrPct = Math.round((yrSave / (mo * 12)) * 100);
+
+  const pricingFaq = [
+    ["Why is the yearly price shown per month?", `With yearly billing, Pro is $${yr} per year, which works out to $${yrPerMo} a month — saving $${yrSave} (${yrPct}%) compared with paying $${mo} every month. You pay $${yr} once a year, and the exact total is always shown above the button.`],
+    ["Can I get a refund if Pro is not for me?", `Yes. Every Pro subscription comes with a full 14-day refund window, whether you choose monthly or yearly. Cancel anytime in two clicks from your <a href="../account/">account page</a>, or read the full <a href="../refund-policy/">Refund &amp; Cancellation Policy</a>.`],
+    ["How do payments, invoices and VAT work?", `Payments are processed by <strong>Polar (polar.sh)</strong>, our Merchant of Record. Polar accepts global cards, Apple Pay and Google Pay, handles sales tax and VAT automatically, and gives you downloadable invoices inside the Customer Portal. Passive Array never sees your card number.`],
+    ["How do MCP credits work on Free vs. Pro?", `Every free account gets 50 MCP credits a day (about 1,500 a month) to pull live YouTube and Twitch data inside Claude, ChatGPT, Cursor or VS Code. Pro raises that to 1,000 credits a day (about 30,000 a month). Credits reset daily at 00:00 UTC and failed calls cost nothing. See every tool and credit cost on the <a href="../mcp">MCP docs page</a>.`],
+    ["What happens to my watchlist if I cancel Pro?", `Your Pro features stay active until the end of your current paid billing period. After that, all ${n} tools and research feeds stay free; your account returns to Free limits (${pro.FREE_WATCH} watched channels and 50 daily MCP credits), and you will not be charged again.`],
+    ["Will any free tool move behind Pro later?", `No. Every tool that is free today stays free without ads or an account. Pro only pays for recurring server work that scales with usage: daily channel snapshots, the Monday mover email, CSV exports and higher daily MCP allowances.`],
+  ];
+
+  const productLd = {
+    "@context": "https://schema.org", "@type": "Product", name: "Passive Array",
+    description: `${n} free tools for creators and brands, with an optional Pro plan for channel watching, CSV exports and MCP credits.`,
+    offers: [
+      { "@type": "Offer", name: "Free", price: "0", priceCurrency: "USD", availability: "https://schema.org/InStock", url: SITE + "/pricing/" },
+      { "@type": "Offer", name: "Pro monthly", price: String(mo), priceCurrency: "USD", availability: "https://schema.org/InStock", url: SITE + "/pricing/" },
+      { "@type": "Offer", name: "Pro yearly", price: String(yr), priceCurrency: "USD", availability: "https://schema.org/InStock", url: SITE + "/pricing/" },
+    ],
+  };
+
   const body = `
-  ${head("Pricing", "Pricing", "Every tool is free. Pro pays for the parts that cost real money to run: watching channels over time, the Monday email, and exports.")}
+  ${head("Pricing", "Pricing", "Every tool is free. Pro pays for the parts that cost real money to run: daily channel tracking, the Monday email, CSV exports and higher MCP limits.")}
+
+  <div class="bill-bar">
+    <div class="bill-toggle" role="group" aria-label="Billing period" data-bill-toggle data-monthly="${mo}" data-yearly="${yr}">
+      <button type="button" data-bill-opt="monthly" aria-pressed="false">Monthly</button>
+      <button type="button" class="on" data-bill-opt="yearly" aria-pressed="true">Yearly <span class="bill-save">Save ${yrPct}%</span></button>
+    </div>
+    <span class="bill-hint">14-day full refund · Cancel in two clicks</span>
+  </div>
+
   <div class="grid c2 plans" style="align-items:stretch">
     <div class="card plan">
-      <span class="k" style="font-size:.76rem;font-weight:700;letter-spacing:.06em;color:var(--deep)">FREE</span>
-      <div class="price">$0</div>
-      <p class="muted" style="margin-bottom:18px">Not a trial. Not a crippled tier. All ${n} tools, forever.</p>
+      <div class="plan-top">
+        <span class="k">FREE</span>
+        <span class="pill">No account required</span>
+      </div>
+      <div class="price">$0<small>/forever</small></div>
+      <p class="muted plan-sub">Not a trial. Not a crippled tier. All ${n} tools, unlimited.</p>
       <ul class="plain">
         <li><b>All ${n} tools</b>, with no feature locked</li>
         <li><b>${live} tools with live data</b> from the official YouTube and Twitch APIs</li>
-        <li><b>Unlimited generations.</b> No credit allowance to run down</li>
+        <li><b>Unlimited generations.</b> No credit allowance to run down on web tools</li>
         <li><b>The Chrome extension</b>, including the monetization check and Studio tag suggestions</li>
         <li><b>Research feeds:</b> keywords, outlier videos and Shorts</li>
         <li><b>No account required.</b> No email, no card, no Google sign-in</li>
-        <li><b>Watch 3 channels</b> with a free account, no alerts</li>
-        <li><b>MCP for AI assistants:</b> 50 credits a day to use Passive Array data in Claude, ChatGPT or Cursor (free account)</li>
+        <li><b>Watch ${pro.FREE_WATCH} channels</b> with a free account, no alerts</li>
+        <li><b><a href="../mcp">MCP for AI assistants</a>:</b> 50 credits a day (~1,500/mo) in Claude, ChatGPT or Cursor (free account)</li>
         <li><b>No ads</b> between you and the answer</li>
       </ul>
-      <a class="btn ghost wide" href="../creator-tools/" style="margin-top:auto">Start using them</a>
+      <a class="btn ghost wide" href="../creator-tools/" style="margin-top:auto">Start using the tools</a>
     </div>
     <div class="card plan pro" style="border-color:var(--teal);border-width:2px">
-      <span class="k" style="font-size:.76rem;font-weight:700;letter-spacing:.06em;color:var(--deep)">PRO</span>
-      <div class="price">$9<small>/month</small></div>
-      <p class="muted" style="margin-bottom:18px">or $79 a year. Cancel in two clicks from your account page.</p>
+      <div class="plan-top">
+        <span class="k">PRO</span>
+        <span class="pill good" data-pro-badge>Save $${yrSave}/year</span>
+      </div>
+      <div class="price" data-pro-price>$${yrPerMo}<small>/month</small></div>
+      <p class="muted plan-sub" data-pro-sub>Billed $${yr} per year (save $${yrSave} vs. $${mo}/mo). Renews automatically. Cancel in two clicks.</p>
       <ul class="plain">
         <li><b>Everything in Free</b>, because Free is everything</li>
-        <li><b>Watch up to 100 channels.</b> Daily snapshots, 7-day and 30-day change on your account page</li>
+        <li><b>Watch up to ${pro.PRO_WATCH} channels.</b> Daily snapshots, 7-day and 30-day change on your account page</li>
         <li><b>The Monday email:</b> every channel on your list, sorted by who moved most</li>
         <li><b>CSV export</b> of your watchlist and the outlier and Shorts feeds</li>
-        <li><b>1,000 MCP credits a day</b> for your AI assistants, instead of 50</li>
+        <li><b>1,000 <a href="../mcp">MCP credits</a> a day</b> (~30,000/mo) for Claude, ChatGPT or Cursor, instead of 50</li>
         <li><b>You keep the site ad-free</b> for everyone else</li>
       </ul>
-      <a class="btn wide" href="../account/" style="margin-top:auto" data-pro-cta>Go Pro from your account</a>
-      <p class="note" style="margin:10px 0 0" data-pro-note>Payments by Polar (polar.sh), our Merchant of Record, which accepts global cards, Apple Pay, and Google Pay and handles sales tax. We never see your card number.</p>
+      <a class="btn wide" href="../account/?plan=yearly" style="margin-top:auto" data-pro-cta data-plan="yearly">Go Pro — $${yr}/year</a>
+      <span class="fmsg" data-pro-msg></span>
+      <p class="note plan-trust" data-pro-note><a href="../refund-policy/">14-day full refund</a> · Cancel in 2 clicks · Payments, VAT &amp; invoices by Polar (cards, Apple Pay, Google Pay). We never see your card number.</p>
+    </div>
+  </div>
+
+  <div class="card dfy-band" style="margin-top:24px">
+    <div class="dfy-main">
+      <span class="k">DONE-FOR-YOU SERVICE · FOUNDER-LED</span>
+      <h2>Want hands-on YouTube SEO instead of DIY tools?</h2>
+      <p class="muted">Founder Nasir Uddin audits your channel, researches winning keywords and outlier topics, and optimizes your titles, descriptions, tags, thumbnails and playlists — worldwide, using YouTube Studio's limited Editor role (never your Google password).</p>
+      <ul class="dfy-points">
+        <li>48-hour channel audit</li>
+        <li>Monthly video SEO</li>
+        <li>Channel setup &amp; relaunch</li>
+        <li>Fixed quote after a free quick look</li>
+      </ul>
+    </div>
+    <div class="dfy-actions">
+      <a class="btn" href="../youtube-seo-service/">View YouTube SEO packages</a>
+      <a class="btn ghost" href="../founder/">Meet Nasir Uddin</a>
     </div>
   </div>
 
@@ -793,30 +853,30 @@ function pricingPage() {
     <div class="tablewrap"><table class="cmp">
       <thead><tr><th></th><th class="us">Passive Array</th><th><a href="../compare/vidiq-alternative/">vidIQ</a></th><th><a href="../compare/tubebuddy-alternative/">TubeBuddy</a></th></tr></thead>
       <tbody>
-        <tr><td>Entry price</td><td class="us">Free</td><td>Free tier, then $16.58/mo billed yearly ($19 monthly)</td><td>Free tier, then paid plans</td></tr>
-        <tr><td>Free tier limits</td><td class="us">None on the tools</td><td>Monthly AI credit allowance</td><td>Feature limits</td></tr>
-        <tr><td>Paid plan</td><td class="us">$9/mo or $79/yr, for channel watching and exports only</td><td>From $16.58/mo billed yearly</td><td>Paid plans</td></tr>
-        <tr><td>Account required to start</td><td class="us">No</td><td>Yes</td><td>Yes</td></tr>
+        <tr><td>Entry price</td><td class="us">Free ($0)</td><td>Free tier (150 AI credits/mo), then $16.58/mo yearly ($19 monthly)</td><td>Free tier, then paid plans</td></tr>
+        <tr><td>Free tier limits</td><td class="us">None on all ${n} web tools</td><td>Monthly AI credit allowance (no rollover)</td><td>Feature limits</td></tr>
+        <tr><td>Paid plans</td><td class="us">$${mo}/mo or $${yr}/yr ($${yrPerMo}/mo), for tracking, exports &amp; MCP</td><td>Boost $16.58/mo ($199/yr) · MAX $39/mo ($468/yr)</td><td>Paid monthly or yearly plans</td></tr>
+        <tr><td>MCP for Claude / ChatGPT</td><td class="us">50 credits/day Free · 1,000/day Pro</td><td>Shared from monthly AI credits (150/mo on Free)</td><td>Not offered</td></tr>
+        <tr><td>Watchlist &amp; CSV export</td><td class="us">${pro.FREE_WATCH} channels Free · ${pro.PRO_WATCH} + Monday email + CSV on Pro</td><td>Paid tiers (per-channel limits)</td><td>Paid tiers</td></tr>
+        <tr><td>Account required to start</td><td class="us">No</td><td>Yes</td><td>Yes (Google)</td></tr>
+        <tr><td>Refund &amp; cancellation</td><td class="us"><a href="../refund-policy/">14-day full refund</a>, 2-click cancel</td><td>Renews automatically; cancel anytime</td><td>Varies by plan</td></tr>
       </tbody>
     </table></div>
     <p class="note">Checked ${CHECKED} from both companies' public pricing pages. Prices change; <a href="../contact/">tell us</a> if this is stale. Full detail on the <a href="../compare/">comparison pages</a>.</p>
+  </div>
+
+  <div class="card faq" style="margin-top:28px">
+    <h2 style="margin:0 0 12px;font-size:1.3rem">Pricing &amp; billing questions</h2>
+    ${pricingFaq.map(([q, a]) => `<details><summary>${esc(q)}</summary><p>${a}</p></details>`).join("")}
   </div>`;
   return site.shell({
-    title: `Pricing: ${n} Free Creator Tools & $9/mo Pro Watchlist`,
+    title: `Pricing: ${n} Free Creator Tools & $${mo}/mo Pro Watchlist`,
     ogTitle: "Passive Array pricing: every tool free, Pro for channel watching",
-    description: `All ${n} Passive Array tools are free with no account. Pro, $9 a month, adds a 100-channel watchlist, daily snapshots, a Monday email and CSV export.`,
+    description: `All ${n} Passive Array tools are free with no account. Pro ($${mo}/mo or $${yr}/yr, 14-day refund) adds a ${pro.PRO_WATCH}-channel watchlist, Monday mover email, CSV exports and 1,000 daily MCP credits.`,
     path: "/pricing/",
     active: "pricing",
     body,
-    jsonld: {
-      "@context": "https://schema.org", "@type": "Product", name: "Passive Array",
-      description: `${n} free tools for creators and brands, with an optional Pro plan for watching channels.`,
-      offers: [
-        { "@type": "Offer", name: "Free", price: "0", priceCurrency: "USD", availability: "https://schema.org/InStock", url: SITE + "/pricing/" },
-        { "@type": "Offer", name: "Pro monthly", price: "9", priceCurrency: "USD", availability: "https://schema.org/InStock", url: SITE + "/pricing/" },
-        { "@type": "Offer", name: "Pro yearly", price: "79", priceCurrency: "USD", availability: "https://schema.org/InStock", url: SITE + "/pricing/" },
-      ],
-    },
+    jsonld: [productLd, site.faqLd(pricingFaq)],
   });
 }
 

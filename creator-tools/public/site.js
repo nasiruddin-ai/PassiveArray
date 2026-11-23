@@ -8,15 +8,92 @@
   var SUBSCRIBE_URL = "/api/subscribe";
 
   /* GA4 events for the Key events report: tool_run, file_download, sign_up, login, generate_lead,
-     begin_checkout, mcp_key_created, extension_click. They go through gtag, so the consent setup in
-     the head applies. done() runs once the hit is sent (or after 800 ms), for clicks that navigate away. */
+     checkout_click, begin_checkout, purchase, billing_period_toggle, service_cta_click,
+     mcp_key_created, extension_click. They go through gtag, so the consent setup in the head applies.
+     done() runs once the hit is sent (or after 600 ms), for clicks that navigate away. */
   window.paTrack = function (name, params, done) {
     var called = false;
     function finish() { if (!called && done) { called = true; done(); } }
     if (typeof window.gtag !== "function") { finish(); return; }
-    var p = Object.assign({}, params || {});
-    if (done) { p.event_callback = finish; setTimeout(finish, 800); }
+    var p = Object.assign({ transport_type: "beacon" }, params || {});
+    if (done) { p.event_callback = finish; setTimeout(finish, 600); }
     window.gtag("event", name, p);
+  };
+
+  /* Unified GA4 checkout tracking across /pricing/, /account/, and /app/.
+     Fires checkout_click on every CTA click (signed in or out) and standard GA4 begin_checkout
+     with value + items whenever Polar checkout is actually launched. Never sends PII/email. */
+  window.paTrackCheckout = function (opts, done) {
+    var o = opts || {};
+    var plan = o.plan === "monthly" ? "monthly" : "yearly";
+    var value = plan === "yearly" ? 79 : 9;
+    var source = o.sourcePage || "unknown";
+    var signedIn = !!o.signedIn;
+    var nextStep = o.nextStep || (signedIn ? "polar_checkout" : "login_required");
+    var label = String(o.buttonText || "").trim().slice(0, 80);
+    var item = {
+      item_id: "pro_" + plan,
+      item_name: plan === "yearly" ? "Passive Array Pro (Yearly)" : "Passive Array Pro (Monthly)",
+      item_category: "Subscription",
+      price: value,
+      quantity: 1,
+    };
+    try { localStorage.setItem("pa-last-checkout-plan", plan); } catch (e) { /* private mode */ }
+    var clickParams = {
+      plan: plan,
+      currency: "USD",
+      value: value,
+      source_page: source,
+      page_path: location.pathname,
+      signed_in: signedIn ? "yes" : "no",
+      next_step: nextStep,
+    };
+    if (label) clickParams.button_text = label;
+    if (nextStep === "polar_checkout") {
+      window.paTrack("checkout_click", clickParams);
+      window.paTrack("begin_checkout", {
+        currency: "USD",
+        value: value,
+        plan: plan,
+        source_page: source,
+        items: [item],
+      }, done);
+    } else {
+      window.paTrack("checkout_click", clickParams, done);
+    }
+  };
+
+  /* Standard GA4 purchase event when returning from Polar (?upgraded=1&checkout_id=...).
+     Deduplicated per checkout_id in localStorage so page reloads never double-count. */
+  window.paTrackPurchase = function (checkoutId, planHint) {
+    var txId = String(checkoutId || "").trim();
+    if (!txId) return;
+    var key = "pa-tracked-checkouts";
+    try {
+      var seen = JSON.parse(localStorage.getItem(key) || "[]");
+      if (Array.isArray(seen) && seen.indexOf(txId) >= 0) return;
+      seen = (Array.isArray(seen) ? seen : []).concat([txId]).slice(-20);
+      localStorage.setItem(key, JSON.stringify(seen));
+    } catch (e) { /* private mode */ }
+    var plan = planHint || "";
+    if (plan !== "monthly" && plan !== "yearly") {
+      try { plan = localStorage.getItem("pa-last-checkout-plan") || ""; } catch (e) { plan = ""; }
+    }
+    plan = plan === "monthly" ? "monthly" : "yearly";
+    var value = plan === "yearly" ? 79 : 9;
+    window.paTrack("purchase", {
+      transaction_id: txId,
+      currency: "USD",
+      value: value,
+      plan: plan,
+      items: [{
+        item_id: "pro_" + plan,
+        item_name: plan === "yearly" ? "Passive Array Pro (Yearly)" : "Passive Array Pro (Monthly)",
+        item_category: "Subscription",
+        price: value,
+        quantity: 1,
+      }],
+    });
   };
   /* Home page: a small "try free" bar on phones, shown after the hero, gone for good once closed. */
   var sticky = document.querySelector("[data-sticky]");
@@ -317,9 +394,117 @@
   }
   paintHeader();
   var proCta = document.querySelector("[data-pro-cta]");
-  if (proCta && !markedEmail()) {
-    proCta.textContent = "Sign in to go Pro";
-    proCta.setAttribute("href", ROOT + "login/?next=%2Faccount%2F");
+  var billToggle = document.querySelector("[data-bill-toggle]");
+  if (proCta) {
+    var mo = Number(billToggle && billToggle.getAttribute("data-monthly")) || 9;
+    var yr = Number(billToggle && billToggle.getAttribute("data-yearly")) || 79;
+    var yrPerMo = (yr / 12).toFixed(2);
+    var yrSave = mo * 12 - yr;
+    var yrPct = Math.round((yrSave / (mo * 12)) * 100);
+    var priceEl = document.querySelector("[data-pro-price]");
+    var subEl = document.querySelector("[data-pro-sub]");
+    var badgeEl = document.querySelector("[data-pro-badge]");
+    var proMsg = document.querySelector("[data-pro-msg]");
+    var currentPlan = proCta.getAttribute("data-plan") || "yearly";
+
+    function paintPlan(plan) {
+      currentPlan = plan === "monthly" ? "monthly" : "yearly";
+      var isYr = currentPlan === "yearly";
+      proCta.setAttribute("data-plan", currentPlan);
+      if (billToggle) {
+        billToggle.querySelectorAll("[data-bill-opt]").forEach(function (b) {
+          var on = b.getAttribute("data-bill-opt") === currentPlan;
+          b.classList.toggle("on", on);
+          b.setAttribute("aria-pressed", on ? "true" : "false");
+        });
+      }
+      if (priceEl) priceEl.innerHTML = "$" + (isYr ? yrPerMo : mo) + "<small>/month</small>";
+      if (subEl) {
+        subEl.textContent = isYr
+          ? "Billed $" + yr + " per year (save $" + yrSave + " vs. $" + mo + "/mo). Renews automatically. Cancel in two clicks."
+          : "Billed $" + mo + " monthly. Switch to yearly ($" + yr + "/yr) to save " + yrPct + "%. Cancel in two clicks.";
+      }
+      if (badgeEl) {
+        badgeEl.textContent = isYr ? "Save $" + yrSave + "/year" : "Flexible monthly";
+        badgeEl.className = isYr ? "pill good" : "pill";
+      }
+      var priceLabel = isYr ? "$" + yr + "/year" : "$" + mo + "/month";
+      var signedIn = !!markedEmail();
+      proCta.textContent = signedIn ? "Go Pro — " + priceLabel : "Sign in to go Pro (" + priceLabel + ")";
+      proCta.setAttribute("href", signedIn
+        ? ROOT + "account/?plan=" + currentPlan
+        : ROOT + "login/?next=" + encodeURIComponent("/account/?plan=" + currentPlan));
+      if (proMsg) { proMsg.textContent = ""; proMsg.className = "fmsg"; }
+    }
+
+    if (billToggle) {
+      billToggle.querySelectorAll("[data-bill-opt]").forEach(function (b) {
+        b.addEventListener("click", function () {
+          var next = b.getAttribute("data-bill-opt");
+          if (next !== currentPlan) {
+            window.paTrack("billing_period_toggle", { plan: next, source_page: "pricing", page_path: location.pathname });
+          }
+          paintPlan(next);
+        });
+      });
+    }
+    paintPlan(currentPlan);
+
+    proCta.addEventListener("click", function (e) {
+      if (!markedEmail()) {
+        if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) {
+          window.paTrackCheckout({ plan: currentPlan, sourcePage: "pricing", signedIn: false, nextStep: "login_required", buttonText: proCta.textContent });
+          return;
+        }
+        e.preventDefault();
+        var loginHref = proCta.getAttribute("href");
+        window.paTrackCheckout({ plan: currentPlan, sourcePage: "pricing", signedIn: false, nextStep: "login_required", buttonText: proCta.textContent }, function () {
+          location.href = loginHref;
+        });
+        return;
+      }
+      e.preventDefault();
+      if (proCta.getAttribute("aria-busy") === "true") return;
+      proCta.setAttribute("aria-busy", "true");
+      if (proMsg) { proMsg.textContent = "Opening Polar checkout…"; proMsg.className = "fmsg"; }
+      window.paTrackCheckout({ plan: currentPlan, sourcePage: "pricing", signedIn: true, nextStep: "polar_checkout", buttonText: proCta.textContent });
+      fetch("/api/billing?action=checkout", {
+        method: "POST",
+        credentials: "same-origin",
+        cache: "no-store",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ plan: currentPlan }),
+      })
+        .then(function (r) { return r.json(); })
+        .catch(function () { return { ok: false, error: "Could not reach the server." }; })
+        .then(function (res) {
+          if (res && res.ok && res.url) { location.href = res.url; return; }
+          proCta.removeAttribute("aria-busy");
+          if (res && res.code === "signin") {
+            marker(null);
+            location.href = ROOT + "login/?next=" + encodeURIComponent("/account/?plan=" + currentPlan);
+            return;
+          }
+          if (res && res.code === "already") {
+            location.href = ROOT + "account/";
+            return;
+          }
+          if (proMsg) {
+            proMsg.textContent = (res && res.error) || "Could not open checkout.";
+            proMsg.className = "fmsg " + (res && res.code === "not_open" ? "" : "bad");
+          }
+        });
+    });
+
+    document.querySelectorAll(".dfy-band a.btn").forEach(function (a) {
+      a.addEventListener("click", function () {
+        window.paTrack("service_cta_click", {
+          source_page: "pricing",
+          link_url: a.href,
+          button_text: (a.textContent || "").trim(),
+        });
+      });
+    });
   }
 
   /* Show / hide a password field. */
@@ -705,13 +890,22 @@
       if (planFree) planFree.hidden = !!res.pro;
       if (planPro) planPro.hidden = !res.pro;
       isPro = !!res.pro;
-      if (location.search.indexOf("upgraded=1") >= 0 && !res.pro) {
-        // The checkout sends people back before the webhook has always landed; try again shortly.
-        setTimeout(function () {
-          authCall("me").then(function (r2) {
-            if (r2 && r2.ok && r2.pro) location.replace(location.pathname);
-          });
-        }, 4000);
+      var upParams = new URLSearchParams(location.search);
+      if (upParams.get("upgraded") === "1") {
+        var txId = upParams.get("checkout_id") || ("polar_" + Date.now());
+        if (res.pro) {
+          window.paTrackPurchase(txId, res.proPlan);
+        } else {
+          // The checkout sends people back before the webhook has always landed; try again shortly.
+          setTimeout(function () {
+            authCall("me").then(function (r2) {
+              if (r2 && r2.ok && r2.pro) {
+                window.paTrackPurchase(txId, r2.proPlan);
+                setTimeout(function () { location.replace(location.pathname); }, 300);
+              }
+            });
+          }, 4000);
+        }
       }
       loadWatch();
 
@@ -720,6 +914,26 @@
         if (setpwTitle) setpwTitle.textContent = res.hasPassword ? "Change your password" : "Add a password";
       }
       showAccount("in");
+      if (!res.pro && planFree) {
+        var wantedPlan = new URLSearchParams(location.search).get("plan");
+        if (wantedPlan === "yearly" || wantedPlan === "monthly") {
+          var pickBtn = planFree.querySelector('[data-upgrade="' + wantedPlan + '"]');
+          var pMsg = planFree.querySelector("[data-plan-msg]");
+          if (pickBtn) {
+            pickBtn.classList.remove("ghost");
+            pickBtn.classList.add("pick");
+            var otherBtn = planFree.querySelector('[data-upgrade="' + (wantedPlan === "yearly" ? "monthly" : "yearly") + '"]');
+            if (otherBtn) otherBtn.classList.add("ghost");
+            if (pMsg) {
+              pMsg.textContent = wantedPlan === "yearly"
+                ? "Yearly Pro selected ($79/year — save 27%). Click the highlighted button to open Polar checkout."
+                : "Monthly Pro selected ($9/month). Click the highlighted button to open Polar checkout.";
+              pMsg.className = "fmsg good";
+            }
+            setTimeout(function () { pickBtn.scrollIntoView({ behavior: "smooth", block: "center" }); }, 60);
+          }
+        }
+      }
     });
 
     if (setpwForm) {
@@ -798,12 +1012,13 @@
     }
     account.querySelectorAll("[data-upgrade]").forEach(function (b) {
       b.addEventListener("click", function () {
+        var plan = b.getAttribute("data-upgrade");
         var msg = account.querySelector("[data-plan-msg]");
         b.disabled = true;
         msg.textContent = "Opening checkout…";
         msg.className = "fmsg";
-        window.paTrack("begin_checkout", { plan: b.getAttribute("data-upgrade"), currency: "USD" });
-        billingCall("checkout", { plan: b.getAttribute("data-upgrade") }).then(function (res) {
+        window.paTrackCheckout({ plan: plan, sourcePage: "account", signedIn: true, nextStep: "polar_checkout", buttonText: b.textContent });
+        billingCall("checkout", { plan: plan }).then(function (res) {
           if (res && res.ok && res.url) { location.href = res.url; return; }
           b.disabled = false;
           msg.textContent = (res && res.error) || "Could not open checkout.";

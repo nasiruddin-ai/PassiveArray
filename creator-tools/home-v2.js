@@ -101,7 +101,9 @@ function main({ tools, posts, esc, intentOf, INTENTS, isLive, faq, guides, root 
   const toolCard = (t, i) => `<a class="tool" href="${turl(t.slug)}" data-hp="tool" data-p="${esc(t.platform)}" data-i="${intentOf(t)}" data-t="${esc((t.name + " " + t.short + " " + t.platform + " " + INTENTS[intentOf(t)].label).toLowerCase())}"${i >= 12 ? " hidden" : ""}><span class="tool-top"><span class="plat ${esc(t.platform)}">${esc(t.platform)}</span>${isLive(t) ? live : ""}</span><h3>${esc(t.name)}</h3><p>${esc(t.short)}</p></a>`;
   const pill = (kind, value, label, n, on) => `<button type="button" data-hp="${kind}" data-v="${esc(value)}" aria-pressed="${on ? "true" : "false"}">${esc(label)}<small>${n}</small></button>`;
   const cmpCell = (v, us) => `<td class="${[us ? "us" : "", /^(Free|Included|Yes|Always)/.test(v) ? "yes" : v === "No" ? "no" : ""].filter(Boolean).join(" ") || "c"}">${esc(v)}</td>`;
-  const guideLinks = guides.map(postBySlug).filter(Boolean).slice(0, 8);
+  const latestPosts = posts.slice(0, 6);
+  const latestSlugs = new Set(latestPosts.map((p) => p.slug));
+  const guideLinks = guides.map(postBySlug).filter((p) => p && !latestSlugs.has(p.slug)).slice(0, 8);
   const otherTools = plats.filter((p) => p !== "YouTube").flatMap((p) => tools.filter((t) => t.platform === p).slice(0, 2));
 
   const html = `<div class="root" data-hp="root" data-root="${root}">
@@ -328,9 +330,9 @@ ${posts.length ? `<section class="sec">
   <div class="in">
     <div class="head">
       <div><span class="eyebrow">Creator blog</span><h2>YouTube SEO guides and creator earnings, explained with sources</h2></div>
-      <p>${posts.length} guides on monetization, earnings, YouTube SEO and sponsorship pricing. Each one quotes the official page it relies on and links the tool that runs the numbers. <a class="link" href="${root}blog/">All articles</a></p>
+      <p>${posts.length} guides on monetization, earnings, YouTube SEO and sponsorship pricing. Each one quotes the official page it relies on and links the tool that runs the numbers. <a class="link" href="${root}blog/">All articles</a> &middot; <a class="link" href="${root}rss.xml">RSS feed</a></p>
     </div>
-    <div class="cols-3">${posts.slice(0, 3).map((p) => `<a class="box post" href="${root}blog/${p.slug}/"><span class="post-top"><span>${esc(p.category.label || p.category)}</span><span>${p.minutes} min read</span></span><h3>${esc(p.title)}</h3><p>${esc(p.description)}</p></a>`).join("")}</div>
+    <div class="cols-3">${latestPosts.map((p) => `<a class="box post" href="${root}blog/${p.slug}/"><span class="post-top"><span>${esc(p.category.label || p.category)}</span><span>${p.minutes} min read</span></span><h3>${esc(p.title)}</h3><p>${esc(p.description)}</p></a>`).join("")}</div>
     <div class="guides">${guideLinks.map((p) => `<a href="${root}blog/${p.slug}/"><span>${esc(p.title)}</span><span class="arrow" aria-hidden="true"></span></a>`).join("")}</div>
   </div>
 </section>` : ""}

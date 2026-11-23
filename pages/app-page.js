@@ -236,8 +236,9 @@ ${site.VERIFY_TAG}
 <style>${CSS}</style>
 <script>try{var t=localStorage.getItem("pa-theme-v2");document.documentElement.setAttribute("data-theme",t==="dark"?"dark":"light");}catch(e){document.documentElement.setAttribute("data-theme","light");}</script>
 <script>window.PA_TOOLS=${JSON.stringify(tools)};window.PA_POSTS=${JSON.stringify(latest)};</script>
+${site.ANALYTICS_HEAD}
 </head>
-<body data-root="${root}" class="app-body">
+<body data-root="${root}" class="app-body">${site.GTM_BODY}
 <div class="app gated" data-app>
   <aside class="rail" aria-label="Dashboard navigation">
     <div class="rail-brand">

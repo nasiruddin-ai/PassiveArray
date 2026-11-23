@@ -807,9 +807,36 @@ p.center.sub { text-align: center; color: var(--muted); margin: 8px auto 18px; m
 .wl-empty { margin-top: 14px; padding: 18px; border: 1px dashed var(--line); border-radius: 12px; color: var(--muted); font-size: .92rem; }
 .wl-foot { display: flex; align-items: center; gap: 14px; margin-top: 14px; flex-wrap: wrap; }
 .plan-prices { display: flex; gap: 8px; flex-wrap: wrap; }
+.plan-prices .btn.pick { box-shadow: 0 0 0 3px rgba(42, 157, 143, .28); }
+.bill-bar { display: flex; align-items: center; justify-content: space-between; gap: 12px 20px; flex-wrap: wrap; margin: 0 0 20px; }
+.bill-toggle { display: inline-flex; padding: 4px; border-radius: 12px; background: var(--card); border: 1px solid var(--line); gap: 4px; }
+.bill-toggle button { border: 0; background: transparent; color: var(--muted); font: inherit; font-size: .9rem; font-weight: 600; padding: 8px 14px; border-radius: 8px; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; transition: background .15s ease, color .15s ease; }
+.bill-toggle button:hover { color: var(--text); }
+.bill-toggle button.on { background: var(--teal); color: #fff; }
+.bill-save { font-size: .72rem; font-weight: 700; padding: 2px 7px; border-radius: 999px; background: var(--soft); color: var(--deep); }
+.bill-toggle button.on .bill-save { background: rgba(255, 255, 255, .2); color: #fff; }
+:root[data-theme="dark"] .bill-save { color: var(--mint); }
+:root[data-theme="dark"] .bill-toggle button.on .bill-save { color: #fff; }
+.bill-hint { font-size: .88rem; color: var(--muted); }
 .plans .plan { display: flex; flex-direction: column; }
-.plans .price { font-size: 3rem; font-weight: 600; letter-spacing: -.03em; line-height: 1.1; margin: 8px 0 4px; }
+.plans .plan-top { display: flex; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: wrap; }
+.plans .k, .dfy-band .k { font-size: .76rem; font-weight: 700; letter-spacing: .06em; color: var(--deep); }
+:root[data-theme="dark"] .plans .k, :root[data-theme="dark"] .dfy-band .k { color: var(--mint); }
+.plans .price { font-size: 3rem; font-weight: 600; letter-spacing: -.03em; line-height: 1.1; margin: 10px 0 6px; font-variant-numeric: tabular-nums; }
 .plans .price small { font-size: 1rem; font-weight: 500; color: var(--muted); letter-spacing: 0; margin-left: 4px; }
+.plans .plan-sub { margin: 0 0 18px; font-size: .92rem; line-height: 1.5; }
+.plans .plan-trust { margin: 10px 0 0; line-height: 1.5; }
+.dfy-band { display: flex; align-items: center; justify-content: space-between; gap: 24px; flex-wrap: wrap; }
+.dfy-main { flex: 1 1 420px; min-width: 0; }
+.dfy-main h2 { font-size: 1.3rem; margin: 6px 0 8px; line-height: 1.25; }
+.dfy-main p { font-size: .94rem; line-height: 1.6; max-width: 64ch; }
+.dfy-points { list-style: none; padding: 0; margin: 14px 0 0; display: flex; flex-wrap: wrap; gap: 8px 14px; font-size: .86rem; font-weight: 600; color: var(--text); }
+.dfy-points li { display: inline-flex; align-items: center; gap: 6px; }
+.dfy-points li::before { content: "\2713"; color: var(--teal); font-weight: 700; }
+:root[data-theme="dark"] .dfy-points li::before { color: var(--mint); }
+.dfy-actions { display: flex; flex-direction: column; gap: 8px; flex: 0 0 auto; min-width: 220px; }
+.dfy-actions .btn { width: 100%; justify-content: center; }
+@media (max-width: 680px) { .dfy-actions { width: 100%; min-width: 0; } }
 .herocard .hactions .btn.watch[disabled] { opacity: .7; cursor: default; }
 .ofilters .fbtn.export { margin-left: auto; }
 .pro-tag { display: inline-block; margin-left: 6px; padding: 1px 7px; border-radius: 999px; font-size: .68rem; font-weight: 700; letter-spacing: .04em; background: var(--deep); color: #fff; vertical-align: middle; }

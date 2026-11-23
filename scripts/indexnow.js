@@ -16,8 +16,16 @@ const SITE = "https://" + HOST;
       .map((p) => p.replace(/\\/g, "/").replace(/^[A-Za-z]:\/.*?\/Git\//, "/"))
       .map((p) => (p.startsWith("http") ? p : SITE + (p.startsWith("/") ? p : "/" + p)));
   } else {
-    const xml = await (await fetch(SITE + "/sitemap.xml")).text();
-    const entries = [...xml.matchAll(/<loc>([^<]+)<\/loc><lastmod>([^<]+)<\/lastmod>/g)].map((m) => ({ loc: m[1], mod: m[2] }));
+    const parseUrlset = (xml) => [...xml.matchAll(/<url>\s*<loc>([^<]+)<\/loc>\s*<lastmod>([^<]+)<\/lastmod>/g)].map((m) => ({ loc: m[1], mod: m[2] }));
+    const rootXml = await (await fetch(SITE + "/sitemap.xml")).text();
+    let entries;
+    if (rootXml.includes("<sitemapindex")) {
+      const children = [...rootXml.matchAll(/<sitemap>\s*<loc>([^<]+)<\/loc>/g)].map((m) => m[1]);
+      const docs = await Promise.all(children.map((u) => fetch(u).then((r) => r.text())));
+      entries = docs.flatMap(parseUrlset);
+    } else {
+      entries = parseUrlset(rootXml);
+    }
     const today = new Date().toISOString().slice(0, 10);
     urls = (args[0] === "changed" ? entries.filter((e) => e.mod === today) : entries).map((e) => e.loc);
   }
