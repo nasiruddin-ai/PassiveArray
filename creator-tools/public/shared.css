@@ -1457,3 +1457,54 @@ a.card.pc[hidden] { display: none; }
 :root[data-theme="dark"] a.post-tool, :root[data-theme="dark"] a.blog-feature, :root[data-theme="dark"] a.feat.lead { color: #fff; }
 :root[data-theme="dark"] .post-toc a { color: var(--text); }
 :root[data-theme="dark"] a.feat, :root[data-theme="dark"] a.tp-next-card { color: var(--text); }
+
+/* ------------------------------------------------ pricing page: three plans and a plan table (Nov 2026) */
+.price-hero h1 { max-width: 20ch; }
+.price-hero .bill-toggle { margin-top: 8px; }
+.price-hero .bill-hint { font-size: .86rem; }
+.plans3 { margin-top: 28px; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; align-items: stretch; }
+.plans3 .plan { gap: 12px; padding: 26px; border-radius: 20px; }
+.plans3 .plan.pro { border: 2px solid var(--teal); box-shadow: var(--shadow); }
+.plans3 .plan .plan-sub { font-size: .9rem; line-height: 1.5; margin: 0 0 6px; min-height: 3em; }
+.plans3 .price { font-size: 2.7rem; margin: 6px 0 2px; }
+.plans3 .price-was { font-size: 1.1rem; font-weight: 500; color: var(--hero-muted); margin-left: 8px; }
+.plans3 .plan .btn.wide { height: 50px; display: flex; align-items: center; justify-content: center; }
+.plans3 .plan.life { background: var(--hero); border-color: var(--hero); color: var(--hero-text); box-shadow: var(--shadow); }
+.plans3 .plan.life .k { color: var(--mint); }
+.plans3 .plan.life .pill { background: rgba(143, 211, 199, .18); color: var(--mint); }
+.plans3 .plan.life .price small, .plans3 .plan.life .plan-sub, .plans3 .plan.life ul.plain li, .plans3 .plan.life .note { color: var(--hero-muted); }
+.plans3 .plan.life ul.plain b { color: #fff; }
+.plans3 .plan.life .note a { color: var(--mint); }
+.plans3 .plan.life .btn.mint { background: var(--mint); color: #1F2A44; border: 0; font-weight: 600; }
+.plans3 .plan.life .btn[aria-disabled="true"] { opacity: .6; cursor: default; }
+:root[data-theme="dark"] .plans3 .plan.life { background: #103234; border-color: rgba(143, 211, 199, .4); }
+:root[data-theme="dark"] .plans3 .plan.life a.btn.mint { color: #1F2A44; }
+.price-table { padding: 24px 24px 12px; }
+.price-table h2, .price-adds h2 { font-size: 1.3rem; margin: 0 0 14px; }
+table.pt { width: 100%; border-collapse: collapse; font-size: .94rem; }
+table.pt thead th { text-align: center; font-size: .95rem; font-weight: 600; padding: 12px; border-bottom: 2px solid var(--line); }
+table.pt tbody th { text-align: left; font-weight: 500; padding: 13px 12px; border-bottom: 1px solid var(--line); }
+table.pt tbody th small { display: block; font-weight: 400; font-size: .8rem; color: var(--muted); margin-top: 2px; }
+table.pt td { text-align: center; padding: 13px 12px; border-bottom: 1px solid var(--line); min-width: 110px; }
+table.pt .pt-group th { background: var(--soft); color: var(--deep); font-size: .76rem; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; padding: 9px 12px; }
+:root[data-theme="dark"] table.pt .pt-group th { background: rgba(42, 157, 143, .14); color: var(--mint); }
+table.pt .pt-life { background: rgba(42, 157, 143, .07); font-weight: 600; }
+table.pt .pt-yes { color: var(--deep); vertical-align: middle; }
+:root[data-theme="dark"] table.pt .pt-yes { color: var(--mint); }
+table.pt .pt-no { color: var(--muted); }
+table.pt .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+.price-adds { margin-top: 32px; }
+.price-adds .card h3 { font-size: 1.05rem; margin: 0 0 8px; }
+.price-adds .card p { font-size: .92rem; line-height: 1.55; color: var(--muted); margin: 0; }
+.price-adds .note { margin-top: 14px; font-size: .86rem; color: var(--muted); }
+@media (max-width: 980px) { .plans3 { grid-template-columns: minmax(0, 1fr); } .plans3 .plan .plan-sub { min-height: 0; } }
+/* The plan table fits a phone without sideways scrolling: a narrower label column and tighter cells. */
+@media (max-width: 640px) {
+  .price-table { padding: 18px 12px 8px; }
+  table.pt { table-layout: fixed; font-size: .82rem; }
+  table.pt thead th:first-child, table.pt tbody th { width: 40%; }
+  table.pt td, table.pt thead th { min-width: 0; padding: 11px 4px; overflow-wrap: anywhere; }
+  table.pt tbody th { padding: 11px 6px 11px 4px; }
+  table.pt tbody th small { font-size: .74rem; }
+}
+@media (max-width: 640px) { table.pt th, table.pt td { white-space: normal; } table.pt tbody th { overflow-wrap: anywhere; } }

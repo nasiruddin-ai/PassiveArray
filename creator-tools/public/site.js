@@ -25,16 +25,16 @@
      with value + items whenever Polar checkout is actually launched. Never sends PII/email. */
   window.paTrackCheckout = function (opts, done) {
     var o = opts || {};
-    var plan = o.plan === "monthly" ? "monthly" : "yearly";
-    var value = plan === "yearly" ? 79 : 9;
+    var plan = o.plan === "monthly" ? "monthly" : o.plan === "lifetime" ? "lifetime" : "yearly";
+    var value = plan === "lifetime" ? (Number(o.value) || 99) : plan === "yearly" ? 79 : 9;
     var source = o.sourcePage || "unknown";
     var signedIn = !!o.signedIn;
     var nextStep = o.nextStep || (signedIn ? "polar_checkout" : "login_required");
     var label = String(o.buttonText || "").trim().slice(0, 80);
     var item = {
       item_id: "pro_" + plan,
-      item_name: plan === "yearly" ? "Passive Array Pro (Yearly)" : "Passive Array Pro (Monthly)",
-      item_category: "Subscription",
+      item_name: plan === "lifetime" ? "Passive Array Lifetime" : plan === "yearly" ? "Passive Array Pro (Yearly)" : "Passive Array Pro (Monthly)",
+      item_category: plan === "lifetime" ? "One-time" : "Subscription",
       price: value,
       quantity: 1,
     };
@@ -434,6 +434,60 @@
     });
   }
   paintHeader();
+  // Lifetime plan on the pricing page: live price and places left, then the same checkout call.
+  var lifeBox = document.querySelector("[data-life]");
+  if (lifeBox) {
+    var lifeCta = lifeBox.querySelector("[data-life-cta]");
+    var lifeMsg = lifeBox.querySelector("[data-life-msg]");
+    var lifePrice = Number(lifeBox.getAttribute("data-life-launch")) || 99;
+    var lifeOpen = true;
+    var paintLife = function () {
+      if (!lifeOpen) { lifeCta.textContent = "Lifetime opens soon"; lifeCta.setAttribute("aria-disabled", "true"); return; }
+      lifeCta.removeAttribute("aria-disabled");
+      lifeCta.textContent = (markedEmail() ? "Get Lifetime — $" : "Sign in to get Lifetime ($") + lifePrice + (markedEmail() ? "" : ")");
+      lifeCta.setAttribute("href", markedEmail() ? ROOT + "account/?plan=lifetime" : ROOT + "login/?next=" + encodeURIComponent("/account/?plan=lifetime"));
+    };
+    paintLife();
+    fetch("/api/billing?action=status", { cache: "no-store" }).then(function (r) { return r.json(); }).catch(function () { return null; }).then(function (st) {
+      var l = st && st.lifetime;
+      if (!l) return;
+      lifeOpen = !!l.configured;
+      if (!lifeOpen) { paintLife(); return; } // not on sale yet: keep the page's own wording
+      lifePrice = l.price;
+      var set = function (sel, text) { var el = lifeBox.querySelector(sel); if (el) el.textContent = text; };
+      set("[data-life-price]", "$" + l.price);
+      var was = lifeBox.querySelector("[data-life-was]");
+      if (was) was.style.display = l.launch ? "" : "none";
+      set("[data-life-badge]", l.launch ? "Launch price" : "One payment");
+      set("[data-life-sub]", l.launch ? "One payment, no renewals. $" + l.launchPrice + " for the first " + l.seats + " buyers, then $" + l.regular + "." : "One payment, no renewals.");
+      set("[data-life-left]", l.launch ? l.launchLeft + " of " + l.seats + " launch places left." : "The launch price has ended.");
+      paintLife();
+    });
+    lifeCta.addEventListener("click", function (e) {
+      if (!lifeOpen) { e.preventDefault(); return; }
+      if (!markedEmail()) {
+        window.paTrackCheckout({ plan: "lifetime", value: lifePrice, sourcePage: "pricing", signedIn: false, nextStep: "login_required", buttonText: lifeCta.textContent });
+        return; // the link goes to the login page
+      }
+      e.preventDefault();
+      if (lifeCta.getAttribute("aria-busy") === "true") return;
+      lifeCta.setAttribute("aria-busy", "true");
+      lifeMsg.textContent = "Opening Polar checkout…"; lifeMsg.className = "fmsg";
+      window.paTrackCheckout({ plan: "lifetime", value: lifePrice, sourcePage: "pricing", signedIn: true, nextStep: "polar_checkout", buttonText: lifeCta.textContent });
+      fetch("/api/billing?action=checkout", { method: "POST", credentials: "same-origin", cache: "no-store", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ plan: "lifetime" }) })
+        .then(function (r) { return r.json(); })
+        .catch(function () { return { ok: false, error: "Could not reach the server." }; })
+        .then(function (res) {
+          if (res && res.ok && res.url) { location.href = res.url; return; }
+          lifeCta.removeAttribute("aria-busy");
+          if (res && res.code === "signin") { marker(null); location.href = ROOT + "login/?next=" + encodeURIComponent("/account/?plan=lifetime"); return; }
+          if (res && res.code === "already") { location.href = ROOT + "account/"; return; }
+          lifeMsg.textContent = (res && res.error) || "Could not open checkout.";
+          lifeMsg.className = "fmsg " + (res && res.code === "not_open" ? "" : "bad");
+        });
+    });
+  }
+
   var proCta = document.querySelector("[data-pro-cta]");
   var billToggle = document.querySelector("[data-bill-toggle]");
   if (proCta) {
@@ -957,7 +1011,7 @@
       showAccount("in");
       if (!res.pro && planFree) {
         var wantedPlan = new URLSearchParams(location.search).get("plan");
-        if (wantedPlan === "yearly" || wantedPlan === "monthly") {
+        if (wantedPlan === "yearly" || wantedPlan === "monthly" || wantedPlan === "lifetime") {
           var pickBtn = planFree.querySelector('[data-upgrade="' + wantedPlan + '"]');
           var pMsg = planFree.querySelector("[data-plan-msg]");
           if (pickBtn) {
@@ -966,7 +1020,9 @@
             var otherBtn = planFree.querySelector('[data-upgrade="' + (wantedPlan === "yearly" ? "monthly" : "yearly") + '"]');
             if (otherBtn) otherBtn.classList.add("ghost");
             if (pMsg) {
-              pMsg.textContent = wantedPlan === "yearly"
+              pMsg.textContent = wantedPlan === "lifetime"
+                ? "Lifetime selected (one payment, no renewals). Click the highlighted button to open Polar checkout."
+                : wantedPlan === "yearly"
                 ? "Yearly Pro selected ($79/year — save 27%). Click the highlighted button to open Polar checkout."
                 : "Monthly Pro selected ($9/month). Click the highlighted button to open Polar checkout.";
               pMsg.className = "fmsg good";
