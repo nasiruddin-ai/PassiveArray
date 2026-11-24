@@ -245,9 +245,17 @@ function loadPosts(today = "2099-12-31") {
 }
 
 /* ------------------------------------------------------------------ pieces */
-function card(p, root) {
-  return `<a class="card post" href="${root}blog/${p.slug}/"><span class="tagline"><span class="plat" style="color:var(--deep)">${esc(p.category.label.toUpperCase())}</span><span class="muted" style="font-size:.78rem">${p.minutes} min read</span></span><h3>${esc(p.title)}</h3><p>${esc(p.description)}</p><span class="pdate">${site.fmtDate(p.date)}</span></a>`;
+function card(p, root, eager) {
+  // The cover is decorative here (the title follows it), so its alt is empty.
+  const img = p.image
+    ? `<span class="pc-img"><img src="/blog/${p.slug}/cover.webp" alt="" width="${p.image.w}" height="${p.image.h}" ${eager ? 'decoding="async"' : 'loading="lazy" decoding="async"'}></span>`
+    : `<span class="pc-img pc-noimg"><span>${esc(p.category.label)}</span></span>`;
+  return `<a class="card post pc" href="${root}blog/${p.slug}/" data-text="${esc((p.title + " " + p.description + " " + p.category.label).toLowerCase())}">${img}<span class="pc-body"><span class="tagline"><span class="plat" style="color:var(--deep)">${esc(p.category.label.toUpperCase())}</span><span class="muted" style="font-size:.78rem">${p.minutes} min read</span></span><h3>${esc(p.title)}</h3><p>${esc(p.description)}</p><span class="pdate">${site.fmtDate(p.date)}</span></span></a>`;
 }
+
+// The search box on the blog index and category pages; site.js filters the cards as you type.
+const blogSearch = (n, what) => `<div class="search-row hub-search">${SEARCH_ICON}<label for="bq" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);margin:0">Search articles</label><input id="bq" type="search" placeholder="Search ${n} ${what}"></div>`;
+const SEARCH_ICON = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>';
 
 function catNav(activeSlug, root, counts) {
   return `<nav class="catnav">
@@ -267,33 +275,45 @@ const signupBand = (title, text) => `<div class="cta-band"><div><h3>${esc(title)
 /* ------------------------------------------------------------------ pages */
 function postPage(p, prev, next, related) {
   const root = "../../";
+  // "On this page": the article's own h2 headings, plus the FAQ.
+  const toc = [];
+  p.html.replace(/<h2 id="([^"]+)">([\s\S]*?)<\/h2>/g, (_, id, text) => { toc.push([id, text.replace(/<[^>]+>/g, "")]); return _; });
+  if (p.faq.length) toc.push(["faq", "Frequently asked questions"]);
+  const tool = (p.tools || []).map((sl) => site.tools.find((t) => t.slug === sl)).filter(Boolean)[0];
   const body = `
-  <div class="page-head">
+  <div class="post-wrap">
+  <div class="tp-head post-head">
     <div class="crumbs"><a href="${root}">Home</a> / <a href="../">Blog</a> / <a href="../category/${p.category.slug}/">${esc(p.category.label)}</a></div>
     <h1>${esc(p.title)}</h1>
-    <p class="lead">${esc(p.description)}</p>
-    <div class="meta"><b>${esc(p.category.label.toUpperCase())}</b><span>${site.fmtDate(p.date)}</span><span>${p.minutes} min read</span>${p.updated !== p.date ? `<span>Updated ${site.fmtDate(p.updated)}</span>` : ""}</div>
+    <p class="tp-lead">${esc(p.description)}</p>
+    <div class="post-meta"><b>${esc(p.category.label.toUpperCase())}</b><span>${site.fmtDate(p.date)}</span><span>${p.minutes} min read</span>${p.updated !== p.date ? `<span>Updated ${site.fmtDate(p.updated)}</span>` : ""}<span>By <a href="${root}founder/">Nasir Uddin</a></span></div>
   </div>
-  ${p.image ? `<figure class="post-hero"><img src="/blog/${p.slug}/cover.webp" alt="${esc(p.image.alt)}" width="${p.image.w}" height="${p.image.h}" fetchpriority="high" decoding="async"></figure>` : ""}
+  <div class="post-layout">
+  ${p.image ? `<figure class="post-hero"><img src="/blog/${p.slug}/cover.webp" alt="${esc(p.image.alt)}" width="${p.image.w}" height="${p.image.h}" fetchpriority="high" decoding="async"></figure>` : '<span class="post-hero"></span>'}
+  <aside class="post-side">
+    ${toc.length > 1 ? `<nav class="post-toc" aria-label="On this page"><span class="post-toc-k">On this page</span>${toc.map(([id, text]) => `<a href="#${id}">${esc(text)}</a>`).join("")}</nav>` : ""}
+    ${tool ? `<a class="post-tool" href="${root}creator-tools/${tool.slug}/"><span class="post-tool-k">Free tool for this article</span><b>${esc(tool.name)}</b><span class="post-tool-d">${esc(tool.short)}</span><span class="btn mint">Open the tool</span></a>` : ""}
+  </aside>
   <article class="prose">
 ${p.html}
 ${p.faq.length ? `<section class="guide-faq" id="faq"><h2>Frequently asked questions</h2><div class="faq">${p.faq.map(([q, a]) => `<details><summary>${esc(q)}</summary>${markdown(a)}</details>`).join("")}</div></section>` : ""}
   ${site.authorBox("Written by", site.fmtDate(p.updated))}
   </article>
+  </div>
   ${toolCards(p.tools, root)}
   ${related.length ? `<section class="tools-used"><h2>More in ${esc(p.category.label)}</h2><div class="grid c3">${related.map((r) => card(r, root)).join("")}</div></section>` : ""}
   ${signupBand("Get the weekly creator report", "Benchmarks, rate changes and new tools, one email a week.")}
   <nav class="post-nav">
     ${prev ? `<a href="../${prev.slug}/"><span>Newer</span>${esc(prev.title)}</a>` : "<span></span>"}
     ${next ? `<a href="../${next.slug}/" style="text-align:right"><span>Older</span>${esc(next.title)}</a>` : ""}
-  </nav>`;
+  </nav>
+  </div>`;
   const posting = postingLd(p);
   return site.shell({
     title: p.title,
     description: p.description,
     path: `/blog/${p.slug}/`,
     active: "blog",
-    narrow: true,
     body,
     image: p.image ? site.SITE + `/blog/${p.slug}/cover.jpg` : undefined,
     jsonld: p.faq.length ? [posting, site.faqLd(p.faq.map(([q, a]) => [q, markdown(a)]))] : posting,
@@ -322,14 +342,17 @@ function categoryPage(cat, posts, counts) {
   const root = "../../../";
   const mine = posts.filter((p) => p.category.slug === cat.slug);
   const body = `
-  <div class="page-head">
+  <div class="hub-hero blog-hero">
     <div class="crumbs"><a href="${root}">Home</a> / <a href="${root}blog/">Blog</a> / ${esc(cat.label)}</div>
     <h1>${esc(cat.label)}</h1>
-    <p class="lead">${esc(cat.blurb)}</p>
-    <div class="meta"><b>FOR</b><span>${esc(cat.who)}</span></div>
+    <p class="intro">${esc(cat.blurb)}</p>
+    ${blogSearch(mine.length, cat.label.toLowerCase() + " articles")}
+    ${catNav(cat.slug, root, counts)}
   </div>
-  ${catNav(cat.slug, root, counts)}
-  <div class="grid c3">${mine.map((p) => card(p, root)).join("")}</div>
+  <div data-blog>
+  <div class="grid c3">${mine.map((p, i) => card(p, root, i < 3)).join("")}</div>
+  <p class="empty" style="display:none">No article matches. Try another word.</p>
+  </div>
   ${CAT_INTROS[cat.slug] ? site.guideHtml({ guide: CAT_INTROS[cat.slug].sections }) : ""}
   ${toolCards(cat.tools, root, "The tools behind these articles")}
   ${signupBand("New " + cat.label.toLowerCase() + " articles, once a week", "One email a week with the new benchmarks and tools. Unsubscribe any time.")}`;
@@ -346,14 +369,24 @@ function categoryPage(cat, posts, counts) {
 function indexPage(posts, counts) {
   const root = "../";
   const [lead, ...rest] = posts;
+  const SHOW = 12;
   const body = `
-  <div class="page-head">
+  <div class="hub-hero blog-hero">
     <div class="crumbs"><a href="${root}">Home</a> / Blog</div>
     <h1>Creator numbers, explained</h1>
-    <p class="lead">Benchmarks, formulas and honest ranges behind engagement rates, earnings and sponsorship prices. Every article shows its working and links to the free tool that does the math.</p>
+    <p class="intro">Benchmarks, formulas and honest ranges, each checked against the platforms' own pages and linked to the free tool that does the math.</p>
+    ${blogSearch(posts.length, "articles")}
+    ${catNav("", root, counts)}
   </div>
-  ${catNav("", root, counts)}
-  <div class="grid c3">${posts.map((p) => card(p, root)).join("")}</div>
+  <div data-blog>
+  <a class="blog-feature" data-feature href="${root}blog/${lead.slug}/">
+    ${lead.image ? `<span class="bf-img"><img src="/blog/${lead.slug}/cover.webp" alt="" width="${lead.image.w}" height="${lead.image.h}" fetchpriority="high" decoding="async"></span>` : ""}
+    <span class="bf-body"><span class="bf-k">Latest · ${esc(lead.category.label)}</span><span class="bf-title">${esc(lead.title)}</span><span class="bf-d">${esc(lead.description)}</span><span class="bf-meta">${site.fmtDate(lead.date)} · ${lead.minutes} min read</span><span class="btn mint">Read the article</span></span>
+  </a>
+  <div class="grid c3 blog-grid">${rest.map((p, i) => card(p, root, i < 3).replace('<a class="card post pc"', '<a class="card post pc"' + (i >= SHOW ? " hidden data-more" : ""))).join("")}</div>
+  ${rest.length > SHOW ? `<div class="blog-more"><button type="button" class="btn ghost" data-show-all>Show all ${posts.length} articles</button></div>` : ""}
+  <p class="empty" style="display:none">No article matches. Try another word.</p>
+  </div>
   <section class="tools-used">
     <h2>Browse by what you need</h2>
     <div class="grid c3">${CATEGORIES.map((c) => `<a class="card" href="${root}blog/category/${c.slug}/"><span class="tagline"><span class="plat" style="color:var(--deep)">${esc(c.label.toUpperCase())}</span><span class="muted" style="font-size:.78rem">${counts[c.slug] || 0} article${(counts[c.slug] || 0) === 1 ? "" : "s"}</span></span><h3>${esc(c.who)}</h3><p>${esc(c.blurb)}</p></a>`).join("")}</div>

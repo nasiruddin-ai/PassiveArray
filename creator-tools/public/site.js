@@ -261,6 +261,45 @@
     });
   }
 
+  // Blog index and category pages: filter the cards as you type; "Show all" reveals the rest.
+  var blog = document.querySelector("[data-blog]");
+  if (blog) {
+    var bcards = Array.prototype.slice.call(blog.querySelectorAll("a.pc"));
+    var bq = document.getElementById("bq");
+    var feature = blog.querySelector("[data-feature]");
+    var moreBtn = blog.querySelector("[data-show-all]");
+    var bempty = blog.querySelector(".empty");
+    var expanded = false;
+    var bapply = function () {
+      var q = bq ? bq.value.trim().toLowerCase() : "";
+      var shown = 0;
+      bcards.forEach(function (c) {
+        var ok = q ? (c.getAttribute("data-text") || "").indexOf(q) !== -1 : expanded || !c.hasAttribute("data-more");
+        c.hidden = !ok;
+        if (ok) shown++;
+      });
+      if (feature) feature.style.display = q ? "none" : "";
+      if (moreBtn) moreBtn.parentNode.style.display = q || expanded ? "none" : "";
+      if (bempty) bempty.style.display = shown ? "none" : "";
+    };
+    if (bq) bq.addEventListener("input", bapply);
+    if (moreBtn) moreBtn.addEventListener("click", function () { expanded = true; bapply(); });
+  }
+  // Article contents list: mark the section being read.
+  var tocLinks = Array.prototype.slice.call(document.querySelectorAll(".post-toc a"));
+  if (tocLinks.length && "IntersectionObserver" in window) {
+    var byId = {};
+    tocLinks.forEach(function (l) { byId[l.getAttribute("href").slice(1)] = l; });
+    var seen = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) {
+        if (!e.isIntersecting) return;
+        tocLinks.forEach(function (l) { l.classList.remove("on"); });
+        var l = byId[e.target.id]; if (l) l.classList.add("on");
+      });
+    }, { rootMargin: "-90px 0px -70% 0px" });
+    Object.keys(byId).forEach(function (id) { var el = document.getElementById(id); if (el) seen.observe(el); });
+  }
+
   var dir = document.querySelector("[data-directory]");
   if (dir) {
     var state = { intent: "all", platform: "all", q: "" };
