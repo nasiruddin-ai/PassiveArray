@@ -531,7 +531,7 @@ const tools = [
     platform: "Instagram",
     short: "Length, hashtags, mentions, emoji, call to action and readability for any caption.",
     intro: "Paste a caption before you post it. The analyzer checks it against Instagram's limits and the habits of high-performing posts.",
-    inputs: [{ id: "caption", label: "Caption", type: "textarea", placeholder: "Paste the caption here, hashtags included", rows: 8 }],
+    inputs: [{ id: "caption", label: "Caption", type: "textarea", placeholder: "Paste the caption here, hashtags included", example: "Three things I wish I knew before my first pour-over. Save this for your next brew.\n\nWhich one surprised you?\n\n#coffee #pourover #homebarista", rows: 8 }],
     how: [
       "Instagram cuts captions at 2,200 characters and shows only the first 125 before 'more'.",
       "3 to 5 relevant hashtags outperform 30 generic ones for most accounts.",

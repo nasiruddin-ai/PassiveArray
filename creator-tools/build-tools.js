@@ -304,7 +304,7 @@ function fieldHtml(f, prefix = "", wide = false) {
   } else if (f.type === "file") {
     control = `<input type="file" id="${id}" name="${id}" accept="${esc(f.accept || "image/*")}"${req}>`;
   } else if (f.type === "textarea") {
-    control = `<textarea id="${id}" name="${id}" rows="${f.rows || 6}" placeholder="${esc(f.placeholder || "")}"${req}></textarea>`;
+    control = `<textarea id="${id}" name="${id}" rows="${f.rows || 6}" placeholder="${esc(f.placeholder || "")}"${req}>${esc(f.value || "")}</textarea>`;
   } else {
     const attrs = [
       `type="${f.type === "number" ? "number" : "text"}"`, `id="${id}"`, `name="${id}"`,
@@ -331,7 +331,7 @@ function formHtml(t) {
   }
   const inputs = t.inputs || [];
   // The first text input (the channel or topic) spans the full row when there are other fields.
-  return `<div class="fields">${inputs.map((f, i) => fieldHtml(f, "", i === 0 && inputs.length > 1 && f.type === "text")).join("")}</div>`;
+  return `<div class="fields${inputs.length > 5 ? " fields-many" : ""}">${inputs.map((f, i) => fieldHtml(f, "", i === 0 && inputs.length > 1 && f.type === "text")).join("")}</div>`;
 }
 
 function buttonLabel(t) {
@@ -503,30 +503,45 @@ function toolPage(template, t) {
   const nextList = withPriority(picked.length ? picked : clusterMates(t.slug).length >= 3 ? clusterMates(t.slug) : [
     ...same.filter((o) => intentOf(o) !== intentOf(t)).slice(0, 3),
     ...tools.filter((o) => o.platform !== t.platform && intentOf(o) === intentOf(t)).slice(0, 1),
-  ]).slice(0, 4).map((o) => `<a href="../${o.slug}/" data-k="${esc(INTENTS[intentOf(o)].label.split(" ")[0])}">${esc(anchorName(o))}</a><p class="next-d">${esc(o.short)}</p>`).join("");
+  ]).slice(0, 4).map((o) => `<a class="tp-next-card" href="../${o.slug}/"><b>${esc(anchorName(o))}</b><span>${esc(o.short)}</span></a>`).join("");
+  // "Try an example": values for the required fields that start empty. A field can carry its
+  // own "example"; YouTube lookups fall back to a well-known public channel or video.
+  const EX_BY_ID = t.platform === "YouTube" && t.api !== "ai" ? { channel: "@mkbhd", video: "https://www.youtube.com/watch?v=dQw4w9WgXcQ" } : {};
+  let example = null;
+  if (!t.compare) {
+    const need = (t.inputs || []).filter((f) => !f.optional && f.type !== "file" && f.type !== "select" && (f.value == null || f.value === ""));
+    const ex = {};
+    // Otherwise the field's own "e.g." placeholder is the example, so the two never disagree.
+    const fromHint = (f) => {
+      const ph = String(f.placeholder || "");
+      if (f.type === "textarea" && ph.indexOf(String.fromCharCode(10)) >= 0) return ph;
+      const m = /e\.g\.\s+(.+)$/.exec(ph);
+      if (!m) return null;
+      if (f.type === "number") { const n = m[1].replace(/,/g, ""); return /^[\d.]+$/.test(n) ? n : null; }
+      return f.type === "textarea" ? m[1] : m[1].split(/,\s| or /)[0].trim();
+    };
+    (t.inputs || []).forEach((f) => { const v = f.example != null ? f.example : EX_BY_ID[f.id] != null ? EX_BY_ID[f.id] : fromHint(f); if (v != null && (f.value == null || f.value === "")) ex[f.id] = v; });
+    if (need.length && need.every((f) => ex[f.id] != null) && !(t.inputs || []).some((f) => f.type === "file")) example = ex;
+  }
+  const live = !t.api && !(t.inputs || []).some((f) => f.type === "file");
+  const meta = "Free · No account · " + (t.api === "youtube" ? "Live data from the YouTube API" : t.api === "twitch" ? "Live data from the Twitch API" : t.api === "ai" ? "Works without signing in" : "Runs in your browser");
+  const privacy = t.api === "youtube" || t.api === "twitch" ? `Reads public data from the official ${t.api === "twitch" ? "Twitch" : "YouTube"} API. No sign-in to your account.` : t.api === "ai" ? "" : "Runs in your browser. Nothing you type is sent anywhere.";
+  const stage = `<div class="stage-empty"><div class="k">YOUR RESULT</div><div class="v">${live ? "Fill in the form" : "Ready when you are"}</div><div class="n">${esc(t.short)}</div>${example ? '<div class="hactions"><button type="button" class="btn mint" id="tryex">Try an example</button></div>' : ""}</div>`;
+  const wbClass = (t.compare ? " wb-stack" : "") + (live ? " wb-live" : "");
   const clientTool = {
     slug: t.slug, name: t.name, platform: t.platform, api: t.api || null, action: t.action || null, autorun: !!t.autorun, params: t.params || null, downloadNeedsAccount: !!t.downloadNeedsAccount,
     compare: t.compare ? { labels: t.compare.labels, fields: t.compare.fields.map((f) => ({ id: f.id, label: f.label, type: f.type })) } : null,
     inputs: (t.inputs || []).map((f) => ({ id: f.id, label: f.label, type: f.type, optional: !!f.optional })),
+    example: example,
   };
   let seoTitle = t.seoTitle || t.name + " | " + BRAND;
   if (seoTitle.length > 65 && seoTitle.endsWith(" | " + BRAND)) {
     seoTitle = seoTitle.slice(0, -(" | " + BRAND).length);
   }
   const seoDesc = trimMeta(t.seoDescription || t.short, 160);
-  const convBanner = `<div class="tool-conv">
-    <div class="tool-conv-col">
-      <span class="tool-conv-k">CREATOR DASHBOARD &amp; WATCHLIST</span>
-      <h3>Track channels &amp; monetization daily</h3>
-      <p>Save up to 3 channels free — or upgrade to <b>Pro ($9/mo)</b> for 100 channels, Monday mover digests &amp; CSV exports.</p>
-      <a class="btn" href="${root}app/">Open Creator Dashboard</a>
-    </div>
-    <div class="tool-conv-col pro-srv">
-      <span class="tool-conv-k">DONE-FOR-YOU YOUTUBE SEO</span>
-      <h3>Want an expert to optimize your channel?</h3>
-      <p>Hire founder Nasir Uddin to audit your channel, research keywords, and write high-CTR titles, descriptions &amp; tags.</p>
-      <a class="btn ghost" href="${root}youtube-seo-service/">See YouTube SEO Packages &rarr;</a>
-    </div>
+  const convBanner = `<div class="result-cta">
+    <div class="result-cta-copy"><b>Want daily tracking or hands-on YouTube SEO?</b><span>Track up to 100 channels in the Dashboard ($9/mo), or book a channel audit with founder Nasir Uddin.</span></div>
+    <div class="result-cta-actions"><a class="btn" href="${root}app/">Open Dashboard</a><a class="btn ghost" href="${root}youtube-seo-service/">YouTube SEO Service &rarr;</a></div>
   </div>`;
   return template
     .replace(/{{title}}/g, esc(seoTitle))
@@ -544,10 +559,14 @@ function toolPage(template, t) {
     .replace("{{footer}}", footer(root, `Data for live tools comes from the official ${t.platform === "Twitch" ? "Twitch" : "YouTube"} API. Estimates are a starting point, not a guarantee.`))
     .replace("{{jsonld}}", jsonLd(t, url))
     .replace("{{form}}", formHtml(t))
+    .replace("{{meta}}", esc(meta))
+    .replace("{{privacy}}", esc(privacy))
+    .replace("{{stage}}", stage)
+    .replace("{{wbClass}}", wbClass)
     .replace("{{button}}", buttonLabel(t))
     .replace("{{siblings}}", siblings)
     .replace("{{convBanner}}", convBanner)
-    .replace("{{howTitle}}", esc(t.howTitle || "How this number is made"))
+    .replace("{{howTitle}}", esc(t.howTitle || "How this number is worked out"))
     .replace("{{how}}", (t.how || []).map((h) => `<li>${esc(h)}</li>`).join(""))
     .replace("{{next}}", nextList)
     .replace("{{guide}}", guideHtml(t) + relatedArticles(t))
@@ -555,6 +574,15 @@ function toolPage(template, t) {
 }
 
 /* ------------------------------------------------------------------ directory (creator-tools/index.html) */
+// The four tools the all-tools page leads with, each with a line icon.
+const HUB_ICON = (d) => `<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${d}</svg>`;
+const HUB_FEATURED = [
+  ["youtube-money-calculator", HUB_ICON('<path d="M12 2v20"/><path d="M17 6H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>')],
+  ["youtube-video-seo-checker", HUB_ICON('<path d="M3 17l6-6 4 4 8-8"/><path d="M15 7h6v6"/>')],
+  ["youtube-subscriber-count-checker", HUB_ICON('<circle cx="9" cy="8" r="4"/><path d="M2 21a7 7 0 0 1 14 0"/><path d="M19 8v6"/><path d="M16 11h6"/>')],
+  ["youtube-tag-extractor", HUB_ICON('<path d="M20 12l-8 8-9-9V3h8z"/><circle cx="7.5" cy="7.5" r="1.5"/>')],
+];
+
 function directoryPage() {
   const root = "../";
   const fbtn = (filter, value, label, on, dot) => `<button type="button" class="fbtn${on ? " on" : ""}" data-filter="${filter}" data-value="${esc(value)}">${dot ? `<i style="background:${dot}"></i>` : ""}${esc(label)}</button>`;
@@ -582,18 +610,20 @@ ${HEAD}
 <body data-root="${root}">${GTM_BODY}
 ${header(root, "tools", true)}
 <main class="wrap" data-directory>
-  <div class="tool-head">
-    <div>
-      <div class="crumbs"><a href="${root}">Home</a> / All tools</div>
-      <h1>All ${tools.length} tools</h1>
-      <p class="intro">Pick by what you want to do, or by platform. Every tool is free and needs no account.</p>
+  <div class="hub-hero">
+    <div class="crumbs"><a href="${root}">Home</a> / All tools</div>
+    <h1>${tools.length} free creator tools</h1>
+    <p class="intro">No account. Every number shows its working. Search, or pick by what you want to do.</p>
+    <div class="search-row hub-search">${ICON.search}<label for="dq" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);margin:0">Search tools</label><input id="dq" type="search" placeholder="Search ${tools.length} tools by name or by what they do"></div>
+    <div class="filters">
+      <div class="row">${fbtn("platform", "all", "All " + tools.length, true)}${PLATFORMS.map((p) => fbtn("platform", p, `${p} ${tools.filter((t) => t.platform === p).length}`, false, PLAT_COLOR[p])).join("")}</div>
+      <div class="row">${fbtn("intent", "all", "Everything", true)}${Object.entries(INTENTS).map(([k, m]) => fbtn("intent", k, m.label)).join("")}</div>
     </div>
-    <div class="search-row">${ICON.search}<label for="dq" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);margin:0">Search tools</label><input id="dq" type="search" placeholder="Search tools by name or by what they do"></div>
   </div>
-  <div class="filters">
-    <div class="row"><span class="lbl">I want to</span>${fbtn("intent", "all", "Everything", true)}${Object.entries(INTENTS).map(([k, m]) => fbtn("intent", k, m.label)).join("")}</div>
-    <div class="row"><span class="lbl">Platform</span>${fbtn("platform", "all", "All", true)}${PLATFORMS.map((p) => fbtn("platform", p, `${p} · ${tools.filter((t) => t.platform === p).length}`, false, PLAT_COLOR[p])).join("")}</div>
-  </div>
+  <section class="hub-feat" data-feat>
+    <h2>Most used <span class="sub">Start here</span></h2>
+    <div class="grid c4">${HUB_FEATURED.map(([slug, icon], i) => { const t = tools.find((o) => o.slug === slug); return t ? `<a class="feat${i === 0 ? " lead" : ""}" href="${root}creator-tools/${t.slug}/">${icon}<b>${esc(t.name)}</b><span>${esc(t.short)}</span></a>` : ""; }).join("")}</div>
+  </section>
   ${groups}
   <p class="empty" style="display:none">No tool matches. Clear a filter or try another word.</p>
 </main>

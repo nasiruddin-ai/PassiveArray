@@ -19,41 +19,45 @@
 </head>
 <body data-root="{{root}}">{{gtmbody}}
 {{header}}
-<main class="wrap">
-  <div class="tool-head">
-    <div>
-      <div class="crumbs"><a href="{{root}}">Home</a> / <a href="{{root}}creator-tools/">All tools</a> / <a href="{{root}}creator-tools/#{{platformSlug}}">{{platform}}</a></div>
-      <div class="h1row"><h1>{{name}}</h1><span class="badge {{platform}}">{{platform}}</span></div>
-      <p class="intro">{{intro}}</p>
-    </div>
-    <div class="siblings">{{siblings}}</div>
+<main class="wrap tp">
+  <div class="tp-head">
+    <div class="crumbs"><a href="{{root}}">Home</a> / <a href="{{root}}creator-tools/">All tools</a> / <a href="{{root}}creator-tools/#{{platformSlug}}">{{platform}}</a></div>
+    <div class="tp-title"><h1>{{name}}</h1><span class="tp-meta">{{meta}}</span></div>
+    <p class="tp-lead">{{short}}</p>
   </div>
 
-  <div class="card inputcard">
-    <form id="form" novalidate>
-      {{form}}
-      <div class="actions">
-        <button type="submit" class="btn" id="go">{{button}}</button>
-        <button type="button" class="btn ghost" id="reset">Clear</button>
-        <span class="status" id="status"></span>
-      </div>
-    </form>
-  </div>
+  <section class="wb{{wbClass}}" id="wb">
+    <div class="wb-in">
+      <form id="form" novalidate>
+        {{form}}
+        <div class="actions">
+          <button type="submit" class="btn" id="go">{{button}}</button>
+          <button type="button" class="btn ghost" id="reset">Clear</button>
+          <span class="status" id="status"></span>
+        </div>
+      </form>
+      <p class="wb-priv">{{privacy}}</p>
+    </div>
+    <div class="wb-out" id="stage" aria-live="polite">{{stage}}</div>
+  </section>
 
   <div class="results" id="results"></div>
 
   {{convBanner}}
 
-  <div class="two">
-    <section class="card how">
-      <h2 style="margin-bottom:12px">{{howTitle}}</h2>
-      <ol>{{how}}</ol>
-    </section>
-    <section class="card next">
-      <h2>Next steps</h2>
-      {{next}}
-    </section>
-  </div>
+  <section class="tp-how">
+    <div class="tp-how-main">
+      <h2>{{howTitle}}</h2>
+      <p>{{intro}}</p>
+    </div>
+    <ol>{{how}}</ol>
+  </section>
+
+  <section class="tp-next">
+    <h2>Next step</h2>
+    <div class="tp-next-grid">{{next}}</div>
+    <div class="siblings"><span>Related:</span>{{siblings}}</div>
+  </section>
   {{guide}}
 </main>
 {{footer}}

@@ -281,6 +281,8 @@
         g.style.display = any ? "" : "none";
       });
       if (empty) empty.style.display = shown ? "none" : "";
+      var feat = dir.querySelector("[data-feat]");
+      if (feat) feat.style.display = state.intent === "all" && state.platform === "all" && !state.q ? "" : "none";
       var count = dir.querySelector("[data-count]");
       if (count) count.textContent = shown;
     }

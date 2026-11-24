@@ -229,7 +229,7 @@ module.exports = function (NICHES) {
       short: "Score a title out of 100 on length, keyword position and click appeal.",
       intro: "Paste a title you are considering. You get a score with every check shown separately, so you can see which part is weak rather than being handed a number with no reasoning.",
       inputs: [
-        { id: "title", label: "Your title", type: "text", placeholder: "Paste the title you are considering" },
+        { id: "title", label: "Your title", type: "text", placeholder: "Paste the title you are considering", example: "How I Travel Europe for $40 a Day (Budget Tips)" },
         { id: "keyword", label: "Main keyword", type: "text", placeholder: "Type the phrase you want to rank for, optional", optional: true },
       ],
       how: [

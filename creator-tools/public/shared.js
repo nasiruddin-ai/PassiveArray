@@ -7,6 +7,11 @@
   var T = window.TOOL;
   var form = document.getElementById("form");
   var results = document.getElementById("results");
+  // The result panel beside the form. Its starting markup is kept so Clear can put it back.
+  var stage = document.getElementById("stage");
+  var stageEmpty = stage ? stage.innerHTML : "";
+  var wbBox = document.getElementById("wb");
+  function setStage(html, on) { if (!stage) return; stage.innerHTML = html; if (wbBox) wbBox.classList.toggle("has-result", !!on); }
   var statusEl = document.getElementById("status");
   var goBtn = document.getElementById("go");
 
@@ -103,14 +108,18 @@
   /* ----------------------------------------------------------- renderers */
   function markedIn() { try { return !!localStorage.getItem("pa-user"); } catch (e) { return false; } }
 
-  function render(out) {
+  function render(out, quiet) {
     if (!out) return;
     if (out.error) {
-      results.innerHTML = "<div class=\"error\">" + esc(out.error) + "</div>" + (out.note ? "<p class=\"note\">" + out.note + "</p>" : "");
+      var eh = "<div class=\"error\">" + esc(out.error) + "</div>" + (out.note ? "<p class=\"note\">" + out.note + "</p>" : "");
+      if (stage) { setStage("<div class=\"stage-empty\"><div class=\"k\">" + (quiet ? "ALMOST THERE" : "CHECK THE FORM") + "</div>" + eh + "</div>", false); results.innerHTML = ""; }
+      else results.innerHTML = eh;
+      if (stage && !quiet && stage.getBoundingClientRect().top > window.innerHeight * 0.6) stage.scrollIntoView({ behavior: "smooth", block: "center" });
       return;
     }
-    if (window.paTrack) window.paTrack("tool_run", { tool_name: T.slug });
-    var h = "";
+    if (window.paTrack && !quiet) window.paTrack("tool_run", { tool_name: T.slug });
+    var h = "", sh = "";
+    if (stage && !out.profile && !out.hero) out.hero = { label: "Result", value: "Ready", note: "The details are below." };
     if (out.profile || out.hero) {
       h += "<div class=\"herocard\">";
       if (out.profile) {
@@ -120,10 +129,11 @@
           (p.url ? "<a class=\"open\" href=\"" + esc(p.url) + "\" target=\"_blank\" rel=\"noopener\">Open on " + esc(T.platform) + "</a>" : "") + "</div>";
       }
       if (out.hero) {
-        h += "<div><div class=\"k\">" + esc(String(out.hero.label).toUpperCase()) + "</div><div class=\"v\">" + out.hero.value + "</div>" + (out.hero.note ? "<div class=\"n\">" + out.hero.note + "</div>" : "") + "</div>";
+        h += "<div><div class=\"k\">" + esc(String(out.hero.label).toUpperCase()) + "</div><div class=\"v" + (String(out.hero.value).replace(/<[^>]*>/g, "").length > 16 ? " long" : "") + "\">" + out.hero.value + "</div>" + (out.hero.note ? "<div class=\"n\">" + out.hero.note + "</div>" : "") + "</div>";
       }
       h += "<div class=\"hactions\"><button type=\"button\" class=\"btn\" id=\"copylink\">Copy link to this result</button>" +
         (out.profile && out.profile.watch ? "<button type=\"button\" class=\"btn watch\" id=\"watchbtn\" data-channel=\"" + esc(out.profile.watch) + "\">Watch this channel</button>" : "") + "</div></div>";
+      if (stage) { sh = h; h = ""; }
     }
     if (out.charts) {
       h += out.charts.map(function (c) { return "<div class=\"card chartcard\"><div class=\"charthead\"><b>" + esc(c.title) + "</b>" + (c.sub ? "<span>" + esc(c.sub) + "</span>" : "") + "</div>" + c.svg + "</div>"; }).join("");
@@ -136,7 +146,7 @@
     }
     if (out.rows) {
       h += "<div class=\"tiles\">" + out.rows.map(function (r) {
-        return "<div class=\"tile\"><span class=\"name\">" + esc(r.name) + (r.sub ? "<small>" + esc(r.sub) + "</small>" : "") + "</span><span class=\"val " + (r.cls || "") + "\">" + r.value + "</span></div>";
+        return "<div class=\"tile\"><span class=\"name\">" + esc(r.name) + (r.sub ? "<small>" + esc(r.sub) + "</small>" : "") + "</span><span class=\"val " + (r.cls || "") + (String(r.value).replace(/<[^>]*>/g, "").length > 24 ? " long" : "") + "\">" + r.value + "</span></div>";
       }).join("") + "</div>";
     }
     if (out.table) {
@@ -172,13 +182,7 @@
         "<span class=\"note\">" + (gated ? "Free account needed to download. Takes a few seconds, and you come straight back here." : esc(out.download.hint || "")) + "</span></div>";
     }
     if (out.note) h += "<p class=\"note\">" + out.note + "</p>";
-    h += "<div class=\"result-cta\">" +
-      "<div class=\"result-cta-copy\"><b>Want daily tracking or hands-on YouTube SEO?</b><span>Track up to 100 channels in the Dashboard ($9/mo) or book a channel audit with Nasir Uddin.</span></div>" +
-      "<div class=\"result-cta-actions\">" +
-        "<a class=\"btn\" href=\"../../app/\">Open Dashboard</a>" +
-        "<a class=\"btn ghost\" href=\"../../youtube-seo-service/\">YouTube SEO Service &rarr;</a>" +
-      "</div>" +
-    "</div>";
+    if (stage) setStage(sh, true);
     results.innerHTML = h;
     var dl = document.getElementById("dlbtn");
     function saveFile() {
@@ -241,7 +245,8 @@
       Object.keys(v).forEach(function (k) { if (String(v[k]).trim() !== "") u.searchParams.set(k, v[k]); });
       navigator.clipboard.writeText(u.toString()).then(function () { cl.textContent = "Link copied"; setTimeout(function () { cl.textContent = "Copy link to this result"; }, 1800); });
     });
-    if (results.getBoundingClientRect().top > window.innerHeight * 0.6) results.scrollIntoView({ behavior: "smooth", block: "start" });
+    var target = stage || results;
+    if (!quiet && target.getBoundingClientRect().top > window.innerHeight * 0.6) target.scrollIntoView({ behavior: "smooth", block: "start" });
   }
 
   function compareTable(items, metrics) {
@@ -3280,14 +3285,48 @@
   document.getElementById("reset").addEventListener("click", function () {
     form.reset();
     results.innerHTML = "";
+    setStage(stageEmpty, false);
+    bindExample();
     setStatus("");
     Array.prototype.forEach.call(form.elements, function (el) { el.classList.remove("invalid"); });
   });
 
+  // Look a field up by name. form.elements[name] is wrong for names like "length", which
+  // collide with the collection's own properties.
+  function field(name) { return Array.prototype.filter.call(form.elements, function (el) { return el.name === name; })[0] || null; }
   // Support links like ?channel=@handle that pre-fill and run.
   var qs = new URLSearchParams(location.search);
   var prefilled = false;
-  qs.forEach(function (val, key) { var el = form.elements[key]; if (el) { el.value = val; prefilled = true; } });
+  qs.forEach(function (val, key) { var el = field(key); if (el) { el.value = val; prefilled = true; } });
+  // Tools that run in the browser answer as you type, and show a result on arrival when
+  // their fields start with values. Nothing is sent anywhere, so this costs nothing.
+  var LIVE = !T.api && !!wbBox && wbBox.className.indexOf("wb-live") >= 0;
+  function requiredFilled() {
+    return Array.prototype.every.call(form.elements, function (el) { return !el.name || !el.required || String(el.value || "").trim() !== ""; });
+  }
+  function liveRun() {
+    var compute = COMPUTE[T.slug];
+    if (!compute) return;
+    if (!requiredFilled()) { results.innerHTML = ""; setStage(stageEmpty, false); bindExample(); return; }
+    try { render(compute(values(), null), true); } catch (err) { if (window.console) console.warn("live run:", err); }
+  }
+  var liveTimer = null;
+  if (LIVE) {
+    var onEdit = function () { clearTimeout(liveTimer); liveTimer = setTimeout(liveRun, 220); };
+    form.addEventListener("input", onEdit);
+    form.addEventListener("change", onEdit);
+  }
+  function bindExample() {
+    var b = document.getElementById("tryex");
+    if (!b || !T.example) return;
+    b.addEventListener("click", function () {
+      Object.keys(T.example).forEach(function (k) { var el = field(k); if (el) el.value = T.example[k]; });
+      run();
+    });
+  }
+  bindExample();
+
   if (prefilled && qs.get("run") !== "0") run();
   else if (T.autorun) run();
+  else if (LIVE && requiredFilled()) liveRun();
 })();

@@ -7,7 +7,7 @@ const MODE = (id, label, options, value) => ({ id, label, type: "select", value,
 const RESOLUTIONS = [["2160p", "2160p (4K)"], ["1440p", "1440p (2K)"], ["1080p", "1080p (Full HD)"], ["720p", "720p (HD)"], ["480p", "480p"], ["360p", "360p"], ["8k", "8K"]];
 
 const USERNAME_INPUTS = [
-  { id: "name", label: "Your name or brand", type: "text", placeholder: "e.g. Maya, or Bean Club" },
+  { id: "name", label: "Your name or brand", type: "text", placeholder: "e.g. Maya, or Bean Club", example: "Bean Club" },
   { id: "topic", label: "What you post about", type: "text", placeholder: "Optional, e.g. coffee, travel, fitness", optional: true },
   {
     id: "style", label: "Style", type: "select", value: "simple",
@@ -48,8 +48,8 @@ module.exports = [
     intro: "Pick what you want to find and fill in the other two numbers from YouTube Studio. You get your RPM, what you earn per view and per thousand, million and more views, or how many views a month a target income needs.",
     inputs: [
       MODE("mode", "What do you want to find?", [["rpm", "RPM, from revenue and views"], ["earnings", "Earnings, from RPM and views"], ["views", "Views needed, from a target and RPM"]], "rpm"),
-      { id: "revenue", label: "Revenue or target income ($)", type: "number", min: 0, optional: true, placeholder: "e.g. 250", hint: "Your estimated revenue in YouTube Studio, or the income you are aiming for" },
-      { id: "views", label: "Views", type: "number", min: 0, optional: true, placeholder: "e.g. 100000", hint: "Views in the same period as the revenue" },
+      { id: "revenue", label: "Revenue or target income ($)", type: "number", min: 0, optional: true, value: 250, hint: "Your estimated revenue in YouTube Studio, or the income you are aiming for" },
+      { id: "views", label: "Views", type: "number", min: 0, optional: true, value: 100000, hint: "Views in the same period as the revenue" },
       { id: "rpm", label: "RPM ($ per 1,000 views)", type: "number", min: 0, optional: true, placeholder: "e.g. 2.50", hint: "From YouTube Studio's revenue report" },
     ],
     how: [
