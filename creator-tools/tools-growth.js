@@ -63,7 +63,7 @@ module.exports = [
     buttonLabel: "Track",
     short: "Daily follower history for any streamer, charted, with 7, 30 and 90-day change.",
     intro: "Enter a Twitch username. The first lookup starts daily tracking, and every day after adds a point to the follower chart. Twitch publishes exact totals, so every change is real.",
-    inputs: [{ id: "login", label: "Twitch username", type: "text", placeholder: "Paste a twitch.tv link or username" }],
+    inputs: [{ id: "login", example: "twitch", label: "Twitch username", type: "text", placeholder: "Paste a twitch.tv link or username" }],
     how: [
       "Each day the channel's follower total is read from the official Twitch Helix API and stored.",
       "Changes compare today with the closest recorded day 7, 30 or 90 days earlier.",
@@ -176,7 +176,7 @@ module.exports = [
     intro: "Paste a video or Shorts link and type a word, a phrase, a hashtag or a username. You get every matching comment we can read, with a link straight to it on YouTube.",
     inputs: [
       { id: "video", label: "Video or Shorts link", type: "text", placeholder: "https://www.youtube.com/watch?v=..." },
-      { id: "q", label: "Search for", type: "text", placeholder: "A word, phrase, #hashtag or @username" },
+      { id: "q", example: "love", label: "Search for", type: "text", placeholder: "A word, phrase, #hashtag or @username" },
       { id: "field", label: "Search in", type: "select", value: "both", options: [["both", "Comment text and usernames"], ["text", "Comment text only"], ["author", "Usernames only"]] },
       { id: "replies", label: "Replies", type: "select", value: "yes", options: [["yes", "Include"], ["no", "Leave out"]] },
       { id: "order", label: "Read", type: "select", value: "relevance", options: [["relevance", "Top comments first"], ["time", "Newest first"]] },
@@ -253,6 +253,7 @@ module.exports = [
   },
   {
     slug: "youtube-trending-tags-by-country",
+    autorun: true,
     howTitle: "Where the data comes from",
     name: "YouTube Trending Tags by Country",
     platform: "YouTube",
@@ -274,6 +275,7 @@ module.exports = [
   },
   {
     slug: "top-youtube-channels-by-country",
+    autorun: true,
     howTitle: "How the ranking is built",
     name: "Top YouTube Channels by Country",
     platform: "YouTube",

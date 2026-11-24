@@ -1381,3 +1381,9 @@ table.cmp tbody th[scope="row"] { font-weight: 500; text-align: left; text-trans
 .feat.lead span { color: var(--hero-muted); }
 [data-directory] .group a.card { padding: 16px 18px; gap: 6px; }
 [data-directory] .group a.card p { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+/* Dark theme: keep the answer panel and the lead card distinct from the cards around them. */
+:root[data-theme="dark"] .wb-out { background: #103234; }
+:root[data-theme="dark"] .wb { border-color: rgba(143, 211, 199, .28); }
+:root[data-theme="dark"] .feat.lead { background: #103234; border-color: rgba(143, 211, 199, .4); }
+:root[data-theme="dark"] .fbtn i { box-shadow: 0 0 0 1px rgba(255, 255, 255, .45); }
+:root[data-theme="dark"] .hub-search { border-color: var(--mint); }

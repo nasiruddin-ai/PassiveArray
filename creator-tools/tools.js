@@ -246,8 +246,8 @@ const tools = [
     short: "Two or three channels side by side: subscribers, views, engagement, upload pace.",
     intro: "Enter two or three channels and see every key metric next to each other, with the leader marked on each row.",
     inputs: [
-      { id: "a", label: "Channel A", type: "text", placeholder: "Paste a link or @handle" },
-      { id: "b", label: "Channel B", type: "text", placeholder: "Paste a link or @handle" },
+      { id: "a", example: "@mkbhd", label: "Channel A", type: "text", placeholder: "Paste a link or @handle" },
+      { id: "b", example: "@veritasium", label: "Channel B", type: "text", placeholder: "Paste a link or @handle" },
       { id: "c", label: "Channel C (optional)", type: "text", placeholder: "Paste a link or @handle", optional: true },
     ],
     how: [
@@ -336,7 +336,7 @@ const tools = [
     action: "channel",
     short: "Followers, live status, current viewers and average VOD views for any streamer.",
     intro: "Enter a Twitch username. You get the follower count, whether the channel is live right now, and average views on the last 10 videos.",
-    inputs: [{ id: "login", label: "Twitch username", type: "text", placeholder: "Paste a twitch.tv link or username" }],
+    inputs: [{ id: "login", example: "twitch", label: "Twitch username", type: "text", placeholder: "Paste a twitch.tv link or username" }],
     how: [
       "Data comes from the official Twitch Helix API.",
       "Average VOD views use the 10 most recent videos: past broadcasts, highlights or uploads.",
@@ -352,8 +352,8 @@ const tools = [
     short: "Two or three streamers side by side: followers, live viewers, VOD views, account age.",
     intro: "Enter two or three usernames and compare followers, current viewers, average VOD views and account age in one table.",
     inputs: [
-      { id: "a", label: "Streamer A", type: "text", placeholder: "Paste a link or username" },
-      { id: "b", label: "Streamer B", type: "text", placeholder: "Paste a link or username" },
+      { id: "a", example: "twitch", label: "Streamer A", type: "text", placeholder: "Paste a link or username" },
+      { id: "b", example: "twitchrivals", label: "Streamer B", type: "text", placeholder: "Paste a link or username" },
       { id: "c", label: "Streamer C (optional)", type: "text", placeholder: "Paste a link or username", optional: true },
     ],
     how: [
@@ -725,9 +725,9 @@ const tools = [
     short: "Five bio options under 150 characters with a clear line for who you help and a call to action.",
     intro: "Fill in what you do, who it is for and the tone you want. You get five bios that fit Instagram's 150-character limit, each with a call to action.",
     inputs: [
-      { id: "name", label: "Name or brand", type: "text", placeholder: "Type your name or brand" },
-      { id: "what", label: "What you do", type: "text", placeholder: "Say what you do in a few words" },
-      { id: "audience", label: "Who it is for", type: "text", placeholder: "Say who it is for, e.g. coaches and consultants" },
+      { id: "name", example: "Bean Club", label: "Name or brand", type: "text", placeholder: "Type your name or brand" },
+      { id: "what", example: "Home coffee tips and gear reviews", label: "What you do", type: "text", placeholder: "Say what you do in a few words" },
+      { id: "audience", example: "people who brew coffee at home", label: "Who it is for", type: "text", placeholder: "Say who it is for, e.g. coaches and consultants" },
       { id: "cta", label: "Call to action", type: "text", placeholder: "Type your call to action, e.g. Book a free call", value: "Link below" },
       { id: "tone", label: "Tone", type: "select", options: TONES },
     ],

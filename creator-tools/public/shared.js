@@ -119,7 +119,7 @@
     }
     if (window.paTrack && !quiet) window.paTrack("tool_run", { tool_name: T.slug });
     var h = "", sh = "";
-    if (stage && !out.profile && !out.hero) out.hero = { label: "Result", value: "Ready", note: "The details are below." };
+    if (stage && !out.profile && !out.hero) out.hero = T.compare || T.action === "compare" ? { label: "Comparison", value: "Side by side", note: "The table below puts each metric next to the others." } : { label: "Result", value: "Ready", note: "The details are below." };
     if (out.profile || out.hero) {
       h += "<div class=\"herocard\">";
       if (out.profile) {
@@ -3218,6 +3218,7 @@
     var channel = String(v.channel || "").trim() || "Your channel";
     var url = URL.createObjectURL(file);
     return {
+      hero: { label: "Thumbnail preview", value: "Preview ready", note: "Checks and feed previews are below. The image stays in your browser." },
       blocks: ["<div id=\"tt-out\" class=\"card\"><p class=\"note\">Reading the image…</p></div>"],
       after: function (root) {
         var img = new Image();
@@ -3287,6 +3288,7 @@
     results.innerHTML = "";
     setStage(stageEmpty, false);
     bindExample();
+    bindRun();
     setStatus("");
     Array.prototype.forEach.call(form.elements, function (el) { el.classList.remove("invalid"); });
   });
@@ -3320,10 +3322,34 @@
     var b = document.getElementById("tryex");
     if (!b || !T.example) return;
     b.addEventListener("click", function () {
+      if (T.example.__image) { sampleImage(); return; }
       Object.keys(T.example).forEach(function (k) { var el = field(k); if (el) el.value = T.example[k]; });
       run();
     });
   }
+  // A plain 1280 x 720 sample thumbnail, drawn here so no image is downloaded or uploaded.
+  function sampleImage() {
+    var input = field("image");
+    if (!input || !window.DataTransfer) return;
+    var c = document.createElement("canvas"); c.width = 1280; c.height = 720;
+    var g = c.getContext("2d");
+    g.fillStyle = "#1F2A44"; g.fillRect(0, 0, 1280, 720);
+    g.fillStyle = "#2A9D8F"; g.fillRect(0, 0, 1280, 26); g.fillRect(820, 150, 340, 420);
+    g.fillStyle = "#F5B83D"; g.beginPath(); g.arc(990, 360, 120, 0, Math.PI * 2); g.fill();
+    g.fillStyle = "#FFFFFF"; g.font = "bold 150px Arial, sans-serif"; g.textBaseline = "middle";
+    g.fillText("SAMPLE", 80, 300); g.fillText("TITLE", 80, 470);
+    c.toBlob(function (blob) {
+      if (!blob) return;
+      try {
+        var dt = new DataTransfer();
+        dt.items.add(new File([blob], "sample-thumbnail.png", { type: "image/png" }));
+        input.files = dt.files;
+      } catch (e) { return; }
+      run();
+    }, "image/png");
+  }
+  function bindRun() { var r = document.getElementById("tryrun"); if (r) r.addEventListener("click", function () { run(); }); }
+  bindRun();
   bindExample();
 
   if (prefilled && qs.get("run") !== "0") run();

@@ -507,7 +507,24 @@ function toolPage(template, t) {
   // "Try an example": values for the required fields that start empty. A field can carry its
   // own "example"; YouTube lookups fall back to a well-known public channel or video.
   const EX_BY_ID = t.platform === "YouTube" && t.api !== "ai" ? { channel: "@mkbhd", video: "https://www.youtube.com/watch?v=dQw4w9WgXcQ" } : {};
-  let example = null;
+  let example = null, runOnly = false;
+  const hasFile = (t.inputs || []).some((f) => f.type === "file");
+  // Browser comparisons: fill accounts A and B from the fields' own "e.g." hints, B a size up.
+  if (t.compare && !t.api) {
+    const ex = {};
+    let ok = true;
+    ["a_", "b_"].forEach((pre, col) => t.compare.fields.forEach((f) => {
+      if (f.type === "number") {
+        const m = /e\.g\.\s+([\d,.]+)$/.exec(String(f.placeholder || ""));
+        if (!m) { ok = false; return; }
+        const n = parseFloat(m[1].replace(/,/g, ""));
+        ex[pre + f.id] = String(col ? Math.round(n * 1.6) : n);
+      } else ex[pre + f.id] = col ? "@example_two" : "@example_one";
+    }));
+    if (ok) example = ex;
+  }
+  // The thumbnail tester has nothing to type, so its example is a sample image drawn in the browser.
+  if (hasFile) example = { __image: 1 };
   if (!t.compare) {
     const need = (t.inputs || []).filter((f) => !f.optional && f.type !== "file" && f.type !== "select" && (f.value == null || f.value === ""));
     const ex = {};
@@ -521,12 +538,14 @@ function toolPage(template, t) {
       return f.type === "textarea" ? m[1] : m[1].split(/,\s| or /)[0].trim();
     };
     (t.inputs || []).forEach((f) => { const v = f.example != null ? f.example : EX_BY_ID[f.id] != null ? EX_BY_ID[f.id] : fromHint(f); if (v != null && (f.value == null || f.value === "")) ex[f.id] = v; });
-    if (need.length && need.every((f) => ex[f.id] != null) && !(t.inputs || []).some((f) => f.type === "file")) example = ex;
+    if (need.length && need.every((f) => ex[f.id] != null) && !hasFile) example = ex;
+    // Live lookups with nothing left to fill (only menus): the panel offers the run button itself.
+    if (!need.length && t.api && !t.autorun && !hasFile) runOnly = true;
   }
   const live = !t.api && !(t.inputs || []).some((f) => f.type === "file");
   const meta = "Free · No account · " + (t.api === "youtube" ? "Live data from the YouTube API" : t.api === "twitch" ? "Live data from the Twitch API" : t.api === "ai" ? "Works without signing in" : "Runs in your browser");
   const privacy = t.api === "youtube" || t.api === "twitch" ? `Reads public data from the official ${t.api === "twitch" ? "Twitch" : "YouTube"} API. No sign-in to your account.` : t.api === "ai" ? "" : "Runs in your browser. Nothing you type is sent anywhere.";
-  const stage = `<div class="stage-empty"><div class="k">YOUR RESULT</div><div class="v">${live ? "Fill in the form" : "Ready when you are"}</div><div class="n">${esc(t.short)}</div>${example ? '<div class="hactions"><button type="button" class="btn mint" id="tryex">Try an example</button></div>' : ""}</div>`;
+  const stage = `<div class="stage-empty"><div class="k">YOUR RESULT</div><div class="v">${hasFile ? "Choose an image" : live ? "Fill in the form" : "Ready when you are"}</div><div class="n">${esc(t.short)}</div>${example ? '<div class="hactions"><button type="button" class="btn mint" id="tryex">' + (hasFile ? "Try a sample image" : "Try an example") + "</button></div>" : runOnly ? '<div class="hactions"><button type="button" class="btn mint" id="tryrun">' + esc(buttonLabel(t)) + "</button></div>" : ""}</div>`;
   const wbClass = (t.compare ? " wb-stack" : "") + (live ? " wb-live" : "");
   const clientTool = {
     slug: t.slug, name: t.name, platform: t.platform, api: t.api || null, action: t.action || null, autorun: !!t.autorun, params: t.params || null, downloadNeedsAccount: !!t.downloadNeedsAccount,

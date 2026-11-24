@@ -65,7 +65,7 @@ module.exports = [
     buttonLabel: "Calculate length",
     short: "Total run time of any public YouTube playlist, and how long it takes at 1.25x, 1.5x and 2x speed.",
     intro: "Paste a playlist link or playlist ID. You get the total length of every available video, the average and longest video, and how long the playlist takes at faster speeds.",
-    inputs: [{ id: "playlist", label: "Playlist link or ID", type: "text", placeholder: "https://www.youtube.com/playlist?list=PL...", hint: "Any link with list= in it works, including a watch link from inside the playlist" }],
+    inputs: [{ id: "playlist", example: "https://www.youtube.com/playlist?list=PLu0W_9lII9agq5TrH9XLIKQvv0iaF2X3w", label: "Playlist link or ID", type: "text", placeholder: "https://www.youtube.com/playlist?list=PL...", hint: "Any link with list= in it works, including a watch link from inside the playlist" }],
     how: [
       "Video lengths are read from the YouTube Data API for every video in the playlist, up to the first 500.",
       "Private, deleted and region-blocked videos have no length to read, so they are counted separately and left out of the total.",
