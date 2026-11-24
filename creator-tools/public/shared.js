@@ -3029,6 +3029,202 @@
   COMPUTE["instagram-username-generator"] = function (v) { return usernameResult(v, "Instagram"); };
   COMPUTE["tiktok-username-generator"] = function (v) { return usernameResult(v, "TikTok"); };
 
+  /* ------------------------------------------ channel tools added 24 Nov 2026 */
+  // YouTube Data API, videos.snippet.tags: the list is limited to 500 characters, commas between
+  // tags count, and a tag containing a space is counted as if wrapped in quotation marks.
+  function tagCost(t) { return t.length + (/\s/.test(t) ? 2 : 0); }
+  function tagListCost(list) { return list.reduce(function (a, t) { return a + tagCost(t); }, 0) + Math.max(0, list.length - 1); }
+
+  COMPUTE["youtube-tag-sorter"] = function (v) {
+    var raw = String(v.tags || "").split(/[,\n]+/).map(function (t) { return t.replace(/^[#\s"']+|[\s"']+$/g, "").replace(/\s+/g, " "); }).filter(Boolean);
+    if (!raw.length) return { error: "Paste at least one tag." };
+    var seen = {}, list = [], dupes = 0;
+    raw.forEach(function (t) { var k = t.toLowerCase(); if (seen[k]) { dupes++; return; } seen[k] = 1; list.push(t); });
+    var order = v.order || "kept";
+    if (order === "specific") list.sort(function (a, b) { return b.length - a.length; });
+    else if (order === "short") list.sort(function (a, b) { return a.length - b.length; });
+    else if (order === "az") list.sort(function (a, b) { return a.toLowerCase().localeCompare(b.toLowerCase()); });
+    var kept = [], dropped = [];
+    list.forEach(function (t) { if (tagListCost(kept.concat([t])) <= 500) kept.push(t); else dropped.push(t); });
+    var used = tagListCost(kept);
+    return {
+      hero: { label: "Tags that fit", value: kept.length + " tags", note: used + " of YouTube's 500 characters used" + (dupes ? ", " + dupes + " duplicate" + (dupes === 1 ? "" : "s") + " removed" : "") },
+      bars: [{ label: "Characters used", value: used / 5, text: used + " / 500" }],
+      rows: [
+        { name: "Tags kept", value: String(kept.length) },
+        { name: "Duplicates removed", value: String(dupes) },
+        { name: "Dropped to fit 500", value: String(dropped.length), cls: dropped.length ? "warn" : "" },
+        { name: "Characters left", value: String(500 - used) },
+      ],
+      tags: kept.map(function (t) { return { tag: t }; }),
+      copy: kept.join(", "),
+      list: dropped.length ? ["<b>Did not fit:</b> " + dropped.map(esc).join(", ")] : null,
+      note: "Characters are counted the way the YouTube Data API documents: commas between tags count, and a tag with a space in it counts two extra for its quotation marks. Tags play a small part in discovery; YouTube Help says they are most useful when your content is commonly misspelled.",
+    };
+  };
+
+  var SUB_MILESTONES = [100, 500, 1000, 5000, 10000, 25000, 50000, 100000, 250000, 500000, 1e6, 2e6, 5e6, 1e7, 2.5e7, 5e7, 1e8, 2e8, 5e8, 1e9];
+  var MILESTONE_NOTE = { 500: "Expanded Partner Program subscriber threshold", 1000: "Full Partner Program subscriber threshold", 100000: "Silver Creator Award level", 1000000: "Gold Creator Award level", 10000000: "Diamond Creator Award level" };
+  COMPUTE["youtube-milestone-calculator"] = function (v, d) {
+    var ch = d.channel, s = d.series || [];
+    if (ch.hiddenSubscribers) return { profile: ytProfile(ch), hero: { label: "Subscribers", value: "Hidden by channel", note: "This channel hides its subscriber count, so milestones cannot be worked out." } };
+    var typed = String(v.rate || "").trim() === "" ? null : num(v.rate);
+    var span = s.length > 1 ? daysBetween(s[0].d, s[s.length - 1].d) : 0;
+    var measured = span >= 3 ? (s[s.length - 1].s - s[0].s) / span : null;
+    var rate = typed != null ? typed : measured;
+    var basis = typed != null ? "the " + fmt(typed) + " a day you entered" : measured != null ? "recorded growth over " + span + " days" : null;
+    var next = SUB_MILESTONES.filter(function (m) { return m > ch.subscribers; }).slice(0, 5);
+    var when = function (m) {
+      if (!rate || rate <= 0) return null;
+      var days = Math.ceil((m - ch.subscribers) / rate);
+      if (days > 36500) return { days: days, text: "More than 100 years" };
+      return { days: days, text: new Date(Date.now() + days * 86400000).toLocaleDateString("en-US", { year: "numeric", month: "short", day: "numeric" }) };
+    };
+    var first = next[0], w0 = first ? when(first) : null;
+    var out = {
+      profile: ytProfile(ch),
+      hero: first
+        ? { label: "Next milestone", value: compact(first) + " subscribers", note: fmt(first - ch.subscribers) + " to go" + (w0 ? ", around " + esc(w0.text) + " at " + esc(basis) : "") }
+        : { label: "Subscribers", value: fmt(ch.subscribers), note: "Past every milestone on our list." },
+      rows: [
+        { name: "Subscribers now", sub: "rounded by YouTube", value: fmt(ch.subscribers) },
+        { name: "Daily growth used", sub: basis || "not enough history yet", value: rate == null ? "Not known" : (rate >= 0 ? "+" : "") + fmt(rate, 1) + " a day", cls: rate != null && rate < 0 ? "bad" : "" },
+        { name: "Total views", value: fmt(ch.views) },
+        { name: "Videos", value: fmt(ch.videos) },
+      ],
+      table: {
+        head: ["Milestone", "Still needed", "Days", "Estimated date", ""],
+        rows: next.map(function (m) {
+          var w = when(m);
+          return [{ html: "<b>" + fmt(m) + "</b>" }, fmt(m - ch.subscribers), w ? fmt(w.days) : "n/a", w ? esc(w.text) : "n/a", esc(MILESTONE_NOTE[m] || "")];
+        }),
+      },
+    };
+    out.note = rate == null
+      ? "We have under three days of recorded history for this channel, so there is no measured pace yet. It is on the daily tracking list now: come back in a few days, or type a daily figure from YouTube Studio above."
+      : rate <= 0 ? "At the pace used, the channel is not gaining subscribers, so no date can be given."
+      : "Dates assume the channel keeps gaining " + fmt(rate, 1) + " subscribers a day. Growth is rarely steady: one video that takes off, or a quiet month, moves every date. Subscriber thresholds for the Partner Program need other conditions too; see the <a href=\"../youtube-monetization-checker/\">monetization checker</a>.";
+    return out;
+  };
+
+  function videoLen(sec) { var m = Math.floor(sec / 60), x = sec % 60; return sec >= 3600 ? Math.floor(sec / 3600) + ":" + ("0" + Math.floor((sec % 3600) / 60)).slice(-2) + ":" + ("0" + x).slice(-2) : m + ":" + ("0" + x).slice(-2); }
+
+  COMPUTE["youtube-channel-video-exporter"] = function (v, d) {
+    var ch = d.channel, list = d.videos || [];
+    if (!list.length) return { profile: ytProfile(ch), hero: { label: "Videos", value: "None found", note: "This channel has no public uploads." } };
+    var views = list.reduce(function (a, x) { return a + (x.views || 0); }, 0);
+    var sorted = list.slice().sort(function (a, b) { return b.views - a.views; });
+    var text = csv(["title", "url", "published_at", "length_seconds", "views", "likes", "comments", "tags", "description"],
+      list.map(function (x) { return [x.title, x.url, x.publishedAt, x.seconds, x.views, x.likes == null ? "" : x.likes, x.comments == null ? "" : x.comments, (x.tags || []).join(", "), x.description]; }));
+    return {
+      profile: ytProfile(ch),
+      hero: { label: "Videos read", value: fmt(list.length), note: "The channel's newest public uploads" + (d.more ? ". It has more; choose a larger number, up to 200." : ".") },
+      rows: [
+        { name: "Total views on these videos", value: fmt(views) },
+        { name: "Average views", value: fmt(views / list.length) },
+        { name: "Most viewed", sub: sorted[0].title.slice(0, 60), value: fmt(sorted[0].views) },
+        { name: "Videos with tags", value: fmt(list.filter(function (x) { return (x.tags || []).length; }).length) + " of " + list.length },
+      ],
+      download: { label: "Download all " + fmt(list.length) + " as CSV", hint: "Titles, links, dates, numbers, tags and descriptions. Opens in Excel or Google Sheets", filename: (ch.handle || ch.id).replace(/[^\w.-]/g, "") + "-videos.csv", text: text },
+      table: {
+        head: ["Video", "Published", "Length", "Views", "Likes", "Comments"],
+        numeric: true,
+        rows: list.slice(0, 50).map(function (x) {
+          return [{ html: "<a href=\"" + esc(x.url) + "\" target=\"_blank\" rel=\"noopener\">" + esc(x.title) + "</a>" }, esc(dateStr(x.publishedAt)), videoLen(x.seconds), fmt(x.views), x.likes == null ? "Hidden" : fmt(x.likes), x.comments == null ? "Off" : fmt(x.comments)];
+        }),
+      },
+      note: (list.length > 50 ? "The table shows the newest 50; the CSV has all " + fmt(list.length) + ". " : "") + "Only public data from the YouTube Data API is exported. It is a copy of titles, descriptions and tags, not of the video files.",
+    };
+  };
+
+  var WEEKDAYS = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+  COMPUTE["youtube-upload-schedule-checker"] = function (v, d) {
+    var ch = d.channel, list = (d.videos || []).filter(function (x) { return x.publishedAt; });
+    if (list.length < 3) return { profile: ytProfile(ch), hero: { label: "Uploads", value: String(list.length), note: "Too few public uploads to see a pattern." } };
+    var days = [0, 0, 0, 0, 0, 0, 0], hours = [];
+    for (var i = 0; i < 24; i++) hours.push(0);
+    list.forEach(function (x) { var t = new Date(x.publishedAt); days[t.getDay()]++; hours[t.getHours()]++; });
+    var topDay = days.indexOf(Math.max.apply(null, days));
+    var topHour = hours.indexOf(Math.max.apply(null, hours));
+    var hourText = function (h) { return new Date(2020, 0, 1, h).toLocaleTimeString("en-US", { hour: "numeric" }); };
+    var newest = new Date(list[0].publishedAt), oldest = new Date(list[list.length - 1].publishedAt);
+    var spanDays = Math.max(1, (newest - oldest) / 86400000);
+    var perWeek = (list.length - 1) / spanDays * 7;
+    var shorts = list.filter(function (x) { return x.seconds > 0 && x.seconds <= 180; }).length;
+    var tz = "";
+    try { tz = Intl.DateTimeFormat().resolvedOptions().timeZone || ""; } catch (e) { tz = ""; }
+    var maxDay = Math.max.apply(null, days) || 1;
+    var hourRows = hours.map(function (n, h) { return { h: h, n: n }; }).filter(function (x) { return x.n; }).sort(function (a, b) { return b.n - a.n; }).slice(0, 6);
+    return {
+      profile: ytProfile(ch),
+      hero: { label: "Most common upload day", value: WEEKDAYS[topDay], note: fmt(days[topDay]) + " of the last " + list.length + " uploads, most often around " + esc(hourText(topHour)) + (tz ? " (" + esc(tz) + ")" : "") },
+      bars: WEEKDAYS.map(function (name, k) { return { label: name, value: days[k] / maxDay * 100, text: days[k] + " upload" + (days[k] === 1 ? "" : "s") }; }),
+      rows: [
+        { name: "Uploads per week", sub: "over " + fmt(spanDays) + " days", value: fmt(perWeek, 1) },
+        { name: "Most common hour", sub: tz || "your time zone", value: hourText(topHour) },
+        { name: "Shorts-length uploads", sub: "3 minutes or less", value: fmt(shorts) + " of " + list.length },
+        { name: "Latest upload", value: dateStr(list[0].publishedAt) },
+      ],
+      table: { head: ["Hour (your time zone)", "Uploads"], rows: hourRows.map(function (x) { return [esc(hourText(x.h)), String(x.n)]; }) },
+      note: "This shows when the channel publishes, not when its viewers are online. A channel's own best time is in YouTube Studio's audience report, which only the owner can see. Times are in your browser's time zone.",
+    };
+  };
+
+  // Words grouped by the categories in YouTube's advertiser-friendly content guidelines
+  // (YouTube Help 6162278). The lists are ours and deliberately leave out slurs.
+  var ADF = [
+    ["Inappropriate language", ["fuck", "fucking", "fucked", "shit", "shitty", "bitch", "asshole", "bastard", "dick", "pussy", "wtf", "damn", "hell", "crap", "piss"]],
+    ["Violence", ["kill", "killed", "killing", "murder", "murdered", "shooting", "stabbing", "stabbed", "beheading", "torture", "massacre", "bloody", "gore", "corpse", "dead body", "assault", "beaten", "brutal"]],
+    ["Adult content", ["sex", "sexy", "nude", "naked", "porn", "nsfw", "onlyfans", "fetish", "erotic", "stripper", "boobs"]],
+    ["Shocking content", ["gruesome", "disgusting", "graphic", "horrifying", "mutilated", "vomit", "crash footage"]],
+    ["Harmful acts and unreliable content", ["suicide", "self harm", "self-harm", "overdose", "dangerous challenge", "eating disorder", "anorexia", "miracle cure", "hoax"]],
+    ["Hateful & derogatory content", ["nazi", "racist", "white power", "hate speech", "supremacy"]],
+    ["Recreational drugs and drug-related content", ["cocaine", "heroin", "meth", "weed", "marijuana", "cannabis", "lsd", "mdma", "ecstasy", "shrooms", "getting high", "stoned"]],
+    ["Firearms-related content", ["gun", "guns", "rifle", "pistol", "firearm", "ammo", "ammunition", "silencer", "3d printed gun", "ar-15"]],
+    ["Controversial issues", ["abortion", "child abuse", "sexual abuse", "rape", "domestic abuse", "sexual harassment"]],
+    ["Sensitive events", ["terrorist", "terrorism", "terror attack", "mass shooting", "school shooting", "war footage", "bombing", "genocide"]],
+    ["Enabling dishonest behavior", ["hack", "hacking", "cheat", "cracked", "pirated", "fake id", "password stealer", "essay writing service"]],
+    ["Tobacco-related content", ["cigarette", "cigarettes", "vape", "vaping", "tobacco", "nicotine", "cigar"]],
+    ["Incendiary and demeaning", ["destroyed", "humiliated", "idiot", "stupid", "moron", "loser", "exposed"]],
+  ];
+  COMPUTE["youtube-demonetization-checker"] = function (v) {
+    var title = String(v.title || "").trim();
+    if (!title) return { error: "Paste the title you want to check." };
+    var parts = [["Title", title], ["Description", String(v.description || "")], ["Tags", String(v.tags || "")]];
+    var hits = [], cats = {};
+    parts.forEach(function (p) {
+      var text = " " + p[1].toLowerCase().replace(/[^a-z0-9\-' ]+/g, " ").replace(/\s+/g, " ") + " ";
+      ADF.forEach(function (c) {
+        c[1].forEach(function (w) {
+          if (text.indexOf(" " + w + " ") >= 0) { hits.push({ where: p[0], word: w, cat: c[0] }); cats[c[0]] = 1; }
+        });
+      });
+    });
+    var inTitle = hits.filter(function (h) { return h.where === "Title"; }).length;
+    var catList = Object.keys(cats);
+    var out = {
+      hero: hits.length
+        ? { label: "Words to look at again", value: "<span class=\"pill warn\">" + hits.length + " flagged</span>", note: inTitle + " in the title, across " + catList.length + " guideline categor" + (catList.length === 1 ? "y" : "ies") + ". A flag is not a verdict." }
+        : { label: "Wording check", value: "<span class=\"pill good\">Nothing flagged</span>", note: "No word from our lists was found. The video and thumbnail are judged too." },
+      rows: [
+        { name: "Flagged in title", value: String(inTitle), cls: inTitle ? "warn" : "good" },
+        { name: "Flagged in description", value: String(hits.filter(function (h) { return h.where === "Description"; }).length) },
+        { name: "Flagged in tags", value: String(hits.filter(function (h) { return h.where === "Tags"; }).length) },
+        { name: "Guideline categories touched", value: String(catList.length) },
+      ],
+      note: "YouTube Help says its advertiser-friendly policies apply to all portions of your content: the video, thumbnail, title, description and tags. This tool reads only the words, from lists we wrote; YouTube publishes no word list and judges context. Its systems decide the monetization icon, and YouTube Help says you can request human review of those decisions.",
+    };
+    if (hits.length) {
+      out.table = { head: ["Word", "Found in", "Guideline category"], rows: hits.map(function (h) { return [{ html: "<b>" + esc(h.word) + "</b>" }, h.where, esc(h.cat)]; }) };
+      out.list = [
+        "<b>Title and thumbnail first.</b> YouTube's guidelines name the title and thumbnail specifically when they describe profanity, so that is where a change matters most.",
+        "<b>Context can make a word fine.</b> News, education and documentary uses are treated differently from shock value. Keep the word if it is the honest subject of the video.",
+        "<b>Check the self-rating form.</b> When you upload, answer YouTube's self-certification questions accurately; it is how you tell YouTube what is in the video.",
+      ];
+    }
+    return out;
+  };
+
   /* ---------------------------------------------- most subscribed channels */
   COMPUTE["youtube-most-subscribed-channels"] = function (v, d) {
     var list = (d.channels || []).slice();

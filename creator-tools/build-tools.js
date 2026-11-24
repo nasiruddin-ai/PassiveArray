@@ -450,6 +450,10 @@ const CLUSTERS = [
   ["youtube-chapters-checker", "youtube-video-seo-checker", "youtube-timestamp-link-generator", "youtube-description-generator", "youtube-title-analyzer"],
   ["video-bitrate-calculator", "video-file-size-calculator", "aspect-ratio-calculator", "youtube-thumbnail-tester", "youtube-embed-code-generator"],
   ["instagram-username-generator", "tiktok-username-generator", "youtube-channel-name-generator", "instagram-bio-generator"],
+  ["youtube-tag-sorter", "youtube-tag-generator", "youtube-tag-extractor", "youtube-hashtag-generator", "youtube-video-seo-checker"],
+  ["youtube-milestone-calculator", "youtube-channel-growth-tracker", "youtube-subscriber-count-checker", "youtube-monetization-checker", "youtube-watch-hours-calculator"],
+  ["youtube-channel-video-exporter", "youtube-upload-schedule-checker", "youtube-channel-comparison", "youtube-comment-exporter", "youtube-channel-keywords-finder"],
+  ["youtube-demonetization-checker", "youtube-title-analyzer", "youtube-monetization-checker", "youtube-video-seo-checker", "youtube-blocked-words-list"],
   ["tiktok-username-generator", "tiktok-account-comparison", "tiktok-engagement-rate-calculator", "tiktok-money-calculator"],
   ["x-account-comparison", "x-follower-to-following-ratio", "youtube-channel-comparison", "tiktok-account-comparison"],
 ];

@@ -685,6 +685,48 @@ async function getPlaylist(input) {
   });
 }
 
+/* ------------------------------------------------------------------ a channel's uploads
+   The newest public uploads with their details, for the video exporter and the upload schedule
+   checker. One playlistItems call and one videos call per 50 videos; no search. */
+const CHANNEL_VIDEOS_CAP = 200;
+async function channelVideos(input, opts = {}) {
+  const id = await resolveChannelId(input);
+  const max = Math.max(10, Math.min(CHANNEL_VIDEOS_CAP, parseInt(opts.max, 10) || 50));
+  return cached("chvideos:" + id + ":" + max, async () => {
+    const d = await yt("channels", { part: CHANNEL_PARTS, id });
+    if (!d.items?.[0]) throw Object.assign(new Error("Channel not found."), { code: "not_found", status: 404 });
+    const ch = summarizeChannel(d.items[0]);
+    const uploads = ch.uploadsPlaylist;
+    delete ch.uploadsPlaylist;
+    const ids = [];
+    let pageToken = "";
+    if (uploads) {
+      do {
+        const page = await yt("playlistItems", { part: "contentDetails", playlistId: uploads, maxResults: 50, pageToken }).catch(() => ({ items: [] }));
+        for (const it of page.items || []) if (it.contentDetails?.videoId) ids.push(it.contentDetails.videoId);
+        pageToken = page.nextPageToken || "";
+      } while (pageToken && ids.length < max);
+    }
+    const take = ids.slice(0, max);
+    const videos = [];
+    for (let i = 0; i < take.length; i += 50) {
+      const v = await yt("videos", { part: "snippet,contentDetails,statistics", id: take.slice(i, i + 50).join(",") });
+      for (const it of v.items || []) {
+        const sn = it.snippet || {}, st = it.statistics || {};
+        videos.push({
+          id: it.id, url: "https://www.youtube.com/watch?v=" + it.id,
+          title: sn.title || "", description: String(sn.description || "").slice(0, 5000), tags: sn.tags || [],
+          publishedAt: sn.publishedAt || null, seconds: isoDurationToSeconds(it.contentDetails?.duration),
+          views: n(st.viewCount), likes: st.likeCount == null ? null : n(st.likeCount), comments: st.commentCount == null ? null : n(st.commentCount),
+          live: !!it.liveStreamingDetails || sn.liveBroadcastContent === "live" || sn.liveBroadcastContent === "upcoming",
+        });
+      }
+    }
+    videos.sort((x, y) => String(y.publishedAt).localeCompare(String(x.publishedAt)));
+    return { channel: ch, videos, checked: videos.length, more: !!pageToken || ids.length > max };
+  });
+}
+
 /* ------------------------------------------------------------------ watch hours estimate
    The same estimate the monetization checker uses, without the slower ad probes. */
 async function watchHours(input) {
@@ -722,6 +764,7 @@ async function handleRequest(action, params = {}) {
     }
     if (action === "videodetails") return { code: 200, body: { ok: true, video: await getVideoDetails(params.video) } };
     if (action === "playlist") return { code: 200, body: { ok: true, playlist: await getPlaylist(params.playlist) } };
+    if (action === "channelvideos") return { code: 200, body: { ok: true, ...(await channelVideos(params.channel, { max: params.max })) } };
     if (action === "watchhours") return { code: 200, body: { ok: true, ...(await watchHours(params.channel)) } };
     if (action === "comments") return { code: 200, body: { ok: true, ...(await getComments(params.video, { max: params.max, order: params.order })) } };
     if (action === "audit") return { code: 200, body: { ok: true, ...(await getChannelComments(params.channel, { videos: params.videos, per: params.per, order: params.order })) } };
@@ -734,4 +777,4 @@ async function handleRequest(action, params = {}) {
   }
 }
 
-module.exports = { getVideoDetails, getPlaylist, parsePlaylistId, watchHours, configure, handleRequest, parseChannelInput, parseVideoId, getChannel, getComments, getChannelComments, getTrending, statsForIds, errorBody, yt, statsForIds, n, isoDurationToSeconds, cached, monetizationCheck, probeAds, watchEstimate };
+module.exports = { channelVideos, getVideoDetails, getPlaylist, parsePlaylistId, watchHours, configure, handleRequest, parseChannelInput, parseVideoId, getChannel, getComments, getChannelComments, getTrending, statsForIds, errorBody, yt, statsForIds, n, isoDurationToSeconds, cached, monetizationCheck, probeAds, watchEstimate };
