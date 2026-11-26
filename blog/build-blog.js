@@ -345,6 +345,18 @@ try { CAT_INTROS = require("./category-intros.js"); } catch (_) { /* optional */
 function categoryPage(cat, posts, counts) {
   const root = "../../../";
   const mine = posts.filter((p) => p.category.slug === cat.slug);
+  const CHUNK = 15;
+  const headings = [
+    `Latest ${cat.label.toLowerCase()} guides`,
+    `More ${cat.label.toLowerCase()} benchmarks & tutorials`,
+    `Foundational ${cat.label.toLowerCase()} guides`,
+  ];
+  const groups = [];
+  for (let i = 0; i < mine.length; i += CHUNK) {
+    const slice = mine.slice(i, i + CHUNK);
+    const h = headings[Math.min(groups.length, headings.length - 1)];
+    groups.push(`<section class="blog-sec" data-blog-sec><h2 style="font-size:1.18rem;margin:${groups.length ? "28px" : "8px"} 0 14px">${esc(h)}</h2><div class="grid c3">${slice.map((p, j) => card(p, root, i === 0 && j < 3)).join("")}</div></section>`);
+  }
   const body = `
   <div class="hub-hero blog-hero">
     <div class="crumbs"><a href="${root}">Home</a> / <a href="${root}blog/">Blog</a> / ${esc(cat.label)}</div>
@@ -354,7 +366,7 @@ function categoryPage(cat, posts, counts) {
     ${catNav(cat.slug, root, counts)}
   </div>
   <div data-blog>
-  <div class="grid c3">${mine.map((p, i) => card(p, root, i < 3)).join("")}</div>
+  ${groups.join("")}
   <p class="empty" style="display:none">No article matches. Try another word.</p>
   </div>
   ${CAT_INTROS[cat.slug] ? site.guideHtml({ guide: CAT_INTROS[cat.slug].sections }) : ""}
@@ -374,6 +386,8 @@ function indexPage(posts, counts) {
   const root = "../";
   const [lead, ...rest] = posts;
   const SHOW = 12;
+  const shownCards = rest.slice(0, SHOW).map((p, i) => card(p, root, i < 3)).join("");
+  const moreCards = rest.slice(SHOW).map((p) => card(p, root, false).replace('<a class="card post pc"', '<a class="card post pc" hidden data-more'));
   const body = `
   <div class="hub-hero blog-hero">
     <div class="crumbs"><a href="${root}">Home</a> / Blog</div>
@@ -383,11 +397,13 @@ function indexPage(posts, counts) {
     ${catNav("", root, counts)}
   </div>
   <div data-blog>
+  <h2 class="sr">Latest articles</h2>
   <a class="blog-feature" data-feature href="${root}blog/${lead.slug}/">
     ${lead.image ? `<span class="bf-img"><img src="/blog/${lead.slug}/cover.webp" alt="" width="${lead.image.w}" height="${lead.image.h}" fetchpriority="high" decoding="async"></span>` : ""}
-    <span class="bf-body"><span class="bf-k">Latest · ${esc(lead.category.label)}</span><span class="bf-title">${esc(lead.title)}</span><span class="bf-d">${esc(lead.description)}</span><span class="bf-meta">${site.fmtDate(lead.date)} · ${lead.minutes} min read</span><span class="btn mint">Read the article</span></span>
+    <span class="bf-body"><span class="bf-k">Latest · ${esc(lead.category.label)}</span><span class="bf-title">${esc(lead.title)}</span><span class="bf-d">${esc(lead.description)}</span><span class="bf-meta">${site.fmtDate(lead.date)} · ${site.esc(lead.minutes)} min read</span><span class="btn mint">Read the article</span></span>
   </a>
-  <div class="grid c3 blog-grid">${rest.map((p, i) => card(p, root, i < 3).replace('<a class="card post pc"', '<a class="card post pc"' + (i >= SHOW ? " hidden data-more" : ""))).join("")}</div>
+  <div class="grid c3 blog-grid" data-blog-grid>${shownCards}</div>
+  ${moreCards.length ? `<script type="application/json" data-more-cards>${JSON.stringify(moreCards).replace(/</g, "\\u003c")}</script>` : ""}
   ${rest.length > SHOW ? `<div class="blog-more"><button type="button" class="btn ghost" data-show-all>Show all ${posts.length} articles</button></div>` : ""}
   <p class="empty" style="display:none">No article matches. Try another word.</p>
   </div>

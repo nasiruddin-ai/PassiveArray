@@ -261,10 +261,23 @@
     });
   }
 
+  document.addEventListener("click", function (e) {
+    var wa = e.target.closest && e.target.closest("[data-wa]");
+    if (!wa) return;
+    e.preventDefault();
+    window.open(wa.getAttribute("data-wa"), "_blank", "noopener,noreferrer");
+  });
+
   // Blog index and category pages: filter the cards as you type; "Show all" reveals the rest.
   var blog = document.querySelector("[data-blog]");
   if (blog) {
+    var bgrid = blog.querySelector("[data-blog-grid]");
+    var moreJson = blog.querySelector("[data-more-cards]");
+    if (bgrid && moreJson) {
+      try { bgrid.insertAdjacentHTML("beforeend", JSON.parse(moreJson.textContent).join("")); } catch (e) {}
+    }
     var bcards = Array.prototype.slice.call(blog.querySelectorAll("a.pc"));
+    var bsecs = Array.prototype.slice.call(blog.querySelectorAll("[data-blog-sec]"));
     var bq = document.getElementById("bq");
     var feature = blog.querySelector("[data-feature]");
     var moreBtn = blog.querySelector("[data-show-all]");
@@ -277,6 +290,10 @@
         var ok = q ? (c.getAttribute("data-text") || "").indexOf(q) !== -1 : expanded || !c.hasAttribute("data-more");
         c.hidden = !ok;
         if (ok) shown++;
+      });
+      bsecs.forEach(function (s) {
+        var hasVis = Array.prototype.some.call(s.querySelectorAll("a.pc"), function (c) { return !c.hidden; });
+        s.hidden = !hasVis;
       });
       if (feature) feature.style.display = q ? "none" : "";
       if (moreBtn) moreBtn.parentNode.style.display = q || expanded ? "none" : "";

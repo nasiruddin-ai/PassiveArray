@@ -1382,7 +1382,7 @@ function youtubeSeoServicePage() {
       <h1>YouTube SEO that brings real viewers — <span>by the founder who built the tools.</span></h1>
       <p class="ys-lead">I research winning topics, write high-CTR titles, descriptions and tags, audit your thumbnails, and structure your channel for global search and suggested reach. Clean, white-hat SEO only — trusted by creators and brands worldwide.</p>
       <div class="ys-ctas">
-        <a class="btn" href="${waLink("Hi Nasir, I'd like a free first look at my YouTube channel: ")}" target="_blank" rel="noopener">${chat}Get Free Channel Look (WhatsApp)</a>
+        <button type="button" class="btn" data-wa="${esc(waLink("Hi Nasir, I'd like a free first look at my YouTube channel: "))}">${chat}Get Free Channel Look (WhatsApp)</button>
         <a class="btn ghost" href="../contact/">${mailIc}Request Quote via Email</a>
       </div>
       <div class="ys-trust">
@@ -1471,7 +1471,7 @@ function youtubeSeoServicePage() {
       <p>${esc(p.text)}</p>
       <ul>${p.items.map((x) => `<li>${check}<span>${esc(x)}</span></li>`).join("")}</ul>
       <span class="price">Custom fixed quote</span>
-      <a class="btn${p.top ? "" : " ghost"}" href="${waLink(`Hi Nasir, I'm interested in the ${p.name} package for my channel: `)}" target="_blank" rel="noopener">${chat}Get Quote on WhatsApp</a>
+      <button type="button" class="btn${p.top ? "" : " ghost"}" data-wa="${esc(waLink(`Hi Nasir, I'm interested in the ${p.name} package for my channel: `))}">${chat}Get Quote on WhatsApp</button>
     </div>`).join("")}</div>
   </section>
 
@@ -1506,7 +1506,7 @@ function youtubeSeoServicePage() {
       <p>Send your YouTube channel link for a free, honest first look — available worldwide via WhatsApp or email.</p>
     </div>
     <div class="ys-cta-btns">
-      <a class="btn" href="${waLink("Hi Nasir, here is my YouTube channel link for a free first look: ")}" target="_blank" rel="noopener">${chat}WhatsApp +880 1770-223898</a>
+      <button type="button" class="btn" data-wa="${esc(waLink("Hi Nasir, here is my YouTube channel link for a free first look: "))}">${chat}WhatsApp +880 1770-223898</button>
       <a class="btn sec" href="../contact/">${mailIc}Send via Email</a>
     </div>
   </section>

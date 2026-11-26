@@ -65,6 +65,10 @@
   /* tool directory: search, platform and job filters; the counts on each pill follow the other filters */
   var grid = one("grid");
   if (grid) {
+    var moreJson = one("more-tools");
+    if (moreJson) {
+      try { grid.insertAdjacentHTML("beforeend", JSON.parse(moreJson.textContent).join("")); } catch (e) {}
+    }
     var tools = all("tool"), q = one("q"), count = one("count"), empty = one("empty"), more = one("more");
     var total = tools.length, FIRST = 12;
     var state = { q: "", plat: "all", intent: "all", all: false };

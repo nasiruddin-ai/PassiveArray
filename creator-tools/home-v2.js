@@ -131,7 +131,7 @@ function main({ tools, posts, esc, intentOf, INTENTS, isLive, faq, guides, root 
         <div class="trust"><span class="badge">No sign-up</span><span class="badge">Free Chrome extension</span><span class="badge">Works in Claude &amp; ChatGPT</span><span class="badge">Every formula shown</span></div>
       </div>
       <div class="panel board">
-        <div class="panel-head"><h3>Most subscribed YouTube channel, by country</h3><span class="badge good">Live API</span></div>
+        <div class="panel-head"><h2>Most subscribed YouTube channel, by country</h2><span class="badge good">Live API</span></div>
         <ol>${board}</ol>
         <div class="panel-foot"><span>Subscribers on ${BOARD.date}. Country is the one on the channel's About page.</span><a class="link" href="${turl("top-youtube-channels-by-country")}">See all 40 countries</a></div>
       </div>
@@ -233,7 +233,8 @@ function main({ tools, posts, esc, intentOf, INTENTS, isLive, faq, guides, root 
       </div>
     </div>
     <p class="count" data-hp="count" aria-live="polite">Showing 12 of ${tools.length} tools</p>
-    <div class="grid" data-hp="grid" data-total="${tools.length}">${ordered.map(toolCard).join("")}</div>
+    <div class="grid" data-hp="grid" data-total="${tools.length}">${ordered.slice(0, 12).map(toolCard).join("")}</div>
+    <script type="application/json" data-hp="more-tools">${JSON.stringify(ordered.slice(12).map((t, i) => toolCard(t, i + 12))).replace(/</g, "\\u003c")}</script>
     <div class="empty" data-hp="empty" hidden>Nothing matches. Try another word, or <button type="button" class="btn ghost sm" data-hp="reset">clear the filters</button></div>
     <div class="dir-foot"><button type="button" class="btn ghost" data-hp="more">Show all ${tools.length} tools</button><a class="link" href="${root}creator-tools/">Open the full tool directory</a></div>
   </div>

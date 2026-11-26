@@ -200,7 +200,7 @@ The same skill transfers across platforms. If you also post on TikTok, [how to g
 - Meta for Developers: [Instagram API reference, IG User Media (caption limits)](https://developers.facebook.com/docs/instagram-platform/instagram-graph-api/reference/ig-user/media)
 - Instagram Help Center: [How do I use hashtags?](https://help.instagram.com/351460621611097)
 - Instagram Help Center: [Add, edit or delete the caption of an existing post](https://help.instagram.com/1490745927855762)
-- Instagram @creators on Threads: [New hashtag guidance](https://www.threads.com/@creators/post/DSalXGPCWM4), 18 December 2025
+- Instagram @creators on Threads: New hashtag guidance (18 December 2025)
 - Instagram: [Breaking down how Instagram Search works](https://about.instagram.com/blog/announcements/break-down-how-instagram-search-works), Adam Mosseri, 25 August 2021
 - Instagram: [Instagram ranking explained](https://about.instagram.com/blog/announcements/instagram-ranking-explained), Adam Mosseri, 31 May 2023
 - Instagram for Creators: [Frequently asked questions](https://creators.instagram.com/faq)
