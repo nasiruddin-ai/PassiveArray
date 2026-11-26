@@ -761,18 +761,11 @@ function pricingPage() {
     ["Will any free tool move behind Pro later?", `No. Every tool that is free today stays free without ads or an account. Pro only pays for recurring server work that scales with usage: daily channel snapshots, the Monday mover email, CSV exports and higher daily MCP allowances.`],
   ];
 
-  const productLd = {
-    "@context": "https://schema.org", "@type": "Product", name: "Passive Array",
-    image: SITE + "/og-image-1200x630.png",
-    brand: { "@type": "Brand", name: BRAND },
-    description: `${n} free tools for creators and brands, with an optional Pro plan for channel watching, CSV exports and MCP credits.`,
-    offers: [
-      { "@type": "Offer", name: "Free", price: "0", priceCurrency: "USD", availability: "https://schema.org/InStock", url: SITE + "/pricing/" },
-      { "@type": "Offer", name: "Pro monthly", price: String(mo), priceCurrency: "USD", availability: "https://schema.org/InStock", url: SITE + "/pricing/" },
-      { "@type": "Offer", name: "Pro yearly", price: String(yr), priceCurrency: "USD", availability: "https://schema.org/InStock", url: SITE + "/pricing/" },
-      { "@type": "Offer", name: "Lifetime", price: String(lifeLaunch), priceCurrency: "USD", availability: "https://schema.org/LimitedAvailability", url: SITE + "/pricing/" },
-    ],
-  };
+  const pageLd = site.webPageLd(
+    "Passive Array Pricing",
+    SITE + "/pricing/",
+    `${n} free tools for creators and brands, with an optional Pro plan for channel watching, CSV exports and MCP credits.`
+  );
 
   const body = `
   <div class="hub-hero price-hero">
@@ -913,7 +906,7 @@ function pricingPage() {
     path: "/pricing/",
     active: "pricing",
     body,
-    jsonld: [productLd, site.faqLd(pricingFaq)],
+    jsonld: [pageLd, site.faqLd(pricingFaq)],
   });
 }
 
