@@ -181,9 +181,9 @@ None has YouTube's range. Most viewers use one of these alongside YouTube rather
 
 - Twitch Help: [Joining the Affiliate Program](https://help.twitch.tv/s/article/joining-the-affiliate-program)
 - Snap Newsroom: [Snapchat introduces new, unified monetization program for creators](https://newsroom.snap.com/snapchat-new-creator-monetization)
-- X Help Center: [Creator Revenue Sharing](https://help.x.com/en/using-x/creator-revenue-sharing)
+- X Help Center: Creator Revenue Sharing
 - Rumble Help Center: [Rumble Creator Program](https://rumble.support/help/rumble-creator-program)
-- Patreon: [Pricing](https://www.patreon.com/pricing)
+- Patreon: Creator Pricing Plans (patreon.com/pricing)
 - YouTube Help: [YouTube Partner Program overview and eligibility](https://support.google.com/youtube/answer/72851)
 
 ## Frequently asked questions

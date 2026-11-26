@@ -91,7 +91,7 @@ function contactPage() {
       </form>
     </div>
     <div class="card faq">
-      <h3 style="margin-bottom:8px">Before you write</h3>
+      <h2 style="font-size:1.08rem;margin-bottom:8px">Before you write</h2>
       <details><summary>A YouTube or Twitch tool says "not set up" or "quota used up"</summary><p>The live tools run on a free API allowance that resets at midnight Pacific time. If it is used up, try again after that. If it says not set up, the site key is missing and we already know.</p></details>
       <details><summary>The subscriber count is different from what YouTube shows</summary><p>YouTube's public API rounds subscriber counts to three significant figures, so 1,234,567 shows as 1.23M. Views and video counts are exact.</p></details>
       <details><summary>Can you add a tool for Instagram or TikTok that looks up an account?</summary><p>Not without breaking those platforms' terms. They have no free public API, so our Instagram, TikTok and X tools work from numbers you type in.</p></details>
@@ -500,8 +500,8 @@ function accountPage() {
         <li>11 tools: channel stats, growth history, monetization check, keyword research, outlier videos and more</li>
         <li>Takes about a minute: sign up, create a key, paste it into your assistant</li>
       </ul>
-      <a class="btn" href="../signup/?next=%2Faccount%2F%23mcp">Create a free account</a>
-      <a class="btn ghost" style="margin-left:8px" href="../login/?next=%2Faccount%2F%23mcp">I have an account</a>
+      <a class="btn" href="../signup/" data-next="/account/#mcp">Create a free account</a>
+      <a class="btn ghost" style="margin-left:8px" href="../login/" data-next="/account/#mcp">I have an account</a>
     </div>
   </div>
   <div class="card" data-account-loading>
@@ -810,7 +810,7 @@ function pricingPage() {
         <li><b>CSV export</b> of your watchlist and the outlier and Shorts feeds</li>
         <li><b>1,000 <a href="../mcp">MCP credits</a> a day</b>, 20 times the free allowance</li>
       </ul>
-      <a class="btn wide" href="../account/?plan=yearly" style="margin-top:auto" data-pro-cta data-plan="yearly">Go Pro — $${yr}/year</a>
+      <a class="btn wide" href="../account/" style="margin-top:auto" data-pro-cta data-plan="yearly">Go Pro — $${yr}/year</a>
       <span class="fmsg" data-pro-msg></span>
       <p class="note plan-trust" data-pro-note><a href="../refund-policy/">14-day full refund</a> · Payments, VAT and invoices by Polar. We never see your card number.</p>
     </div>
@@ -825,7 +825,7 @@ function pricingPage() {
         <li><b>${pro.PRO_WATCH} watched channels</b>, Monday email, CSV exports</li>
         <li><b>1,000 MCP credits a day</b> for AI assistants</li>
       </ul>
-      <a class="btn mint wide" href="../account/?plan=lifetime" style="margin-top:auto" data-life-cta>Get Lifetime — $${lifeLaunch}</a>
+      <a class="btn mint wide" href="../account/" style="margin-top:auto" data-life-cta>Get Lifetime — $${lifeLaunch}</a>
       <span class="fmsg" data-life-msg></span>
       <p class="note plan-trust"><span data-life-left>Limited to the first ${lifeSeats} buyers at this price.</span> <a href="../refund-policy/">14-day full refund</a>.</p>
     </div>

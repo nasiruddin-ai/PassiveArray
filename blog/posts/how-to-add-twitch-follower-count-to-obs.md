@@ -163,8 +163,8 @@ Stats sites for other platforms often estimate between real updates. Twitch is e
 - Streamlabs: [How to set up a follower goal widget](https://streamlabs.com/content-hub/post/how-to-setup-follower-goal-widget)
 - Streamlabs: [Goals widgets](https://streamlabs.com/stream-widgets/goals)
 - Streamlabs: [Stream Labels widget](https://streamlabs.com/stream-widgets/stream-labels)
-- StreamElements Help: [Overlays: the complete guide](https://support.streamelements.com/hc/en-us/articles/10474479981074-Overlays-The-Complete-Guide-Gallery-OBS-Setup-Widgets-Alerts-Data)
-- StreamElements Help: [SE.Live: the complete guide](https://support.streamelements.com/hc/en-us/articles/18771457842066-SE-Live-The-Complete-Guide-Setup-Features-Multistreaming-Troubleshooting)
+- StreamElements Help: Overlays: the complete guide
+- StreamElements Help: SE.Live: the complete guide
 - StreamElements: [Elements Gallery](https://widgets.streamelements.com/)
 
 ## Frequently asked questions

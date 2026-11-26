@@ -325,7 +325,7 @@ function formHtml(t) {
       const prefix = "abc"[i] + "_";
       const optional = i === 2;
       const fields = t.compare.fields.map((f) => fieldHtml(optional ? { ...f, optional: true } : f, prefix)).join("");
-      return `<div class="col"><h3>${esc(label)}${optional ? ' <span class="hint" style="display:inline">optional</span>' : ""}</h3>${fields}</div>`;
+      return `<div class="col"><h2>${esc(label)}${optional ? ' <span class="hint" style="display:inline">optional</span>' : ""}</h2>${fields}</div>`;
     }).join("");
     return `<div class="cols">${cols}</div>`;
   }
@@ -888,6 +888,20 @@ function postCard(p, root) {
   return `<a class="card post" href="${root}blog/${p.slug}/"><span class="tagline"><span class="plat" style="color:var(--deep)">${esc(label.toUpperCase())}</span><span class="muted" style="font-size:.78rem">${p.minutes} min read</span></span><h3>${esc(p.title)}</h3><p>${esc(p.description)}</p><span class="pdate">${fmtDate(p.date)}</span></a>`;
 }
 
+function seoDocTitle(title) {
+  const full = title + " | " + BRAND;
+  if (full.length <= 65) return full;
+  for (const sep of [": ", "? ", " (", ", "]) {
+    const idx = title.indexOf(sep);
+    if (idx >= 18) {
+      const head = sep === "? " ? title.slice(0, idx + 1) : title.slice(0, idx);
+      const cand = head.trim() + " | " + BRAND;
+      if (cand.length <= 68) return cand;
+    }
+  }
+  return full.length <= 70 ? full : title + " | Guide";
+}
+
 // path is the site path the page is served at, e.g. "/blog/some-post/". Body goes inside <main class="wrap">.
 function shell({ title, description, path, body, active = "", head = "", scripts = "", jsonld = null, narrow = false, ogTitle, image }) {
   const depth = path.split("/").filter(Boolean).length;
@@ -899,7 +913,7 @@ function shell({ title, description, path, body, active = "", head = "", scripts
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>${esc((title + " | " + BRAND).length > 65 ? title : title + " | " + BRAND)}</title>
+<title>${esc(seoDocTitle(title))}</title>
 <meta name="description" content="${esc(metaDesc)}">
 <link rel="canonical" href="${canonical}">
 <meta property="og:title" content="${esc(ogTitle || title)}">

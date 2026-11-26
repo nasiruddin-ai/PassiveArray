@@ -142,8 +142,8 @@ Use it for **trends in public numbers**. Do not use its earnings line to judge a
 - YouTube Help: [YouTube RPM and CPM](https://support.google.com/youtube/answer/9314357)
 - YouTube Help: [Check your YouTube subscriber count](https://support.google.com/youtube/answer/6051134)
 - YouTube Data API: [Channels resource (subscriberCount, viewCount)](https://developers.google.com/youtube/v3/docs/channels)
-- Social Blade: [How are estimated earnings calculated? (FAQ)](https://socialblade.com/help/how-are-estimated-earnings-calculated), as indexed on 1 November 2026
-- Social Blade: [YouTube money calculator](https://socialblade.com/youtube/calculator), as indexed on 1 November 2026
+- Social Blade: How are estimated earnings calculated? (FAQ), as indexed on 1 November 2026
+- Social Blade: YouTube money calculator, as indexed on 1 November 2026
 - Wikipedia: [Social Blade](https://en.wikipedia.org/wiki/Social_Blade), for the company's history and YouTube's 2016 statement
 
 ## Frequently asked questions

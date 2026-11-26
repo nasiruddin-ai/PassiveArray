@@ -9,7 +9,9 @@ related: how-does-youtube-pay-you, youtube-ad-revenue-explained, how-much-does-y
 image: YouTube taxes: Google withholds 0 to 30% of earnings from US viewers when you submit tax info, and up to 24% of worldwide earnings for individuals who do not
 ---
 
-Yes, YouTubers pay taxes, and part of it can be taken before the money reaches you. Every creator in the YouTube Partner Program, **wherever they live**, must submit US tax information in **AdSense for YouTube**. Google then withholds US tax on the part of your earnings that comes **from viewers in the US**. For creators outside the US who submit tax info, the rate is **between 0% and 30%** of those US earnings, depending on whether their country has a tax treaty with the US. US creators with valid tax info have nothing withheld. An individual who submits nothing can have **24% of total worldwide earnings** withheld. YouTube asks creators to submit, and claim any treaty benefit, by **10 December** each year.
+Yes, YouTubers pay taxes, and part of it can be taken before the money reaches you. Every creator in the YouTube Partner Program, **wherever they live**, must submit US tax information in **AdSense for YouTube**. Google then withholds US tax on the part of your earnings that comes **from viewers in the US**.
+
+For creators outside the US who submit tax info, the rate is **between 0% and 30%** of those US earnings, depending on whether their country has a tax treaty with the US. US creators with valid tax info have nothing withheld. An individual who submits nothing can have **24% of total worldwide earnings** withheld. YouTube asks creators to submit, and claim any treaty benefit, by **10 December** each year.
 
 This is information, not tax advice. YouTube itself says "YouTube and Google can't provide advice on tax issues", and nor can we. This guide covers the official mechanics: why Google withholds, the rates, which form you fill in, how to submit it, and where to find withheld amounts and year-end forms. To work out your earnings before withholding, the [YouTube RPM calculator](../../creator-tools/youtube-rpm-calculator/) turns RPM and views into income.
 

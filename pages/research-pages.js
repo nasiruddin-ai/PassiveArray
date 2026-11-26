@@ -42,9 +42,9 @@ function keywordsPage() {
   </form>
   <div class="tryline" style="justify-content:flex-start;margin:0 0 18px">
     <span>Try:</span>
-    <a href="?q=home%20workout" data-kw="home workout">home workout</a>
-    <a href="?q=squarespace%20tutorial" data-kw="squarespace tutorial">squarespace tutorial</a>
-    <a href="?q=how%20to%20start%20a%20podcast" data-kw="how to start a podcast">how to start a podcast</a>
+    <button type="button" class="flink" data-kw="home workout">home workout</button>
+    <button type="button" class="flink" data-kw="squarespace tutorial">squarespace tutorial</button>
+    <button type="button" class="flink" data-kw="how to start a podcast">how to start a podcast</button>
     <span class="status" id="kwstatus" style="margin-left:auto"></span>
   </div>
 

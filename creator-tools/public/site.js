@@ -434,6 +434,12 @@
     });
   }
   paintHeader();
+  document.addEventListener("click", function (e) {
+    var a = e.target.closest && e.target.closest("a[data-next]");
+    if (!a) return;
+    e.preventDefault();
+    location.href = a.getAttribute("href") + "?next=" + encodeURIComponent(a.getAttribute("data-next"));
+  });
   // Lifetime plan on the pricing page: live price and places left, then the same checkout call.
   var lifeBox = document.querySelector("[data-life]");
   if (lifeBox) {

@@ -315,7 +315,7 @@ https://example.com/contact/</textarea>
     body: `
     <div class="card inputcard seo-form" data-seo="headings">
       <label for="hd-input">Paste HTML or Markdown draft</label>
-      <textarea id="hd-input" data-input rows="8" placeholder="<h1>Main Title</h1>\n<p>Intro paragraph...</p>\n<h2>Section</h2>"># How to Rank YouTube Videos Globally
+      <textarea id="hd-input" data-input rows="8" placeholder="&lt;h1&gt;Main Title&lt;/h1&gt;&#10;&lt;p&gt;Intro paragraph...&lt;/p&gt;&#10;&lt;h2&gt;Section&lt;/h2&gt;"># How to Rank YouTube Videos Globally
 Most creators only optimize for English keywords, leaving huge search volume untapped.
 
 ## Step 1: Research Multilingual Search Intent

@@ -133,7 +133,7 @@ In a year you will have a clean daily record of the channels that matter to you,
 
 - YouTube Help: [Check your YouTube subscriber count](https://support.google.com/youtube/answer/6051134)
 - YouTube Data API: [Channels resource (subscriberCount)](https://developers.google.com/youtube/v3/docs/channels)
-- Social Blade: [How are estimated earnings calculated? (FAQ)](https://socialblade.com/help/how-are-estimated-earnings-calculated), as indexed on 1 November 2026
+- Social Blade: How are estimated earnings calculated? (FAQ), as indexed on 1 November 2026
 - Wikipedia: [Social Blade](https://en.wikipedia.org/wiki/Social_Blade), for the company's history and the 2025 platform removals
 - vidIQ: [Pricing](https://vidiq.com/pricing/) and [Features](https://vidiq.com/features/), checked 1 November 2026
 - TubeBuddy: [Pricing](https://www.tubebuddy.com/pricing) and [Channelytics](https://www.tubebuddy.com/tools/channelytics), checked 1 November 2026

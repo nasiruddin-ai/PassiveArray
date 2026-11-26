@@ -9,7 +9,9 @@ related: how-to-grow-a-youtube-channel, why-did-my-youtube-subscribers-go-down, 
 image: Bring a dead channel back, with the Passive Array YouTube Channel Quality Checker scoring engagement, reach, consistency and audience
 ---
 
-You can revive a dead YouTube channel, because YouTube judges each new video on its own viewers, not on the channel's past slump. YouTube's recommendation help says its system "uses fresh performance data for each individual video, rather than relying on past results." What a dead channel usually has is not a penalty but an audience that stopped watching: subscribers who moved on, a topic that cooled, or a long gap between uploads. The fix is to diagnose which one, decide who the channel is for now, and give that audience a reason to come back. A quick first check is the [YouTube Channel Quality Checker](../../creator-tools/youtube-channel-quality-checker/), which scores your recent uploads on engagement, reach and upload consistency and shows the raw figure behind each score.
+You can revive a dead YouTube channel, because YouTube judges each new video on its own viewers, not on the channel's past slump. YouTube's recommendation help says its system "uses fresh performance data for each individual video, rather than relying on past results." What a dead channel usually has is not a penalty but an audience that stopped watching: subscribers who moved on, a topic that cooled, or a long gap between uploads.
+
+The fix is to diagnose which one, decide who the channel is for now, and give that audience a reason to come back. A quick first check is the [YouTube Channel Quality Checker](../../creator-tools/youtube-channel-quality-checker/), which scores your recent uploads on engagement, reach and upload consistency and shows the raw figure behind each score.
 
 This guide covers what "dead" really means, how to find the cause in about an hour, how to choose between restarting, pivoting and starting a new channel, and a 90-day plan. It assumes the channel has no strikes or policy problems. If it does, deal with those first.
 

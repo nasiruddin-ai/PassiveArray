@@ -106,7 +106,7 @@ function withWebGuide(html, folder) {
   const others = site.WEB_TOOLS.filter(([href]) => href !== folder + "/").map(([href, name]) => `<a href="/${href}">${esc(name)}</a>`).join(" · ");
   const more = `<section><h2>More free web tools</h2><p>${others}. For creators: <a href="/creator-tools/youtube-monetization-checker/">YouTube monetization checker</a> · <a href="/research/">YouTube keyword research</a>.</p><p>Guides: <a href="/blog/how-to-rank-youtube-videos-on-google/">How to rank YouTube videos on Google</a> · <a href="/blog/how-youtube-seo-works/">How YouTube SEO works</a> · <a href="/blog/youtube-for-small-business/">YouTube for small business</a> · <a href="/blog/best-free-youtube-seo-tools/">Best free YouTube SEO tools</a>.</p></section>`;
   const block = `${style}<article class="pa-guide">${(g.guide || []).map(sec).join("")}${faq}${more}${g.guideUpdated ? `<p class="note">Checked ${esc(g.guideUpdated)}.</p>` : ""}</article>`;
-  return html.replace(/<div class="pa-foot">/, block + "<div class=\"pa-foot\">");
+  return html.replace(/<\/main><div class="pa-foot">/, block + "</main><div class=\"pa-foot\">");
 }
 
 // Passive Array pages: home, tools directory and one page per creator tool.

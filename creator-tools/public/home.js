@@ -33,6 +33,12 @@
       cards.forEach(function (c, j) { c.hidden = i !== j; });
     });
   });
+  root.addEventListener("click", function (e) {
+    var a = e.target.closest && e.target.closest("a[data-channel]");
+    if (!a) return;
+    e.preventDefault();
+    location.href = a.getAttribute("href") + "?channel=" + encodeURIComponent(a.getAttribute("data-channel"));
+  });
 
   /* MCP preview: replay reveals the lines one by one; copy puts the server URL on the clipboard */
   var term = one("term"), replay = one("replay"), copy = one("copy");

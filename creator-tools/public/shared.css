@@ -144,7 +144,7 @@ p { margin: 0; }
 .bigsearch .btn { height: 48px; padding: 0 26px; font-size: 1rem; }
 .tryline { margin-top: 14px; display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 8px; font-size: .85rem; color: var(--muted); }
 .tryline .chip { padding: 4px 10px; border-radius: 999px; background: var(--card); border: 1px solid var(--line); font-weight: 600; color: var(--text); }
-.tryline a { font-weight: 600; }
+.tryline a, .tryline button.flink { font-weight: 600; color: var(--deep); font-size: inherit; }
 @media (max-width: 640px) {
   .hero { padding: 44px 0 28px; }
   .bigsearch { height: auto; flex-wrap: wrap; padding: 10px; gap: 8px; border-radius: 16px; }
@@ -235,7 +235,7 @@ input:focus, select:focus, textarea:focus { outline: 2px solid var(--teal); bord
 input.invalid { border-color: var(--bad); }
 .cols { display: grid; gap: 16px; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); }
 .col { display: flex; flex-direction: column; gap: 12px; }
-.col h3 { font-size: .95rem; color: var(--muted); }
+.col h3, .col h2 { font-size: .95rem; color: var(--muted); }
 .actions { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; margin-top: 16px; }
 .status { color: var(--muted); font-size: .9rem; }
 

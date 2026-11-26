@@ -256,7 +256,7 @@ ${site.ANALYTICS_HEAD}
     <div class="rail-list" data-rail-recent><div class="rail-empty">Tools you open show up here.</div></div>
     <div class="rail-foot">
       ${ic("user", 22)}
-      <div class="who"><b data-who-email>Not signed in</b><span data-who-sub><a href="${root}login/?next=%2Fapp%2F">Sign in</a></span></div>
+      <div class="who"><b data-who-email>Not signed in</b><span data-who-sub><a href="${root}login/" data-next="/app/">Sign in</a></span></div>
       <span class="plan" data-who-plan hidden>Free</span>
     </div>
   </aside>
@@ -268,7 +268,7 @@ ${site.ANALYTICS_HEAD}
       <span class="spacer"></span>
       <form class="asearch" data-app-search role="search">${site.ICON.search}<input type="text" placeholder="Check a channel: @handle or link" aria-label="Check a channel"></form>
     </div>
-    <div data-signed-out hidden class="notice" style="margin-bottom:16px">You are browsing the dashboard signed out. Research and tools work; the watchlist and your channel card need a free account. <a class="btn" href="${root}login/?next=%2Fapp%2F">Sign in</a></div>
+    <div data-signed-out hidden class="notice" style="margin-bottom:16px">You are browsing the dashboard signed out. Research and tools work; the watchlist and your channel card need a free account. <a class="btn" href="${root}login/" data-next="/app/">Sign in</a></div>
     ${panels}
     <section class="panel" data-panel="upgrade" hidden><div class="pgrid" data-panel-body="upgrade"></div></section>
   </main>

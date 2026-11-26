@@ -36,7 +36,9 @@ YouTube calls each clickable item an element. There are five types.
 
 ![The YouTube end screen element types: video or playlist, subscribe, channel, and an external link for Partner Program members](youtube-end-screen-elements.webp "End screen element types, from YouTube Help.")
 
-**Video or playlist.** A video element can show "your most recent upload", let YouTube "select a video from your channel to best suit the viewer", or show a specific video. YouTube says you can "Pick any video or playlist (public or unlisted) from your or any other channel", although the step list on the same page describes the playlist element as "Display a public YouTube playlist". If an unlisted playlist will not attach, that is the likely reason. Our view, not YouTube's: pick a specific video or playlist when there is an obvious next step, such as part 2 of a series, and avoid "most recent upload" on evergreen videos, because in a year your newest upload may be on a different topic.
+**Video or playlist.** A video element can show "your most recent upload", let YouTube "select a video from your channel to best suit the viewer", or show a specific video. YouTube says you can "Pick any video or playlist (public or unlisted) from your or any other channel", although the step list on the same page describes the playlist element as "Display a public YouTube playlist". If an unlisted playlist will not attach, that is the likely reason.
+
+Our view, not YouTube's: pick a specific video or playlist when there is an obvious next step, such as part 2 of a series, and avoid "most recent upload" on evergreen videos, because in a year your newest upload may be on a different topic.
 
 **Subscribe.** "Encourage subscriptions to your channel." It promotes your own channel only. For a subscribe link outside the video, such as in a description or on a website, the [YouTube subscribe link generator](../../creator-tools/youtube-subscribe-link-generator/) builds one that opens your channel with the subscribe prompt already showing.
 
