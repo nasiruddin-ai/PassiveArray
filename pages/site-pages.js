@@ -763,6 +763,8 @@ function pricingPage() {
 
   const productLd = {
     "@context": "https://schema.org", "@type": "Product", name: "Passive Array",
+    image: SITE + "/og-image-1200x630.png",
+    brand: { "@type": "Brand", name: BRAND },
     description: `${n} free tools for creators and brands, with an optional Pro plan for channel watching, CSV exports and MCP credits.`,
     offers: [
       { "@type": "Offer", name: "Free", price: "0", priceCurrency: "USD", availability: "https://schema.org/InStock", url: SITE + "/pricing/" },
@@ -1197,7 +1199,7 @@ function founderPage() {
 
   const allSkills = Object.values(f.skills).flat();
   const person = {
-    "@context": "https://schema.org", "@type": "Person", name: f.name, jobTitle: f.role,
+    "@type": "Person", name: f.name, jobTitle: f.role,
     description: `${f.short} based in ${f.location} and founder of Passive Array.`,
     image: SITE + f.photo, url: SITE + "/founder/", sameAs: [f.linkedin, f.github],
     worksFor: { "@type": "Organization", name: BRAND, url: SITE },
@@ -1206,7 +1208,7 @@ function founderPage() {
     hasCredential: f.certifications.map((c) => ({ "@type": "EducationalOccupationalCredential", name: c.title, recognizedBy: { "@type": "Organization", name: c.place } })),
     knowsAbout: allSkills,
   };
-  const profile = { "@context": "https://schema.org", "@type": "ProfilePage", url: SITE + "/founder/", mainEntity: { "@type": "Person", name: f.name, url: SITE + "/founder/" } };
+  const profile = { "@context": "https://schema.org", "@type": "ProfilePage", url: SITE + "/founder/", mainEntity: person };
   return site.shell({
     title: f.name + ": SEO and AI Automation Specialist",
     ogTitle: f.name + ", SEO and AI automation specialist, founder of Passive Array",
@@ -1214,7 +1216,7 @@ function founderPage() {
     path: "/founder/",
     active: "about",
     body,
-    jsonld: [person, profile],
+    jsonld: profile,
   });
 }
 

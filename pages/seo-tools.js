@@ -471,7 +471,7 @@ function page(slug) {
   ${t.body}
   ${g ? site.guideHtml(g) : ""}
   <section class="card related-posts"><h2>More free SEO tools</h2><div class="rp-list">${others.join("")}<a href="../domain-age-checker/">Domain Age Checker</a><a href="../research/">YouTube Keyword Research</a></div></section>`;
-  const app = { "@context": "https://schema.org", "@type": "WebApplication", name: t.name, url: SITE + "/" + slug + "/", description: (g && g.seoDescription) || t.lead, applicationCategory: "UtilitiesApplication", operatingSystem: "Any", offers: { "@type": "Offer", price: "0", priceCurrency: "USD" }, provider: { "@type": "Organization", name: site.BRAND, url: SITE } };
+  const pageLd = site.webPageLd(t.name, SITE + "/" + slug + "/", (g && g.seoDescription) || t.lead);
   return site.shell({
     title: g && g.seoTitle ? g.seoTitle.replace(/ \| Passive Array$/, "") : t.name,
     ogTitle: (g && g.seoTitle) || t.name,
@@ -480,7 +480,7 @@ function page(slug) {
     active: "tools",
     body,
     scripts: `<script src="../creator-tools/seo-tools.js"></script>`,
-    jsonld: g && g.faq && g.faq.length ? [app, site.faqLd(g.faq)] : app,
+    jsonld: g && g.faq && g.faq.length ? [pageLd, site.faqLd(g.faq)] : pageLd,
   });
 }
 

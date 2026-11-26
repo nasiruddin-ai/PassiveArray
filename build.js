@@ -85,9 +85,9 @@ function withWebGuide(html, folder) {
     html = html.replace(/<\/title>/i, "</title>\n<meta name=\"description\" content=\"" + esc(g.seoDescription) + "\">");
   }
   if (!/rel="canonical"/i.test(html)) html = html.replace(/<\/title>/i, "</title>\n<link rel=\"canonical\" href=\"" + canonical + "\">");
-  const app = { "@context": "https://schema.org", "@type": "WebApplication", name: (g.seoTitle || folder).split(/[:|]/)[0].trim(), url: canonical, description: g.seoDescription || "", applicationCategory: "UtilitiesApplication", operatingSystem: "Any", offers: { "@type": "Offer", price: "0", priceCurrency: "USD" }, provider: { "@type": "Organization", name: site.BRAND, url: site.SITE } };
-  const ld = g.faq && g.faq.length ? [app, site.faqLd(g.faq)] : app;
-  html = html.replace(/<\/head>/i, "<script type=\"application/ld+json\">" + JSON.stringify(ld) + "</script>\n</head>");
+  const pageLd = site.webPageLd((g.seoTitle || folder).split(/[:|]/)[0].trim(), canonical, g.seoDescription || "");
+  const ld = g.faq && g.faq.length ? [pageLd, site.faqLd(g.faq)] : pageLd;
+  html = html.replace(/<\/head>/i, site.ldScripts(ld) + "\n</head>");
   const style = `<style id="pa-guide">
 .pa-guide{max-width:960px;margin:40px auto 0;padding:32px clamp(18px,4vw,40px);border:1px solid rgba(31,42,68,.12);border-radius:18px;background:#fff;color:#1F2A44;font-family:Poppins,system-ui,-apple-system,"Segoe UI",sans-serif;box-sizing:border-box}
 .pa-guide section{max-width:780px}.pa-guide section+section{margin-top:30px;padding-top:26px;border-top:1px solid rgba(31,42,68,.1)}
@@ -363,7 +363,8 @@ let stamped = 0;
 function seoTags(html, file) {
   const rel = path.relative(DIST, file).split(path.sep).join("/");
   if (!/(^|\/)index\.html$/.test(rel)) return html;
-  const url = site.SITE + "/" + rel.replace(/index\.html$/, "");
+  const canonMatch = html.match(/<link\s+rel="canonical"\s+href="([^"]+)"/i);
+  const url = canonMatch ? canonMatch[1] : site.SITE + "/" + rel.replace(/index\.html$/, "");
   const strip = (s) => String(s || "").replace(/<[^>]+>/g, "").replace(/&amp;/g, "&").replace(/&#39;/g, "'").replace(/&quot;/g, '"').replace(/\s+/g, " ").trim();
   const attr = (s) => String(s).replace(/&/g, "&amp;").replace(/"/g, "&quot;").replace(/</g, "&lt;");
   const title = strip((html.match(/<title>([\s\S]*?)<\/title>/i) || [])[1]);
@@ -395,14 +396,10 @@ function seoTags(html, file) {
   // A page-level type for pages with no structured data of their own.
   if (!ldTypes.trim()) {
     const p = "/" + rel.replace(/index\.html$/, "");
-    const name = h1 || title.split(" | ")[0];
+    const name = p === "/youtube-extension/" ? "Passive Array: YouTube SEO, Tags & Stats" : (h1 || title.split(" | ")[0]);
     const site_ = { "@type": "WebSite", name: site.BRAND, url: site.SITE + "/" };
-    if (p === "/youtube-extension/") {
-      add.push({ "@context": "https://schema.org", "@type": "SoftwareApplication", name: "Passive Array: YouTube SEO, Tags & Stats", url, description: desc, applicationCategory: "BrowserApplication", operatingSystem: "Chrome, Edge, Brave", offers: { "@type": "Offer", price: "0", priceCurrency: "USD" }, publisher: { "@type": "Organization", name: site.BRAND, url: site.SITE + "/" } });
-    } else {
-      const type = /^\/(creator-tools|blog|compare)\/$|^\/blog\/category\/[^/]+\/$/.test(p) ? "CollectionPage" : p === "/about/" ? "AboutPage" : p === "/contact/" ? "ContactPage" : "WebPage";
-      add.push({ "@context": "https://schema.org", "@type": type, name, description: desc, url, isPartOf: site_ });
-    }
+    const type = /^\/(creator-tools|blog|compare)\/$|^\/blog\/category\/[^/]+\/$/.test(p) ? "CollectionPage" : p === "/about/" ? "AboutPage" : p === "/contact/" ? "ContactPage" : "WebPage";
+    add.push({ "@context": "https://schema.org", "@type": type, name, description: desc, url, isAccessibleForFree: true, isPartOf: site_, publisher: { "@type": "Organization", name: site.BRAND, url: site.SITE + "/" } });
   }
 
   let head = add.map((x) => `<script type="application/ld+json">${JSON.stringify(x).replace(/</g, "\\u003c")}</script>`).join("\n");

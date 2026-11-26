@@ -131,10 +131,16 @@ document.addEventListener("click", function (e) {
 </script>`;
 
   const jsonld = [
-    { "@context": "https://schema.org", "@type": "SoftwareApplication", name: "Passive Array MCP server", url: URL, applicationCategory: "DeveloperApplication", operatingSystem: "Any",
-      description: `Remote MCP server with ${totalTools} read-only tools for live YouTube and Twitch data.`,
-      offers: { "@type": "Offer", price: "0", priceCurrency: "USD" } },
-    { "@context": "https://schema.org", "@type": "FAQPage", mainEntity: FAQ.map(([q, a]) => ({ "@type": "Question", name: q, acceptedAnswer: { "@type": "Answer", text: a } })) },
+    site.webPageLd("Passive Array MCP server", URL, `Remote MCP server with ${totalTools} read-only tools for live YouTube and Twitch data.`),
+    site.faqLd(FAQ),
+    {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      itemListElement: [
+        { "@type": "ListItem", position: 1, name: "Home", item: site.SITE + "/" },
+        { "@type": "ListItem", position: 2, name: "MCP Server", item: URL },
+      ],
+    },
   ];
   return site.shell({
     title: "Passive Array MCP Server: YouTube & Twitch Data for AI",

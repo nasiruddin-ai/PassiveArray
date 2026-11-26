@@ -345,17 +345,39 @@ function buttonLabel(t) {
   return "Calculate";
 }
 
-function jsonLd(t, url) {
-  const app = {
-    "@context": "https://schema.org", "@type": "WebApplication", name: t.name, description: t.short, url,
-    applicationCategory: "UtilitiesApplication", operatingSystem: "Any",
-    offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },
-    provider: { "@type": "Organization", name: BRAND, url: SITE },
+const ENTITIES = { "&amp;": "&", "&lt;": "<", "&gt;": ">", "&quot;": '"', "&#39;": "'", "&apos;": "'", "&nbsp;": " ", "&mdash;": "—", "&ndash;": "–", "&rsquo;": "’", "&lsquo;": "‘", "&rdquo;": "”", "&ldquo;": "“", "&hellip;": "…" };
+function stripHtml(s) {
+  return String(s || "")
+    .replace(/<[^>]+>/g, " ")
+    .replace(/&(?:#(\d+)|#x([0-9a-fA-F]+)|[a-zA-Z]+);/g, (m, dec, hex) => (dec ? String.fromCodePoint(Number(dec)) : hex ? String.fromCodePoint(parseInt(hex, 16)) : ENTITIES[m] || m))
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+function ldScripts(jsonld) {
+  if (!jsonld) return "";
+  const items = Array.isArray(jsonld) ? jsonld.filter(Boolean) : [jsonld];
+  return items.map((x) => `<script type="application/ld+json">${JSON.stringify(x).replace(/</g, "\\u003c")}</script>`).join("\n");
+}
+
+function webPageLd(name, url, description) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "WebPage",
+    name,
+    description,
+    url,
+    isAccessibleForFree: true,
+    isPartOf: { "@type": "WebSite", name: BRAND, url: SITE + "/" },
+    publisher: { "@type": "Organization", name: BRAND, url: SITE + "/" },
   };
-  if (!t.faq || !t.faq.length) return JSON.stringify(app);
+}
+
+function jsonLd(t, url) {
+  const page = webPageLd(t.name, url, t.short);
+  if (!t.faq || !t.faq.length) return ldScripts(page);
   // The FAQ is also printed on the page (guideHtml), which is what Google requires for FAQPage markup.
-  const faq = { "@context": "https://schema.org", "@type": "FAQPage", mainEntity: t.faq.map(([q, a]) => ({ "@type": "Question", name: q, acceptedAnswer: { "@type": "Answer", text: a.replace(/<[^>]+>/g, "") } })) };
-  return JSON.stringify([app, faq]);
+  return ldScripts([page, faqLd(t.faq)]);
 }
 
 /* Long-form guide and FAQ under a tool. Sections: { h, p: [html], list: [html], table: { head, rows } }.
@@ -368,7 +390,7 @@ function relatedArticles(t) {
 }
 
 function faqLd(faq) {
-  return { "@context": "https://schema.org", "@type": "FAQPage", mainEntity: faq.map(([q, a]) => ({ "@type": "Question", name: q, acceptedAnswer: { "@type": "Answer", text: String(a).replace(/<[^>]+>/g, "") } })) };
+  return { "@context": "https://schema.org", "@type": "FAQPage", mainEntity: faq.map(([q, a]) => ({ "@type": "Question", name: stripHtml(q), acceptedAnswer: { "@type": "Answer", text: stripHtml(a) } })) };
 }
 
 function guideHtml(t) {
@@ -794,12 +816,8 @@ function homePage(posts = []) {
     { "@context": "https://schema.org", "@type": "Organization", name: BRAND, url: SITE + "/", logo: SITE + "/icon-512.png",
       founder: { "@type": "Person", name: "Nasir Uddin", url: SITE + "/founder/" },
       sameAs: ["https://www.linkedin.com/in/seoconsultantnasir/", "https://github.com/nasiruddin-ai"] },
-    { "@context": "https://schema.org", "@type": "SoftwareApplication", name: BRAND, url: SITE + "/",
-      applicationCategory: "BusinessApplication", operatingSystem: "Any",
-      description: `${tools.length} free tools for YouTube, Instagram, TikTok and Twitch creators. No account required.`,
-      offers: { "@type": "Offer", price: "0", priceCurrency: "USD", availability: "https://schema.org/InStock" } },
-    { "@context": "https://schema.org", "@type": "FAQPage",
-      mainEntity: HOME_FAQ.map(([q, a]) => ({ "@type": "Question", name: q, acceptedAnswer: { "@type": "Answer", text: a } })) },
+    webPageLd(`${tools.length} Free YouTube SEO & Creator Tools`, SITE + "/", `${tools.length} free tools for YouTube, Instagram, TikTok and Twitch creators. No account required.`),
+    faqLd(HOME_FAQ),
   ];
 
   return `<!DOCTYPE html>
@@ -819,7 +837,7 @@ ${HEAD}
 <link rel="stylesheet" href="creator-tools/shared.css">
 <link rel="stylesheet" href="creator-tools/home.css">
 <script>try{var t=localStorage.getItem("pa-theme-v2");document.documentElement.setAttribute("data-theme",t==="dark"?"dark":"light");}catch(e){document.documentElement.setAttribute("data-theme","light");}</script>
-<script type="application/ld+json">${JSON.stringify(jsonld)}</script>
+${ldScripts(jsonld)}
 </head>
 <body data-root="${root}" class="home lp">${GTM_BODY}
 <a class="lp-announce" href="${root}creator-tools/youtube-comment-audit/"><span class="lp-new">New</span><span>Comment Audit: score any channel's comment section out of 100, free</span><i aria-hidden="true">&rarr;</i></a>
@@ -873,7 +891,7 @@ function postCard(p, root) {
 // path is the site path the page is served at, e.g. "/blog/some-post/". Body goes inside <main class="wrap">.
 function shell({ title, description, path, body, active = "", head = "", scripts = "", jsonld = null, narrow = false, ogTitle, image }) {
   const depth = path.split("/").filter(Boolean).length;
-  const root = "../".repeat(depth);
+  const root = path === "/" ? "" : !path.endsWith("/") ? "/" : "../".repeat(depth);
   const canonical = SITE + path;
   const metaDesc = trimMeta(description, 160);
   return `<!DOCTYPE html>
@@ -895,7 +913,7 @@ ${head}
 <link rel="preload" href="/fonts/poppins-400.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="${root}creator-tools/shared.css">
 <script>try{var t=localStorage.getItem("pa-theme-v2");document.documentElement.setAttribute("data-theme",t==="dark"?"dark":"light");}catch(e){document.documentElement.setAttribute("data-theme","light");}</script>
-${jsonld ? `<script type="application/ld+json">${JSON.stringify(jsonld)}</script>` : ""}
+${ldScripts(jsonld)}
 </head>
 <body data-root="${root}">${GTM_BODY}
 ${header(root, active, false)}
@@ -909,7 +927,7 @@ ${scripts}
 </html>`;
 }
 
-module.exports = { authorBox, AUTHOR, ANALYTICS_HEAD, GTM_BODY, GTM_ID, GA4_ID, ANALYTICS, buildInto, homePage, tools, SITE, BRAND, TAGLINE, WEB_TOOLS, header, footer, shell, postCard, fmtDate, esc, ICON, VERIFY_TAG, intentOf, INTENTS, guideHtml, faqLd, trimMeta };
+module.exports = { authorBox, AUTHOR, ANALYTICS_HEAD, GTM_BODY, GTM_ID, GA4_ID, ANALYTICS, buildInto, homePage, tools, SITE, BRAND, TAGLINE, WEB_TOOLS, header, footer, shell, postCard, fmtDate, esc, ICON, VERIFY_TAG, intentOf, INTENTS, guideHtml, faqLd, webPageLd, ldScripts, stripHtml, trimMeta };
 
 if (require.main === module) {
   const out = path.join(HERE, ".out");

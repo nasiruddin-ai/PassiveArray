@@ -143,11 +143,7 @@ function outliersPage(kind) {
 }
 
 function webApp(name, p, description) {
-  return {
-    "@context": "https://schema.org", "@type": "WebApplication", name, url: site.SITE + p, description,
-    applicationCategory: "UtilitiesApplication", operatingSystem: "Any",
-    offers: { "@type": "Offer", price: "0", priceCurrency: "USD" }, provider: { "@type": "Organization", name: site.BRAND, url: site.SITE },
-  };
+  return site.webPageLd(name, site.SITE + p, description);
 }
 
 function buildInto(dist) {
