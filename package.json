@@ -8,6 +8,8 @@
     "creator-tools": "node creator-tools/server.js"
   },
   "dependencies": {
-    "@anthropic-ai/sdk": "latest"
+    "@anthropic-ai/sdk": "latest",
+    "clean-css": "^5.3.3",
+    "terser": "^5.51.4"
   }
 }

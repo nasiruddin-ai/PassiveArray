@@ -331,13 +331,41 @@ const INDEXNOW_KEY = "e3928c4f16234a16a612080c80a35cd8";
 fs.writeFileSync(path.join(DIST, INDEXNOW_KEY + ".txt"), INDEXNOW_KEY);
 
 
+// Minify every JS and CSS file in dist/ before computing cache-busting hashes so browsers,
+// Vercel's immutable CDN cache, and SEO crawlers all receive compact production assets.
+const { minify_sync: minifyJs } = require("terser");
+const CleanCSS = require("clean-css");
+const cssMinifier = new CleanCSS({ level: 1 });
+let minifiedAssets = 0, savedBytes = 0;
+(function minifyWalk(dir) {
+  for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
+    const p = path.join(dir, entry.name);
+    if (entry.isDirectory()) { minifyWalk(p); continue; }
+    if (entry.name.endsWith(".js")) {
+      const raw = fs.readFileSync(p, "utf8");
+      const out = minifyJs(raw, { compress: true, mangle: true, format: { comments: false } });
+      if (out.error) throw out.error;
+      fs.writeFileSync(p, out.code);
+      minifiedAssets++;
+      savedBytes += Buffer.byteLength(raw) - Buffer.byteLength(out.code);
+    } else if (entry.name.endsWith(".css")) {
+      const raw = fs.readFileSync(p, "utf8");
+      const out = cssMinifier.minify(raw);
+      if (out.errors && out.errors.length) throw new Error("CSS minify failed on " + p + ": " + out.errors.join("; "));
+      fs.writeFileSync(p, out.styles);
+      minifiedAssets++;
+      savedBytes += Buffer.byteLength(raw) - Buffer.byteLength(out.styles);
+    }
+  }
+})(DIST);
+console.log("minified " + minifiedAssets + " JS/CSS assets (saved " + Math.round(savedBytes / 1024) + " KB)");
+
 // Cache-busting: every page links shared.css, site.js and shared.js with a
-// version derived from their contents, so a new build can never be paired
-// with a stylesheet a browser or the CDN cached from the previous one.
+// version derived from the minified dist/ files, so a new build can never be paired
+// with an unminified or stale asset cached from a previous build.
 const crypto = require("crypto");
 const assetVersion = crypto.createHash("md5").update(
-  ["shared.css", "site.js", "shared.js", "research.js", "app.js", "seo-tools.js", "home.js"].map((f) => fs.readFileSync(path.join(ROOT, "creator-tools", "public", f))).join("") +
-  fs.readFileSync(path.join(ROOT, "creator-tools", "home-v2.css"))
+  ["shared.css", "site.js", "shared.js", "research.js", "app.js", "seo-tools.js", "home.js", "home.css"].map((f) => fs.readFileSync(path.join(DIST, "creator-tools", f))).join("")
 ).digest("hex").slice(0, 10);
 let stamped = 0;
 (function walk(dir) {
